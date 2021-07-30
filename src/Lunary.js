@@ -18,12 +18,31 @@ class Lunary extends Client {
         this.config = require("./config/config")
         this.cluster = new ClusterClient(this)
         this.shard = new ShardManager(this)
+        
+        this.events = []
+        this.commands = []
     }
 
     init() {
+        this.loadEvents()
+        this.loadCommands()
         this.login(this.config.token)
+    }
+
+    loadEvents() {
+        require("./handlers/eventHandler")(this)
+    }
+
+    loadCommands() {
+        require("./handlers/commandHandler")(this)
     }
 }
 
 const client = new Lunary()
+
+module.exports = {
+    client: client, 
+    ClientBase: Lunary
+}
+
 client.init()

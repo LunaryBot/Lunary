@@ -4,6 +4,7 @@
 // })
 
 // app.listen(8080, "0.0.0.0")
+require("./functions/quote")
 const Manager = require("./system/cluster/ClusterManager");
 let {token} = require("./config/config");
 const manager = new Manager(`${__dirname}/Lunary.js`,{
@@ -13,5 +14,5 @@ const manager = new Manager(`${__dirname}/Lunary.js`,{
     token: token
 })
 
-manager.on('clusterCreate', cluster => console.log(`Launched Cluster ${cluster.id}`));
+manager.on('clusterCreate', cluster => console.log(`[System] [Cluster ${cluster.id}] Cluster criado!`));
 manager.spawn(undefined, undefined, -1)
