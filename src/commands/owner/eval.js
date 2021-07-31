@@ -53,7 +53,10 @@ module.exports = class EvalCommand extends Command {
             })
 
             collector.on('collect', button => {
-                console.log("collect!")
+                button.defer()
+                msg.edit({
+                    content: "Collected!"
+                })
             })
         } catch (err) {
             console.log(`${err}`)

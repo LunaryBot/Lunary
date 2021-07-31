@@ -23,6 +23,9 @@ module.exports =  class MessageComponent {
 
         this.channel = this.client.channels.cache.get(data.channel_id);
 
+        this.has = false
+        this.isEphemeral = false
+
         this.clicker = {
             id: data.guild_id ? data.member.user.id : data.user.id,
             user: this.client.users.resolve(data.guild_id ? data.member.user.id : data.user.id),
@@ -35,6 +38,23 @@ module.exports =  class MessageComponent {
         };
 
         this.message = data.message
+    }
+
+    async defer(ephemeral = false) {
+        if (this.has) return
+    
+        if (ephemeral) this.isEphemeral = true;
+    
+        await this.client.api.interactions(this.discordID, this.token).callback.post({
+            data: {
+                data: {
+                    flags: ephemeral ? 1 << 6 : null,
+                },
+                type: 6,
+            },
+        });
+        this.has = true;
+        return this;
     }
 
     get client() {

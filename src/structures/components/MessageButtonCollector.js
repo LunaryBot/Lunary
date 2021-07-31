@@ -14,8 +14,6 @@ module.exports = class ButtonCollector extends CollectorBase {
       button: options.buttonID
     }
 
-    console.log(message.id)
-
     this.createTimeout(this.options.time)
     this.client.on('clickButton', (button) => {
       return this.collect(button)
@@ -36,21 +34,11 @@ module.exports = class ButtonCollector extends CollectorBase {
 
   collect (button) {
     if (this.ended) return
-
-    if (
-      button.message.id != this.options.message.id ||
-        button.clicker.id != this.options.user.id
-    ) {
-        console.log("Aqui")
-        //console.log(this.options.message)
-      return null
-    } else if (button.id === this.options.buttonID) {
-      return this.emit('collect', button)
-    } else if (button.name !== this.options.button) {
+    if (button.message.id != this.options.message.id || button.clicker.id != this.options.user.id) return null
+    else if (button.id === this.options.button) return this.emit('collect', button) 
+    else if (button.name !== this.options.button) {
       if (button.id !== this.options.button) return null
-    } else {
-      this.emit('collect', button)
-    }
+    } else this.emit('collect', button)
   }
 
 }

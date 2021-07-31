@@ -20,7 +20,7 @@ module.exports = class InteractionMessage {
         this.guild = guild
         this.channel
 
-        this.get()
+        return this.get()
     }
 
     get client() {
@@ -38,7 +38,6 @@ module.exports = class InteractionMessage {
         } catch (error) {
             res = {}
         }
-        console.log(res.id)
         this.content = res.content
         this.id = res.id
         this.embeds = res.embeds || []

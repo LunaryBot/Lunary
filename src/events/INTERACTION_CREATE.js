@@ -45,7 +45,7 @@ module.exports = class InteractionCreateEvent extends Event {
                     }
                 })
 
-                let msg = new InteractionMessage(client, {
+                let msg = await new InteractionMessage(client, {
                     interaction: interaction,
                     member: this.member,
                     guild: guild,
