@@ -1,7 +1,8 @@
 const Discord = require("discord.js")
 const Event = require("../structures/Event")
 const axios = require("axios")
-const InteractionMessage = require("../utils/InteractionMessage")
+const InteractionMessage = require("../structures/InteractionMessage")
+const MessageComponent = require("../structures/components/MessageComponent")
 
 module.exports = class InteractionCreateEvent extends Event {
     constructor(client) {
@@ -10,6 +11,16 @@ module.exports = class InteractionCreateEvent extends Event {
 
     async run(interaction) {
         if(interaction.type == 2) this.execCommand(interaction)
+        else if(!interaction.data.component_type) return
+        
+        switch (interaction.data.component_type) {
+            case 2:
+                this.client.emit("clickButton", new MessageComponent(this.client, interaction))
+                break;
+        
+            default:
+                break;
+        }
     }
 
     async execCommand(interaction) {
