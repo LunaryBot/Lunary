@@ -1,5 +1,6 @@
 const axios = require("axios")
 const MessageButtonCollector = require("./components/MessageButtonCollector")
+const MenuCollector = require("./components/MessageSelectMenuCollector")
 let _client
 
 module.exports = class InteractionMessage {
@@ -68,6 +69,11 @@ module.exports = class InteractionMessage {
 
     createButtonCollector(options) {
         let collector = new MessageButtonCollector(this, options)
+        return collector
+    }
+
+    createMenuCollector(options) {
+        let collector = new MenuCollector(this, options)
         return collector
     }
 }

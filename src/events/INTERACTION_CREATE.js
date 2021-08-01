@@ -16,7 +16,11 @@ module.exports = class InteractionCreateEvent extends Event {
         switch (interaction.data.component_type) {
             case 2:
                 this.client.emit("clickButton", new MessageComponent(this.client, interaction))
-                break;
+            break;
+
+            case 3:
+                this.client.emit("clickMenu", new MessageComponent(this.client, interaction, true))
+            break;
         
             default:
                 break;

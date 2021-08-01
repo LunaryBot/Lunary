@@ -13,7 +13,7 @@ module.exports = class MessageButton {
     }
 
     setDisabled(disabled) {
-        if (disabled != true) this.disabled = true
+        if (disabled == true) this.disabled = true
         else this.disabled = false
         return this
     }

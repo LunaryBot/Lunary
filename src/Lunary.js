@@ -1,5 +1,4 @@
 const { Client } = require("discord.js")
-const CollectorManager = require("./structures/components/CollectorManager")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 

@@ -57,6 +57,21 @@ module.exports =  class MessageComponent {
         return this;
     }
 
+    async reply(data) {
+        if (this.has) return
+    
+        if (data.flags === 1 << 6) this.isEphemeral = true;
+    
+        await this.client.api.interactions(this.discordID, this.token).callback.post({
+            data: {
+                data: data,
+                type: 4,
+            }
+        });
+        this.has = true;
+        return this;
+    }
+
     get client() {
         return _client
     }

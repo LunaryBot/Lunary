@@ -3,6 +3,9 @@ let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require("child_process");
 const Discord = require("discord.js");
 const MessageButton = require("../../structures/components/MessageButton");
+const MessageSelectMenu = require("../../structures/components/MessageSelectMenu");
+const MessageSelectMenuOption = require("../../structures/components/MessageSelectMenuOption");
+let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {
     constructor(client) {
@@ -39,27 +42,32 @@ module.exports = class EvalCommand extends Command {
                     {
                         type: 1,
                         components: [
-                            new MessageButton().setLabel("Click Me!").setStyle("red").setEmoji("833753487514533898").setID("b1")
+                            new MessageSelectMenu().setID("m1").setPlaceholder("Escolha").addOptions(new MessageSelectMenuOption(m), {
+                                label: "Rogue2", 
+                                value: "rogue2", 
+                                description: "Sneak n stab", 
+                                emoji: {
+                                    name: "emoji_1", 
+                                    id: "870329125259337769" 
+                                }
+                            })
                         ]
                     }
                 ]
             })
 
-            let collector = msg.createButtonCollector({
+            let coletor = msg.createMenuCollector({
                 user: ctx.author,
-                buttonID: "b1",
-                max: 1,
-                stopOnCollect: true
+                max: 2,
+                menuID: "m1"
             })
 
-            collector.on('collect', button => {
-                button.defer()
-                msg.edit({
-                    content: "Collected!"
+            coletor.on('collect', (menu) => {
+                menu.reply({
+                    content: `${menu.values.join(" | ")}`
                 })
             })
         } catch (err) {
-            console.log(`${err}`)
             ctx.reply({
                 content: `\`\`\`js\n${`${err}`.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
                 flags: ctx.args.find(x => x.name == "hide") ? 1 << 6 : 0
