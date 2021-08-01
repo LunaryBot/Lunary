@@ -5,6 +5,7 @@ const Discord = require("discord.js");
 const MessageButton = require("../../structures/components/MessageButton");
 const MessageSelectMenu = require("../../structures/components/MessageSelectMenu");
 const MessageSelectMenuOption = require("../../structures/components/MessageSelectMenuOption");
+const MessageActionRow = require("../../structures/components/MessageActionRow");
 let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {
@@ -39,20 +40,15 @@ module.exports = class EvalCommand extends Command {
                 content: `\`\`\`js\n${result.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
                 flags: ctx.args.find(x => x.name == "hide") ? 1 << 6 : 0,
                 components: [
-                    {
-                        type: 1,
-                        components: [
-                            new MessageSelectMenu().setID("m1").setPlaceholder("Escolha").addOptions(new MessageSelectMenuOption(m), {
-                                label: "Rogue2", 
-                                value: "rogue2", 
-                                description: "Sneak n stab", 
-                                emoji: {
-                                    name: "emoji_1", 
-                                    id: "870329125259337769" 
-                                }
-                            })
-                        ]
-                    }
+                    new MessageActionRow().addComponent(new MessageSelectMenu().setID("m1").setPlaceholder("Escolha").addOptions(new MessageSelectMenuOption(m), {
+                        label: "Rogue2", 
+                        value: "rogue2", 
+                        description: "Sneak n stab", 
+                        emoji: {
+                            name: "emoji_1", 
+                            id: "870329125259337769" 
+                        }
+                    }))
                 ]
             })
 
@@ -63,8 +59,9 @@ module.exports = class EvalCommand extends Command {
             })
 
             coletor.on('collect', (menu) => {
-                menu.reply({
-                    content: `${menu.values.join(" | ")}`
+                msg.edit({
+                    content: `${menu.values.join(" | ")}`,
+                    components: []
                 })
             })
         } catch (err) {
@@ -74,10 +71,6 @@ module.exports = class EvalCommand extends Command {
             })
         }
     } 
-}
-
-async function resultado(client, message, result) {
-    message.quote(`${result}`.replace(client.token, "🙃").slice(0, 1990), {code: "js"})
 }
 
 function consoleRun(command) {

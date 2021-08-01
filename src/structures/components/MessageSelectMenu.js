@@ -2,7 +2,7 @@ const { resolveString } = require('discord.js').Util;
 const MessageSelectMenuOption = require("./MessageSelectMenuOption")
 
 module.exports = class MessageSelectMenu {
-    constructor() {
+    constructor(data) {
         this.type = 3
         this.placeholder = null
         this.options = []
@@ -10,6 +10,13 @@ module.exports = class MessageSelectMenu {
         this.min_values = 1
         this.max_values = 1
         this.disabled = false
+
+        if(data) this.createData(data)
+    }
+
+    createData(data = {}) {
+        Object.keys(this).forEach(x => this[x] = data[x] || null)
+        return this
     }
     
     addOption(option) {

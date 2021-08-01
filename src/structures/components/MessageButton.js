@@ -2,7 +2,7 @@ const { resolveString } = require('discord.js').Util;
 const styles = [ "blurple", "grey", "green", "red", "url" ]
 
 module.exports = class MessageButton {
-    constructor() {
+    constructor(data) {
         this.type = 2
         this.label = null
         this.style = 2
@@ -10,6 +10,13 @@ module.exports = class MessageButton {
         this.url = null
         this.custom_id = Date.now()
         this.disabled = false
+
+        if(data) this.createData(data)
+    }
+
+    createData(data = {}) {
+        Object.keys(this).forEach(x => this[x] = data[x] || null)
+        return this
     }
 
     setDisabled(disabled) {
