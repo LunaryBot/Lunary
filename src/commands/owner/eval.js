@@ -20,14 +20,14 @@ module.exports = class EvalCommand extends Command {
 
     async run(ctx) {
         if(ctx.author.id != "699416429338034268") return ctx.reply({
-            embeds: [new Discord.MessageEmbed().setColor("RED").setDescription("**Apenas meus desenvolvedores podem usar este commando!**")]
+            embeds: [new Discord.MessageEmbed().setColor("RED").setDescription("**Apenas meus desenvolvedores podem usar este comando!**")]
         })
         const start = Date.now()
         try {
             let result;
-            if(ctx.args.find(x => x.name == "type") && ctx.args.find(x => x.name == "type").value == "--bash") result = consoleRun(ctx.args.find(x => x.name == "code").value)
-            else if(ctx.args.find(x => x.name == "type") && ctx.args.find(x => x.name == "type").value == "--async") result = await eval(`(async() => { ${ctx.args.find(x => x.name == "code").value} })()`)
-            else result = await eval(ctx.args.find(x => x.name == "code").value)
+            if(ctx.args.get("type") == "--bash") result = consoleRun(ctx.args.get("code"))
+            else if(ctx.args.get("type") == "--async") result = await eval(`(async() => { ${ctx.args.get("code")} })()`)
+            else result = await eval(ctx.args.get("code"))
 
             if (result instanceof Promise) {
                 result = await result
@@ -38,36 +38,12 @@ module.exports = class EvalCommand extends Command {
 
             let msg = await ctx.reply({
                 content: `\`\`\`js\n${result.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
-                flags: ctx.args.find(x => x.name == "hide") ? 1 << 6 : 0,
-                components: [
-                    new MessageActionRow().addComponent(new MessageSelectMenu().setID("m1").setPlaceholder("Escolha").addOptions(new MessageSelectMenuOption(m), {
-                        label: "Rogue2", 
-                        value: "rogue2", 
-                        description: "Sneak n stab", 
-                        emoji: {
-                            name: "emoji_1", 
-                            id: "870329125259337769" 
-                        }
-                    }))
-                ]
-            })
-
-            let coletor = msg.createMenuCollector({
-                user: ctx.author,
-                max: 2,
-                menuID: "m1"
-            })
-
-            coletor.on('collect', (menu) => {
-                msg.edit({
-                    content: `${menu.values.join(" | ")}`,
-                    components: []
-                })
+                flags: ctx.args.get("hide") ? 1 << 6 : 0,
             })
         } catch (err) {
             ctx.reply({
                 content: `\`\`\`js\n${`${err}`.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
-                flags: ctx.args.find(x => x.name == "hide") ? 1 << 6 : 0
+                flags: ctx.args.get("hide") ? 1 << 6 : 0
             })
         }
     } 

@@ -1,6 +1,7 @@
 const { Client } = require("discord.js")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
+const Logger = require("./utils/logger")
 
 class Lunary extends Client {
     constructor() {
@@ -18,6 +19,7 @@ class Lunary extends Client {
         this.config = require("./config/config")
         this.cluster = new ClusterClient(this)
         this.shard = new ShardManager(this)
+        this.logger = new Logger(this.cluster)
         
         this.events = []
         this.commands = []

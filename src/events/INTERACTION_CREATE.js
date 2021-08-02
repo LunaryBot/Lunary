@@ -1,8 +1,9 @@
-const Discord = require("discord.js")
 const Event = require("../structures/Event")
 const axios = require("axios")
 const InteractionMessage = require("../structures/InteractionMessage")
 const MessageComponent = require("../structures/components/MessageComponent")
+const { Util, APIMessage } = require("discord.js")
+const InteractionArgs = require("../structures/InteractionArgs")
 
 module.exports = class InteractionCreateEvent extends Event {
     constructor(client) {
@@ -36,17 +37,20 @@ module.exports = class InteractionCreateEvent extends Event {
         let client = this.client
         let ctx = {
             interaction: interaction,
-            args: interaction.data.options,
+            args: new InteractionArgs(interaction.data.options || []),
             guild: guild,
             channel: guild.channels.cache.get(interaction.channel_id),
             member: guild.members.cache.get(interaction.member.user.id),
             author: this.client.users.cache.get(interaction.member.user.id),
-            reply: async function(data) {
+            reply: async function(data, files) {
+                if(files == undefined || !Array.isArray(files)) files = []
+                if(files.length) files = await Promise.all(files.map(file => APIMessage.resolveFile(file)))
                 client.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 4,
                         data: data
-                    }
+                    },
+                    files: files
                 })
 
                 let msg = await new InteractionMessage(client, {

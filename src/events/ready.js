@@ -6,7 +6,7 @@ module.exports = class ReadyEvent extends Event {
   }
 
   run() {
-    console.log(`[Client] [Cluster ${this.client.cluster.id}] Client conectado ao Discord!`)
+    this.client.logger.log(`Client conectado ao Discord!`, { key: "Client", cluster: true, date: true })
 
     this.client.api.applications(this.client.user.id).guilds("869916717122469898").commands.post({
       data: {

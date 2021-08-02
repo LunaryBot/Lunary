@@ -1,4 +1,5 @@
 const axios = require("axios")
+const { APIMessage } = require("discord.js")
 const MessageButtonCollector = require("./components/MessageButtonCollector")
 const MenuCollector = require("./components/MessageSelectMenuCollector")
 let _client
@@ -39,16 +40,18 @@ module.exports = class InteractionMessage {
         } catch (error) {
             res = {}
         }
-        this.content = res.content
-        this.id = res.id
-        this.embeds = res.embeds || []
+        try {
+            this.content = res.content
+            this.id = res.id
+            this.embeds = res.embeds || []  
+        } catch (_) {}
         return this
     }
 
     async edit(data) {
-       const res = await axios
-       .patch(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.interaction.token}/messages/@original`, data)
-       .then((res) => {
+        const res = await axios
+        .patch(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.interaction.token}/messages/@original`, data)
+        .then((res) => {
             return res.data
         })
        this.content = res.content
