@@ -11,7 +11,8 @@ const manager = new Manager(`${__dirname}/Lunary.js`,{
     totalShards: 1,
     totalClusters: 1, 
     mode: "process",
-    token: token
+    token: token,
+    respawn: true
 })
 
 manager.on('clusterCreate', cluster => Logger.log(`Cluster criado!`, { key: "System", cluster: cluster, date: true }));

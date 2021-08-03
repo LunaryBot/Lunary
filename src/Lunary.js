@@ -23,6 +23,10 @@ class Lunary extends Client {
         
         this.events = []
         this.commands = []
+
+        this.on("shardReconnecting", shard => {
+            console.log("Shard Reconectada")
+        })
     }
 
     init() {
