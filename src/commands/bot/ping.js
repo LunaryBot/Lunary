@@ -1,6 +1,7 @@
 const Command = require("../../structures/Command")
 const Discord = require("discord.js")
 const { client } = require("../../Lunary")
+const formatSizeUnits = require("../../utils/formatSizeUnits")
 let formatNumber = new Intl.NumberFormat("pt-BR").format
 module.exports = class PingCommand extends Command {
     constructor(client) {
@@ -13,39 +14,52 @@ module.exports = class PingCommand extends Command {
     }
 
     async run(ctx) {
-        if(ctx.args.get("type") !== "clusters") {
-            let embed = new Discord.MessageEmbed()
-
+        if(ctx.args.get("type") == "clusters") {
             let stats = await this.client.cluster.broadcastEval(`
-                [this.cluster.id, this.cluster.ids.size, this.ws.ping, this.guilds.cache.size, this.users.cache.size, this.uptime, process.memoryUsage().rss]
+                [this.cluster.id, this.cluster.ids.size, this.ws.ping, this.guilds.cache.size, this.uptime, process.memoryUsage().rss]
             `)
 
-            let k = "-".repeat(82)
-            let s = ["```prolog\n" + "+" + k + "+\n" + `|${o("Cluster", 20)}|${o("Uptime", 14)}|${o("Shards", 8)}|${o("Ping", 8)}|${o("Guilds", 8)}|${o("Users", 10)}|${o("RAM", 8)}|`]
+            let k = "-".repeat(84)
+            let s = ["```prolog\n" + "+" + k + "+\n" + `|${o("Cluster", 30)}|${o("Uptime", 16)}|${o("Shards", 8)}|${o("Ping", 8)}|${o("Guilds", 8)}|${o("RAM", 9)}|`]
 
-            for(let i = 0; i < this.client.cluster.info.CLUSTER_COUNT; i++) {
+            let guilds = 0
+            let ram = 0
+            let shards = 0
+
+            for(let i = 0; i < 2; i++) {
                 let cluster = stats.find(x => x[0] == i)
-                console.log(cluster)
-                if(cluster) {
-                    s.push(`|${o(`Cluster ${cluster[0]}`, 20)}|${o("N\\A", 14)}|${o(cluster[1], 8)}|${o(`~${cluster[2]}ms`, 8)}|${o(formatNumber(cluster[3]), 8)}|${o(formatNumber(cluster[4]), 10)}|${o(cluster[6], 8)}|`)
-                } else {
-                    
+                if(cluster && cluster[1]) shards += Number(cluster[1])
+                if(cluster && cluster[3]) guilds += Number(cluster[3])
+                if(cluster && cluster[5]) ram += Number(cluster[5])
+
+                cluster = {
+                    id: i + 1,
+                    name: this.client.config.clusterName[Number(i)],
+                    shards: cluster ? cluster[1] : "N\\A",
+                    ping: cluster ? `~${cluster[2]}ms` : "N\\A",
+                    guilds: cluster ? formatNumber(cluster[3]) : "N\\A",
+                    uptime: cluster ? duration(cluster[4]) : "N\\A",
+                    ram: cluster ? formatSizeUnits(cluster[5]) : "N\\A"
                 }
+                s.push(`|${o(`${this.client.cluster.id == i ? "» " : ""}Cluster ${cluster.id} (${cluster.name})`, 30)}|${o(cluster.uptime, 16)}|${o(cluster.shards, 8)}|${o(cluster.ping, 8)}|${o(cluster.guilds, 8)}|${o(cluster.ram, 9)}|`)
             }
+            
+            let l = "\n|" + "_".repeat(84) + "|\n" + `|${o("Total", 30)}|${o("------", 16)}|${o(shards, 8)}|${o("------", 8)}|${o(guilds, 8)}|${o(formatSizeUnits(ram), 9)}|`
 
             ctx.reply({
-                content: s.join("\n|" + k + "|\n") + "\n+" + k + "+" + "```"
+                content: s.join("\n") + l + "\n+" + k + "+" + "```"
             })
         } else {
+            let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.guild.shardID) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clusterName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`
+            
             let ping = Date.now()
             let msg = await ctx.reply({
-                content: `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.guild.shardID) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (Pinho)]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:** \`--\`\n**:dividers: | Banco de dados:** \`--\``
+                content: `${a} \`--\`\n**:dividers: | Banco de dados:** \`--\``
             })
-
             let pong = Date.now() - ping
             
             msg.edit({
-                content: `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.guild.shardID) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (Pinho)]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:** \`${pong}ms\`\n**:dividers: | Banco de dados:** \`--\``
+                content: `${a} \`${pong}ms\`\n**:dividers: | Banco de dados:** \`--\``
             })
         }
     }
@@ -58,4 +72,11 @@ function o(string, size) {
     let n = (size - Number(string.length)) % 2
 
     return `${" ".repeat(Number(m))}${string}${" ".repeat(n != 0 ? Number(m) + 1 : Number(m))}`
+}
+
+function duration(ms) {
+    let tempo = require("moment").duration(Number(ms), "milliseconds").format("d[d] h[h] m[m] s[s]", {
+        trim: "small"
+    });
+    return tempo
 }
