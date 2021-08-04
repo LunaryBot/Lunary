@@ -26,6 +26,7 @@ class Lunary extends Client {
         
         this.events = []
         this.commands = []
+        this.langs = []
 
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
@@ -33,9 +34,14 @@ class Lunary extends Client {
     }
 
     init() {
+        this.loadLanguage()
         this.loadEvents()
         this.loadCommands()
         this.login(this.config.token)
+    }
+
+    loadLanguage() {
+        require("./handlers/langHandler")(this)
     }
 
     loadEvents() {

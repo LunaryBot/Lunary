@@ -3,6 +3,7 @@ const Discord = require("discord.js")
 const { client } = require("../../Lunary")
 const formatSizeUnits = require("../../utils/formatSizeUnits")
 let formatNumber = new Intl.NumberFormat("pt-BR").format
+
 module.exports = class PingCommand extends Command {
     constructor(client) {
         super({
@@ -13,7 +14,7 @@ module.exports = class PingCommand extends Command {
         }, client)
     }
 
-    async run(ctx) {
+    async run(ctx, t) {
         if(ctx.args.get("type") == "clusters") {
             let stats = await this.client.cluster.broadcastEval(`
                 [this.cluster.id, this.cluster.ids.size, this.ws.ping, this.guilds.cache.size, this.uptime, process.memoryUsage().rss]
@@ -41,7 +42,7 @@ module.exports = class PingCommand extends Command {
                     uptime: cluster ? duration(cluster[4]) : "N\\A",
                     ram: cluster ? formatSizeUnits(cluster[5]) : "N\\A"
                 }
-                s.push(`|${o(`${this.client.cluster.id == i ? "» " : ""}Cluster ${cluster.id} (${cluster.name})`, 30)}|${o(cluster.uptime, 16)}|${o(cluster.shards, 8)}|${o(cluster.ping, 8)}|${o(cluster.guilds, 8)}|${o(cluster.ram, 9)}|`)
+                s.push(`|${o(`${this.client.cluster.id == i ? "» " : ""}Cluster ${cluster.id} (${cluster.name}) ${this.client.cluster.id == i ? "  " : ""}`, 30)}|${o(cluster.uptime, 16)}|${o(cluster.shards, 8)}|${o(cluster.ping, 8)}|${o(cluster.guilds, 8)}|${o(cluster.ram, 9)}|`)
             }
             
             let l = "\n|" + "_".repeat(84) + "|\n" + `|${o("Total", 30)}|${o("------", 16)}|${o(shards, 8)}|${o("------", 8)}|${o(guilds, 8)}|${o(formatSizeUnits(ram), 9)}|`
@@ -54,12 +55,12 @@ module.exports = class PingCommand extends Command {
             
             let ping = Date.now()
             let msg = await ctx.reply({
-                content: `${a} \`--\`\n**:dividers: | Banco de dados:** \`--\``
+                content: `${a} \`--\`\n**:dividers: | ${t("ping/ping_database")}:** \`--\``
             })
             let pong = Date.now() - ping
             
             msg.edit({
-                content: `${a} \`${pong}ms\`\n**:dividers: | Banco de dados:** \`--\``
+                content: `${a} \`${pong}ms\`\n**:dividers: | ${t("ping/ping_database")}:** \`--\``
             })
         }
     }

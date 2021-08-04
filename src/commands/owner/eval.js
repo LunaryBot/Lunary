@@ -18,7 +18,7 @@ module.exports = class EvalCommand extends Command {
         }, client)
     }
 
-    async run(ctx) {
+    async run(ctx, t) {
         if(ctx.author.id != "699416429338034268") return ctx.reply({
             embeds: [new Discord.MessageEmbed().setColor("RED").setDescription("**Apenas meus desenvolvedores podem usar este comando!**")]
         })

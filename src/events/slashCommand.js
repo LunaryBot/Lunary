@@ -4,31 +4,14 @@ const InteractionMessage = require("../structures/InteractionMessage")
 const MessageComponent = require("../structures/components/MessageComponent")
 const { Util, APIMessage } = require("discord.js")
 const InteractionArgs = require("../structures/InteractionArgs")
+const ObjRef = require("../utils/objref/ObjRef")
 
-module.exports = class InteractionCreateEvent extends Event {
+module.exports = class SlashCommandEvent extends Event {
     constructor(client) {
-        super("INTERACTION_CREATE", client, true)
+        super("slashCommand", client)
     }
 
     async run(interaction) {
-        if(interaction.type == 2) this.client.emit("slashCommand", interaction)
-        else if(!interaction.data.component_type) return
-        
-        switch (interaction.data.component_type) {
-            case 2:
-                this.client.emit("clickButton", new MessageComponent(this.client, interaction))
-            break;
-
-            case 3:
-                this.client.emit("clickMenu", new MessageComponent(this.client, interaction, true))
-            break;
-        
-            default:
-                break;
-        }
-    }
-
-    async execCommand(interaction) {
         let command = interaction.data.name ? interaction.data.name.toLowerCase() : undefined
         command = this.client.commands.find(c => c.name == command)
         if(!command) return;
@@ -64,7 +47,9 @@ module.exports = class InteractionCreateEvent extends Event {
             }
         }
 
-        command.run(ctx)
+        let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
+
+        command.run(ctx, t)
     }
 }
 

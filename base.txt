@@ -1,0 +1,22 @@
+const Command = require("../../structures/Command")
+const Discord = require("discord.js")
+
+module.exports = class CleanCommand extends Command {
+    constructor(client) {
+        super({
+            name: "",
+            description: "",
+            category: "",
+            dirname: __dirname,
+            permissions: {
+                Discord: [""],
+                Bot: [""],
+                Lunar: [""]
+            }
+        }, client)
+    }
+
+    async run(ctx, t) {
+        
+    }
+}

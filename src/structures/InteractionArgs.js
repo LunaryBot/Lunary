@@ -1,6 +1,10 @@
 module.exports = class InteractionArgs extends Array {
     constructor(args) {
-        super(...args)
+        args = args.map(function(x) {
+            if(x.type != 1) return x
+            else return x.options
+        })
+        super(...args.flat(Infinity))
     }
 
     get(value) {
