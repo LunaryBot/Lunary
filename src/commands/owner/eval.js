@@ -6,6 +6,7 @@ const MessageButton = require("../../structures/components/MessageButton");
 const MessageSelectMenu = require("../../structures/components/MessageSelectMenu");
 const MessageSelectMenuOption = require("../../structures/components/MessageSelectMenuOption");
 const MessageActionRow = require("../../structures/components/MessageActionRow");
+const MemberBotPermissions = require("../../structures/MemberBotPermissions");
 let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {
@@ -18,7 +19,7 @@ module.exports = class EvalCommand extends Command {
         }, client)
     }
 
-    async run(ctx, t) {
+    async run(ctx, t, db) {
         if(ctx.author.id != "699416429338034268") return ctx.reply({
             embeds: [new Discord.MessageEmbed().setColor("RED").setDescription("**Apenas meus desenvolvedores podem usar este comando!**")]
         })

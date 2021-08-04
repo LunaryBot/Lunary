@@ -29,8 +29,24 @@ module.exports = class CleanCommand extends Command {
       ]
     })
 
+    let configs = db.ref(`Servidores/${ctx.guild.id}/Configs`).val() || {}
+
+    let reason = ctx.args.get("reason")
+    if(!reason) {
+      if(configs.ReasonObr && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.reply({
+        embeds: [
+          new Discord.MessageEmbed()
+          .setDescription(`**${t("reason_obr")}**`)
+          .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+          .setColor("#FF0000")
+          .setTimestamp()
+        ]
+      })
+      else reason = t("reason_not_informed")
+    }
+
     ctx.reply({
-      content: "A"
+      content: reason
     })
   }
 }

@@ -17,7 +17,7 @@ module.exports = class CleanCommand extends Command {
         }, client)
     }
 
-    async run(ctx, t) {
+    async run(ctx, t, db) {
         let msgs = Number(ctx.args.get("num"))
         if(!msgs || isNaN(msgs) || msgs > 99 || msgs < 1) return ctx.reply({
             content: `A`

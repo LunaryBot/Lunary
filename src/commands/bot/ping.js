@@ -14,7 +14,7 @@ module.exports = class PingCommand extends Command {
         }, client)
     }
 
-    async run(ctx, t) {
+    async run(ctx, t, db) {
         if(ctx.args.get("type") == "clusters") {
             let stats = await this.client.cluster.broadcastEval(`
                 [this.cluster.id, this.cluster.ids.size, this.ws.ping, this.guilds.cache.size, this.uptime, process.memoryUsage().rss]
@@ -60,7 +60,7 @@ module.exports = class PingCommand extends Command {
             let pong = Date.now() - ping
             
             msg.edit({
-                content: `${a} \`${pong}ms\`\n**:dividers: | ${t("ping/ping_database")}:** \`--\``
+                content: `${a} \`${pong}ms\`\n**:dividers: | ${t("ping/ping_database")}:** \`${db.ping}ms\``
             })
         }
     }

@@ -5,6 +5,7 @@ const Logger = require("./utils/logger")
 require("./functions/shorten")
 const moment = require("moment")
 require("moment-duration-format")
+const firebase = require('firebase')
 
 class Lunary extends Client {
     constructor() {
@@ -23,11 +24,9 @@ class Lunary extends Client {
         this.cluster = new ClusterClient(this)
         this.shard = new ShardManager(this)
         this.logger = new Logger(this.cluster)
-        
-        this.events = []
-        this.commands = []
-        this.langs = []
 
+        firebase.initializeApp(this.config.firebaseConfig)
+        this.db = firebase.default.database()
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
         })
@@ -41,14 +40,17 @@ class Lunary extends Client {
     }
 
     loadLanguage() {
+        this.langs = []
         require("./handlers/langHandler")(this)
     }
 
     loadEvents() {
+        this.events = []
         require("./handlers/eventHandler")(this)
     }
 
     loadCommands() {
+        this.commands = []
         require("./handlers/commandHandler")(this)
     }
 }

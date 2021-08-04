@@ -1,5 +1,7 @@
 {
     "user_not_found": "<:NaoRed:818109994112516136> | Usuário não encontrado.",
+    "reason_obr": "<:NaoRed:818109994112516136> | É preciso informar um motivo para a punição.",
+    "reason_not_informed": "Motivo não informado.",
     "clean": {
 
     },
