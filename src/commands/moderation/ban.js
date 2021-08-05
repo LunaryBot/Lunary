@@ -70,7 +70,7 @@ module.exports = class CleanCommand extends Command {
       })
     }
 
-    if(reason > 512) return ctx.reply({
+    if(reason > 450) return ctx.reply({
       embeds: [
         new Discord.MessageEmbed()
         .setDescription(`**${t("very_big_reason")}**`)
@@ -131,7 +131,16 @@ module.exports = class CleanCommand extends Command {
           notifyDM = false
         }
 
-        
+        await ctx.guild.members.ban(user.id, {reason: t("punished_by", {
+          author_tag: ctx.author.tag,
+          reason: reason
+        })})
+
+        ctx.channel.send(new Discord.MessageEmbed()
+        .setColor("#A020F0")
+        .setDescription(`<:Hammer:842549266480234516>・**_${ctx.author.toString()}, ${user.toString()} foi banido com sucesso!_**${(notifyDM == false) ? `\nNão foi possivel notificalo via dm.` : ""}`)
+        .setFooter('Sistema de punição Lunar | Muito obrigado por me escolher para punir este membro!', this.client.user.displayAvatarURL({ dynamic: true, format: "png" }))
+        )
       }
     })
 

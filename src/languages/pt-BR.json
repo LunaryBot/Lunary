@@ -4,8 +4,9 @@
     "reason_not_informed": "Motivo não informado.",
     "not_punishable": "<:NaoRed:818109994112516136> | Eu não tenho permissão para punir este usuário.",
     "highest_position": "<:NaoRed:818109994112516136> | Você não pode punir um membro com funções iguais/superiores a sua.",
-    "very_big_reason": "<:NaoRed:818109994112516136> | O motivo deve conter no máximo `512` caracteres.",
+    "very_big_reason": "<:NaoRed:818109994112516136> | O motivo deve conter no máximo `450` caracteres.",
     "default_message_punish": "{emoji} Você foi {punish} **{guild_name}**\n**`[MOTIVO]`:** {reason}",
+    "punished_by": "{punish} por {author_tag}",
     "clean": {
 
     },
