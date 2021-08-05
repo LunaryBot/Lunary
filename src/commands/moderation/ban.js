@@ -132,6 +132,7 @@ module.exports = class CleanCommand extends Command {
         }
 
         await ctx.guild.members.ban(user.id, {reason: t("punished_by", {
+          punish: "Banido",
           author_tag: ctx.author.tag,
           reason: reason
         })})
