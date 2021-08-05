@@ -10,7 +10,7 @@ module.exports = class ButtonCollector extends CollectorBase {
       user: options.user ? options.user : null,
       message: options.message ? options.message : message,
       max: options.max ? options.max : 1,
-      stopOnCollect: !!options.stopOnCollect,
+      stopOnCollect: options.stopOnCollect == undefined ? true : !!options.stopOnCollect,
       button: options.buttonID
     }
 
@@ -35,9 +35,11 @@ module.exports = class ButtonCollector extends CollectorBase {
   collect (button) {
     if (this.ended) return
     if (button.message.id != this.options.message.id || button.clicker.id != this.options.user.id) return null
-    else if (button.id === this.options.button) return this.emit('collect', button) 
-    else if (button.name !== this.options.button) {
-      if (button.id !== this.options.button) return null
+    else if(this.options.button) {
+      if (button.id === this.options.button) return this.emit('collect', button) 
+      else if (button.name !== this.options.button) {
+        if (button.id !== this.options.button) return null
+      } else this.emit('collect', button)
     } else this.emit('collect', button)
   }
 

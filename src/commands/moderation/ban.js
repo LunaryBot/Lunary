@@ -1,5 +1,7 @@
 const Command = require("../../structures/Command")
 const Discord = require("discord.js")
+const MessageButton = require("../../structures/components/MessageButton")
+const MessageActionRow = require("../../structures/components/MessageActionRow")
 
 module.exports = class CleanCommand extends Command {
   constructor(client) {
@@ -17,7 +19,7 @@ module.exports = class CleanCommand extends Command {
   }
 
   async run(ctx, t, db) {
-    let user = await this.client.users.fetch(ctx.args.get("user") || ctx.args.get("user-id")).catch(() => {})
+    const user = await this.client.users.fetch(ctx.args.get("user") || ctx.args.get("user-id")).catch(() => {})
 
     if(!user) return ctx.reply({
       embeds: [
@@ -45,8 +47,96 @@ module.exports = class CleanCommand extends Command {
       else reason = t("reason_not_informed")
     }
 
-    ctx.reply({
-      content: reason
+    const membro = ctx.guild.members.cache.get(user.id)
+    if(membro) {
+      // if(!membro.bannable) return ctx.reply({
+      //   embeds: [
+      //     new Discord.MessageEmbed()
+      //     .setDescription(`**${t("not_punishable")}**`)
+      //     .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+      //     .setColor("#FF0000")
+      //     .setTimestamp()
+      //   ]
+      // })
+
+      if(ctx.member.roles.highest.position <=  membro.roles.highest.position && ctx.author.id != ctx.guild.ownerID) return ctx.reply({
+        embeds: [
+          new Discord.MessageEmbed()
+          .setDescription(`**${t("highest_position")}**`)
+          .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+          .setColor("#FF0000")
+          .setTimestamp()
+        ]
+      })
+    }
+
+    if(reason > 512) return ctx.reply({
+      embeds: [
+        new Discord.MessageEmbed()
+        .setDescription(`**${t("very_big_reason")}**`)
+        .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+        .setColor("#FF0000")
+        .setTimestamp()
+      ]
+    })
+
+    let msg = await ctx.reply({
+      embeds: [
+        new Discord.MessageEmbed()
+        .setColor("#FF0000")
+        .setTitle("(<a:AlertRed:829429780155858974>) Confirme a punição a seguir:")
+        .addField(`<:User:816454160991911988> │ Usuário a ser Banido:`, [
+          `> _  _**Menção:** ${user.toString()}`,
+          `> _  _**Tag:** \`${user.tag}\``,
+          `> _  _**ID:** \`${user.id}\``
+        ])
+        .addField(`<:Motivo:816454218570792990> │ Motivo:`, `ㅤ${reason}`)
+        .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+      ],
+      components: [
+        new MessageActionRow()
+        .addComponent(
+          new MessageButton()
+          .setID("confirm_punish")
+          .setStyle("green")
+          .setEmoji("872635474798346241")
+        )
+        .addComponent(
+          new MessageButton()
+          .setID("cancel_punish")
+          .setStyle("red")
+          .setEmoji("872635598660313148")
+        )
+      ]
+    })
+
+    let coletor = msg.createButtonCollector({
+      user: ctx.author,
+      time: 1 * 1000 * 60,
+      max: 1
+    })
+
+    coletor.on("collect", async button => {
+      
+      let notifyDM = true
+      if(button.id == "confirm_punish") {
+        try {
+        if(membro && ctx.args.get("notify-dm") != false) await user.send(t("default_message_punish", {
+          emoji: ":hammer:",
+          guild_name: ctx.guild.name,
+          punish: "banido de",
+          reason: reason
+        }))
+        } catch(_) {
+          notifyDM = false
+        }
+
+        
+      }
+    })
+
+    coletor.on("end", () => {
+      msg.delete().catch(() => {})
     })
   }
 }

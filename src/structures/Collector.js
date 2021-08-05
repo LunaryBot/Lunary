@@ -12,9 +12,11 @@ module.exports = class CollectorBase extends EventEmitter {
     }
   
     stopAll () {
-        this.ended = true
-        this.emit('ended', this.ended, this.error)
-        this.emit('end', this.collectedSize, this.collected)
+        if(this.ended != true) {
+            this.ended = true
+            this.emit('ended', this.ended, this.error)
+            this.emit('end', this.collectedSize, this.collected)
+        }
     }
   
     createTimeout (time) {

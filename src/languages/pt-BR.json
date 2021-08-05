@@ -2,6 +2,10 @@
     "user_not_found": "<:NaoRed:818109994112516136> | Usuário não encontrado.",
     "reason_obr": "<:NaoRed:818109994112516136> | É preciso informar um motivo para a punição.",
     "reason_not_informed": "Motivo não informado.",
+    "not_punishable": "<:NaoRed:818109994112516136> | Eu não tenho permissão para punir este usuário.",
+    "highest_position": "<:NaoRed:818109994112516136> | Você não pode punir um membro com funções iguais/superiores a sua.",
+    "very_big_reason": "<:NaoRed:818109994112516136> | O motivo deve conter no máximo `512` caracteres.",
+    "default_message_punish": "{emoji} Você foi {punish} **{guild_name}**\n**`[MOTIVO]`:** {reason}",
     "clean": {
 
     },

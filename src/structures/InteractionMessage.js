@@ -60,14 +60,15 @@ module.exports = class InteractionMessage {
        return this
     }
 
-    delete() {
-        delete this.interaction
+    async delete() {
         delete this.content
         delete this.id
         delete this.embeds
         delete this.author
         delete this.member
         delete this.guild
+        await axios
+        .delete(`https://discord.com/api/v8/webhooks/${this.client.user.id}/${this.interaction.token}/messages/@original`)
     }
 
     createButtonCollector(options) {
