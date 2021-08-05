@@ -117,9 +117,8 @@ module.exports = class CleanCommand extends Command {
     })
 
     coletor.on("collect", async button => {
-      
-      let notifyDM = true
       if(button.id == "confirm_punish") {
+        let notifyDM = true
         try {
         if(membro && ctx.args.get("notify-dm") != false) await user.send(t("default_message_punish", {
           emoji: ":hammer:",
