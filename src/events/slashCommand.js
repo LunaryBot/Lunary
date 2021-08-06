@@ -29,7 +29,7 @@ module.exports = class SlashCommandEvent extends Event {
 
         const ctx = {
             interaction: interaction,
-            args: new InteractionArgs(interaction.data.options || []),
+            args: new InteractionArgs(this.client, interaction.data.options || [], guild),
             guild: guild,
             channel: guild.channels.cache.get(interaction.channel_id),
             member: guild.members.cache.get(interaction.member.user.id),

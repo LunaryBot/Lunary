@@ -8,6 +8,7 @@ const MessageSelectMenuOption = require("../../structures/components/MessageSele
 const MessageActionRow = require("../../structures/components/MessageActionRow");
 const MemberBotPermissions = require("../../structures/MemberBotPermissions");
 const message_modlogs = require("../../utils/message_modlogs");
+const message_punish = require("../../utils/message_punish");
 let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {

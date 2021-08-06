@@ -20,7 +20,7 @@ module.exports = class CleanCommand extends Command {
   }
 
   async run(ctx, t, db) {
-    const user = await this.client.users.fetch(ctx.args.get("user") || ctx.args.get("user-id")).catch(() => {})
+    const user = await ctx.args.getUser("user") || await ctx.args.getUser("user-id")
 
     if(!user) return ctx.reply({
       embeds: [
@@ -138,13 +138,14 @@ module.exports = class CleanCommand extends Command {
         })})
 
         ctx.channel.send(new Discord.MessageEmbed()
-        .setColor("#A020F0")
-        .setDescription(`<:Hammer:842549266480234516>・**_${ctx.author.toString()}, ${user.toString()} foi banido com sucesso!_**${(notifyDM == false) ? `\nNão foi possivel notificalo via dm.` : ""}`)
-        .setFooter('Sistema de punição Lunar | Muito obrigado por me escolher para punir este membro!', this.client.user.displayAvatarURL({ dynamic: true, format: "png" }))
+          .setColor("#A020F0")
+          .setDescription(`<:Hammer:842549266480234516>・**_${ctx.author.toString()}, ${user.toString()} foi banido com sucesso!_**${(notifyDM == false) ? `\nNão foi possivel notificalo via dm.` : ""}`)
+          .setFooter('Sistema de punição Lunar | Muito obrigado por me escolher para punir este membro!', this.client.user.displayAvatarURL({ dynamic: true, format: "png" }))
         )
 
         let channel_modlogs = ctx.guild.channels.cache.get(configs.ChatModLogs)
         if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send(message_modlogs(ctx.author, user, reason, "ban"))
+        
       }
     })
 
