@@ -6,7 +6,6 @@ require("./functions/shorten")
 const moment = require("moment")
 require("moment-duration-format")
 const firebase = require("firebase")
-const fbadmin = require("firebase-admin")
 
 class Lunary extends Client {
     constructor() {
@@ -28,8 +27,9 @@ class Lunary extends Client {
 
         firebase.initializeApp(this.config.firebaseConfig)
         this.db = firebase.database()
-        let a = firebase.initializeApp(this.config.firebaseConfig2, "logs")
-        this.db2 = a.database()
+        let db2 = firebase.initializeApp(this.config.firebaseConfig2, "logs")
+        this.db2 = db2.database()
+        
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
         })

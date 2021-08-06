@@ -11,7 +11,7 @@ module.exports = class InteractionMessage {
         guild,
         channel,
         author
-    }) {
+    }, hideFlag) {
         _client = client
         this.interaction = interaction
         this.content = ""
