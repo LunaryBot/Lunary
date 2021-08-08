@@ -1,6 +1,11 @@
 const { EventEmitter } = require('events')
+const { client } = require("../Lunary")
   
 module.exports = class CollectorBase extends EventEmitter {
+    /**
+     * 
+     * @param {client} client 
+     */
     constructor (client) {
         super()
     

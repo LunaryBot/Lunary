@@ -2,6 +2,7 @@ const Command = require("../../structures/Command")
 const Discord = require("discord.js")
 const { client } = require("../../Lunary")
 const formatSizeUnits = require("../../utils/formatSizeUnits")
+const ObjRef = require("../../utils/objref/ObjRef")
 let formatNumber = new Intl.NumberFormat("pt-BR").format
 
 module.exports = class PingCommand extends Command {
@@ -14,8 +15,14 @@ module.exports = class PingCommand extends Command {
         }, client)
     }
 
-    async run(ctx, t, db) {
-        if(ctx.args.get("type") == "clusters") {
+    /** 
+     * @param {Discord.CommandInteraction} interaction
+     * @param {ObjRef} t
+     * @param {ObjRef} db
+     */
+
+    async run(interaction, t, db) {
+        if(interaction.options.getString("type") == "clusters") {
             let stats = await this.client.cluster.broadcastEval(`
                 [this.cluster.id, this.cluster.ids.size, this.ws.ping, this.guilds.cache.size, this.uptime, process.memoryUsage().rss]
             `)
@@ -47,21 +54,24 @@ module.exports = class PingCommand extends Command {
             
             let l = "\n|" + "_".repeat(84) + "|\n" + `|${o("Total", 30)}|${o("------", 16)}|${o(shards, 8)}|${o("------", 8)}|${o(guilds, 8)}|${o(formatSizeUnits(ram), 9)}|`
 
-            ctx.reply({
+            interaction.reply({
                 content: s.join("\n") + l + "\n+" + k + "+" + "```"
             })
         } else {
-            let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.guild.shardID) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clusterName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`
+            let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(interaction.guild.shardID) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clusterName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`
             
             let ping = Date.now()
-            let msg = await ctx.reply({
+            await interaction.reply({
                 content: `${a} \`--\`\n**:dividers: | ${t("ping/ping_database")}:** \`--\``
             })
+            
             let pong = Date.now() - ping
             
-            msg.edit({
+            interaction.editReply({
                 content: `${a} \`${pong}ms\`\n**:dividers: | ${t("ping/ping_database")}:** \`${db.ping}ms\``
             })
+
+            
         }
     }
 }

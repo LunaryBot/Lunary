@@ -1,4 +1,3 @@
-const { resolveString } = require('discord.js').Util;
 const styles = [ "blurple", "grey", "green", "red", "url" ]
 
 module.exports = class MessageButton {
@@ -91,4 +90,10 @@ module.exports = class MessageButton {
 
         return style
     }
+}
+
+function resolveString(data) {
+    if (typeof data == 'string') return data;
+    if (Array.isArray(data)) return data.join('\n');
+    return String(data);
 }

@@ -12,11 +12,11 @@ class Lunary extends Client {
         super({
             shards: ClusterClient.getinfo().SHARD_LIST,
 	        shardCount: ClusterClient.getinfo().TOTAL_SHARDS,
-            ws: { 
+            intents: 1719,
+            ws: {
                 properties: { 
                     $browser: "Discord iOS" 
                 },
-            intents: 1719 
             }, 
             fetchAllMembers: true
         })

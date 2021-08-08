@@ -1,4 +1,3 @@
-const { resolveString } = require('discord.js').Util;
 const MessageSelectMenuOption = require("./MessageSelectMenuOption")
 
 module.exports = class MessageSelectMenu {
@@ -71,4 +70,10 @@ module.exports = class MessageSelectMenu {
             custom_id: this.custom_id
         }
     }
+}
+
+function resolveString(data) {
+    if (typeof data == 'string') return data;
+    if (Array.isArray(data)) return data.join('\n');
+    return String(data);
 }

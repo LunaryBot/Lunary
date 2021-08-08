@@ -9,6 +9,7 @@ const MessageActionRow = require("../../structures/components/MessageActionRow")
 const MemberBotPermissions = require("../../structures/MemberBotPermissions");
 const message_modlogs = require("../../utils/message_modlogs");
 const message_punish = require("../../utils/message_punish");
+const ObjRef = require("../../utils/objref/ObjRef");
 let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {
@@ -21,16 +22,22 @@ module.exports = class EvalCommand extends Command {
         }, client)
     }
 
-    async run(ctx, t, db) {
-        if(ctx.author.id != "699416429338034268") return ctx.reply({
+    /** 
+    * @param {Discord.CommandInteraction} interaction
+    * @param {ObjRef} t
+    * @param {ObjRef} db
+    */
+
+    async run(interaction, t, db) {
+        if(!this.client.config.devs.includes(interaction.user.id)) return interaction.reply({
             embeds: [new Discord.MessageEmbed().setColor("RED").setDescription("**Apenas meus desenvolvedores podem usar este comando!**")]
         })
         const start = Date.now()
         try {
             let result;
-            if(ctx.args.get("type") == "--bash") result = consoleRun(ctx.args.get("code"))
-            else if(ctx.args.get("type") == "--async") result = await eval(`(async() => { ${ctx.args.get("code")} })()`)
-            else result = await eval(ctx.args.get("code"))
+            if(interaction.options.getString("type") == "--bash") result = consoleRun(interaction.options.getString("code"))
+            else if(interaction.options.getString("type") == "--async") result = await eval(`(async() => { ${interaction.options.getString("code")} })()`)
+            else result = await eval(interaction.options.getString("code"))
 
             if (result instanceof Promise) {
                 result = await result
@@ -39,14 +46,14 @@ module.exports = class EvalCommand extends Command {
             if (typeof result !== 'string') result = await require('util').inspect(result, { depth: 0 })
             let end = (Date.now() - start)
 
-            let msg = await ctx.reply({
-                content: `\`\`\`js\n${result.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
-                flags: ctx.args.get("hide") ? 1 << 6 : 0,
+            let msg = await interaction.reply({
+                content: `\`\`\`js\n${result.replace(this.client.token, "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``,
+                ephemeral: interaction.options.getBoolean("hide") ? true : false,
             })
         } catch (err) {
-            ctx.reply({
+            interaction.reply({
                 content: `\`\`\`js\n${`${err}`.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
-                flags: ctx.args.get("hide") ? 1 << 6 : 0
+                ephemeral: interaction.options.getBoolean("hide") ? true : false
             })
         }
     } 

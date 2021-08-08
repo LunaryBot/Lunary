@@ -1,6 +1,13 @@
-const { ClientBase } = require("../Lunary")
-
+const { client } = require("../Lunary")
 module.exports = class Command {
+    /**
+    * @param {client} client
+    * @param {String} name
+    * @param {String} description
+    * @param {String} category
+    * @param {String} dirname
+    */
+
     constructor({
         name = null,
         description = null,

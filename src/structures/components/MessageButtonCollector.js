@@ -1,4 +1,5 @@
 const CollectorBase = require('../Collector.js')
+const MessageComponent = require("./MessageComponent")
 
 module.exports = class ButtonCollector extends CollectorBase {
 
@@ -31,6 +32,12 @@ module.exports = class ButtonCollector extends CollectorBase {
       }
     })
   }
+
+  /**
+   * 
+   * @param {MessageComponent}  button 
+   * @returns 
+   */
 
   collect (button) {
     if (this.ended) return
