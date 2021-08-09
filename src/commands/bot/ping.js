@@ -69,7 +69,7 @@ module.exports = class PingCommand extends Command {
             
             interaction.editReply({
                 content: `${a} \`${pong}ms\`\n**:dividers: | ${t("ping/ping_database")}:** \`${db.ping}ms\``
-            })
+            }).catch(() => {})
 
             
         }

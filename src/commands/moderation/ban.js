@@ -147,15 +147,17 @@ module.exports = class CleanCommand extends Command {
           reason: reason
         })})
 
-        interaction.channel.send(new Discord.MessageEmbed()
-          .setColor("#A020F0")
-          .setDescription(`<:Hammer:842549266480234516>・**_${interaction.user.toString()}, ${user.toString()} foi banido com sucesso!_**${(notifyDM == false) ? `\nNão foi possivel notificalo via dm.` : ""}`)
-          .setFooter('Sistema de punição Lunar | Muito obrigado por me escolher para punir este membro!', this.client.user.displayAvatarURL({ dynamic: true, format: "png" }))
-        )
+        interaction.channel.send({
+          embeds: [
+            new Discord.MessageEmbed()
+            .setColor("#A020F0")
+            .setDescription(`<:Hammer:842549266480234516>・**_${interaction.user.toString()}, ${user.toString()} foi banido com sucesso!_**${(notifyDM == false) ? `\nNão foi possivel notificalo via dm.` : ""}`)
+            .setFooter('Sistema de punição Lunar | Muito obrigado por me escolher para punir este membro!', this.client.user.displayAvatarURL({ dynamic: true, format: "png" }))
+          ]
+        })
 
-        let channel_modlogs = interaction.guild.channels.cache.get(configs.ChatModLogs)
-        if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send(message_modlogs(interaction.user, user, reason, "ban"))
-        
+        let channel_modlogs = configs.ChatModLogs ? interaction.guild.channels.cache.get(`${configs.ChatModLogs}`) : null
+        if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send({ embeds: [message_modlogs(interaction.user, user, reason, "ban")] })
       }
     })
 

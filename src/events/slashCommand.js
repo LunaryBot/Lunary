@@ -37,7 +37,7 @@ module.exports = class SlashCommandEvent extends Event {
         try {
             await command.run(interaction, t, db)
         } catch (e) {
-            if(!interaction.deferred) interaction.reply({
+            if(!interaction.replied) interaction.reply({
                 embeds: [
                     new MessageEmbed()
                     .setColor("#FF0000")
