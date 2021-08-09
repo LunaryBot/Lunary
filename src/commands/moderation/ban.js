@@ -3,6 +3,7 @@ const Discord = require("discord.js")
 const MessageButton = require("../../structures/components/MessageButton")
 const MessageActionRow = require("../../structures/components/MessageActionRow")
 const message_modlogs = require("../../utils/message_modlogs")
+const message_punish = require("../../utils/message_punish")
 const ObjRef = require("../../utils/objref/ObjRef")
 const ButtonCollector = require("../../structures/components/MessageButtonCollector")
 
@@ -158,6 +159,8 @@ module.exports = class CleanCommand extends Command {
 
         let channel_modlogs = configs.ChatModLogs ? interaction.guild.channels.cache.get(`${configs.ChatModLogs}`) : null
         if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send({ embeds: [message_modlogs(interaction.user, user, reason, "ban")] })
+        let channel_punish = configs.ChatPunish ? interaction.guild.channels.cache.get(`${configs.ChatPunish}`) : null
+        if(channel_punish && channel_punish.permissionsFor(this.client.user.id).has(18432)) channel_punish.send({ embeds: [message_punish(interaction.user, user, reason, "ban", t, this.client)] })
       }
     })
 

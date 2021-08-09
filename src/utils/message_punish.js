@@ -18,7 +18,7 @@ module.exports = function message_modlogs(author, user, reason, type, t, client)
         `**<:Autor:816454125670891520>•Informações do autor:**`,
         `>  **Nome:** \`${author.tag}\``,
         `>  **ID:** \`${author.id}\``
-    ])
+    ].join("\n"))
     .addField(`<:Motivo:816454218570792990>•Motivo:`, `>>>  ${reason}`)
     .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png" }))
     .setTimestamp()
