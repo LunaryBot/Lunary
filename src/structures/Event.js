@@ -1,9 +1,9 @@
-const { ClientBase } = require("../Lunary")
+const client = require("../Lunary")
 
 module.exports = class Event {
     /**
      * @param {String} type 
-     * @param {ClientBase} client 
+     * @param {client} client 
      * @param {Boolean} ws 
      */
     constructor(type = null, client, ws = false) {

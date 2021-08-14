@@ -27,8 +27,8 @@ class Lunary extends Client {
 
         firebase.initializeApp(this.config.firebaseConfig)
         this.db = firebase.database()
-        let db2 = firebase.initializeApp(this.config.firebaseConfig2, "logs")
-        this.db2 = db2.database()
+        let logsDB = firebase.initializeApp(this.config.firebaseConfig2, "logs")
+        this.logsDB = logsDB.database()
         
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
@@ -45,24 +45,24 @@ class Lunary extends Client {
     loadLanguage() {
         this.langs = []
         require("./handlers/langHandler")(this)
+        return this.langs
     }
 
     loadEvents() {
         this.events = []
         require("./handlers/eventHandler")(this)
+        return this.events
     }
 
     loadCommands() {
         this.commands = []
         require("./handlers/commandHandler")(this)
+        return this.commands
     }
 }
 
 const client = new Lunary()
 
-module.exports = {
-    client: client, 
-    ClientBase: Lunary
-}
+module.exports = client
 
 client.init()

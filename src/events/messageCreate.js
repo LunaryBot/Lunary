@@ -19,12 +19,11 @@ module.exports = class MessageEvent extends Event {
     db = new ObjRef(db)
     
     const ctx = {
-      args: new Map().set("code", message.content.slice("luna eval ".length).replace(coderegex, "$1")),
       channel: message.channel,
       member: message.member,
-      author: message.author,
+      user: message.author,
       reply: async function(data) {
-        return message.quote(data.content)
+        return message.quote(data)
       }
     }
 
