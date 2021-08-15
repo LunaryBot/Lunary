@@ -30,7 +30,6 @@ module.exports = class MessageCreateEvent extends Event {
     
     try {
       const args = message.content.replace(regexp, '').trim().split(/ +/g)
-      console.log(message.content.replace(regexp, '$1'))
       if(!args.length) return
       const command = this.client.commands.vanila.find(x => x.name == args.shift().toLowerCase())
       if(!command) return
@@ -54,7 +53,7 @@ module.exports = class MessageCreateEvent extends Event {
         user: message.author,
         command: command,
         slash: false,
-        prefix: defaultprefix,
+        prefix: message.content.replace(message.content.replace(regexp, ''), ''),
         dm: !Boolean(message.guild)
       }, { guildsDB: GuildsDB, usersDB: UsersDB })
 
