@@ -4,7 +4,7 @@ const ObjRef = require("../utils/objref/ObjRef")
 const { GuildDB } = require("./GuildDB")
 
 module.exports = class ContextCommand {
-    constructor({client, message = null, interaction = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
+    constructor({client, message = null, interaction = null, args = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
         
         /**
          * @type {_client}
@@ -15,6 +15,11 @@ module.exports = class ContextCommand {
          * @type {?Message}
          */
         this.message = message
+
+        /**
+         * @type {?Array}
+         */
+        this.args = args
         
         /**
          * @type {?CommandInteraction}

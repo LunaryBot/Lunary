@@ -67,4 +67,5 @@ const client = new Lunary()
 
 module.exports = client
 
+process.on('warning', () => console.log("Erro!"));
 client.init()

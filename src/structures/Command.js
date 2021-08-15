@@ -5,13 +5,14 @@ module.exports = class Command {
     * @param {_client} client
     * @param {String} name
     * @param {String} description
+    * @param {?Array} aliases
     * @param {String} category
     * @param {String} dirname
     */
-
     constructor({
         name = null,
         description = null,
+        aliases = null,
         category = null,
         dirname = null,
         subcommands = [],
@@ -21,6 +22,7 @@ module.exports = class Command {
         this.client = client
         this.name = name
         this.description = description
+        this.aliases = aliases
         this.category = category
         this.dirname = dirname
         this.subcommands = subcommands

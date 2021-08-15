@@ -63,9 +63,9 @@ module.exports = class InteractionCreateEvent extends Event {
                     .setFooter("Desculpa pelo transtorno.")
                 ]
             }
-            if(!interaction.guild && !interaction.replied) return interaction.reply(data)
-            else if(!interaction.guild && interaction.replied) return interaction.editReply(data)
-            else return interaction.channel.send(data)
+            if(!interaction.guild && !interaction.replied) return interaction.reply(data).catch(() => {})
+            else if(!interaction.guild && interaction.replied) return interaction.editReply(data).catch(() => {})
+            else return interaction.channel.send(data).catch(() => {})
         }
     }
 }
