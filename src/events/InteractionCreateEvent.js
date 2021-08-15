@@ -1,10 +1,7 @@
 const Event = require("../structures/Event")
-const axios = require("axios")
-const InteractionMessage = require("../structures/InteractionMessage")
-const MessageComponent = require("../structures/components/MessageComponent")
-const { Interaction, CommandInteraction } = require("discord.js")
-const InteractionArgs = require("../structures/InteractionArgs")
+const { Interaction, CommandInteraction, MessageEmbed } = require("discord.js")
 const { configPermissions } = require("../structures/BotPermissions")
+const ContextCommand = require("../structures/ContextCommand")
 
 module.exports = class InteractionCreateEvent extends Event {
     constructor(client) {
@@ -18,8 +15,7 @@ module.exports = class InteractionCreateEvent extends Event {
      */
 
     async run(interaction) {
-        if (interaction.isCommand()) return this.client.emit("slashCommand", interaction)
-        if(interaction.isButton()) return this.client.emit("clickButton", interaction)
+        if (interaction.isCommand()) return this.executeCommand(interaction)
     }
 
     /**
@@ -30,25 +26,31 @@ module.exports = class InteractionCreateEvent extends Event {
 
     async executeCommand(interaction) {
         let command = interaction.commandName ? interaction.commandName.toLowerCase() : undefined
-        command = this.client.commands.find(c => c.name == command)
+        command = this.client.commands.slash.find(c => c.name == command)
         if(!command) return;
 
-        let guild = this.client.guilds.cache.get(interaction.guild.id)
-        let client = this.client
-        let pingDB = Date.now()
-        let db = await this.client.db.ref().once('value')
-        db = db.val()
-        pingDB = Date.now() - pingDB
+        let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
+        if(GuildsDB) GuildsDB = GuildsDB.val() || {}
 
-        db = new ObjRef(db)
-        db.ping = pingDB
+        let UsersDB = await this.client.UsersDB.ref().once('value')
+        UsersDB = UsersDB.val() || {}
 
-        interaction.member.botpermissions = BotPermissions(interaction.member, db)
+        const ctx = new ContextCommand({
+            client: this.client,
+            interaction: interaction,
+            guild: interaction.guild,
+            channel: interaction.channel,
+            user: interaction.user,
+            command: command,
+            slash: true
+        }, { guildsDB: GuildsDB, usersDB: UsersDB })
+
+        ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
 
         let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
 
         try {
-            await command.run(interaction, t, db)
+            await command.run(ctx)
         } catch (e) {
             interaction.channel.send({
                 content: `${interaction.user.toString()}`,

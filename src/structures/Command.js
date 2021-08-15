@@ -1,7 +1,8 @@
-const { client } = require("../Lunary")
+const _client = require("../Lunary")
+
 module.exports = class Command {
     /**
-    * @param {client} client
+    * @param {_client} client
     * @param {String} name
     * @param {String} description
     * @param {String} category
@@ -14,7 +15,8 @@ module.exports = class Command {
         category = null,
         dirname = null,
         subcommands = [],
-        permissions = {}
+        permissions = {},
+        dm = false
     }, client) {
         this.client = client
         this.name = name
@@ -23,6 +25,11 @@ module.exports = class Command {
         this.dirname = dirname
         this.subcommands = subcommands
         this.permissions = permissions
+        this.dm = false
+    }
+
+    isDM() {
+        return this.dm
     }
 
     verifyPerms(member, me) {

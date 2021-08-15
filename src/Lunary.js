@@ -11,7 +11,7 @@ class Lunary extends Client {
     constructor() {
         super({
             shards: ClusterClient.getinfo().SHARD_LIST,
-	        shardCount: ClusterClient.getinfo().TOTAL_SHARDS,
+            shardCount: ClusterClient.getinfo().TOTAL_SHARDS,
             intents: 1719,
             ws: {
                 properties: { 
@@ -25,10 +25,12 @@ class Lunary extends Client {
         this.shard = new ShardManager(this)
         this.logger = new Logger(this.cluster)
 
-        firebase.initializeApp(this.config.firebaseConfig)
-        this.db = firebase.database()
-        let logsDB = firebase.initializeApp(this.config.firebaseConfig2, "logs")
-        this.logsDB = logsDB.database()
+        firebase.initializeApp(this.config.firebaseConfigGuilds)
+        this.GuildsDB = firebase.database()
+        this.db = this.GuildsDB
+
+        const UsersDB = firebase.initializeApp(this.config.firebaseConfigUsers, "users")
+        this.UsersDB = UsersDB.database()
         
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
@@ -55,7 +57,7 @@ class Lunary extends Client {
     }
 
     loadCommands() {
-        this.commands = []
+        this.commands = {}
         require("./handlers/commandHandler")(this)
         return this.commands
     }

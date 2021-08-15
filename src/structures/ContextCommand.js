@@ -1,10 +1,9 @@
-const _client = require('../Lunary.js')
-const { Message, User, Guild, GuildMember, DMChannel, GuildChannel } = require("discord.js")
-const Command = require("./Command")
-const ObjRef = require('../utils/objref/ObjRef.js')
+const _client = require("../Lunary")
+const { Message, CommandInteraction, User, Guild, GuildMember, DMChannel, GuildChannel } = require("discord.js")
+const ObjRef = require("../utils/objref/ObjRef")
 
-class ContextCommand {
-    constructor({client, message = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
+module.exports = class ContextCommand {
+    constructor({client, message = null, interaction = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
         
         /**
          * @type {_client}
@@ -15,6 +14,11 @@ class ContextCommand {
          * @type {?Message}
          */
         this.message = message
+        
+        /**
+         * @type {?CommandInteraction}
+         */
+        this.interaction = interaction
 
         /**
          * @type {User}
@@ -24,7 +28,7 @@ class ContextCommand {
         /**
          * @type {Guild}
          */
-        this.guild = dm == true ? guild : null
+        this.guild = dm == false ? guild : null
         
         /**
          * @type {GuildChannel}
@@ -34,12 +38,12 @@ class ContextCommand {
         /**
          * @type {GuildMember}
          */
-        this.member = dm == true ? this.guild.members.cache.get(this.user.id) : null
+        this.member = dm == false ? this.guild.members.cache.get(this.author.id) : null
         
         /**
          * @type {GuildMember}
          */
-        this.me = dm == true ? this.guild.me : this.client 
+        this.me = dm == false ? this.guild.me : this.client 
 
         /**
          * @type {Command}
@@ -59,10 +63,14 @@ class ContextCommand {
         /**
          * @type {?string}
          */
-        this.prefix = prefix || null
+        this.prefix = this.slash == true ? "/" : prefix || null
 
         this.GuildDB = guildsDB
-        
+
         this.UserDB = usersDB
+
+        this.GuildsDB = new ObjRef(guildsDB || {})
+
+        this.UsersDB = new ObjRef(usersDB || {})
     }
-} // https://lunary.ml/
+}

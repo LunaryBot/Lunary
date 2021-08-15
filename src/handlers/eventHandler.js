@@ -1,7 +1,7 @@
 const fs = require("fs")
 
 module.exports = (client) => {
-  let events = fs.readdirSync(__dirname + "/../events").filter(file => file.split(".").pop() == "js");
+  let events = fs.readdirSync(__dirname + "/../events").filter(file => file.endsWith("Event.js"));
   for(let event of events) {
     let base = require(__dirname + `/../events/${event}`)
     if(typeof base == "function") {

@@ -1,6 +1,5 @@
-const Command = require("../../structures/Command")
+const { Command, ContextCommand } = require("../../../structures/Command")
 const Discord = require("discord.js")
-const ObjRef = require("../../utils/objref/ObjRef")
 
 module.exports = class CleanCommand extends Command {
     constructor(client) {
