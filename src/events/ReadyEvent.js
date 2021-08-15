@@ -7,8 +7,12 @@ module.exports = class ReadyEvent extends Event {
 
   run() {
     this.client.logger.log(`Client conectado ao Discord!`, { key: "Client", cluster: true, date: true })
+  }
+}
 
-    this.client.api.applications(this.client.user.id).guilds("869916717122469898").commands.post({
+/* 
+
+this.client.api.applications(this.client.user.id).guilds("869916717122469898").commands.post({
       data: {
         name: 'eval',
         description: '〔🛠️ • Owner〕Executa um código JavaScript',
@@ -69,5 +73,4 @@ module.exports = class ReadyEvent extends Event {
         ]
       }
     })
-  }
-}
+*/
