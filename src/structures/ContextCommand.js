@@ -1,6 +1,7 @@
 const _client = require("../Lunary")
 const { Message, CommandInteraction, User, Guild, GuildMember, DMChannel, GuildChannel } = require("discord.js")
 const ObjRef = require("../utils/objref/ObjRef")
+const { GuildDB } = require("./GuildDB")
 
 module.exports = class ContextCommand {
     constructor({client, message = null, interaction = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
@@ -28,7 +29,7 @@ module.exports = class ContextCommand {
         /**
          * @type {Guild}
          */
-        this.guild = dm == false ? guild : null
+        this.guild = guild || null
         
         /**
          * @type {GuildChannel}
@@ -38,12 +39,12 @@ module.exports = class ContextCommand {
         /**
          * @type {GuildMember}
          */
-        this.member = dm == false ? this.guild.members.cache.get(this.author.id) : null
+        this.member = this.guild ? this.guild.members.cache.get(this.author.id) : null
         
         /**
          * @type {GuildMember}
          */
-        this.me = dm == false ? this.guild.me : this.client 
+        this.me = this.guild ? this.guild.me : this.client 
 
         /**
          * @type {Command}
@@ -64,13 +65,11 @@ module.exports = class ContextCommand {
          * @type {?string}
          */
         this.prefix = this.slash == true ? "/" : prefix || null
-
-        this.GuildDB = guildsDB
-
-        this.UserDB = usersDB
-
+        
         this.GuildsDB = new ObjRef(guildsDB || {})
-
         this.UsersDB = new ObjRef(usersDB || {})
+
+        this.GuildDB = this.guild ? new GuildDB(this.GuildsDB.ref(`Servidores/${this.guild.id}/`).val()) : null
+        this.UserDB = this.UsersDB.ref(`Users/${this.author.id}/`).val()
     }
 }

@@ -23,36 +23,37 @@ module.exports = class InteractionCreateEvent extends Event {
      * @param {CommandInteraction} interaction 
      * @returns 
      */
-
+    
     async executeCommand(interaction) {
-        let command = interaction.commandName ? interaction.commandName.toLowerCase() : undefined
-        command = this.client.commands.slash.find(c => c.name == command)
-        if(!command) return;
-
-        let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
-        if(GuildsDB) GuildsDB = GuildsDB.val() || {}
-
-        let UsersDB = await this.client.UsersDB.ref().once('value')
-        UsersDB = UsersDB.val() || {}
-
-        const ctx = new ContextCommand({
-            client: this.client,
-            interaction: interaction,
-            guild: interaction.guild,
-            channel: interaction.channel,
-            user: interaction.user,
-            command: command,
-            slash: true
-        }, { guildsDB: GuildsDB, usersDB: UsersDB })
-
-        ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
-
-        let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
-
         try {
+            let command = interaction.commandName ? interaction.commandName.toLowerCase() : undefined
+            command = this.client.commands.slash.find(c => c.name == command)
+            if(!command) return;
+
+            let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
+            if(GuildsDB) GuildsDB = GuildsDB.val() || {}
+
+            let UsersDB = await this.client.UsersDB.ref().once('value')
+            UsersDB = UsersDB.val() || {}
+
+            const ctx = new ContextCommand({
+                client: this.client,
+                interaction: interaction,
+                guild: interaction.guild,
+                channel: interaction.channel,
+                user: interaction.user,
+                command: command,
+                slash: true,
+                dm: !Boolean(interaction.guild)
+            }, { guildsDB: GuildsDB, usersDB: UsersDB })
+
+            if(ctx.dm == false) ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
+
+            let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
+
             await command.run(ctx)
         } catch (e) {
-            interaction.channel.send({
+            const data = {
                 content: `${interaction.user.toString()}`,
                 embeds: [
                     new MessageEmbed()
@@ -61,7 +62,10 @@ module.exports = class InteractionCreateEvent extends Event {
                     .addField("Erro:", `\`\`\`js\n${`${e}`.shorten(1990)}\`\`\``)
                     .setFooter("Desculpa pelo transtorno.")
                 ]
-            })
+            }
+            if(!interaction.guild && !interaction.replied) return interaction.reply(data)
+            else if(!interaction.guild && interaction.replied) return interaction.editReply(data)
+            else return interaction.channel.send(data)
         }
     }
 }

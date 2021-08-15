@@ -1,8 +1,9 @@
 const { Collection } = require("discord.js")
 const { Permissions } = require("./BotPermissions")
+const BitField = require("./BitField")
 
 class GuildDB {
-    constructor(data) {
+    constructor(data = {}) {
         this.perms = new Collection()
         this.chat_modlogs = data.chat_modlogs || null
         this.chat_punish = data.chat_punish || null
@@ -41,4 +42,9 @@ class GuildConfigs extends BitField {
     static get defaultBit() {
         return 0
     }
+}
+
+module.exports = {
+    GuildDB: GuildDB,
+    GuildConfigs: GuildConfigs
 }
