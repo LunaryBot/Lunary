@@ -13,7 +13,7 @@ module.exports = function confirm_punish(ctx, user, reason) {
             new Discord.MessageEmbed()
             .setColor("#FF0000")
             .setAuthor(ctx.t("confirm_punish/title"), "https://cdn.discordapp.com/emojis/829429780155858974.gif?v=1")
-            .setDescription(`**- ${ctx.t("confirm_punish/description")}**\nㅤ${user.toString()} (\`${user.id}\`)`)
+            .setDescription(`**- ${ctx.t("confirm_punish/description")}**\nㅤ${user.toString()} (\`${user.tag} - ${user.id}\`)`)
             .addField(`<:Motivo:816454218570792990> • ${ctx.t("geral/reason")}:`, `ㅤ${reason}`)
             .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
             .setFooter(`${ctx.t("geral/requested_by")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))

@@ -32,7 +32,7 @@ module.exports = class MessageCreateEvent extends Event {
       const args = message.content.replace(regexp, '').trim().split(/ +/g)
       if(!args.length) return
       const commandName = args.shift()?.toLowerCase()
-      const command = this.client.commands.vanila.find(c => c.name == commandName || (Array.isArray(c.aliases) && c.aliases.includes(commandName)))
+      const command = this.client.commands.vanilla.find(c => c.name == commandName || (Array.isArray(c.aliases) && c.aliases.includes(commandName)))
       if(!command) return
       if(message.guild) {
         const perms = message.channel.permissionsFor(this.client.user.id);
