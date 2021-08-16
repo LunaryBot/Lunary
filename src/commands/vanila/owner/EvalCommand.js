@@ -3,6 +3,8 @@ const ContextCommand = require("../../../structures/ContextCommand")
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require("child_process");
 const Discord = require("discord.js");
+const confirm_punish = require("../../../utils/confirm_punish");
+const highest_position = require("../../../utils/highest_position");
 
 module.exports = class EvalCommand extends Command {
     constructor(client) {

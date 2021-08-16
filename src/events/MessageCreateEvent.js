@@ -42,7 +42,6 @@ module.exports = class MessageCreateEvent extends Event {
         if(!perms.has("ATTACH_FILES")) return message.reply(`> Eu preciso de permissão de \`Anexar arquivos\``)
       }
 
-
       let UsersDB = await this.client.UsersDB.ref().once('value')
       UsersDB = UsersDB.val() || {}
 
@@ -60,7 +59,6 @@ module.exports = class MessageCreateEvent extends Event {
       }, { guildsDB: GuildsDB, usersDB: UsersDB })
 
       if(ctx.dm == false) ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
-      let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
 
       await command.run(ctx)
     } catch (e) {

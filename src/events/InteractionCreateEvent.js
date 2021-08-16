@@ -49,8 +49,6 @@ module.exports = class InteractionCreateEvent extends Event {
 
             if(ctx.dm == false) ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
 
-            let t = this.client.langs.find(x => x.lang == null || "pt-BR").t
-
             await command.run(ctx)
         } catch (e) {
             const data = {

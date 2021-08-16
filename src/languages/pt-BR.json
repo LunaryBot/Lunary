@@ -1,12 +1,20 @@
 {
-    "user_not_found": "<:NaoRed:818109994112516136> | Usuário não encontrado.",
-    "reason_obr": "<:NaoRed:818109994112516136> | É preciso informar um motivo para a punição.",
-    "reason_not_informed": "Motivo não informado.",
-    "not_punishable": "<:NaoRed:818109994112516136> | Eu não tenho permissão para punir este usuário.",
-    "highest_position": "<:NaoRed:818109994112516136> | Você não pode punir um membro com funções iguais/superiores a sua.",
-    "very_big_reason": "<:NaoRed:818109994112516136> | O motivo deve conter no máximo `450` caracteres.",
+    "punished_by": "Punido por {author_tag} - Motivo: {reason}",
     "default_message_punish": "{emoji} Você foi {punish} **{guild_name}**\n**`[MOTIVO]`:** {reason}",
-    "punished_by": "{punish} por {author_tag} - Motivo: {reason}",
+    "geral": {
+        "user_not_found": "Usuário não encontrado.",
+        "reason_obr": "É preciso informar um motivo para a punição.",
+        "not_punishable": "Eu não tenho permissão para punir este usuário.",
+        "reason_not_informed": "Motivo não informado.",
+        "very_big_reason": "O motivo deve conter no máximo `450` caracteres.",
+        "highest_position": "Você não pode punir um membro com funções iguais/superiores a sua.",
+        "requested_by": "Requisitado por",
+        "reason": "Motivo inserido"
+    },
+    "confirm_punish": {
+        "title": "Confirme a punição a seguir:",
+        "description": "Você realmente deseja punir o usuário informado?"
+    },
     "clean": {
 
     },

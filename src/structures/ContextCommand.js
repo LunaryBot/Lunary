@@ -2,6 +2,7 @@ const _client = require("../Lunary")
 const { Message, CommandInteraction, User, Guild, GuildMember, DMChannel, GuildChannel } = require("discord.js")
 const ObjRef = require("../utils/objref/ObjRef")
 const { GuildDB } = require("./GuildDB")
+const Language = require("../languages/Language")
 
 module.exports = class ContextCommand {
     constructor({client, message = null, interaction = null, args = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
@@ -76,5 +77,12 @@ module.exports = class ContextCommand {
 
         this.GuildDB = this.guild ? new GuildDB(this.GuildsDB.ref(`Servidores/${this.guild.id}/`).val()) : null
         this.UserDB = this.UsersDB.ref(`Users/${this.author.id}/`).val()
+
+        /**
+         * @type {Language}
+         */
+        const lang = this.client.langs.find(x => x.lang == null || "pt-BR")
+        
+        this.t = lang.t
     }
 }
