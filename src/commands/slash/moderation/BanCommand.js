@@ -84,6 +84,38 @@ module.exports = class NameCommand extends Command {
             ]
         })
 
-        await ctx.interaction.reply(confirm_punish(ctx, user, reason))
+        if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
+            await ctx.interaction.reply(confirm_punish(ctx, user, reason))
+
+            const msg = await ctx.interaction.fetchReply()
+            
+            const colletor = msg.createMessageComponentCollector((c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.message.author.id), { time: 1 * 1000 * 60, max: 1 })
+
+            colletor.on("collect", async c => {
+                await c.deferUpdate().catch(() => {})
+                if(c.customId != "confirm_punish") return ctx.interaction.deleteReply()
+
+                ctx.interaction.editReply(await ban())
+            })
+        } else ctx.interaction.reply(await ban())
+
+        async function ban() {
+            let notifyDM = true
+            try {
+                if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/ban", {
+                    emoji: ":hammer:",
+                    guild_name: ctx.guild.name,
+                    reason: reason
+                }))
+            } catch(_) {
+                notifyDM = false
+            }
+
+            
+
+            return {
+                content: "Calma"
+            }
+        }
     }
 }

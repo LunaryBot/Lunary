@@ -3,9 +3,10 @@ const { Permissions } = require("./BotPermissions")
 const BitField = require("./BitField")
 
 class UserDB {
-    constructor(data = {}) {
+    constructor(data = {}, perms) {
         this.aboutme = data.aboutme || ""
         this.configs = new UserConfigs(data.configs || 0)
+        if(perms) this.permissions = perms
     }
 }
 
@@ -40,6 +41,6 @@ class UserConfigs extends BitField {
 }
 
 module.exports = {
-    GuildDB: GuildDB,
-    GuildConfigs: GuildConfigs
+    UserDB: UserDB,
+    UserConfigs: UserConfigs
 }

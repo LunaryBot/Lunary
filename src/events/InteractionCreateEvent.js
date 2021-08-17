@@ -46,12 +46,10 @@ module.exports = class InteractionCreateEvent extends Event {
                 slash: true,
                 dm: !Boolean(interaction.guild)
             }, { guildsDB: GuildsDB, usersDB: UsersDB })
-
-            if(ctx.dm == false) ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
-
+            
             await command.run(ctx)
         } catch (e) {
-            const data = {
+            interaction.channel.send({
                 content: `${interaction.user.toString()}`,
                 embeds: [
                     new MessageEmbed()
@@ -60,10 +58,7 @@ module.exports = class InteractionCreateEvent extends Event {
                     .addField("Erro:", `\`\`\`js\n${`${e}`.shorten(1990)}\`\`\``)
                     .setFooter("Desculpa pelo transtorno.")
                 ]
-            }
-            if(!interaction.guild && !interaction.replied) return interaction.reply(data).catch(() => {})
-            else if(!interaction.guild && interaction.replied) return interaction.editReply(data).catch(() => {})
-            else return interaction.channel.send(data).catch(() => {})
+            }).catch(() => {})
         }
     }
 }

@@ -1,6 +1,8 @@
 {
     "punished_by": "Punido por {author_tag} - Motivo: {reason}",
-    "default_message_punish": "{emoji} Você foi {punish} **{guild_name}**\n**`[MOTIVO]`:** {reason}",
+    "default_dm_messages_punish": {
+        "ban": "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
+    },
     "geral": {
         "user_not_found": "Usuário não encontrado.",
         "reason_obr": "É preciso informar um motivo para a punição.",
