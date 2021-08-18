@@ -30,7 +30,7 @@ module.exports = class NameCommand extends Command {
         if(!user) return await ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
-                .setDescription(`**<:NaoRed:818109994112516136> • ${ctx.t("geral/user_not_found")}**`)
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
                 .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                 .setColor("#FF0000")
                 .setTimestamp()
@@ -42,7 +42,7 @@ module.exports = class NameCommand extends Command {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
                     new Discord.MessageEmbed()
-                    .setDescription(`**<:NaoRed:818109994112516136> • ${ctx.t("geral/reason_obr")}**`)
+                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/reason_obr")}**`)
                     .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                     .setColor("#FF0000")
                     .setTimestamp()
@@ -56,7 +56,7 @@ module.exports = class NameCommand extends Command {
             // if(!membro.bannable) return await ctx.interaction.reply({
             //   embeds: [
             //     new Discord.MessageEmbed()
-            //     .setDescription(`**<:NaoRed:818109994112516136> • ${ctx.t("geral/not_punishable")}**`)
+            //     .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
             //     .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
             //     .setColor("#FF0000")
             //     .setTimestamp()
@@ -66,7 +66,7 @@ module.exports = class NameCommand extends Command {
             if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
                 embeds: [
                     new Discord.MessageEmbed()
-                    .setDescription(`**<:NaoRed:818109994112516136> • ${ctx.t("geral/highest_position")}**`)
+                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
                     .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                     .setColor("#FF0000")
                     .setTimestamp()
@@ -77,7 +77,7 @@ module.exports = class NameCommand extends Command {
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
-                .setDescription(`**<:NaoRed:818109994112516136> • ${ctx.t("geral/very_big_reason")}**`)
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/very_big_reason")}**`)
                 .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                 .setColor("#FF0000")
                 .setTimestamp()
@@ -89,7 +89,8 @@ module.exports = class NameCommand extends Command {
 
             const msg = await ctx.interaction.fetchReply()
             
-            const colletor = msg.createMessageComponentCollector((c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.message.author.id), { time: 1 * 1000 * 60, max: 1 })
+            const filter = c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.author.id
+            const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 60, max: 1 })
 
             colletor.on("collect", async c => {
                 await c.deferUpdate().catch(() => {})
@@ -110,8 +111,6 @@ module.exports = class NameCommand extends Command {
             } catch(_) {
                 notifyDM = false
             }
-
-            
 
             return {
                 content: "Calma"

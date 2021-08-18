@@ -6,6 +6,7 @@ require("./functions/shorten")
 const moment = require("moment")
 require("moment-duration-format")
 const firebase = require("firebase")
+global.emojis = require("./utils/emojisInstance")
 
 class Lunary extends Client {
     constructor() {
