@@ -8,14 +8,14 @@ const {message_modlogs, message_punish, randomCharacters, ObjRef} = require("../
 module.exports = class NameCommand extends Command {
     constructor(client) {
         super({
-            name: "ban",
-            description: "Bane um usuário do servidor.",
+            name: "kick",
+            description: "Expulsa um usuário do servidor.",
             category: "moderation",
             dirname: __dirname,
             permissions: {
-                Discord: ["BAN_MEMBERS"],
-                Bot: ["LUNAR_BAN_MEMBERS"],
-                Lunar: ["BAN_MEMBERS"]
+                Discord: ["KICK_MEMBERS"],
+                Bot: ["LUNAR_KICK_MEMBERS"],
+                Lunar: ["KICK_MEMBERS"]
             },
             dm: false
         }, client)
@@ -26,13 +26,13 @@ module.exports = class NameCommand extends Command {
      */
 
     async run(ctx) {
-        const user = await ctx.interaction.options.getUser("user") || await this.client.users.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const user = await ctx.interaction.options.getMember("user") || await ctx.guild.members.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
                 .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                 .setColor("#FF0000")
                 .setTimestamp()
             ]
@@ -44,7 +44,7 @@ module.exports = class NameCommand extends Command {
                 embeds: [
                     new Discord.MessageEmbed()
                     .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/reason_obr")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                    .setFooter(ctx.interaction.user.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                     .setColor("#FF0000")
                     .setTimestamp()
                 ]
@@ -52,28 +52,25 @@ module.exports = class NameCommand extends Command {
             else reason = ctx.t("geral/reason_not_informed")
         }
 
-        const membro = await ctx.interaction.guild.members.fetch(user.id).catch(() => {})
-        if(membro) {
-            if(!membro.bannable) return await ctx.interaction.reply({
-              embeds: [
+        if(!user.bannable) return await ctx.interaction.reply({
+            embeds: [
                 new Discord.MessageEmbed()
                 .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
                 .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
                 .setColor("#FF0000")
                 .setTimestamp()
-              ]
-            })
+            ]
+        })
             
-            if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
-                embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
-                ]
-            })
-        }
+        if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
+            embeds: [
+                new Discord.MessageEmbed()
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
+                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setColor("#FF0000")
+                .setTimestamp()
+            ]
+        })
 
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
@@ -86,7 +83,7 @@ module.exports = class NameCommand extends Command {
         })
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
-            await ctx.interaction.reply(confirm_punish(ctx, user, reason))
+            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason))
 
             const msg = await ctx.interaction.fetchReply()
             
@@ -97,22 +94,22 @@ module.exports = class NameCommand extends Command {
                 await c.deferUpdate().catch(() => {})
                 if(c.customId != "confirm_punish") return ctx.interaction.deleteReply().catch(() => {})
 
-                let _ban = await ban()
-                ctx.interaction.editReply(_ban).catch(() => {})
+                let _kick = await kick()
+                ctx.interaction.editReply(_kick).catch(() => {})
             })
             colletor.on("end", () => {
                 if(!colletor.endReason) return ctx.interaction.deleteReply().catch(() => {})
             })
         } else {
-            let _ban = await ban()
-            ctx.interaction.reply(_ban).catch(() => {})
+            let kick = await kick()
+            ctx.interaction.reply(_kick).catch(() => {})
         }
 
-        async function ban() {
+        async function kick() {
             let notifyDM = true
             try {
-                if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/ban", {
-                    emoji: ":hammer:",
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/kick", {
+                    emoji: ":hiking_boot:",
                     guild_name: ctx.guild.name,
                     reason: reason
                 }))
@@ -120,10 +117,10 @@ module.exports = class NameCommand extends Command {
                 notifyDM = false
             }
 
-            await ctx.guild.members.ban(user.id, {reason: ctx.t("geral/punished_by", {
+            await user.kick(ctx.t("geral/punished_by", {
                 author_tag: ctx.author.tag,
                 reason: reason
-            })})
+            }))
 
            let logs = await ctx.client.LogsDB.ref().once("value")
             logs = logs.val() || {}
@@ -137,7 +134,7 @@ module.exports = class NameCommand extends Command {
             }
 
             const log = Buffer.from(JSON.stringify({
-                type: 1,
+                type: 2,
                 author: ctx.author.id,
                 user: user.id,
                 server: ctx.guild.id,
@@ -150,18 +147,18 @@ module.exports = class NameCommand extends Command {
             const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
             if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
                 embeds: [
-                    message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client, ctx.UserDB.gifs.ban)
+                    message_punish(ctx.author, user.user, reason, "kick", ctx.t, ctx.client, ctx.UserDB.gifs.kick)
                 ]
             })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
-                    message_modlogs(ctx.author, user, reason, "ban", ctx.t, id)
+                    message_modlogs(ctx.author, user.user, reason, "kick", ctx.t, id)
                 ]
             })
 
             return {
-                content: `:tada: ─ ${ctx.author.toString()}, o usuário ${user.toString()} (\`${user.tag} - ${user.id}\`) foi punido com sucesso${!notifyDM ? ", mas infelizmente não foi possível notifica-lo na DM." : "."}\n\n**ID da Punição:**\n\`\`\`${id}\`\`\`\n||Obrigado pela preferência! :partying_face:||`,
+                content: `:tada: ─ ${ctx.author.toString()}, o usuário ${user.toString()} (\`${user.user.tag} - ${user.user.id}\`) foi punido com sucesso${!notifyDM ? ", mas infelizmente não foi possível notifica-lo na DM." : "."}\n\n**ID da Punição:**\n\`\`\`${id}\`\`\`\n||Obrigado pela preferência! :partying_face:||`,
                 embeds: [],
                 components: []
             }

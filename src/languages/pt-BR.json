@@ -1,6 +1,7 @@
 {
     "default_dm_messages_punish": {
-        "ban": "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
+        "ban": "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}",
+        "kick": "{emoji} Você foi expulso de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
     },
     "default_message_punish": {
         "banned_user": "Usuário Banido",
@@ -33,11 +34,5 @@
     "confirm_punish": {
         "title": "Confirme a punição a seguir:",
         "description": "Você realmente deseja punir o usuário informado?"
-    },
-    "clean": {
-
-    },
-    "ping": {
-        "ping_database": "Banco de dados"
     }
 }

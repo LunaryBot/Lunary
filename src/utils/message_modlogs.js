@@ -3,6 +3,10 @@ const p = {
     ban: {
         cor: "RED",
         text: "Ban"
+    },
+    kick: {
+        cor: "#ea8935",
+        text: "Kick"
     }
 }
 

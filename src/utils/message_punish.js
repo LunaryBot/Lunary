@@ -2,8 +2,10 @@ const { MessageEmbed } = require("discord.js")
 const { format } = require("./format_time")
 const p = {
     "ban": {
-        image: "https://cdn.discordapp.com/emojis/818839929135956019.png?v=1",
         text: "banned"
+    },
+    "kick": {
+        text: "kicked"
     }
 }
 
