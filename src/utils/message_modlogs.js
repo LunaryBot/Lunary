@@ -13,6 +13,6 @@ module.exports = function message_modlogs(author, user, reason, type, t, id) {
     .setAuthor(`${p[type].text} | ${user.tag}`, user.displayAvatarURL({ dynamic: true, format: "png" }))
     .setDescription(`> ${global.emojis.get("author").mention} **${t("default_message_modlog/author")}:** ${author.toString()} (\`${author.id}\`)\n> ${global.emojis.get("user").mention} **${t("default_message_modlog/user")}:** ${user.toString()} (\`${user.id}\`)`)
     .addField(`${global.emojis.get("clipboard").mention} ${t("default_message_modlog/reason")}:`, `>>> ${reason.shorten(1010)}`, false)
-    .setFooter("ID: 1ecddd2c-2564-4fac-90c8-e50b1a710080")
+    .setFooter("ID: " + id)
     .setTimestamp()
 }

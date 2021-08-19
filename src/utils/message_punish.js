@@ -22,6 +22,8 @@ module.exports = function message_modlogs(author, user, reason, type, t, client,
     if(time) embed.addField(`${global.emojis.get("time").mention}${t("default_message_punish/time")}`, `${format(time)}`)
     
     embed.addField(`${global.emojis.get("clipboard").mention}${t("default_message_punish/reason")}`, reason)
+    
+    if(gif) embed.image = gif
 
     return embed
 }

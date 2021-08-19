@@ -33,6 +33,9 @@ class Lunary extends Client {
         const UsersDB = firebase.initializeApp(this.config.firebaseConfigUsers, "users")
         this.UsersDB = UsersDB.database()
         
+        const LogsDB = firebase.initializeApp(this.config.firebaseConfigLogs, "logs")
+        this.LogsDB = LogsDB.database()
+        
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")
         })

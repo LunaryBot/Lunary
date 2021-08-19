@@ -17,7 +17,7 @@ module.exports = class Language {
                 output = output.replace(regex, a)
             })
             
-            return output
+            return output || ":bug:"
         }
     }
 }

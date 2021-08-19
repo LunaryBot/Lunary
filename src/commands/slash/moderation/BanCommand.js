@@ -3,8 +3,7 @@ const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
 const confirm_punish = require("../../../utils/confirm_punish")
 const highest_position = require("../../../utils/highest_position")
-const message_punish = require("../../../utils/message_punish")
-const message_modlogs = require("../../../utils/message_modlogs")
+const {message_modlogs, message_punish, randomCharacters, ObjRef} = require("../../../utils/index")
 
 module.exports = class NameCommand extends Command {
     constructor(client) {
@@ -53,17 +52,17 @@ module.exports = class NameCommand extends Command {
             else reason = ctx.t("geral/reason_not_informed")
         }
 
-        const membro = await ctx.interaction.guild.members.fetch(user.id)
+        const membro = await ctx.interaction.guild.members.fetch(user.id).catch(() => {})
         if(membro) {
-            // if(!membro.bannable) return await ctx.interaction.reply({
-            //   embeds: [
-            //     new Discord.MessageEmbed()
-            //     .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-            //     .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-            //     .setColor("#FF0000")
-            //     .setTimestamp()
-            //   ]
-            // })
+            if(!membro.bannable) return await ctx.interaction.reply({
+              embeds: [
+                new Discord.MessageEmbed()
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
+                .setFooter(ctx.interaction.user.tag, ctx.interaction.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setColor("#FF0000")
+                .setTimestamp()
+              ]
+            })
             
             if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
                 embeds: [
@@ -92,7 +91,7 @@ module.exports = class NameCommand extends Command {
             const msg = await ctx.interaction.fetchReply()
             
             const filter = c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.author.id
-            const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 10, max: 1, errors: ["time"] })
+            const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 60, max: 1, errors: ["time"] })
 
             colletor.on("collect", async c => {
                 await c.deferUpdate().catch(() => {})
@@ -121,21 +120,50 @@ module.exports = class NameCommand extends Command {
                 notifyDM = false
             }
 
+            await ctx.guild.members.ban(user.id, {reason: ctx.t("geral/punished_by", {
+                author_tag: ctx.author.tag,
+                reason: reason
+            })})
+
+           let logs = await ctx.client.LogsDB.ref().once("value")
+            logs = logs.val() || {}
+            logs = new ObjRef(logs)
+
+            let id
+            
+            for(let i; ;i++) {
+                id = `${randomCharacters(8)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(10)}`.toLowerCase()
+                if(!logs.ref(id).val()) break;
+            }
+
+            const log = Buffer.from(JSON.stringify({
+                type: 1,
+                author: ctx.author.id,
+                user: user.id,
+                server: ctx.guild.id,
+                reason: encodeURI(reason),
+                date: Date.now()
+            }), 'ascii').toString('base64')
+
+            ctx.client.LogsDB.ref(id).set(log)
+
             const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
             if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
                 embeds: [
-                    message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client)
+                    message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client, ctx.UserDB.gifs.ban)
                 ]
             })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
-                    message_modlogs(ctx.author, user, reason, "ban", ctx.t)
+                    message_modlogs(ctx.author, user, reason, "ban", ctx.t, id)
                 ]
             })
 
             return {
-                content: "Calma"
+                content: `:tada: ─ ${ctx.author.toString()}, o usuário ${user.toString()} (\`${user.tag} - ${user.id}\`) foi punido com sucesso${!notifyDM ? ", mas infelizmente não foi possível notifica-lo na DM." : "."}\n\n**ID da Punição:**\n\`\`\`${id}\`\`\`\n||Obrigado pela preferência! :partying_face:||`,
+                embeds: [],
+                components: []
             }
         }
     }
