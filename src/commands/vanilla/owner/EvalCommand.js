@@ -5,6 +5,7 @@ const { exec } = require("child_process");
 const Discord = require("discord.js");
 const confirm_punish = require("../../../utils/confirm_punish");
 const highest_position = require("../../../utils/highest_position");
+const { format } = require("../../../utils/format_time");
 
 module.exports = class EvalCommand extends Command {
     constructor(client) {

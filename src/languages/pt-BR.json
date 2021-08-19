@@ -4,7 +4,21 @@
         "ban": "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
     },
     "default_message_punish": {
-        "author": "Author"
+        "banned_user": "Usuário Banido",
+        "kicked_user": "Usuário Expulso",
+        "muted_user": "Usuário Silenciado",
+        "warned_user": "Usuário Advertido",
+        "banned_by": "Banido por",
+        "kicked_by": "Expulso por",
+        "muted_by": "Mutado por",
+        "warned_by": "Advertido por",
+        "reason": "Motivo",
+        "time": "Tempo"
+    },
+    "default_message_modlog": {
+        "user": "Usuário",
+        "author": "Autor",
+        "reason": "Motivo"
     },
     "geral": {
         "user_not_found": "Usuário não encontrado.",

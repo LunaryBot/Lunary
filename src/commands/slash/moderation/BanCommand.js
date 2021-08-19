@@ -3,6 +3,8 @@ const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
 const confirm_punish = require("../../../utils/confirm_punish")
 const highest_position = require("../../../utils/highest_position")
+const message_punish = require("../../../utils/message_punish")
+const message_modlogs = require("../../../utils/message_modlogs")
 
 module.exports = class NameCommand extends Command {
     constructor(client) {
@@ -90,15 +92,22 @@ module.exports = class NameCommand extends Command {
             const msg = await ctx.interaction.fetchReply()
             
             const filter = c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.author.id
-            const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 60, max: 1 })
+            const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 10, max: 1, errors: ["time"] })
 
             colletor.on("collect", async c => {
                 await c.deferUpdate().catch(() => {})
-                if(c.customId != "confirm_punish") return ctx.interaction.deleteReply()
+                if(c.customId != "confirm_punish") return ctx.interaction.deleteReply().catch(() => {})
 
-                ctx.interaction.editReply(await ban())
+                let _ban = await ban()
+                ctx.interaction.editReply(_ban).catch(() => {})
             })
-        } else ctx.interaction.reply(await ban())
+            colletor.on("end", () => {
+                if(!colletor.endReason) return ctx.interaction.deleteReply().catch(() => {})
+            })
+        } else {
+            let _ban = await ban()
+            ctx.interaction.reply(_ban).catch(() => {})
+        }
 
         async function ban() {
             let notifyDM = true
@@ -111,6 +120,19 @@ module.exports = class NameCommand extends Command {
             } catch(_) {
                 notifyDM = false
             }
+
+            const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
+            if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
+                embeds: [
+                    message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client)
+                ]
+            })
+            const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
+            if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
+                embeds: [
+                    message_modlogs(ctx.author, user, reason, "ban", ctx.t)
+                ]
+            })
 
             return {
                 content: "Calma"

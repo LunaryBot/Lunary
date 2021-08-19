@@ -6,6 +6,7 @@ class UserDB {
     constructor(data = {}, perms) {
         this.aboutme = data.aboutme || ""
         this.configs = new UserConfigs(data.configs || 0)
+        this.gifs = data.gifs || {}
         if(perms) this.permissions = perms
     }
 }
