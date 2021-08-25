@@ -7,6 +7,10 @@ const p = {
     kick: {
         cor: "#ea8935",
         text: "Kick"
+    },
+    adv: {
+        cor: 15379509,
+        text: "Warn"
     }
 }
 

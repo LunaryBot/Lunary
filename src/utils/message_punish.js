@@ -6,6 +6,9 @@ const p = {
     },
     "kick": {
         text: "kicked"
+    },
+    "adv": {
+        text: "warned"
     }
 }
 

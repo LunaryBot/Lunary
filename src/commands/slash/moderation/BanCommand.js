@@ -1,11 +1,9 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
-const confirm_punish = require("../../../utils/confirm_punish")
-const highest_position = require("../../../utils/highest_position")
-const {message_modlogs, message_punish, randomCharacters, ObjRef} = require("../../../utils/index")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
 
-module.exports = class NameCommand extends Command {
+module.exports = class BanCommand extends Command {
     constructor(client) {
         super({
             name: "ban",
@@ -97,14 +95,14 @@ module.exports = class NameCommand extends Command {
                 await c.deferUpdate().catch(() => {})
                 if(c.customId != "confirm_punish") return ctx.interaction.deleteReply().catch(() => {})
 
-                let _ban = await ban()
+                const _ban = await ban()
                 ctx.interaction.editReply(_ban).catch(() => {})
             })
             colletor.on("end", () => {
                 if(!colletor.endReason) return ctx.interaction.deleteReply().catch(() => {})
             })
         } else {
-            let _ban = await ban()
+            const _ban = await ban()
             ctx.interaction.reply(_ban).catch(() => {})
         }
 

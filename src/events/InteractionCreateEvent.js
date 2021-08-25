@@ -2,6 +2,7 @@ const Event = require("../structures/Event")
 const { Interaction, CommandInteraction, MessageEmbed } = require("discord.js")
 const { configPermissions } = require("../structures/BotPermissions")
 const ContextCommand = require("../structures/ContextCommand")
+const Command = require("../structures/Command")
 
 module.exports = class InteractionCreateEvent extends Event {
     constructor(client) {
@@ -26,8 +27,13 @@ module.exports = class InteractionCreateEvent extends Event {
     
     async executeCommand(interaction) {
         try {
-            let command = interaction.commandName ? interaction.commandName.toLowerCase() : undefined
-            command = this.client.commands.slash.find(c => c.name == command)
+            /**
+             * @type {Command}
+             */
+            let command = this.client.commands.slash.find(c => c.name == interaction.commandName.toLowerCase())
+            if(!command) return;
+            const subcommand = interaction.options.data.find(x => x.type == "SUB_COMMAND_GROUP")
+            if(subcommand && subcommand.name && command.subcommands) command = command.subcommands.find(sc => sc.name == subcommand.name)
             if(!command) return;
 
             let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
@@ -43,6 +49,7 @@ module.exports = class InteractionCreateEvent extends Event {
                 channel: interaction.channel,
                 user: interaction.user,
                 command: command,
+                mainCommand: this.client.commands.slash.find(c => c.name == interaction.commandName),
                 slash: true,
                 dm: !Boolean(interaction.guild)
             }, { guildsDB: GuildsDB, usersDB: UsersDB })

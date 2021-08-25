@@ -1,21 +1,21 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
+const AdvRemoveSubCommand = require("./Adv_RemoveSubcommand")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
 
-module.exports = class KickCommand extends Command {
+module.exports = class AdvCommand extends Command {
     constructor(client) {
         super({
-            name: "kick",
-            description: "Expulsa um usuário do servidor.",
+            name: "adv",
+            description: "Aplica uma advertência/aviso em um usuário do servidor.",
             category: "moderation",
             dirname: __dirname,
+            subcommands: [new AdvRemoveSubCommand(client, "adv")],
             permissions: {
-                Discord: ["KICK_MEMBERS"],
-                Bot: ["LUNAR_KICK_MEMBERS"],
-                Lunar: ["KICK_MEMBERS"]
-            },
-            dm: false
+                Discord: ["MANAGE_MESSAGES"],
+                Bot: ["LUNAR_ADV_MEMBERS"]
+            }
         }, client)
     }
 
@@ -50,36 +50,6 @@ module.exports = class KickCommand extends Command {
             else reason = ctx.t("geral/reason_not_informed")
         }
 
-        if(!user.kickable) return await ctx.interaction.reply({
-            embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
-            ]
-        })
-            
-        if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
-            embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
-            ]
-        })
-
-        if(reason > 450) return ctx.interaction.reply({
-            embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/very_big_reason")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
-            ]
-        })
-
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
             await ctx.interaction.reply(confirm_punish(ctx, user.user, reason))
 
@@ -92,35 +62,19 @@ module.exports = class KickCommand extends Command {
                 await c.deferUpdate().catch(() => {})
                 if(c.customId != "confirm_punish") return ctx.interaction.deleteReply().catch(() => {})
 
-                let _kick = await kick()
-                ctx.interaction.editReply(_kick).catch(() => {})
+                const _adv = await adv()
+                ctx.interaction.editReply(_adv).catch(() => {})
             })
             colletor.on("end", () => {
                 if(!colletor.endReason) return ctx.interaction.deleteReply().catch(() => {})
             })
         } else {
-            let kick = await kick()
-            ctx.interaction.reply(_kick).catch(() => {})
+            const _adv = await adv()
+            ctx.interaction.reply(_adv).catch(() => {})
         }
 
-        async function kick() {
-            let notifyDM = true
-            try {
-                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/kick", {
-                    emoji: ":hiking_boot:",
-                    guild_name: ctx.guild.name,
-                    reason: reason
-                }))
-            } catch(_) {
-                notifyDM = false
-            }
-
-            await user.kick(ctx.t("geral/punished_by", {
-                author_tag: ctx.author.tag,
-                reason: reason
-            }))
-
-           let logs = await ctx.client.LogsDB.ref().once("value")
+        async function adv() {
+            let logs = await ctx.client.LogsDB.ref().once("value")
             logs = logs.val() || {}
             logs = new ObjRef(logs)
 
@@ -132,7 +86,7 @@ module.exports = class KickCommand extends Command {
             }
 
             const log = Buffer.from(JSON.stringify({
-                type: 2,
+                type: 4,
                 author: ctx.author.id,
                 user: user.id,
                 server: ctx.guild.id,
@@ -142,16 +96,28 @@ module.exports = class KickCommand extends Command {
 
             ctx.client.LogsDB.ref(id).set(log)
 
+            let notifyDM = true
+            try {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/adv", {
+                    emoji: ":hiking_boot:",
+                    guild_name: ctx.guild.name,
+                    reason: reason
+                }))
+            } catch(_) {
+                notifyDM = false
+            }
+
+
             const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
             if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
                 embeds: [
-                    message_punish(ctx.author, user.user, reason, "kick", ctx.t, ctx.client, ctx.UserDB.gifs.kick)
+                    message_punish(ctx.author, user.user, reason, "adv", ctx.t, ctx.client, ctx.UserDB.gifs.kick)
                 ]
             })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
-                    message_modlogs(ctx.author, user.user, reason, "kick", ctx.t, id)
+                    message_modlogs(ctx.author, user.user, reason, "adv", ctx.t, id)
                 ]
             })
 

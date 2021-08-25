@@ -6,5 +6,6 @@ module.exports = {
     removeAcents: require("./removeAcents"),
     formatSizeUnits: require("./formatSizeUnits"),
     format_time: require("./format_time"),
-    ObjRef: require("./objref/ObjRef")
+    ObjRef: require("./objref/ObjRef"),
+    highest_position: require("./highest_position")
 }

@@ -1,20 +1,20 @@
 const _client = require("../Lunary")
-const SubCommand = require("./SubCommand")
+const Command = require("./Command")
 
-module.exports = class Command {
+module.exports = class SubCommand {
     /**
     * @param {_client} client
+    * @param {string} mainCommand
     */
     constructor({
         name = null,
         description = null,
         aliases = null,
-        category = null,
         dirname = null,
         subcommands = [],
         permissions = {},
         dm = false
-    }, client) {
+    }, mainCommand, client) {
         this.client = client
 
         /**
@@ -28,19 +28,19 @@ module.exports = class Command {
         this.description = description
 
         /**
-         * @type {string[]?}
+         * @type {string[]}
          */
         this.aliases = aliases
 
         /**
          * @type {string}
          */
-        this.category = category
+        this.dirname = dirname
 
         /**
          * @type {string}
          */
-        this.dirname = dirname
+        this.nameMainCommand = mainCommand
 
         /**
          * @type {SubCommand[]}

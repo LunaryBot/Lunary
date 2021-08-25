@@ -6,6 +6,9 @@ require("./functions/shorten")
 const moment = require("moment")
 require("moment-duration-format")
 const firebase = require("firebase")
+const Command = require("./structures/Command")
+const Event = require("./structures/Event")
+const Language = require("./languages/Language")
 global.emojis = require("./utils/emojisInstance")
 
 class Lunary extends Client {
@@ -48,18 +51,30 @@ class Lunary extends Client {
         this.login(this.config.token)
     }
 
+    /**
+     * 
+     * @returns {Language[]}
+     */
     loadLanguage() {
         this.langs = []
         require("./handlers/langHandler")(this)
         return this.langs
     }
 
+    /**
+     * 
+     * @returns {Event[]}
+     */
     loadEvents() {
         this.events = []
         require("./handlers/eventHandler")(this)
         return this.events
     }
 
+    /**
+     * 
+     * @returns {Command[]{}}
+     */
     loadCommands() {
         this.commands = {}
         require("./handlers/commandHandler")(this)
