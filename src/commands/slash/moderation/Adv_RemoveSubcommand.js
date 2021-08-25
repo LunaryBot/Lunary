@@ -42,7 +42,8 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         const advs = logs.filter(x => x.user == user.id && x.type == 4)
         if(!advs.length) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed
+                new Discord.MessageEmbed()
+                .setColor("")
             ]
         })
     }

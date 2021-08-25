@@ -9,8 +9,8 @@ const Manager = require("./system/cluster/ClusterManager");
 let {token} = require("./config/config");
 const Logger = require("./utils/logger");
 const manager = new Manager(`${__dirname}/Lunary.js`,{
-    totalShards: 1,
-    totalClusters: 1, 
+    totalShards: 2,
+    totalClusters: 2, 
     mode: "process",
     token: token
 })

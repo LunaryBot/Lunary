@@ -106,7 +106,7 @@ class ClusterManager extends EventEmitter {
       return Promise.reject(new Error('CLUSTERING_CLUSTER_NOT_FOUND', cluster));
     }
 
-    if (this.clusters.size !== this.totalClusters) return Promise.reject(new Error('CLUSTERING_IN_PROCESS'));
+    // if (this.clusters.size !== this.totalClusters) return Promise.reject(new Error('CLUSTERING_IN_PROCESS'));
 
     const promises = [];
     for (const cl of this.clusters.values()) promises.push(cl[method](...args));
