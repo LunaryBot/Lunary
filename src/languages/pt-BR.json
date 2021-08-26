@@ -35,5 +35,10 @@
     "confirm_punish": {
         "title": "Confirme a punição a seguir:",
         "description": "Você realmente deseja punir o usuário informado?"
+    },
+    "adv_remove": {
+        "no_warning": "O usuário não possui advertências.",
+        "deleted_warning": "Foi deletada `1` advertência de `{user_tag}`.",
+        "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
     }
 }

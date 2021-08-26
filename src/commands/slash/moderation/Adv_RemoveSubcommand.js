@@ -25,9 +25,9 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         if(!user) return await ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
+                .setColor("#FF0000")
                 .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
                 .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
                 .setTimestamp()
             ]
         })
@@ -43,8 +43,20 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         if(!advs.length) return ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
-                .setColor("")
+                .setColor("#FF0000")
+                .setDescription(`**${global.emojis.get("alert").mention} ${ctx.t("adv_remove/no_warning")}**`)
+                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setTimestamp()
             ]
+        })
+
+        await logs.forEach(x => ctx.client.LogsDB.ref(x.id).remove())
+
+        await ctx.interaction.reply({
+            content: `${global.emojis.get("yep").mention} ${ctx.t(`adv_remove/deleted_warning${advs.length > 1 ? "s" : ""}`, {
+                size: advs.length,
+                user_tag: user.tag
+            })}`
         })
     }
 }
