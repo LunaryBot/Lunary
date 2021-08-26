@@ -1,16 +1,10 @@
-// const app = require("express")()
-// app.get("/", (req, res) => {
-//     res.send("Ok")
-// })
-
-// app.listen(8080, "0.0.0.0")
-
+require("dotenv").config()
 const Manager = require("./system/cluster/ClusterManager");
 let {token} = require("./config/config");
 const Logger = require("./utils/logger");
 const manager = new Manager(`${__dirname}/Lunary.js`,{
-    totalShards: 1,
-    totalClusters: 1, 
+    totalShards: 4,
+    totalClusters: 2, 
     mode: "process",
     token: token
 })
