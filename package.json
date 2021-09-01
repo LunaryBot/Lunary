@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "firebase": "^8.8.1",
     "moment": "^2.29.1",
-    "moment-duration-format": "^2.3.2"
+    "moment-duration-format": "^2.3.2",
+    "sydb": "^1.0.1"
   }
 }

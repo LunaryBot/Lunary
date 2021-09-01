@@ -7,6 +7,7 @@ class GuildDB {
         this.perms = new Collection()
         this.chat_modlogs = data.chat_modlogs || null
         this.chat_punish = data.chat_punish || null
+        this.muterole = data.muterole || null
         this.configs = new GuildConfigs(data.configs || 0)
     }
 }

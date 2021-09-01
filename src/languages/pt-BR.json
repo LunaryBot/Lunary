@@ -30,7 +30,9 @@
         "very_big_reason": "O motivo deve conter no máximo `450` caracteres.",
         "highest_position": "Você não pode punir um membro com funções iguais/superiores a sua.",
         "requested_by": "Requisitado por",
-        "reason": "Motivo inserido"
+        "reason": "Motivo inserido",
+        "invalid_time": "O tempo inserido é inválido.",
+        "duration": "Duração"
     },
     "confirm_punish": {
         "title": "Confirme a punição a seguir:",
@@ -40,5 +42,45 @@
         "no_warning": "O usuário não possui advertências.",
         "deleted_warning": "Foi deletada `1` advertência de `{user_tag}`.",
         "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
+    },
+    "mute": {
+        "manager_position": ""
+    },
+    "moment": {
+        "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
+        "monthsShort": ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+        "weekdays": ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"],
+        "weekdaysShort": ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"],
+        "weekdaysMin": ["dom", "2ª", "3ª", "4ª", "5ª", "6ª", "sáb"],
+        "longDateFormat": {
+            "LT": "HH:mm",
+            "L": "DD/MM/YYYY",
+            "LL": "D [de] MMMM [de] YYYY",
+            "LLL": "D [de] MMMM [de] YYYY [às] LT",
+            "LLLL": "dddd, D [de] MMMM [de] YYYY [às] LT"
+        },
+        "calendar": {
+            "sameDay": "[Hoje às] LT",
+            "nextDay": "[Amanhã às] LT",
+            "nextWeek": "dddd [às] LT",
+            "lastDay": "[Ontem às] LT",
+            "sameElse": "L"
+        },
+        "relativeTime": {
+            "future": "em %s",
+            "past": "%s atrás",
+            "s": "segundos",
+            "m": "um minuto",
+            "mm": "minutos",
+            "h": "uma hora",
+            "hh": "%d horas",
+            "d": "um dia",
+            "dd": "%d dias",
+            "M": "um mês",
+            "MM": "%d meses",
+            "y": "um ano",
+            "yy": "%d anos"
+        },
+        "ordinal": "%dº"
     }
 }

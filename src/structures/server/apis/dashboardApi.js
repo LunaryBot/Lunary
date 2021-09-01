@@ -1,3 +1,4 @@
+const { default: axios } = require("axios")
 const client = require("../../../Lunary")
 
 const router = require("express").Router()
@@ -34,10 +35,15 @@ module.exports = router
 
     const data = {}
     data.name = guild.name
-    data.icon = guild.iconURL({ dynamic: true })
+    data.icon = guild.iconURL({ dynamic: true, format: "png" })
     data.id = guild.id
     data.channels = [ ...guild.channels.cache.values() ].map(x => x.toJSON())
-    data.roles = [ ...guild.roles.cache.values() ].map(x => x.toJSON())
+    data.roles = [ ...guild.roles.cache.values() ].map(function(x) {
+        const json = x.toJSON()
+        json.permissions = Number(json.permissions)
+
+        return json
+    })
     data.shardId = res?.shardID
     data.clusterId = res?.clusterID
 

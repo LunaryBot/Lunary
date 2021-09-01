@@ -7,5 +7,6 @@ module.exports = {
     formatSizeUnits: require("./formatSizeUnits"),
     format_time: require("./format_time"),
     ObjRef: require("./objref/ObjRef"),
-    highest_position: require("./highest_position")
+    highest_position: require("./highest_position"),
+    timeString: require("./timeString"),
 }

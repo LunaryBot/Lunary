@@ -15,7 +15,8 @@ const k = {
         M: 'mês',
         MM: 'meses',
         y: 'ano',
-        yy: 'anos'
+        yy: 'anos',
+        and: 'e'
     },
     "en-US": {
         ms: 'millisecond',
@@ -33,7 +34,8 @@ const k = {
         M: 'month',
         MM: 'months',
         y: 'year',
-        yy: 'years'
+        yy: 'years',
+        and: 'and'
     }
 }
 
@@ -59,9 +61,15 @@ function format(ms, lang = "pt-BR") {
     if(hours) m.push(`${hours} ${k[lang]["h" + `${hours != 1 ? "h" : ""}`]}`)
     if(minutes) m.push(`${minutes} ${k[lang]["m" + `${minutes != 1 ? "m" : ""}`]}`)
     if(seconds) m.push(`${seconds} ${k[lang]["s" + `${seconds != 1 ? "s" : ""}`]}`)
-    //if(milliseconds) m.push(`${milliseconds} ${k[lang]["ms" + `${milliseconds != 1 ? "s" : ""}`]}`)
 
-    return m.join(" ")
+    let tempo = ""
+    for(let i in m) {
+        if(i == 0 || m.length == 1) tempo = m[i]
+        else if(Number(i) + 1 == m.length) tempo += ` ${k[lang]["and"]} ${m[i]}`
+        else tempo += `, ${m[i]}`
+    }
+
+    return tempo
 }
 
 module.exports = {

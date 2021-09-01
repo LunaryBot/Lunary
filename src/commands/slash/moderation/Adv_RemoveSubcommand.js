@@ -11,7 +11,8 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],
                 Bot: ["LUNAR_ADV_MEMBERS"]
-            }
+            },
+            dm: false
         }, mainCommand, client)
     }
 

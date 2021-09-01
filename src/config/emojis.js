@@ -4,5 +4,6 @@ module.exports = {
     alert: "<a:alert:877320782479511594>",
     clipboard: "<:clipboard:877360141241032744>",
     user: "<:user:877345385079795753>",
-    author: "<:author:877649348060651622>"
+    author: "<:author:877649348060651622>",
+    time: "<:Time:882641849934835753>"
 }
