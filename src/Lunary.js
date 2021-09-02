@@ -1,4 +1,4 @@
-const { Client } = require("discord.js")
+const { Client, Collection } = require("discord.js")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")
@@ -38,6 +38,8 @@ class Lunary extends Client {
         
         const LogsDB = firebase.initializeApp(this.config.firebaseConfigLogs, "logs")
         this.LogsDB = LogsDB.database()
+
+        this.mutes = new Collection()
         
         this.on("shardReconnecting", shard => {
             console.log("Shard Reconectada")

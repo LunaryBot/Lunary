@@ -123,7 +123,14 @@ module.exports = class AdvCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.author.toString()}, o usuário ${user.toString()} (\`${user.user.tag} - ${user.user.id}\`) foi punido com sucesso${!notifyDM ? ", mas infelizmente não foi possível notifica-lo na DM." : "."}\n\n**ID da Punição:**\n\`\`\`${id}\`\`\`\n||Obrigado pela preferência! :partying_face:||`,
+                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                    author_mention: ctx.author.toString(),
+                    user_mention: user.toString(),
+                    user_tag: user.user.tag,
+                    user_id: user.id,
+                    id: id,
+                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                })}`,
                 embeds: [],
                 components: []
             }

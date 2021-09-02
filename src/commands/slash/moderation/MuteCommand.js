@@ -2,7 +2,7 @@ const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
 const sydb = require("sydb")
-const mutes = new sydb(__dirname + "/../../../data/mutes.json")
+const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish, timeString, format_time: {format}} = require("../../../utils/index")
 
 module.exports = class NameCommand extends Command {
@@ -83,17 +83,18 @@ module.exports = class NameCommand extends Command {
         })
 
         let time = ctx.interaction.options.getString("time") || "..."
-        if(time != "...") time = timeString(time)
-
-        if(isNaN(time) || time == 0) return ctx.interaction.reply({
-            embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/invalid_time")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
-            ]
-        })
+        if(time != "...") {
+            time = timeString(time)
+            if(isNaN(time) || time == 0) return ctx.interaction.reply({
+                embeds: [
+                    new Discord.MessageEmbed()
+                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/invalid_time")}**`)
+                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                    .setColor("#FF0000")
+                    .setTimestamp()
+                ]
+            })
+        }
 
         let muterole = ctx.guild.roles.cache.get(ctx.GuildDB.muterole)
         
@@ -114,6 +115,26 @@ module.exports = class NameCommand extends Command {
             })
             this.client.db.ref(`Servers/${ctx.guild.id}/`).update({muterole: muterole.id})
         }
+
+        if(muterole && ctx.guild.roles.cache.get(muterole.id).position >= ctx.guild.me.roles.highest.position) return ctx.interaction.reply({
+            embeds: [
+                new Discord.MessageEmbed()
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/manager_position")}**`)
+                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setColor("#FF0000")
+                .setTimestamp()
+            ]
+        })
+
+        if(muterole && user.roles.cache.has(muterole.id)) return ctx.interaction.reply({
+            embeds: [
+                new Discord.MessageEmbed()
+                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/user_muted")}**`)
+                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                .setColor("#FF0000")
+                .setTimestamp()
+            ]
+        })
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
             await ctx.interaction.reply(confirm_punish(ctx, user.user, reason, time))
@@ -139,6 +160,27 @@ module.exports = class NameCommand extends Command {
         }
 
         async function mute() {
+            if(!highest_position(ctx.me, user)) return {
+                embeds: [
+                    new Discord.MessageEmbed()
+                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
+                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                    .setColor("#FF0000")
+                    .setTimestamp()
+                ]
+            }
+            let notifyDM = true
+            try {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/mute", {
+                    emoji: ":mute:",
+                    guild_name: ctx.guild.name,
+                    reason: reason,
+                    time: time != "..." ? format(time) : ctx.t("geral/not_determined")
+                }))
+            } catch(_) {
+                notifyDM = false
+            }
+
             let logs = await ctx.client.LogsDB.ref().once("value")
             logs = logs.val() || {}
             logs = new ObjRef(logs)
@@ -150,14 +192,63 @@ module.exports = class NameCommand extends Command {
                 if(!logs.ref(id).val()) break;
             }
 
+            const end = time != "..." ? Date.now() + time : time
             const log = Buffer.from(JSON.stringify({
                 type: 4,
                 author: ctx.author.id,
                 user: user.id,
                 server: ctx.guild.id,
                 reason: encodeURI(reason),
-                date: Date.now()
+                date: Date.now(),
+                time: time
             }), 'ascii').toString('base64')
+            
+            const roles = user.roles.cache.filter(x => !x.managed && x.id != ctx.guild.id).map(x => x.id) || []
+            
+            const data = {
+                user: user.id,
+                server: ctx.guild.id,
+                id: id,
+                roles: roles,
+                muterole: muterole.id,
+                end: end
+            }
+            mutesdb.ref(`${ctx.guild.id}_${user.id}`).set(data)
+
+            if(roles && roles.length) await user.roles.remove(roles).catch(() => {})
+
+            await user.roles.add(muterole.id)
+
+            const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
+            if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
+                embeds: [
+                    message_punish(ctx.author, user.user, reason, "mute", ctx.t, ctx.client, ctx.UserDB.gifs.mute, time)
+                ]
+            })
+            const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
+            if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
+                embeds: [
+                    message_modlogs(ctx.author, user.user, reason, "mute", ctx.t, id, time)
+                ]
+            })
+
+            if(time != "...") {
+                const timeout = setTimeout(() => ctx.client.emit("muteEnd", data), time)
+                ctx.client.mutes.set(`${ctx.guild.id}_${user.id}`, timeout)
+            }
+
+            return {
+                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                    author_mention: ctx.author.toString(),
+                    user_mention: user.toString(),
+                    user_tag: user.user.tag,
+                    user_id: user.id,
+                    id: id,
+                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                })}`,
+                embeds: [],
+                components: []
+            }
         }
     }
 }

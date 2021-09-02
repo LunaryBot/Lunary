@@ -13,7 +13,7 @@ module.exports = function confirm_punish(ctx, user, reason, time) {
     .setColor(13641511)
     .setAuthor(ctx.t("confirm_punish/title"), global.emojis.get("alert").url)
     .setDescription(`**- ${ctx.t("confirm_punish/description")}**\nㅤ${user.toString()} (\`${user.tag} - ${user.id}\`)`)
-    .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${reason}${time ? `\n\n**- ${global.emojis.get("time").mention} • ${ctx.t("geral/duration")}:** \`${time != "..." ? `${format(time)}` : "Não determinado."}\`` : ""}`)
+    .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${reason}${time ? `\n\n**- ${global.emojis.get("time").mention} • ${ctx.t("geral/duration")}:** \`${time != "..." ? `${format(time)}` : ctx.t("geral/not_determined")}\`` : ""}`)
     .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
     .setFooter(`${ctx.t("geral/requested_by")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))
     .setTimestamp()

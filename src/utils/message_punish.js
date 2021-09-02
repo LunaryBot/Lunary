@@ -7,7 +7,13 @@ const p = {
     "kick": {
         text: "kicked"
     },
+    "mute": {
+        text: "muted"
+    },
     "adv": {
+        text: "warned"
+    },
+    "unmute": {
         text: "warned"
     }
 }
@@ -24,7 +30,7 @@ module.exports = function message_modlogs(author, user, reason, type, t, client,
         {name: `${global.emojis.get("author").mention}${t(`default_message_punish/${type.text}_by`)}`, value: `${author.toString()}\n(\`${author.id}\`)`, inline: true},
     ])
     
-    if(time) embed.addField(`${global.emojis.get("time").mention}${t("default_message_punish/time")}`, `${format(time)}`)
+    if(time) embed.addField(`${global.emojis.get("time").mention} • ${t("geral/duration")}:`, `**- **\`${time != "..." ? `${format(time)}` : t("geral/not_determined")}\``)
     
     embed.addField(`${global.emojis.get("clipboard").mention}${t("default_message_punish/reason")}`, reason)
     

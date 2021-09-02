@@ -107,6 +107,15 @@ module.exports = class BanCommand extends Command {
         }
 
         async function ban() {
+            if(membro && !membro.bannable) return {
+                embeds: [
+                    new Discord.MessageEmbed()
+                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
+                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+                    .setColor("#FF0000")
+                    .setTimestamp()
+                ]
+            }
             let notifyDM = true
             try {
                 if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/ban", {
@@ -159,7 +168,14 @@ module.exports = class BanCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.author.toString()}, o usuário ${user.toString()} (\`${user.tag} - ${user.id}\`) foi punido com sucesso${!notifyDM ? ", mas infelizmente não foi possível notifica-lo na DM." : "."}\n\n**ID da Punição:**\n\`\`\`${id}\`\`\`\n||Obrigado pela preferência! :partying_face:||`,
+                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                    author_mention: ctx.author.toString(),
+                    user_mention: user.toString(),
+                    user_tag: user.tag,
+                    user_id: user.id,
+                    id: id,
+                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                })}`,
                 embeds: [],
                 components: []
             }

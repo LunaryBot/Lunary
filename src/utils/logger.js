@@ -27,7 +27,7 @@ module.exports = class Logger {
 }
 
 function formateDate() {
-    let d = new Date(Date.now() - 10800000)
+    let d = new Date(Date.now())
 
     return new String(`${formateNumber(d.getHours())}:${formateNumber(d.getMinutes())} ${formateNumber(d.getDate())}/${formateNumber(d.getMonth() + 1)}/${d.getFullYear()}`)
 }

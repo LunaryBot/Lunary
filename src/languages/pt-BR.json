@@ -2,6 +2,7 @@
     "default_dm_messages_punish": {
         "ban": "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}",
         "kick": "{emoji} Você foi expulso de **{guild_name}**\n**`[MOTIVO]`:** {reason}",
+        "mute": "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}\n**`[DURAÇÃO]`:** {time}",
         "adv": "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}"
     },
     "default_message_punish": {
@@ -14,7 +15,9 @@
         "muted_by": "Mutado por",
         "warned_by": "Advertido por",
         "reason": "Motivo",
-        "time": "Tempo"
+        "time": "Tempo",
+        "sucess_punish": "{author_mention}, o usuário {user_mention} (`{user_tag} - {user_id}`) foi punido com sucesso{notifyDM}\n\n**ID da Punição:**\n```{id}```\n||Obrigado pela preferência! :partying_face:||",
+        "not_notify_dm": ", mas infelizmente não foi possível notifica-lo via DM."
     },
     "default_message_modlog": {
         "user": "Usuário",
@@ -31,8 +34,8 @@
         "highest_position": "Você não pode punir um membro com funções iguais/superiores a sua.",
         "requested_by": "Requisitado por",
         "reason": "Motivo inserido",
-        "invalid_time": "O tempo inserido é inválido.",
-        "duration": "Duração"
+        "duration": "Duração",
+        "not_determined": "Não determinado."
     },
     "confirm_punish": {
         "title": "Confirme a punição a seguir:",
@@ -44,7 +47,9 @@
         "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
     },
     "mute": {
-        "manager_position": ""
+        "invalid_time": "O tempo inserido é inválido.",
+        "manager_position": "Eu não tenho permissão para gerenciar o cargo de mute.",
+        "user_muted": "O usuário já está mutado."
     },
     "moment": {
         "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
