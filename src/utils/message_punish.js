@@ -14,7 +14,7 @@ const p = {
         text: "warned"
     },
     "unmute": {
-        text: "warned"
+        text: "unmuted"
     }
 }
 

@@ -1,4 +1,6 @@
 const Event = require("../structures/Event")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../utils/index")
+const reason = "Tempo de mute expirou."
 
 module.exports = class MuteEndEvent extends Event {
   constructor(client) {
@@ -26,21 +28,20 @@ module.exports = class MuteEndEvent extends Event {
     }
 
     const guildDB = await this.client.db.ref(`Servers/${guild.id}/`).once("value").then(x => x.val() || {})
+    const t = this.client.langs.find(x => x.lang || "pt-BR").t
 
-    // const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
-    // if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
-    //   embeds: [
-    //     message_punish(ctx.author, user.user, reason, "mute", ctx.t, ctx.client, ctx.UserDB.gifs.mute, time)
-    //   ]
-    // })
-    // const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
-    // if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
-    //   embeds: [
-    //     message_modlogs(ctx.author, user.user, reason, "mute", ctx.t, id, time)
-    //   ]
-    // })
-
-
+    const channel_punish = guild.channels.cache.get(guildDB.chat_punish)
+    if(channel_punish && channel_punish.permissionsFor(this.client.user.id).has(18432)) channel_punish.send({
+      embeds: [
+        message_punish(this.client.user, user.user, reason, "unmute", t, this.client)
+      ]
+    })
+    const channel_modlogs = guild.channels.cache.get(guildDB.chat_modlogs)
+    if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send({
+      embeds: [
+        message_modlogs(this.client.user, user.user, reason, "unmute", t, data.id)
+      ]
+    })
 
     console.log("Mute terminado!")
   }
