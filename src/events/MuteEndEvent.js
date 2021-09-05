@@ -1,4 +1,7 @@
 const Event = require("../structures/Event")
+const { GuildDB } = require("../structures/GuildDB")
+const sydb = require("sydb")
+const mutesdb = new sydb(__dirname + "/../data/mutes.json")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../utils/index")
 const reason = "Tempo de mute expirou."
 
@@ -8,6 +11,8 @@ module.exports = class MuteEndEvent extends Event {
   }
 
   async run(data) {
+    const data2 = mutesdb.ref(`${data.server}_${data.user}`).val()
+    if(!data2) return
     const guild = this.client.guilds.cache.get(data.server)
     if(!guild) return
     const user = await guild.members.fetch(data.user).catch(() => {})
@@ -27,15 +32,18 @@ module.exports = class MuteEndEvent extends Event {
       user.roles.add(roles).catch(() => {})
     }
 
-    const guildDB = await this.client.db.ref(`Servers/${guild.id}/`).once("value").then(x => x.val() || {})
-    const t = this.client.langs.find(x => x.lang || "pt-BR").t
+    const guildDB = await this.client.db.ref(`Servers/${guild.id}/`).once("value").then(x => new GuildDB(x.val() || {}))
+    const t = this.client.langs.find(x => x.lang == null || "pt-BR").t
 
-    const channel_punish = guild.channels.cache.get(guildDB.chat_punish)
-    if(channel_punish && channel_punish.permissionsFor(this.client.user.id).has(18432)) channel_punish.send({
-      embeds: [
-        message_punish(this.client.user, user.user, reason, "unmute", t, this.client)
-      ]
-    })
+    if(guildDB.configs.has("LOG_UNMUTE")) {
+      const channel_punish = guild.channels.cache.get(guildDB.chat_punish)
+      if(channel_punish && channel_punish.permissionsFor(this.client.user.id).has(18432)) channel_punish.send({
+        embeds: [
+          message_punish(this.client.user, user.user, reason, "unmute", t, this.client)
+        ]
+      })
+    }
+    
     const channel_modlogs = guild.channels.cache.get(guildDB.chat_modlogs)
     if(channel_modlogs && channel_modlogs.permissionsFor(this.client.user.id).has(18432)) channel_modlogs.send({
       embeds: [
@@ -43,6 +51,6 @@ module.exports = class MuteEndEvent extends Event {
       ]
     })
 
-    console.log("Mute terminado!")
+    mutesdb.ref(`${data.server}_${data.user}`).delete()
   }
 }

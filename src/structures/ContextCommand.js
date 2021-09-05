@@ -83,7 +83,7 @@ module.exports = class ContextCommand {
         /**
          * @type {Language}
          */
-        const lang = this.client.langs.find(x => x.lang || "pt-BR")
+        const lang = this.client.langs.find(x => x.lang == null || "pt-BR")
         
         this.t = lang.t
     }
