@@ -11,19 +11,19 @@
                     "options": [
                         {
                             "name": "user-id",
-                            "description": "ID do usuário a ser banido.",
+                            "description": "〔👤 • User〕ID do usuário a a ser banido.",
                             "type": 3,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para o banimento."
+                            "description": "〔📑 • Reason〕Motivo para o banimento."
                           },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "  Notoficar a punição via mensagem direta(Privado)."
+                            "description": "  〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -34,19 +34,19 @@
                     "options": [
                         {
                             "name": "user",
-                            "description": "Usuário a ser banido.",
+                            "description": "〔👤 • User〕Usuário a ser banido.",
                             "type": 6,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para o banimento."
+                            "description": "〔📑 • Reason〕Motivo para o banimento."
                           },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "  Notoficar a punição via mensagem direta(Privado)."
+                            "description": "  〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 }
@@ -65,19 +65,19 @@
                     "options": [
                         {
                             "name": "user-id",
-                            "description": "ID do usuário a ser expulso.",
+                            "description": "〔👤 • User〕ID do usuário a a ser expulso.",
                             "type": 3,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para a expulsão."
+                            "description": "〔📑 • Reason〕Motivo para a expulsão."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -88,19 +88,19 @@
                     "options": [
                         {
                             "name": "user",
-                            "description": "Usuário a ser expulso.",
+                            "description": "〔👤 • User〕Usuário a ser expulso.",
                             "type": 6,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para a expulsão."
+                            "description": "〔📑 • Reason〕Motivo para a expulsão."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 }
@@ -120,23 +120,23 @@
                         {
                             "type": 3,
                             "name": "user-id",
-                            "description": "ID do usuário a ser silenciado.",
+                            "description": "〔👤 • User〕ID do usuário a a ser silenciado.",
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para o silenciamento."
+                            "description": "〔📑 • Reason〕Motivo para o silenciamento."
                         },
                         {
                             "type": 3,
                             "name": "time",
-                            "description": "Tempo que o usuário ira ficar silenciado"
+                            "description": "〔⏱️ • Duration〕Tempo que o usuário ira ficar silenciado."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -147,24 +147,24 @@
                     "options": [
                         {
                             "name": "user",
-                            "description": "Usuário a ser silenciado.",
+                            "description": "〔👤 • User〕Usuário a ser silenciado.",
                             "type": 6,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para o silenciamento."
+                            "description": "〔📑 • Reason〕Motivo para o silenciamento."
                         },
                         {
                             "type": 3,
                             "name": "time",
-                            "description": "Tempo que o usuário ira ficar silenciado"
+                            "description": "〔⏱️ • Duration〕Tempo que o usuário ira ficar silenciado."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 }
@@ -183,19 +183,19 @@
                     "options": [
                         {
                             "name": "user-id",
-                            "description": "ID do usuário a ser advertido.",
+                            "description": "〔👤 • User〕ID do usuário a a ser advertido.",
                             "type": 3,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para a advertência."
+                            "description": "〔📑 • Reason〕Motivo para a advertência."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -206,19 +206,19 @@
                     "options": [
                         {
                             "name": "user",
-                            "description": "Usuário a ser advertido.",
+                            "description": "〔👤 • User〕Usuário a ser advertido.",
                             "type": 6,
                             "required": true
                         },
                         {
                             "type": 3,
                             "name": "reason",
-                            "description": "Motivo para a advertência."
+                            "description": "〔📑 • Reason〕Motivo para a advertência."
                         },
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -234,7 +234,7 @@
                             "options": [
                                 {
                                     "name": "user-id",
-                                    "description": "ID do usuário a ser ser removido as advertências.",
+                                    "description": "〔👤 • User〕ID do usuário a a ser removido as advertências.",
                                     "type": 3,
                                     "required": true
                                 }
@@ -247,7 +247,7 @@
                             "options": [
                                 {
                                     "name": "user",
-                                    "description": "Usuário a ser ser removido as advertências.",
+                                    "description": "〔👤 • User〕Usuário a ser removido as advertências.",
                                     "type": 6,
                                     "required": true
                                 }
