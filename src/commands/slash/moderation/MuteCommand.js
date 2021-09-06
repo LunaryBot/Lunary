@@ -202,6 +202,8 @@ module.exports = class NameCommand extends Command {
                 date: Date.now(),
                 time: time
             }), 'ascii').toString('base64')
+
+            ctx.client.LogsDB.ref(id).set(log)
             
             const roles = user.roles.cache.filter(x => !x.managed && x.id != ctx.guild.id).map(x => x.id) || []
             

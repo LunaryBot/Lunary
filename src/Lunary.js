@@ -42,7 +42,8 @@ class Lunary extends Client {
         this.mutes = new Collection()
         
         this.on("shardReconnecting", shard => {
-            console.log("Shard Reconectada")
+            console.log(shard)
+            this.logger.log(`Client reconectado ao Discord!`, { key: "Client", cluster: true, date: true })
         })
     }
 

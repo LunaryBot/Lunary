@@ -23,7 +23,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "  〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "  〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -46,7 +46,20 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "  〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "  〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
+                        }
+                    ]
+                },
+                {
+                    "name": "info",
+                    "type": 1,
+                    "description": "〔🔨 • Moderação〕Mostra as informações do banimento de um usuário banido no servidor.",
+                    "options": [
+                        {
+                            "name": "user",
+                            "description": "〔👤 • User〕Usuário(@user/tag/id) a ser visto as informações do banimento.",
+                            "type": 3,
+                            "required": true
                         }
                     ]
                 }
@@ -77,7 +90,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -100,7 +113,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 }
@@ -136,13 +149,13 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
                 {
                     "name": "by-user",
-                    "description": "〔🔨 • Moderação〕Silencia um usuário usando o ID por um período de tempo determinado no servidor.",
+                    "description": "〔🔨 • Moderação〕Silencia um usuário por um período de tempo determinado no servidor.",
                     "type": 1,
                     "options": [
                         {
@@ -164,7 +177,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 }
@@ -195,7 +208,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
@@ -218,7 +231,7 @@
                         {
                             "type": 5,
                             "name": "notify-dm",
-                            "description": "〔📬 • Notify DM〕Notoficar a punição via mensagem direta(Privado)."
+                            "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
                         }
                     ]
                 },
