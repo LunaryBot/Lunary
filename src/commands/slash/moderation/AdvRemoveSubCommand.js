@@ -25,7 +25,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"))
+                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
             ]
         })
 
@@ -39,7 +39,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         const advs = logs.filter(x => x.user == user.id && x.type == 4)
         if(!advs.length) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("adv_remove/no_warning"))
+                this.sendError(ctx.t("adv_remove/no_warning"), ctx.author)
             ]
         })
 

@@ -30,7 +30,7 @@ module.exports = class AdvCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"))
+                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
             ]
         })
 
@@ -38,7 +38,7 @@ module.exports = class AdvCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"))
+                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")

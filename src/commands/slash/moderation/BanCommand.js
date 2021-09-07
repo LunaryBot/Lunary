@@ -31,7 +31,7 @@ module.exports = class BanCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"))
+                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
             ]
         })
 
@@ -39,7 +39,7 @@ module.exports = class BanCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"))
+                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")
@@ -49,20 +49,20 @@ module.exports = class BanCommand extends Command {
         if(membro) {
             if(!membro.bannable) return await ctx.interaction.reply({
               embeds: [
-                this.sendError(ctx.t("geral/not_punishable"))
+                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
               ]
             })
             
             if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/highest_position"))
+                    this.sendError(ctx.t("geral/highest_position"), ctx.author)
                 ]
             })
         }
 
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/very_big_reason"))
+                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
             ]
         })
 
@@ -92,7 +92,7 @@ module.exports = class BanCommand extends Command {
         async function ban() {
             if(membro && !membro.bannable) return {
                 embeds: [
-                    this.sendError(ctx.t("geral/not_punishable"))
+                    this.sendError(ctx.t("geral/not_punishable"), ctx.author)
                 ]
             }
             let notifyDM = true

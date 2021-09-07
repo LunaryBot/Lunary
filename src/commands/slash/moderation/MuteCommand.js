@@ -30,7 +30,7 @@ module.exports = class NameCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"))
+                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
             ]
         })
 
@@ -38,7 +38,7 @@ module.exports = class NameCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"))
+                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")
@@ -46,19 +46,19 @@ module.exports = class NameCommand extends Command {
 
         if(!highest_position(ctx.me, user)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/not_punishable"))
+                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
             ]
         })
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/not_punishable"))
+                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
             ]
         })
 
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/very_big_reason"))
+                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
             ]
         })
 
@@ -67,7 +67,7 @@ module.exports = class NameCommand extends Command {
             time = timeString(time)
             if(isNaN(time) || time == 0) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("mute/invalid_time"))
+                    this.sendError(ctx.t("mute/invalid_time"), ctx.author)
                 ]
             })
         }
@@ -94,13 +94,13 @@ module.exports = class NameCommand extends Command {
 
         if(muterole && ctx.guild.roles.cache.get(muterole.id).position >= ctx.guild.me.roles.highest.position) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("mute/manager_position"))
+                this.sendError(ctx.t("mute/manager_position"), ctx.author)
             ]
         })
 
         if(muterole && user.roles.cache.has(muterole.id)) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("mute/user_muted"))
+                this.sendError(ctx.t("mute/user_muted"), ctx.author)
             ]
         })
 
@@ -130,7 +130,7 @@ module.exports = class NameCommand extends Command {
         async function mute() {
             if(!highest_position(ctx.me, user)) return {
                 embeds: [
-                    this.sendError(ctx.t("geral/not_punishable"))
+                    this.sendError(ctx.t("geral/not_punishable"), ctx.author)
                 ]
             }
             let notifyDM = true
