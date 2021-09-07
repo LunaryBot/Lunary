@@ -32,8 +32,8 @@ module.exports = class InteractionCreateEvent extends Event {
              */
             let command = this.client.commands.slash.find(c => c.name == interaction.commandName.toLowerCase())
             if(!command) return;
-            const subcommand = interaction.options.data.find(x => x.type == "SUB_COMMAND_GROUP")
-            if(subcommand && subcommand.name && command.subcommands) command = command.subcommands.find(sc => sc.name == subcommand.name)
+            const subcommand = interaction.options.data.find(x => ["SUB_COMMAND_GROUP", "SUB_COMMAND"].includes(x.type))
+            if(subcommand && subcommand.name && command.subcommands && command.subcommands.find(sc => sc.name == subcommand.name)) command = command.subcommands.find(sc => sc.name == subcommand.name)
             if(!command) return;
 
             let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null

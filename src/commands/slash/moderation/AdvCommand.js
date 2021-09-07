@@ -1,7 +1,7 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
-const AdvRemoveSubCommand = require("./Adv_RemoveSubcommand")
+const AdvRemoveSubCommand = require("./AdvRemoveSubcommand")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
 
 module.exports = class AdvCommand extends Command {
@@ -11,13 +11,14 @@ module.exports = class AdvCommand extends Command {
             description: "Aplica uma advertência/aviso em um usuário do servidor.",
             category: "moderation",
             dirname: __dirname,
-            subcommands: [new AdvRemoveSubCommand(client, "adv")],
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],
                 Bot: ["LUNAR_ADV_MEMBERS"]
             },
             dm: false
         }, client)
+
+        this.subcommands = [new AdvRemoveSubCommand(client, this)]
     }
 
     /** 
@@ -29,11 +30,7 @@ module.exports = class AdvCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/user_not_found"))
             ]
         })
 
@@ -41,11 +38,7 @@ module.exports = class AdvCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/reason_obr")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("geral/reason_obr"))
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")

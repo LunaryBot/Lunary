@@ -1,10 +1,12 @@
 const _client = require("../Lunary")
 const Command = require("./Command")
+const Discord = require("discord.js")
+const Language = require("../languages/Language")
 
 module.exports = class SubCommand {
     /**
     * @param {_client} client
-    * @param {string} mainCommand
+    * @param {Command} mainCommand
     */
     constructor({
         name = null,
@@ -38,9 +40,9 @@ module.exports = class SubCommand {
         this.dirname = dirname
 
         /**
-         * @type {string}
+         * @type {Command}
          */
-        this.nameMainCommand = mainCommand
+        this.mainCommand = mainCommand
 
         /**
          * @type {SubCommand[]}
@@ -90,5 +92,25 @@ module.exports = class SubCommand {
         }
 
         return data
+    }
+
+    /**
+     * @param {string}
+     * @param {Discord.User|Discord.GuildMember} user
+     */
+    sendError(description, user) {
+        if(user instanceof Discord.GuildMember) user = user.user
+        
+        const embed = new Discord.MessageEmbed()
+        .setDescription(`**${global.emojis.get("nop").mention} • ${description}**`)
+        .setColor("#FF0000")
+        .setTimestamp()
+
+        if(user instanceof Discord.User) {
+            embed
+            .setFooter(user.tag, user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+        }
+
+        return embed
     }
 }

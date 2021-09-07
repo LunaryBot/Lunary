@@ -28,11 +28,7 @@ module.exports = class KickCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/user_not_found"))
             ]
         })
 
@@ -40,11 +36,7 @@ module.exports = class KickCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/reason_obr")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("geral/reason_obr"))
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")
@@ -52,31 +44,19 @@ module.exports = class KickCommand extends Command {
 
         if(!user.kickable) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/not_punishable"))
             ]
         })
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/highest_position"))
             ]
         })
 
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/very_big_reason")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/very_big_reason"))
             ]
         })
 
@@ -106,11 +86,7 @@ module.exports = class KickCommand extends Command {
         async function kick() {
             if(!user.kickable) return {
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("geral/not_punishable"))
                 ]
             }
             let notifyDM = true

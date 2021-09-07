@@ -30,11 +30,7 @@ module.exports = class NameCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/user_not_found"))
             ]
         })
 
@@ -42,43 +38,27 @@ module.exports = class NameCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/reason_obr")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("geral/reason_obr"))
                 ]
             })
             else reason = ctx.t("geral/reason_not_informed")
         }
 
-        // if(!highest_position(ctx.me, user)) return await ctx.interaction.reply({
-        //     embeds: [
-        //         new Discord.MessageEmbed()
-        //         .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-        //         .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        //         .setColor("#FF0000")
-        //         .setTimestamp()
-        //     ]
-        // })
+        if(!highest_position(ctx.me, user)) return await ctx.interaction.reply({
+            embeds: [
+                this.sendError(ctx.t("geral/not_punishable"))
+            ]
+        })
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/highest_position")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/not_punishable"))
             ]
         })
 
         if(reason > 450) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/very_big_reason")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("geral/very_big_reason"))
             ]
         })
 
@@ -87,11 +67,7 @@ module.exports = class NameCommand extends Command {
             time = timeString(time)
             if(isNaN(time) || time == 0) return ctx.interaction.reply({
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/invalid_time")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("mute/invalid_time"))
                 ]
             })
         }
@@ -118,21 +94,13 @@ module.exports = class NameCommand extends Command {
 
         if(muterole && ctx.guild.roles.cache.get(muterole.id).position >= ctx.guild.me.roles.highest.position) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/manager_position")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("mute/manager_position"))
             ]
         })
 
         if(muterole && user.roles.cache.has(muterole.id)) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("mute/user_muted")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setColor("#FF0000")
-                .setTimestamp()
+                this.sendError(ctx.t("mute/user_muted"))
             ]
         })
 
@@ -162,11 +130,7 @@ module.exports = class NameCommand extends Command {
         async function mute() {
             if(!highest_position(ctx.me, user)) return {
                 embeds: [
-                    new Discord.MessageEmbed()
-                    .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/not_punishable")}**`)
-                    .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                    .setColor("#FF0000")
-                    .setTimestamp()
+                    this.sendError(ctx.t("geral/not_punishable"))
                 ]
             }
             let notifyDM = true

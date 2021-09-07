@@ -25,11 +25,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setColor("#FF0000")
-                .setDescription(`**${global.emojis.get("nop").mention} • ${ctx.t("geral/user_not_found")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setTimestamp()
+                this.sendError(ctx.t("geral/user_not_found"))
             ]
         })
 
@@ -43,11 +39,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         const advs = logs.filter(x => x.user == user.id && x.type == 4)
         if(!advs.length) return ctx.interaction.reply({
             embeds: [
-                new Discord.MessageEmbed()
-                .setColor("#FF0000")
-                .setDescription(`**${global.emojis.get("alert").mention} ${ctx.t("adv_remove/no_warning")}**`)
-                .setFooter(ctx.author.tag, ctx.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-                .setTimestamp()
+                this.sendError(ctx.t("adv_remove/no_warning"))
             ]
         })
 
