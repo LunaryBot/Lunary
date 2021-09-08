@@ -27,12 +27,12 @@
         "reason": "Motivo"
     },
     "geral": {
-        "punished_by": "Punido por {author_tag} - Motivo: {reason}",
+        "punished_by": "Punido por {author_tag} - ID: {id} - Motivo: {reason}",
         "user_not_found": "Usuário não encontrado.",
         "reason_obr": "É preciso informar um motivo para a punição.",
         "not_punishable": "Eu não tenho permissão para punir este usuário.",
         "reason_not_informed": "Motivo não informado.",
-        "very_big_reason": "O motivo deve conter no máximo `450` caracteres.",
+        "very_big_reason": "O motivo deve conter no máximo `400` caracteres.",
         "highest_position": "Você não pode punir um membro com funções iguais/superiores a sua.",
         "requested_by": "Requisitado por",
         "reason": "Motivo inserido",
@@ -43,15 +43,24 @@
         "title": "Confirme a punição a seguir:",
         "description": "Você realmente deseja punir o usuário informado?"
     },
-    "adv_remove": {
-        "no_warning": "O usuário não possui advertências.",
-        "deleted_warning": "Foi deletada `1` advertência de `{user_tag}`.",
-        "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
+    "ban_info": {
+        "user_not_banned": "Não encontrei nenhum usuário referente a `{user}` baniddo no servidor.",
+        "embed": {
+            "title": "Informações do banimento",
+            "description": {
+                "user_banned": "Usuário banido:"
+            }
+        }
     },
     "mute": {
         "invalid_time": "O tempo inserido é inválido.",
         "manager_position": "Eu não tenho permissão para gerenciar o cargo de mute.",
         "user_muted": "O usuário já está mutado."
+    },
+    "adv_remove": {
+        "no_warning": "O usuário não possui advertências.",
+        "deleted_warning": "Foi deletada `1` advertência de `{user_tag}`.",
+        "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
     },
     "moment": {
         "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],

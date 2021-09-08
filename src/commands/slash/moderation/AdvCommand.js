@@ -44,6 +44,12 @@ module.exports = class AdvCommand extends Command {
             else reason = ctx.t("geral/reason_not_informed")
         }
 
+        if(reason > 400) return ctx.interaction.reply({
+            embeds: [
+                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
+            ]
+        })
+
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
             await ctx.interaction.reply(confirm_punish(ctx, user.user, reason))
 

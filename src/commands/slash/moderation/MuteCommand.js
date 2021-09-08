@@ -56,7 +56,7 @@ module.exports = class NameCommand extends Command {
             ]
         })
 
-        if(reason > 450) return ctx.interaction.reply({
+        if(reason > 400) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
             ]

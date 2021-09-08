@@ -54,7 +54,7 @@ module.exports = class KickCommand extends Command {
             ]
         })
 
-        if(reason > 450) return ctx.interaction.reply({
+        if(reason > 400) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
             ]
@@ -100,12 +100,7 @@ module.exports = class KickCommand extends Command {
                 notifyDM = false
             }
 
-            await user.kick(ctx.t("geral/punished_by", {
-                author_tag: ctx.author.tag,
-                reason: reason
-            }))
-
-           let logs = await ctx.client.LogsDB.ref().once("value")
+            let logs = await ctx.client.LogsDB.ref().once("value")
             logs = logs.val() || {}
             logs = new ObjRef(logs)
 
@@ -115,6 +110,13 @@ module.exports = class KickCommand extends Command {
                 id = `${randomCharacters(8)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(10)}`.toLowerCase()
                 if(!logs.ref(id).val()) break;
             }
+
+            await user.kick(ctx.t("geral/punished_by", {
+                author_tag: ctx.author.tag,
+                reason: reason,
+                id: id
+            }).shorten(512))
+
 
             const log = Buffer.from(JSON.stringify({
                 type: 2,
