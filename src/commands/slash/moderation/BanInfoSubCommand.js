@@ -63,13 +63,13 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         .setColor(13641511)
         .setTitle(`(:question:) - ${ctx.t("ban_info/embed/title")}`)
         .setDescription(`**- ${ctx.t("ban_info/embed/description/user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
-        .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${ban.reason}`)
+        .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${banReason}`)
         .setThumbnail(ban.user.displayAvatarURL({ format: "png", dynamic: true}))
         .setTimestamp()
         
         if(regex.test(banReason)) {
             const id = banReason.replace(regex, "$1")
-
+            
             let logsdb = await ctx.client.LogsDB.ref().once("value")
             logsdb = logsdb.val() || {}
             const logs = new ObjRef(logsdb)
@@ -84,22 +84,19 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
+                    embed.fields = []
+                    embed.addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${banReason.replace(regex, "$2")}`)
                 }
             }
         }
 
 
         await ctx.interaction.reply({
-            embeds: [
-                new Discord.MessageEmbed()
-                .setColor(13641511)
-                .setTitle(`(:question:) - ${ctx.t("ban_info/embed/title")}`)
-                .setDescription(`**- ${ctx.t("ban_info/embed/description/user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
-                .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${ban.reason}`)
-                .setThumbnail(ban.user.displayAvatarURL({ format: "png", dynamic: true}))
-                .setTimestamp()
-            ],
+            embeds: [embed],
             components: [components]
         })
+
+        const msg = await ctx.interaction.fetchReply()
+        
     }
 }
