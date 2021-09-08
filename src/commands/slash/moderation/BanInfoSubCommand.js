@@ -1,6 +1,7 @@
 const SubCommand = require("../../../structures/SubCommand")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
+const { ObjRef } = require("../../../utils")
 
 module.exports = class BanInfoSubCommand extends SubCommand {
     constructor(client, mainCommand) {
@@ -41,6 +42,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                 }), ctx.author)
             ]
         }).catch(() => {})
+        const banReason = ban.reason || ctx.t("geral/reason_not_informed")
 
         const regex = new RegExp(`${this.client.langs.map(x => "^" + x.t("geral/punished_by", {
             author_tag: ".{0,32}#\\d{4}",
@@ -57,12 +59,35 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             .setEmoji("884988947271405608")
         ])
 
-        if(regex.test(ban.reason)) components.addComponents([
-            new Discord.MessageButton()
-            .setURL(`http://localhost:3000/dashboard/guilds/${ctx.guild.id}/modlogs?id=${ban.reason.replace(regex, "$1")}/`)
-            .setLabel("Lunary logs(Beta)")
-            .setStyle("LINK")
-        ])
+        const embed = new Discord.MessageEmbed()
+        .setColor(13641511)
+        .setTitle(`(:question:) - ${ctx.t("ban_info/embed/title")}`)
+        .setDescription(`**- ${ctx.t("ban_info/embed/description/user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
+        .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${ban.reason}`)
+        .setThumbnail(ban.user.displayAvatarURL({ format: "png", dynamic: true}))
+        .setTimestamp()
+        
+        if(regex.test(banReason)) {
+            const id = banReason.replace(regex, "$1")
+
+            let logsdb = await ctx.client.LogsDB.ref().once("value")
+            logsdb = logsdb.val() || {}
+            const logs = new ObjRef(logsdb)
+
+            let _log = logs.ref(id).val()
+            if(_log) {
+                _log = JSON.parse(Buffer.from(_log, 'base64').toString('ascii'))
+                if(_log.type == 1 &&_log.user == ban.user.id && _log.server == ctx.guild.id && banReason.replace(regex, "$2") == decodeURI(_log.reason))  {
+                    components.addComponents([
+                        new Discord.MessageButton()
+                        .setURL(`http://localhost:3000/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setLabel("Lunary logs(Beta)")
+                        .setStyle("LINK")
+                    ])
+                }
+            }
+        }
+
 
         await ctx.interaction.reply({
             embeds: [
