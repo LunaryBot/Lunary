@@ -42,11 +42,11 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             ]
         }).catch(() => {})
 
-        const regex = new RegExp(`${this.client.langs.map(x => x.t("geral/punished_by", {
+        const regex = new RegExp(`${this.client.langs.map(x => "^" + x.t("geral/punished_by", {
             author_tag: ".{0,32}#\\d{4}",
             id: "(.{8}-.{4}-.{4}-.{4}-.{10})",
             reason: "(.*?)"
-        })).join("|")}`, 'i')
+        }) + "$").join("|")}`, 'i')
 
         const components = new Discord.MessageActionRow()
         .addComponents([
@@ -56,14 +56,22 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             .setLabel("Unban")
             .setEmoji("884988947271405608")
         ])
-        
+
+        if(regex.test(ban.reason)) components.addComponents([
+            new Discord.MessageButton()
+            .setURL(`http://localhost:3000/dashboard/guilds/${ctx.guild.id}/modlogs?id=${ban.reason.replace(regex, "$1")}/`)
+            .setLabel("Lunary logs(Beta)")
+            .setStyle("LINK")
+        ])
+
         await ctx.interaction.reply({
             embeds: [
                 new Discord.MessageEmbed()
                 .setColor(13641511)
                 .setTitle(`(:question:) - ${ctx.t("ban_info/embed/title")}`)
-                .setDescription(`**- ${ctx.t("ban_info/embed/user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
+                .setDescription(`**- ${ctx.t("ban_info/embed/description/user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
                 .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${ban.reason}`)
+                .setThumbnail(ban.user.displayAvatarURL({ format: "png", dynamic: true}))
                 .setTimestamp()
             ],
             components: [components]
