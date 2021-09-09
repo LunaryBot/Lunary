@@ -49,7 +49,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             id: "(.{8}-.{4}-.{4}-.{4}-.{10})",
             reason: "(.*?)"
         }) + "$").join("|")}`, 'i')
-
+        
         const components = new Discord.MessageActionRow()
         .addComponents([
             new Discord.MessageButton()
@@ -97,6 +97,27 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         })
 
         const msg = await ctx.interaction.fetchReply()
+
+        const coletor = msg.createMessageComponentCollector({
+            filter: c => c.customId == "unban" && c.user.id == ctx.author.id,
+            max: 1,
+            time: 1 * 1000 * 60
+        })
+
+        coletor.on("collect", async() => {
+            msg.reply({
+                content: "..."
+            })
+        })
+
+        coletor.on("end", async() => {
+            components.components.find(x => x.customId == "unban").setDisabled()
+
+            msg.edit({
+                embeds: [embed],
+                components: [components]
+            })
+        })
         
     }
 }
