@@ -1,12 +1,28 @@
 const Event = require("../structures/Event")
+const sydb = require("sydb")
+const mutesdb = new sydb(__dirname + "/../data/mutes.json")
 
 module.exports = class ReadyEvent extends Event {
   constructor(client) {
     super("ready", client)
   }
 
-  run() {
+  async run() {
     this.client.logger.log(`Client conectado ao Discord!`, { key: "Client", cluster: true, date: true })
+    const gs = []
+    let mutes = Object.entries(mutesdb.ref().val()).filter(([k, v]) => v.time != "..." && this.client.guilds.cache.get(v.server))
+
+    mutes.forEach(async([k, v]) => {
+      const guild = this.client.guilds.cache.get(v.server)
+      const member = await guild.members.fetch(v.user)
+      if(!member || !member.roles.cache.get(v.muterole)) return
+
+      const time = v.end - Date.now()
+      if(time > 0) {
+        const timeout = setTimeout(() => this.client.emit("muteEnd", v), time)
+        this.client.mutes.set(`${k}`, timeout)
+      } else setTimeout(() => this.client.emit("muteEnd", v), time)
+    })
   }
 }
 

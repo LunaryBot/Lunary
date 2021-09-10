@@ -21,15 +21,17 @@ module.exports = class MuteEndEvent extends Event {
     const muterole = guild.roles.cache.get(data.muterole)
     if(muterole.position >= guild.me.roles.highest.position) return
     
-    user.roles.remove(muterole.id).catch(() => {})
+    await user.roles.remove(data.muterole).catch(() => {})
     if(data.roles?.length) {
       const roles = data.roles.filter(function(x) { 
+        if(x == data.muterole) return
         const role = guild.roles.cache.get(x)
         if(!role) return
+        console.log(role.name)
         if(role.position < guild.me.roles.highest.position) return true
       })
-
-      user.roles.add(roles).catch(() => {})
+      console.log(roles)
+      await user.roles.add(roles).catch(() => {})
     }
 
     const guildDB = await this.client.db.ref(`Servers/${guild.id}/`).once("value").then(x => new GuildDB(x.val() || {}))
@@ -51,6 +53,7 @@ module.exports = class MuteEndEvent extends Event {
       ]
     })
 
+    this.client.mutes.delete(`${data.server}_${data.user}`)
     mutesdb.ref(`${data.server}_${data.user}`).delete()
   }
 }
