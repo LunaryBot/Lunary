@@ -74,11 +74,11 @@ module.exports = class EvalCommand extends Command {
             let end = (Date.now() - start)
 
             await ctx.message.reply({
-                content: `\`\`\`js\n${result.replace(this.client.token, "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``
+                content: `\`\`\`js\n${result.replace(new RegExp(this.client.token, 'g'), "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``
             })
         } catch (e) {
             await ctx.message.reply({
-                content: `\`\`\`js\n${`${e}`.replace(this.client.token, "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``
+                content: `\`\`\`js\n${`${e}`.replace(new RegExp(this.client.token, 'g'), "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``
             })
         }
     } 

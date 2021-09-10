@@ -41,12 +41,12 @@ module.exports = class EvalCommand extends Command {
             let end = (Date.now() - start)
 
             let msg = await ctx.interaction.reply({
-                content: `\`\`\`js\n${result.replace(this.client.token, "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``,
+                content: `\`\`\`js\n${result.replace(new RegExp(this.client.token, 'g'), "🙃").replace(/```/g, "\\`\\`\\`").slice(0, 1990)}\`\`\``,
                 ephemeral: ctx.interaction.options.getBoolean("hide") ? true : false,
             })
         } catch (err) {
             ctx.interaction.reply({
-                content: `\`\`\`js\n${`${err}`.replace(this.client.token, "🙃").slice(0, 1990)}\`\`\``,
+                content: `\`\`\`js\n${`${err}`.replace(new RegExp(this.client.token, 'g'), "🙃").slice(0, 1990)}\`\`\``,
                 ephemeral: ctx.interaction.options.getBoolean("hide") ? true : false
             })
         }

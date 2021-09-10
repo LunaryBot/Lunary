@@ -62,6 +62,9 @@
         "deleted_warning": "Foi deletada `1` advertência de `{user_tag}`.",
         "deleted_warnings": "Foram deletadas `{size}` advertências de `{user_tag}`."
     },
+    "unban": {
+        "remove_ban": "**Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+    },
     "moment": {
         "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
         "monthsShort": ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],

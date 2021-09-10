@@ -90,7 +90,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             }
         }
 
-
         await ctx.interaction.reply({
             embeds: [embed],
             components: [components]
@@ -104,9 +103,20 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             time: 1 * 1000 * 60
         })
 
-        coletor.on("collect", async() => {
+        coletor.on("collect", 
+        /**
+         * @param {Discord.ButtonInteraction} button
+         */
+        async(button) => {
+            await button.deferUpdate().catch(() => {})
+            await ctx.guild.members.unban(ban.user.id, `${ctx.t("geral/requested_by")}: ${ctx.author.tag}`)
+            
             msg.reply({
-                content: "..."
+                content: `:white_check_mark: ─ ${ctx.t("unban/remove_ban", {
+                    author_mention: ctx.author.toString(),
+                    user_tag: ban.user.tag,
+                    user_id: ban.user.id
+                })}`
             })
         })
 
