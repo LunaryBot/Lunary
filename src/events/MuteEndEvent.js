@@ -14,7 +14,7 @@ module.exports = class MuteEndEvent extends Event {
     const data2 = mutesdb.ref(`${data.server}_${data.user}`).val()
     if(!data2) return
     const guild = this.client.guilds.cache.get(data.server)
-    if(!guild) return
+    if(!guild || !guild.me.permissions.has("MANAGE_ROLES")) return
     const user = await guild.members.fetch(data.user).catch(() => {})
     if(!user) return
     if(!user.roles.cache.has(data.muterole)) return
