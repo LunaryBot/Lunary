@@ -20,6 +20,10 @@ const p = {
     unmute: {
         cor: "GREEN",
         text: "Unmute"
+    },
+    unban: {
+        cor: "GREEN",
+        text: "Unban"
     }
 }
 
@@ -30,8 +34,9 @@ module.exports = function message_modlogs(author, user, reason, type, t, id, tim
     .setAuthor(`${p[type].text} | ${user.tag}`, user.displayAvatarURL({ dynamic: true, format: "png" }))
     .setDescription(`> ${global.emojis.get("author").mention} **${t("default_message_modlog/author")}:** ${author.toString()} (\`${author.id}\`)\n> ${global.emojis.get("user").mention} **${t("default_message_modlog/user")}:** ${user.toString()} (\`${user.id}\`)`)
     .addField(`${global.emojis.get("clipboard").mention} ${t("default_message_modlog/reason")}:`, `>>> ${reason.shorten(1010)}`, false)
-    .setFooter(`${type == "unmute" ? "Mute" : ""} ID: ` + id)
     .setTimestamp()
+
+    if(id) embed.setFooter(`${type == "unmute" ? "Mute" : ""} ID: ` + id)
 
     if(time) embed.addField(`${global.emojis.get("time").mention} • ${t("geral/duration")}:`, `> \`${time != "..." ? `${format(time)}` : t("geral/not_determined")}\``)
 

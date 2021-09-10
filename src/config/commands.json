@@ -270,5 +270,31 @@
                 }
             ]
         }
+    },
+    "help": {
+        "data": {
+            "name": "help",
+            "description": "〔🤖 • Bot〕Meu comando de ajuda."
+        }
+    },
+    "ping": {
+        "data": {
+            "name": "ping",
+            "description": "〔🤖 • Bot〕Veja a minha latência.",
+            "type": 1,
+            "options": [
+                {
+                    "type": 3,
+                    "name": "type",
+                    "description": "〔📍 • Type〕Veja os stats de uma área específica minha.",
+                    "choices": [
+                        { 
+                            "name": "clusters", 
+                            "value": "clusters" 
+                        }
+                    ]
+                }
+            ]
+        }
     }
 }

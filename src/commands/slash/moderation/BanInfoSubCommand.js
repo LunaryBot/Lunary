@@ -1,7 +1,7 @@
 const SubCommand = require("../../../structures/SubCommand")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
-const { ObjRef } = require("../../../utils")
+const { ObjRef, message_modlogs } = require("../../../utils")
 
 module.exports = class BanInfoSubCommand extends SubCommand {
     constructor(client, mainCommand) {
@@ -80,7 +80,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                 if(_log.type == 1 &&_log.user == ban.user.id && _log.server == ctx.guild.id && banReason.replace(regex, "$2") == decodeURI(_log.reason))  {
                     components.addComponents([
                         new Discord.MessageButton()
-                        .setURL(`http://localhost:3000/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setURL(`${this.client.config.website}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
@@ -111,6 +111,15 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             await button.deferUpdate().catch(() => {})
             await ctx.guild.members.unban(ban.user.id, `${ctx.t("geral/requested_by")}: ${ctx.author.tag}`)
             
+            if(ctx.GuildDB.configs.has("LOG_UNBAN")) {
+                const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
+                if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
+                    embeds: [
+                        message_modlogs(ctx.author, ban.user, ctx.t("geral/reason_not_informed"), "unban", ctx.t)
+                    ]
+                })
+            }
+
             msg.reply({
                 content: `:white_check_mark: ─ ${ctx.t("unban/remove_ban", {
                     author_mention: ctx.author.toString(),
