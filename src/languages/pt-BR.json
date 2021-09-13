@@ -65,6 +65,23 @@
     "unban": {
         "remove_ban": "**Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
     },
+    "help": {
+        "title": "Lunary ajuda",
+        "description": "Olá {author}, eu sou a Lunar, sou um bot com um grande sonho,\nMeu foco principal é manter seu servidor organizado, ajudando na moderação e administração. Este é meu painel de ajuda, aqui você poderá descobrir no que eu posso ajudar a você e o servidor.",
+        "links": {
+            "commands": "Minha lista de comandos",
+            "support": "Precisando de ajuda? Pergunte no meu servidor de suporte!",
+            "vote": "Que tal votar em mim para me ajudar a  chegar em outras pessoas?",
+            "add": "Que tal me adicionar em seu servidor?",
+            "dashboard": "Me configure pela minha dashboard"
+        },
+        "created_by": "Fui criada e desenvolvida por:",
+        "buttons": {
+            "invite_me": "Me adicione!",
+            "support": "Meu servidor.",
+            "website": "Meu website."
+        }
+    },
     "moment": {
         "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
         "monthsShort": ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
