@@ -1,6 +1,6 @@
 {
   "name": "lunarybot",
-  "version": "3.0.0",
+  "version": "3.0 Canary",
   "description": "",
   "main": "src/LunaryCluster.js",
   "scripts": {

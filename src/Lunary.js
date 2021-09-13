@@ -1,4 +1,4 @@
-const { Client, Collection } = require("discord.js")
+const { Permissions, Client, Collection, Constants: { InviteScopes } } = require("discord.js")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")
@@ -82,6 +82,62 @@ class Lunary extends Client {
         this.commands = {}
         require("./handlers/commandHandler")(this)
         return this.commands
+    }
+
+    /**
+    * @param {{
+    *   client_id:string,
+    *   scopes:string[],
+    *   permissions:bigint,
+    *   disableGuildSelect:boolean,
+    *   guild:string,
+    *   redirect:string,
+    *   redirect_uri:string,
+    *   state:string
+    * }} options
+    */
+     generateOauth2(options = {}) {
+        if(typeof options !== 'object') throw new TypeError('INVALID_TYPE', 'options', 'object', true);
+        let client_id = options.client_id
+        
+        if(!client_id) {
+            if(!this.application) throw new Error('CLIENT_NOT_READY', 'generate an invite link');
+            else client_id = this.application.id
+        }
+    
+        const query = new URLSearchParams({
+            client_id: client_id,
+        });
+    
+        const { scopes } = options;
+        if(typeof scopes === 'undefined') throw new TypeError('INVITE_MISSING_SCOPES');
+        
+        if(!Array.isArray(scopes)) throw new TypeError('INVALID_TYPE', 'scopes', 'Array of Invite Scopes', true);
+        
+        if(!scopes.some(scope => ['bot', 'applications.commands'].includes(scope))) throw new TypeError('INVITE_MISSING_SCOPES');
+        
+        const invalidScope = scopes.find(scope => !InviteScopes.includes(scope));
+        if(invalidScope) throw new TypeError('INVALID_ELEMENT', 'Array', 'scopes', invalidScope);
+
+        query.set('scope', scopes.join(' '));
+    
+        if(options.permissions) {
+            const permissions = Permissions.resolve(options.permissions);
+            if(permissions) query.set('permissions', permissions);
+        }
+    
+        if(options.disableGuildSelect) query.set('disable_guild_select', true)
+    
+        if(options.guild) {
+            const guildId = this.guilds.resolveId(options.guild);
+            if(!guildId) throw new TypeError('INVALID_TYPE', 'options.guild', 'GuildResolvable');
+            query.set('guild_id', guildId);
+        }
+
+        if(options.redirect_uri || options.redirect) query.set('redirect_uri', options.redirect_uri || options.redirect)
+        if(options.state) query.set('state', options.state)
+    
+        return `${this.options.http.api}${this.api.oauth2.authorize}?${query.toString()}`;
     }
 }
 
