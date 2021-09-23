@@ -1,3 +1,6 @@
 node_modules
 src/config/config.js
+src/data/commands.json
+src/data/mutes.json
 .env
+src/commands/slash

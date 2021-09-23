@@ -8,14 +8,14 @@ const { format } = require("./format_time")
  * @param {Discord.User} user
  * @param {String} reason
  */
-module.exports = function confirm_punish(ctx, user, reason, time) {
+module.exports = function confirm_punishment(ctx, user, reason, time) {
     const embed = new Discord.MessageEmbed()
-    .setColor(13641511)
-    .setAuthor(ctx.t("confirm_punish/title"), global.emojis.get("alert").url)
-    .setDescription(`**- ${ctx.t("confirm_punish/description")}**\nㅤ${user.toString()} (\`${user.tag} - ${user.id}\`)`)
-    .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("geral/reason")}:`, `ㅤ${reason}${time ? `\n\n**- ${global.emojis.get("time").mention} • ${ctx.t("geral/duration")}:** \`${time != "..." ? `${format(time)}` : ctx.t("geral/not_determined")}\`` : ""}`)
+    .setColor("#d02727")
+    .setAuthor(ctx.t("general:confirm_punishment.title"), global.emojis.get("alert").url)
+    .setDescription(`**- ${ctx.t("general:confirm_punishment.description")}**\nㅤ${user.toString()} (\`${user.tag} - ${user.id}\`)`)
+    .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("general:confirm_punishment.reason")}:`, `ㅤ${reason}${time ? `\n\n**- ${global.emojis.get("time").mention} • ${ctx.t("general:confirm_punishment.duration")}:** \`${time != "..." ? `${formactx.t(time)}` : ctx.t("general:confirm_punishment.duration_not_determined")}\`` : ""}`)
     .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-    .setFooter(`${ctx.t("geral/requested_by")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))
+    .setFooter(`${ctx.t("general:requested_by")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))
     .setTimestamp()
 
     const data = {

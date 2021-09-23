@@ -1,0 +1,3 @@
+help: 
+  name: eval
+  description: Execute um código JavaScript.

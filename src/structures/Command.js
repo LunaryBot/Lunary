@@ -97,7 +97,7 @@ module.exports = class Command {
      * @param {string}
      * @param {Discord.User|Discord.GuildMember} user
      */
-     sendError(description, user) {
+    sendError(description, user) {
         if(user instanceof Discord.GuildMember) user = user.user
         
         const embed = new Discord.MessageEmbed()

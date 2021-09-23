@@ -9,6 +9,7 @@ const firebase = require("firebase")
 const Command = require("./structures/Command")
 const Event = require("./structures/Event")
 const Language = require("./languages/Language")
+const Locale = require("./structures/Locale")
 global.emojis = require("./utils/emojisInstance")
 
 class Lunary extends Client {
@@ -48,6 +49,7 @@ class Lunary extends Client {
     }
 
     init() {
+        this.loadLocales()
         this.loadLanguage()
         this.loadEvents()
         this.loadCommands()
@@ -62,6 +64,16 @@ class Lunary extends Client {
         this.langs = []
         require("./handlers/langHandler")(this)
         return this.langs
+    }
+
+    /**
+     * 
+     * @returns {Locale[]}
+     */
+     loadLocales() {
+        this.locales = []
+        require("./handlers/localeHandler")(this)
+        return this.locales
     }
 
     /**
@@ -107,14 +119,15 @@ class Lunary extends Client {
     
         const query = new URLSearchParams({
             client_id: client_id,
+            response_type: "code"
         });
     
         const { scopes } = options;
         if(typeof scopes === 'undefined') throw new TypeError('INVITE_MISSING_SCOPES');
         
-        if(!Array.isArray(scopes)) throw new TypeError('INVALID_TYPE', 'scopes', 'Array of Invite Scopes', true);
+        if(!Array.isArray(scopes)) throw new TypeError('INVALID_TYPE', 'scopes', 'Array of OAuth2 Scopes', true);
         
-        if(!scopes.some(scope => ['bot', 'applications.commands'].includes(scope))) throw new TypeError('INVITE_MISSING_SCOPES');
+        if(!scopes.some(scope => ['bot', 'applications.commands'].includes(scope)) && scopes.length == 0) throw new TypeError('OAUTH2_MISSING_SCOPES');
         
         const invalidScope = scopes.find(scope => !InviteScopes.includes(scope));
         if(invalidScope) throw new TypeError('INVALID_ELEMENT', 'Array', 'scopes', invalidScope);

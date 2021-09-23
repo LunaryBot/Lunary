@@ -7,7 +7,6 @@ module.exports = class HelpCommand extends Command {
     constructor(client) {
         super({
             name: "help",
-            description: "Meu comando de ajuda.",
             category: "bot",
             dirname: __dirname,
         }, client)
@@ -27,14 +26,14 @@ module.exports = class HelpCommand extends Command {
 
         const embed = new Discord.MessageEmbed()
         .setColor("#A020F0")
-        .setAuthor(`${ctx.t("help/title")} • ${version}`, this.client.user.avatarURL({ dynamic: true, format: "png", size: 1024 }), this.client.config.links.website.home)
-        .setDescription(`<:YaY:835190406899695697> **|** ${ctx.t("help/description", { author: ctx.author.toString() })}`)
-        .addField(`:clipboard: ${ctx.t("help/links/commands")}`, `> ${this.client.config.links.website.commands}`)
-        .addField(`<:Duvida:835272427516461146> ${ctx.t("help/links/support")}`, `> ${this.client.config.links.website.support}`)
-        .addField(`:love_letter: ${ctx.t("help/links/add")}`, `> [${this.client.config.links.website.invite}](${invite})`)
-        .addField(`:envelope_with_arrow: ${ctx.t("help/links/vote")}`, `> ${this.client.config.links.website.vote}`)
-        .addField(`:gear: ${ctx.t("help/links/dashboard")}`, `> ${this.client.config.links.website.dashboard.me}`)
-        .setFooter(`• ${ctx.t("help/created_by")} ${Bae.tag}`, Bae.avatarURL({ dynamic: true, format: "png", size: 1024 }))
+        .setAuthor(`${ctx.t("help:texts.title")} • ${version}`, this.client.user.avatarURL({ dynamic: true, format: "png", size: 1024 }), this.client.config.links.website.home)
+        .setDescription(`<:YaY:835190406899695697> **|** ${ctx.t("help:texts.description", { author: ctx.author.toString() })}`)
+        .addField(`:clipboard: ${ctx.t("help:texts.links.commands")}`, `> ${this.client.config.links.website.commands}`)
+        .addField(`<:Duvida:835272427516461146> ${ctx.t("help:texts.links.support")}`, `> ${this.client.config.links.website.support}`)
+        .addField(`:love_letter: ${ctx.t("help:texts.links.add")}`, `> [${this.client.config.links.website.invite}](${invite})`)
+        .addField(`:envelope_with_arrow: ${ctx.t("help:texts.links.vote")}`, `> ${this.client.config.links.website.vote}`)
+        .addField(`:gear: ${ctx.t("help:texts.links.dashboard")}`, `> ${this.client.config.links.website.dashboard.me}`)
+        .setFooter(`• ${ctx.t("help:texts.created_by")} ${Bae.tag}`, Bae.avatarURL({ dynamic: true, format: "png", size: 1024 }))
         .setThumbnail("https://imgur.com/iacDuXp.png")
 
         const components = new Discord.MessageActionRow()
@@ -42,15 +41,15 @@ module.exports = class HelpCommand extends Command {
             new Discord.MessageButton()
             .setStyle("LINK")
             .setURL(invite)
-            .setLabel(ctx.t("help/buttons/invite_me")),
+            .setLabel(ctx.t("help:texts.buttons.invite_me")),
             new Discord.MessageButton()
             .setStyle("LINK")
             .setURL(this.client.config.links.support)
-            .setLabel(ctx.t("help/buttons/support")),
+            .setLabel(ctx.t("help:texts.buttons.support")),
             new Discord.MessageButton()
             .setStyle("LINK")
             .setURL(this.client.config.links.website.home)
-            .setLabel(ctx.t("help/buttons/website"))
+            .setLabel(ctx.t("help:texts.buttons.website"))
         ])
 
         await ctx.interaction.reply({

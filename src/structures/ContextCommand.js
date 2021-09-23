@@ -5,6 +5,7 @@ const { GuildDB } = require("./GuildDB")
 const { UserDB } = require("./UserDB")
 const Language = require("../languages/Language")
 const { configPermissions } = require("./BotPermissions")
+const Locale = require("./Locale")
 
 module.exports = class ContextCommand {
     constructor({client, message = null, interaction = null, args = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {
@@ -81,10 +82,11 @@ module.exports = class ContextCommand {
         this.UserDB = new UserDB(this.UsersDB.ref(`Users/${this.author.id}/`).val(), !this.dm ? configPermissions(this.member, this.GuildsDB) : null)
 
         /**
-         * @type {Language}
+         * @type {Locale}
          */
-        const lang = this.client.langs.find(x => x.lang == null || "pt-BR")
+        const locale = this.client.locales.find(x => x.locale == (GuildDB.locale || this.client.config.defaultLocale))
         
-        this.t = lang.t
+        this.locale = locale
+        this.t = locale.t
     }
 }

@@ -9,5 +9,8 @@ const manager = new Manager(`${__dirname}/Lunary.js`,{
     token: token
 })
 
-manager.on('clusterCreate', cluster => Logger.log(`Cluster criado!`, { key: "System", cluster: cluster, date: true }));
+manager.on('clusterCreate', cluster => {
+    Logger.log(`Cluster criado!`, { key: "System", cluster: cluster, date: true })
+});
+
 manager.spawn()

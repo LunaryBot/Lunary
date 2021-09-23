@@ -2,7 +2,7 @@ const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
 const AdvRemoveSubCommand = require("./AdvRemoveSubcommand")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, confirm_punish} = require("../../../utils/index")
 
 module.exports = class AdvCommand extends Command {
     constructor(client) {
@@ -30,7 +30,7 @@ module.exports = class AdvCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
+                this.sendError(ctx.t("general:invalid_user"), ctx.author)
             ]
         })
 
@@ -38,15 +38,15 @@ module.exports = class AdvCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
+                    this.sendError(ctx.t("adv:texts.mandatory_reason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("geral/reason_not_informed")
+            else reason = ctx.t("adv:texts.reason_not_informed")
         }
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
+                this.sendError(ctx.t("adv:very_big_reason"), ctx.author)
             ]
         })
 
@@ -98,7 +98,7 @@ module.exports = class AdvCommand extends Command {
 
             let notifyDM = true
             try {
-                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/adv", {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("adv:default_dm_message", {
                     emoji: ":hiking_boot:",
                     guild_name: ctx.guild.name,
                     reason: reason
@@ -107,13 +107,12 @@ module.exports = class AdvCommand extends Command {
                 notifyDM = false
             }
 
-
-            const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
-            if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
-                embeds: [
-                    message_punish(ctx.author, user.user, reason, "adv", ctx.t, ctx.client, ctx.UserDB.gifs.kick)
-                ]
-            })
+            // const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
+            // if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
+            //     embeds: [
+            //         message_punish(ctx.author, user.user, reason, "adv", ctx.t, ctx.client, ctx.UserDB.gifs.kick)
+            //     ]
+            // })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
@@ -122,13 +121,13 @@ module.exports = class AdvCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                content: `:tada: ─ ${ctx.t("general:successfully_punished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
                     user_tag: user.user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:not_notify_dm") : "."
                 })}`,
                 embeds: [],
                 components: []

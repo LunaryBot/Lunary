@@ -30,7 +30,7 @@ module.exports = class PingCommand extends Command {
             let ram = 0
             let shards = 0
 
-            for(let i = 0; i < 2; i++) {
+            for(let i = 0; i < this.client.cluster.count; i++) {
                 let cluster = stats.find(x => x[0] == i)
                 if(cluster && cluster[1]) shards += Number(cluster[1])
                 if(cluster && cluster[3]) guilds += Number(cluster[3])

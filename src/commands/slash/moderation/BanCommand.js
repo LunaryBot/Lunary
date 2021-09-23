@@ -8,7 +8,6 @@ module.exports = class BanCommand extends Command {
     constructor(client) {
         super({
             name: "ban",
-            description: "Bane um usuário do servidor.",
             category: "moderation",
             dirname: __dirname,
             permissions: {
@@ -31,7 +30,7 @@ module.exports = class BanCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
+                this.sendError(ctx.t("general:invalid_user"), ctx.author)
             ]
         })
 
@@ -39,30 +38,30 @@ module.exports = class BanCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
+                    this.sendError(ctx.t("ban:texts.mandatory_reason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("geral/reason_not_informed")
+            else reason = ctx.t("ban:texts.reason_not_informed")
         }
 
         const membro = await ctx.interaction.guild.members.fetch(user.id).catch(() => {})
         if(membro) {
             if(!membro.bannable) return await ctx.interaction.reply({
               embeds: [
-                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
+                this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
               ]
             })
             
             if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/highest_position"), ctx.author)
+                    this.sendError(ctx.t("general:userMissingPermissionsToPunish"), ctx.author)
                 ]
             })
         }
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
+                this.sendError(ctx.t("ban:very_big_reason"), ctx.author)
             ]
         })
 
@@ -73,7 +72,7 @@ module.exports = class BanCommand extends Command {
             
             const filter = c => ["confirm_punish", "cancel_punish"].includes(c.customId) && c.user.id == ctx.author.id
             const colletor = msg.createMessageComponentCollector({ filter, time: 1 * 1000 * 60, max: 1, errors: ["time"] })
-
+            
             colletor.on("collect", async c => {
                 await c.deferUpdate().catch(() => {})
                 if(c.customId != "confirm_punish") return ctx.interaction.deleteReply().catch(() => {})
@@ -92,12 +91,12 @@ module.exports = class BanCommand extends Command {
         async function ban() {
             if(membro && !membro.bannable) return {
                 embeds: [
-                    this.sendError(ctx.t("geral/not_punishable"), ctx.author)
+                    this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
                 ]
             }
             let notifyDM = true
             try {
-                if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/ban", {
+                if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
                     emoji: ":hammer:",
                     guild_name: ctx.guild.name,
                     reason: reason
@@ -117,7 +116,7 @@ module.exports = class BanCommand extends Command {
                 if(!logs.ref(id).val()) break;
              }
 
-            await ctx.guild.members.ban(user.id, {reason: ctx.t("geral/punished_by", {
+            await ctx.guild.members.ban(user.id, {reason: ctx.t("ban:texts.punished_by", {
                 author_tag: ctx.author.tag,
                 reason: reason,
                 id: id
@@ -135,12 +134,12 @@ module.exports = class BanCommand extends Command {
 
             ctx.client.LogsDB.ref(id).set(log)
 
-            const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
-            if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
-                embeds: [
-                    message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client, ctx.UserDB.gifs.ban)
-                ]
-            })
+            // const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
+            // if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432n)) channel_punish.send({
+            //     embeds: [
+            //         message_punish(ctx.author, user, reason, "ban", ctx.t, ctx.client, ctx.UserDB.gifs.ban)
+            //     ]
+            // })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
@@ -149,13 +148,13 @@ module.exports = class BanCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                content: `:tada: ─ ${ctx.t("general:successfully_punished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
                     user_tag: user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:not_notify_dm") : "."
                 })}`,
                 embeds: [],
                 components: []
