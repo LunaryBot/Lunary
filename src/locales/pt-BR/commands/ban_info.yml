@@ -1,0 +1,11 @@
+help:
+  name: ban info
+  description:
+texts:
+  user_not_banned: Não encontrei nenhum usuário referente a `{user}` baniddo no servidor.
+  embed:
+    title: Informações do banimento
+    user_banned: "Usuário banido:"
+    reason: Motivo inserido
+  remove_ban: "**Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+  reason_not_informed: Motivo não informado.

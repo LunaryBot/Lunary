@@ -18,9 +18,14 @@ module.exports = class Locale {
             } else path = this.dirname + `/${path}`
             
             const data = yaml.load(readFileSync(path, 'utf8'));
-            const val = new ObjRef(data, ".").ref(split.slice(1).join(":")).val()
+            let val = new ObjRef(data, ".").ref(split.slice(1).join(":")).val()
+            if(typeof val == "object") {
+                if(Array.isArray(val)) val = val.joiN(",")
+                else val = JSON.stringify(val)
+            }
+
+            let output = val || ":bug:"
             
-            let output = `${val || ":bug:"}`
             const variablesKeys = Object.keys(variables || {})
             if(val) variablesKeys.map(function(x) {
                 let a = variables[x]
