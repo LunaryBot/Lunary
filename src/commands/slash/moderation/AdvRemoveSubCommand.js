@@ -25,7 +25,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
+                this.sendError(ctx.t("general:invalid_user"), ctx.author)
             ]
         })
 
@@ -39,16 +39,17 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
         const advs = logs.filter(x => x.user == user.id && x.type == 4)
         if(!advs.length) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("adv_remove/no_warning"), ctx.author)
+                this.sendError(ctx.t("adv_remove:texts.no_warning"), ctx.author)
             ]
         })
 
         await logs.forEach(x => ctx.client.LogsDB.ref(x.id).remove())
 
         await ctx.interaction.reply({
-            content: `${global.emojis.get("yep").mention} ${ctx.t(`adv_remove/deleted_warning${advs.length > 1 ? "s" : ""}`, {
+            content: `:white_check_mark: ─ ${ctx.t(`adv_remove:texts.deleted_warning${advs.length > 1 ? "s" : ""}`, {
                 size: advs.length,
-                user_tag: user.tag
+                user_tag: user.tag,
+                user_id: user.id,
             })}`
         })
     }

@@ -109,7 +109,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
          */
         async(button) => {
             await button.deferUpdate().catch(() => {})
-            await ctx.guild.members.unban(ban.user.id, `${ctx.t("general:requested_by")}: ${ctx.author.tag}`)
+            await ctx.guild.members.unban(ban.user.id, `${ctx.t("general:.requested_by")}: ${ctx.author.tag}`)
             
             if(ctx.GuildDB.configs.has("LOG_UNBAN")) {
                 const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)

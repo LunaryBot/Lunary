@@ -1,6 +1,6 @@
 help:
   name: ban info
-  description:
+  description: Mostra as informações do banimento de um usuário banido no servidor.
 texts:
   user_not_banned: Não encontrei nenhum usuário referente a `{user}` baniddo no servidor.
   embed:
