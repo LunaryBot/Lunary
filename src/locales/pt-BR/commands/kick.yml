@@ -1,0 +1,9 @@
+help:
+  name: kick
+  description: Expulsa um usuário do servidor.
+texts:
+  mandatory_reason: É preciso informar um motivo para a expulsão. `[Opção de motivo obrigatório ativa]`
+  very_big_reason: O motivo deve conter no máximo `400` caracteres.
+  reason_not_informed: Motivo não informado.
+  default_dm_message: "{emoji} Você foi expulso de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
+  punished_by: "Punido por {author_tag} - ID: {id} - Motivo: {reason}"
