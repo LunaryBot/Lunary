@@ -76,20 +76,20 @@ class ClusterManager extends EventEmitter {
     return this.clusters;
   }
 
-    broadcast(message) {
-      const promises = [];
-      for (const cluster of this.clusters.values()) promises.push(cluster.send(message));
-      return Promise.all(promises);
-    }
+  broadcast(message) {
+    const promises = [];
+    for (const cluster of this.clusters.values()) promises.push(cluster.send(message));
+    return Promise.all(promises);
+  }
 
-    createCluster(id , shardstospawn, totalshards) {
+  createCluster(id , shardstospawn, totalshards) {
       
-      const cluster = new Cluster(this, id,  shardstospawn, totalshards);
-      this.clusters.set(id, cluster);
+    const cluster = new Cluster(this, id,  shardstospawn, totalshards);
+    this.clusters.set(id, cluster);
 
-      this.emit('clusterCreate', cluster);
-      return cluster;
-    }
+    this.emit('clusterCreate', cluster);
+    return cluster;
+  }
 
    broadcastEval(script, cluster) {
     return this._performOnShards('eval', [script], cluster);
@@ -121,6 +121,10 @@ class ClusterManager extends EventEmitter {
       await Promise.all(promises);
     }
     return this.clusters;
+  }
+
+  isReady() {
+    return this.clusters.size != this.totalClusters
   }
 
 }

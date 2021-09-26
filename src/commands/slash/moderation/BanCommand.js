@@ -30,7 +30,7 @@ module.exports = class BanCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("general:invalid_user"), ctx.author)
+                this.sendError(ctx.t("general:invalidUser"), ctx.author)
             ]
         })
 
@@ -38,10 +38,10 @@ module.exports = class BanCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("ban:texts.mandatory_reason"), ctx.author)
+                    this.sendError(ctx.t("ban:texts.mandatoryReason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("ban:texts.reason_not_informed")
+            else reason = ctx.t("ban:texts.reasonNotInformed")
         }
 
         const membro = await ctx.interaction.guild.members.fetch(user.id).catch(() => {})
@@ -61,7 +61,7 @@ module.exports = class BanCommand extends Command {
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("ban:very_big_reason"), ctx.author)
+                this.sendError(ctx.t("ban:veryBigReason"), ctx.author)
             ]
         })
 
@@ -116,7 +116,7 @@ module.exports = class BanCommand extends Command {
                 if(!logs.ref(id).val()) break;
              }
 
-            await ctx.guild.members.ban(user.id, {reason: ctx.t("ban:texts.punished_by", {
+            await ctx.guild.members.ban(user.id, {reason: ctx.t("ban:texts.punishedBy", {
                 author_tag: ctx.author.tag,
                 reason: reason,
                 id: id
@@ -157,13 +157,13 @@ module.exports = class BanCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.t("general:successfully_punished", {
+                content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
                     user_tag: user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("general:not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
                 })}`,
                 embeds: [],
                 components: []

@@ -1,4 +1,4 @@
-const { Permissions, Client, Collection, Constants: { InviteScopes } } = require("discord.js")
+const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require("discord.js")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")
@@ -23,7 +23,21 @@ class Lunary extends Client {
                     $browser: "Discord iOS" 
                 },
             }, 
-            fetchAllMembers: true
+            fetchAllMembers: true,
+            makeCache: Options.cacheWithLimits({
+                ApplicationCommandManager: 0,
+                GuildBanManager: 0,
+                GuildInviteManager: 0,
+                GuildMemberManager: 0,
+                MessageManager: 0,
+		        PresenceManager: 0,
+                UserManager: 0,
+                GuildStickerManager: 0,
+                StageInstanceManager: 0,
+                VoiceStateManager: 0,
+                ThreadManager: 0,
+                ThreadMemberManager: 0
+            })
         })
         this.config = require("./config/config")
         this.cluster = new ClusterClient(this)
@@ -159,5 +173,4 @@ const client = new Lunary()
 module.exports = client
 
 process.on('warning', () => console.log("Erro!"));
-require("./structures/server/main")()
 client.init()

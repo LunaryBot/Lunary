@@ -38,7 +38,7 @@ module.exports = function message_modlogs(author, user, reason, type, t, lang = 
 
     if(id) embed.setFooter(`${type == "unmute" ? "Mute" : ""} ID: ` + id)
 
-    if(time) embed.addField(`${global.emojis.get("time").mention} • ${t("general:modlogs.duration")}:`, `> \`${time != "..." ? `${format(time)}` : t("general:modlogs.duration_not_determined")}\``)
+    if(time) embed.addField(`${global.emojis.get("time").mention} • ${t("general:modlogs.duration")}:`, `> \`${time != "..." ? `${format(time)}` : t("general:modlogs.durationNotDetermined")}\``)
 
     return embed
 }

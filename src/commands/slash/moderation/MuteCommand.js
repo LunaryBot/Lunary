@@ -30,7 +30,7 @@ module.exports = class NameCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/user_not_found"), ctx.author)
+                this.sendError(ctx.t("general:invalidUser"), ctx.author)
             ]
         })
 
@@ -38,27 +38,27 @@ module.exports = class NameCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("geral/reason_obr"), ctx.author)
+                    this.sendError(ctx.t("mute:texts.mandatoryReason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("geral/reason_not_informed")
+            else reason = ctx.t("mute:texts.reasonNotInformed")
         }
 
         if(!highest_position(ctx.me, user)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
+                this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
             ]
         })
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/not_punishable"), ctx.author)
+                this.sendError(ctx.t("general:userMissingPermissionsToPunish"), ctx.author)
             ]
         })
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("geral/very_big_reason"), ctx.author)
+                this.sendError(ctx.t("general:veryBigReason"), ctx.author)
             ]
         })
 
@@ -67,7 +67,7 @@ module.exports = class NameCommand extends Command {
             time = timeString(time)
             if(isNaN(time) || time == 0) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("mute/invalid_time"), ctx.author)
+                    this.sendError(ctx.t("mute:texts.invalidTime"), ctx.author)
                 ]
             })
         }
@@ -87,20 +87,20 @@ module.exports = class NameCommand extends Command {
                     hoist: true,
                     mentionable: false
                 },
-                reason: 'Cargo de mute',
+                reason: ctx.t("mute:texts.createMuterole"),
             })
             this.client.db.ref(`Servers/${ctx.guild.id}/`).update({muterole: muterole.id})
         }
 
         if(muterole && ctx.guild.roles.cache.get(muterole.id).position >= ctx.guild.me.roles.highest.position) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("mute/manager_position"), ctx.author)
+                this.sendError(ctx.t("mute:texts.lunyMissingPermissionsToManagerMuterole"), ctx.author)
             ]
         })
 
         if(muterole && user.roles.cache.has(muterole.id)) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("mute/user_muted"), ctx.author)
+                this.sendError(ctx.t("mute:texts.userMuted"), ctx.author)
             ]
         })
 
@@ -130,16 +130,16 @@ module.exports = class NameCommand extends Command {
         async function mute() {
             if(!highest_position(ctx.me, user)) return {
                 embeds: [
-                    this.sendError(ctx.t("geral/not_punishable"), ctx.author)
+                    this.sendError(ctx.t("general:texts.lunyMissingPermissionsToPunish"), ctx.author)
                 ]
             }
             let notifyDM = true
             try {
-                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("default_dm_messages_punish/mute", {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("mute:texts.default_dm_messages_punish", {
                     emoji: ":mute:",
                     guild_name: ctx.guild.name,
                     reason: reason,
-                    time: time != "..." ? format(time) : ctx.t("geral/not_determined")
+                    time: time != "..." ? format(time) : ctx.t("general:durationNotDetermined")
                 }))
             } catch(_) {
                 notifyDM = false
@@ -158,7 +158,7 @@ module.exports = class NameCommand extends Command {
 
             const end = time != "..." ? Date.now() + time : time
             const log = Buffer.from(JSON.stringify({
-                type: 4,
+                type: 3,
                 author: ctx.author.id,
                 user: user.id,
                 server: ctx.guild.id,
@@ -185,12 +185,12 @@ module.exports = class NameCommand extends Command {
 
             await user.roles.add(muterole.id)
 
-            const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
-            if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
-                embeds: [
-                    message_punish(ctx.author, user.user, reason, "mute", ctx.t, ctx.client, ctx.UserDB.gifs.mute, time)
-                ]
-            })
+            // const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
+            // if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
+            //     embeds: [
+            //         message_punish(ctx.author, user.user, reason, "mute", ctx.t, ctx.client, ctx.UserDB.gifs.mute, time)
+            //     ]
+            // })
             const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
@@ -204,13 +204,13 @@ module.exports = class NameCommand extends Command {
             }
 
             return {
-                content: `:tada: ─ ${ctx.t("default_message_punish/sucess_punish", {
+                content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
-                    user_tag: user.user.tag,
+                    user_tag: user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("default_message_punish/not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
                 })}`,
                 embeds: [],
                 components: []

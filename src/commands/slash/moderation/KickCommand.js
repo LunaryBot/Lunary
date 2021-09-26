@@ -28,7 +28,7 @@ module.exports = class KickCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("general:invalid_user"), ctx.author)
+                this.sendError(ctx.t("general:invalidUser"), ctx.author)
             ]
         })
 
@@ -36,10 +36,10 @@ module.exports = class KickCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("kick:texts.mandatory_reason"), ctx.author)
+                    this.sendError(ctx.t("kick:texts.mandatoryReason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("kick:texts.reason_not_informed")
+            else reason = ctx.t("kick:texts.reasonNotInformed")
         }
 
         if(!user.kickable) return await ctx.interaction.reply({
@@ -56,7 +56,7 @@ module.exports = class KickCommand extends Command {
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("kick:texts.very_big_reason"), ctx.author)
+                this.sendError(ctx.t("kick:texts.veryBigReason"), ctx.author)
             ]
         })
 
@@ -91,7 +91,7 @@ module.exports = class KickCommand extends Command {
             }
             let notifyDM = true
             try {
-                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("kick:default_dm_message", {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("kick:texts.default_dm_message", {
                     emoji: ":hiking_boot:",
                     guild_name: ctx.guild.name,
                     reason: reason
@@ -111,7 +111,7 @@ module.exports = class KickCommand extends Command {
                 if(!logs.ref(id).val()) break;
             }
 
-            await user.kick(ctx.t("kick:texts.punished_by", {
+            await user.kick(ctx.t("kick:texts.punishedBy", {
                 author_tag: ctx.author.tag,
                 reason: reason,
                 id: id
@@ -143,13 +143,13 @@ module.exports = class KickCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.t("general:successfully_punished", {
+                content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
                     user_tag: user.user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("general:not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
                 })}`,
                 embeds: [],
                 components: []

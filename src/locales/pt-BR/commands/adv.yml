@@ -2,7 +2,7 @@ help:
   name: adv
   description: Aplica uma advertência/aviso em um usuário do servidor.
 texts:
-  mandatory_reason: É preciso informar um motivo para a advertência. `[Opção de motivo obrigatório ativa]`
-  very_big_reason: O motivo deve conter no máximo `400` caracteres.
-  reason_not_informed: Motivo não informado.
+  mandatoryReason: É preciso informar um motivo para a advertência. `[Opção de motivo obrigatório ativa]`
+  veryBigReason: O motivo deve conter no máximo `400` caracteres.
+  reasonNotInformed: Motivo não informado.
   default_dm_message: "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}"

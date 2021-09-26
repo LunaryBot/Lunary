@@ -1,6 +1,5 @@
 const express = require("express")
-const client = require("../../Lunary")
-const apiRouter = require("./apis/main")
+const apiRouter = require("./LunaryServerAPI")
 
 module.exports = function initServer() {
     const app = express()
@@ -10,7 +9,7 @@ module.exports = function initServer() {
 
     app.use("/api", apiRouter)
 
-    app.listen(Number(`${client.cluster.id}016`), "0.0.0.0")
+    app.listen(16, "0.0.0.0")
 
     return app
 }

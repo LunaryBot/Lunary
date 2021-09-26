@@ -30,7 +30,7 @@ module.exports = class AdvCommand extends Command {
 
         if(!user) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("general:invalid_user"), ctx.author)
+                this.sendError(ctx.t("general:invalidUser"), ctx.author)
             ]
         })
 
@@ -38,15 +38,15 @@ module.exports = class AdvCommand extends Command {
         if(!reason) {
             if(ctx.GuildDB.configs.has("MANDATORY_REASON") && !ctx.member.botpermissions.has("LUNAR_NOT_REASON")) return ctx.interaction.reply({
                 embeds: [
-                    this.sendError(ctx.t("adv:texts.mandatory_reason"), ctx.author)
+                    this.sendError(ctx.t("adv:texts.mandatoryReason"), ctx.author)
                 ]
             })
-            else reason = ctx.t("adv:texts.reason_not_informed")
+            else reason = ctx.t("adv:texts.reasonNotInformed")
         }
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("adv:very_big_reason"), ctx.author)
+                this.sendError(ctx.t("adv:veryBigReason"), ctx.author)
             ]
         })
 
@@ -98,7 +98,7 @@ module.exports = class AdvCommand extends Command {
 
             let notifyDM = true
             try {
-                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("adv:default_dm_message", {
+                if(ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("adv:texts.default_dm_message", {
                     emoji: ":hiking_boot:",
                     guild_name: ctx.guild.name,
                     reason: reason
@@ -121,13 +121,13 @@ module.exports = class AdvCommand extends Command {
             })
 
             return {
-                content: `:tada: ─ ${ctx.t("general:successfully_punished", {
+                content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
                     user_tag: user.user.tag,
                     user_id: user.id,
                     id: id,
-                    notifyDM: !notifyDM ? ctx.t("general:not_notify_dm") : "."
+                    notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
                 })}`,
                 embeds: [],
                 components: []

@@ -35,7 +35,7 @@ module.exports = class MuteEndEvent extends Event {
     }
 
     const guildDB = await this.client.db.ref(`Servers/${guild.id}/`).once("value").then(x => new GuildDB(x.val() || {}))
-    const t = this.client.langs.find(x => x.lang == null || "pt-BR").t
+    const t = this.client.locales.find(x => x.locale == guildDB.locale || "pt-BR").t
 
     if(guildDB.configs.has("LOG_UNMUTE")) {
       const channel_punish = guild.channels.cache.get(guildDB.chat_punish)

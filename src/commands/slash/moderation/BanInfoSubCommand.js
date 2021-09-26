@@ -26,7 +26,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{18})>/, "$1")
         if(!/^\d{18}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("ban_info/user_not_banned", {
+                this.sendError(ctx.t("ban_info/userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
                 }), ctx.author)
             ]
@@ -37,14 +37,14 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         const ban = bans.find(x => x.user.tag == userRegex || x.user.id == userRegex)
         if(!ban) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("ban_info:texts.user_not_banned", {
+                this.sendError(ctx.t("ban_info:texts.userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
                 }), ctx.author)
             ]
         }).catch(() => {})
-        const banReason = ban.reason || ctx.t("ban:texts.reason_not_informed")
+        const banReason = ban.reason || ctx.t("ban:texts.reasonNotInformed")
 
-        const regex = new RegExp(`${this.client.locales.map(locale => "^" + locale.t("ban:texts.punished_by", {
+        const regex = new RegExp(`${this.client.locales.map(locale => "^" + locale.t("ban:texts.punishedBy", {
             author_tag: ".{0,32}#\\d{4}",
             id: "(.{8}-.{4}-.{4}-.{4}-.{10})",
             reason: "(.*?)"
@@ -62,7 +62,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         const embed = new Discord.MessageEmbed()
         .setColor(13641511)
         .setTitle(`(:question:) - ${ctx.t("ban_info:texts.embed.title")}`)
-        .setDescription(`**- ${ctx.t("ban_info:texts.embed.user_banned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
+        .setDescription(`**- ${ctx.t("ban_info:texts.embed.userBanned")}**\nㅤ${ban.user.toString()} (\`${ban.user.tag} - ${ban.user.id}\`)`)
         .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("ban_info:texts.embed.reason")}:`, `ㅤ${banReason}`)
         .setThumbnail(ban.user.displayAvatarURL({ format: "png", dynamic: true}))
         .setTimestamp()
@@ -109,19 +109,19 @@ module.exports = class BanInfoSubCommand extends SubCommand {
          */
         async(button) => {
             await button.deferUpdate().catch(() => {})
-            await ctx.guild.members.unban(ban.user.id, `${ctx.t("general:.requested_by")}: ${ctx.author.tag}`)
+            await ctx.guild.members.unban(ban.user.id, `${ctx.t("general:requestedBy")}: ${ctx.author.tag}`)
             
             if(ctx.GuildDB.configs.has("LOG_UNBAN")) {
                 const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
                 if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                     embeds: [
-                        message_modlogs(ctx.author, ban.user, ctx.t("ban_info:texts.reason_not_informed"), "unban", ctx.t)
+                        message_modlogs(ctx.author, ban.user, ctx.t("ban_info:texts.reasonNotInformed"), "unban", ctx.t)
                     ]
                 })
             }
 
             msg.reply({
-                content: `:white_check_mark: ─ ${ctx.t("ban_info:texts.remove_ban", {
+                content: `:white_check_mark: ─ ${ctx.t("ban_info:texts.removeBan", {
                     author_mention: ctx.author.toString(),
                     user_tag: ban.user.tag,
                     user_id: ban.user.id

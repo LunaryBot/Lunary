@@ -2,6 +2,6 @@ help:
   name: adv remove
   description: Remove as advertências/avisos de um usuário do servidor.
 texts:
-  no_warning: O usuário não possui advertências nesse servidor.
-  deleted_warning: O usuário `{user_tag}` (`{user_id}`) teve `uma` advertência deletada.
-  deleted_warnings: O usuário `{user_tag}` (`{user_id}`) teve `{size}` advertências deletadas.
+  noWarning: O usuário não possui advertências nesse servidor.
+  deletedWarning: O usuário `{user_tag}` (`{user_id}`) teve `uma` advertência deletada.
+  deletedWarnings: O usuário `{user_tag}` (`{user_id}`) teve `{size}` advertências deletadas.
