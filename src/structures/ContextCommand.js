@@ -48,7 +48,7 @@ module.exports = class ContextCommand {
         /**
          * @type {GuildMember}
          */
-        this.member = this.guild ? this.guild.members.cache.get(this.author.id) : null
+        this.member = this.guild ? (this.interaction || this.message).member : null
         
         /**
          * @type {GuildMember}

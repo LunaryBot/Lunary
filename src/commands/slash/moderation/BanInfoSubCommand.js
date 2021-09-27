@@ -26,7 +26,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{18})>/, "$1")
         if(!/^\d{18}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
             embeds: [
-                this.sendError(ctx.t("ban_info/userNotBanned", {
+                this.sendError(ctx.t("ban_info:texts.userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
                 }), ctx.author)
             ]

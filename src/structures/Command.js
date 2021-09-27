@@ -14,7 +14,8 @@ module.exports = class Command {
         dirname = null,
         subcommands = [],
         permissions = {},
-        dm = false
+        dm = false,
+        baseCommand = false
     }, client) {
         this.client = client
 
@@ -57,6 +58,11 @@ module.exports = class Command {
          * @type {boolean}
          */
         this.dm = dm
+
+        /**
+         * @type {boolean}
+         */
+         this.baseCommand = baseCommand
     }
 
     isDM() {

@@ -22,13 +22,11 @@ class Lunary extends Client {
                 properties: { 
                     $browser: "Discord iOS" 
                 },
-            }, 
-            fetchAllMembers: true,
+            },
             makeCache: Options.cacheWithLimits({
                 ApplicationCommandManager: 0,
                 GuildBanManager: 0,
                 GuildInviteManager: 0,
-                GuildMemberManager: 0,
                 MessageManager: 0,
 		        PresenceManager: 0,
                 UserManager: 0,

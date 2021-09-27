@@ -18,7 +18,7 @@ module.exports = class MessageCreateEvent extends Event {
     
     if(message.guild) {
       const perms = message.channel.permissionsFor(this.client.user.id);
-      if(!perms.has("SEND_MESSAGES")) return;
+      if(perms && !perms.has("SEND_MESSAGES")) return
     }
     
     let GuildsDB = message.guild ? await this.client.db.ref().once('value') : null
@@ -36,10 +36,12 @@ module.exports = class MessageCreateEvent extends Event {
       if(!command) return
       if(message.guild) {
         const perms = message.channel.permissionsFor(this.client.user.id);
-        if(!perms.has("EMBED_LINKS")) return message.reply(`> Eu preciso de permissão de \`Enviar Links\``)
-        if(!perms.has("USE_EXTERNAL_EMOJIS")) return message.reply(`> Eu preciso de permissão de \`Usar Emojis Externos\``)
-        if(!perms.has("ADD_REACTIONS")) return message.reply(`> Eu preciso de permissão de \`Adicionar Reações\``)
-        if(!perms.has("ATTACH_FILES")) return message.reply(`> Eu preciso de permissão de \`Anexar arquivos\``)
+        if(perms) {
+          if(!perms.has("EMBED_LINKS")) return message.reply(`> Eu preciso de permissão de \`Enviar Links\``)
+          if(!perms.has("USE_EXTERNAL_EMOJIS")) return message.reply(`> Eu preciso de permissão de \`Usar Emojis Externos\``)
+          if(!perms.has("ADD_REACTIONS")) return message.reply(`> Eu preciso de permissão de \`Adicionar Reações\``)
+          if(!perms.has("ATTACH_FILES")) return message.reply(`> Eu preciso de permissão de \`Anexar arquivos\``)
+        }
       }
 
       let UsersDB = await this.client.UsersDB.ref().once('value')
@@ -58,10 +60,9 @@ module.exports = class MessageCreateEvent extends Event {
         dm: !Boolean(message.guild)
       }, { guildsDB: GuildsDB, usersDB: UsersDB })
 
-      if(ctx.dm == false) ctx.member.botpermissions = configPermissions(ctx.member, ctx.GuildsDB)
-
       await command.run(ctx)
     } catch (e) {
+      console.log(e)
         message.reply({
           content: `${message.author.toString()}`,
           embeds: [
