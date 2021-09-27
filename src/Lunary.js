@@ -3,6 +3,7 @@ const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")
 require("./functions/shorten")
+require("./functions/emojis")
 const moment = require("moment")
 require("moment-duration-format")
 const firebase = require("firebase")
@@ -82,7 +83,7 @@ class Lunary extends Client {
      * 
      * @returns {Locale[]}
      */
-     loadLocales() {
+    loadLocales() {
         this.locales = []
         require("./handlers/localeHandler")(this)
         return this.locales

@@ -26,6 +26,7 @@
     "js-yaml": "^4.1.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
+    "node-canvas": "^2.7.0",
     "sydb": "^1.0.1"
   }
 }

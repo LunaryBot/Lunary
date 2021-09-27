@@ -1,0 +1,111 @@
+const SubCommand = require("../../../structures/SubCommand")
+const ContextCommand = require("../../../structures/ContextCommand")
+const Discord = require("discord.js")
+
+module.exports = class UserInfoSubCommand extends SubCommand {
+    constructor(client, mainCommand) {
+        super({
+            name: "info",
+            dirname: __dirname
+        }, mainCommand, client)
+    }
+
+    /** 
+     * @param {ContextCommand} ctx
+     */
+
+    async run(ctx) {
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
+        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{18}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
+        
+        if(!user) return await ctx.interaction.reply({
+            embeds: [
+                this.sendError(ctx.t("general:invalidUser"), ctx.author)
+            ]
+        }).catch(() => {})
+
+        const avatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 });
+        const base_embed = new Discord.MessageEmbed()
+        .setAuthor(user.username, `https://cdn.discordapp.com/emojis/${this.client.config.devs.includes(user.id) ? "844347009543569449" : "832083303627620422"}.png?size=128`)
+        .setColor(this.client.config.devs.includes(user.id) ? "#FFFAFA" : "#A020F0")
+        .setThumbnail(avatar)
+        const badges = user.flags.toArray().map(flag => global.emojis.get(flag).mention).join(" ")
+
+        const embed_main = new Discord.MessageEmbed(base_embed.toJSON())
+        .addField(":bookmark: Tag do Discord", `\`${user.tag}\``, true)
+        .addField(":computer: ID do Discord", `\`${user.id}\``, true)
+        .addField(":calendar_spiral: Conta criada há", `<t:${Math.floor((user.createdTimestamp + 3600000) /1000.0)}:R>`)
+        
+        if(badges) embed_main.setDescription(`> ${badges}`)
+
+        const member = await ctx.guild.members.fetch(user.id).catch(() => {})
+        if(!member) return ctx.interaction.reply({
+            embeds: [embed_main]
+        }).catch(() => {})
+
+        embed_main.addField(":star2: Entrou no servidor há", `<t:${Math.floor((member.joinedTimestamp + 3600000) /1000.0)}:R>`)
+        let secondy_embed = null
+        
+        const comp_back = new Discord.MessageActionRow()
+        .addComponents([
+            new Discord.MessageButton()
+            .setCustomId("back")
+            .setStyle("SECONDARY")
+            .setEmoji("858168570055491604")
+        ])
+
+        const comp_next = new Discord.MessageActionRow()
+        .addComponents([
+            new Discord.MessageButton()
+            .setCustomId("next")
+            .setStyle("SECONDARY")
+            .setEmoji("858168497950818324")
+        ])
+
+        ctx.interaction.reply({
+            embeds: [embed_main],
+            components: [comp_next]
+        }).catch(() => {})
+
+        const msg = await ctx.interaction.fetchReply()
+
+        const collector = msg.createMessageComponentCollector({
+            filter: comp => ["next", "back"].includes(comp.customId) && comp.user.id == ctx.author.id,
+            time: 1 * 1000 * 60
+        })
+
+        collector.on("collect", 
+        /**
+         * @param {Discord.ButtonInteraction} button 
+         */
+        async button => {
+            await button.deferUpdate().catch(() => {})
+            switch (button.customId) {
+                case "next":
+                    if(secondy_embed == null) {
+                        let roles = member.roles.cache.filter(x => x.id != ctx.guild.id)
+
+                        roles = roles.sort(function(a, b) {
+                            return b.position - a.position
+                        }).map(x => x.name)
+
+                        secondy_embed = new Discord.MessageEmbed(base_embed.toJSON())
+                        .addField(`<:Tools:853645102575910963> Cargos (${roles.length})`, `> ${(roles.length == 0) ? "\`🤷‍♀️ Esse membro não possui cargos...\`" : `${(roles.length > 40) ? `${roles.slice(0, 40).map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")} e mais ${roles.length - 40} cargo${(roles.length - 40 == 1) ? "" : "s"}` : roles.map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")}`}`)
+                        .addField(`:closed_lock_with_key: Permissões`, "> " + member.permissions.toArray().map((x) => `\`${ctx.t(`permissions:${x}`)}\``).join(", ") || "🙅‍♀️ Esse membro não possui permissões...")
+                    }
+                    msg.edit({
+                        embeds: [secondy_embed],
+                        components: [comp_back]
+                    }).catch(() => {})
+                break;
+
+                case "back":
+                    msg.edit({
+                        embeds: [embed_main],
+                        components: [comp_next]
+                    }).catch(() => {})
+                break;
+            }
+        })
+    }
+}
