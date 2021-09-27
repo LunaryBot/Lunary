@@ -32,9 +32,9 @@ module.exports = class UserInfoSubCommand extends SubCommand {
         const badges = user.flags.toArray().map(flag => global.emojis.get(flag).mention).join(" ")
 
         const embed_main = new Discord.MessageEmbed(base_embed.toJSON())
-        .addField(":bookmark: Tag do Discord", `\`${user.tag}\``, true)
-        .addField(":computer: ID do Discord", `\`${user.id}\``, true)
-        .addField(":calendar_spiral: Conta criada há", `<t:${Math.floor((user.createdTimestamp + 3600000) /1000.0)}:R>`)
+        .addField(`:bookmark: ${ctx.t("user_info:texts.userTagDiscord")}`, `\`${user.tag}\``, true)
+        .addField(`:computer: ${ctx.t("user_info:texts.userIdDiscord")}`, `\`${user.id}\``, true)
+        .addField(`:calendar_spiral: ${ctx.t("user_info:texts.userCreatedTimestamp")}`, `<t:${Math.floor((user.createdTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((user.createdTimestamp + 3600000) /1000.0)}:R>)`)
         
         if(badges) embed_main.setDescription(`> ${badges}`)
 
@@ -43,7 +43,8 @@ module.exports = class UserInfoSubCommand extends SubCommand {
             embeds: [embed_main]
         }).catch(() => {})
 
-        embed_main.addField(":star2: Entrou no servidor há", `<t:${Math.floor((member.joinedTimestamp + 3600000) /1000.0)}:R>`)
+        embed_main.addField(`:star2: ${ctx.t("user_info:texts.memberJoinedTimestamp")}`, `<t:${Math.floor((member.joinedTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((member.joinedTimestamp + 3600000) /1000.0)}:R>)`)
+        if(member.premiumSinceTimestamp) embed_main.addField(`<:booster:892131133800742973> ${ctx.t("user_info:texts.memberPremiumSinceTimestamp")}`, `<t:${Math.floor((member.premiumSinceTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((member.premiumSinceTimestamp + 3600000) /1000.0)}:R>)`)
         let secondy_embed = null
         
         const comp_back = new Discord.MessageActionRow()
@@ -90,8 +91,16 @@ module.exports = class UserInfoSubCommand extends SubCommand {
                         }).map(x => x.name)
 
                         secondy_embed = new Discord.MessageEmbed(base_embed.toJSON())
-                        .addField(`<:Tools:853645102575910963> Cargos (${roles.length})`, `> ${(roles.length == 0) ? "\`🤷‍♀️ Esse membro não possui cargos...\`" : `${(roles.length > 40) ? `${roles.slice(0, 40).map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")} e mais ${roles.length - 40} cargo${(roles.length - 40 == 1) ? "" : "s"}` : roles.map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")}`}`)
-                        .addField(`:closed_lock_with_key: Permissões`, "> " + member.permissions.toArray().map((x) => `\`${ctx.t(`permissions:${x}`)}\``).join(", ") || "🙅‍♀️ Esse membro não possui permissões...")
+                        .addField(`<:Tools:853645102575910963> ${ctx.t("user_info:texts.memberRoles", {
+                            size: roles.length
+                        })}`, `> ${(roles.length == 0) ? "\`🤷‍♀️ Esse membro não possui cargos...\`" : `${(roles.length > 40) ? `${roles.slice(0, 40).map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")} e mais ${roles.length - 40} cargo${(roles.length - 40 == 1) ? "" : "s"}` : roles.map(x => `\`${(x.length > 47) ? x.slice(0, 44) + "..." : x }\``).join(", ")}`}`)
+                        .addField(`:closed_lock_with_key: ${ctx.t("user_info:texts.memberPermissions", {
+                            rank_permissions: (() => {
+                                if(ctx.guild.ownerId == user.id) return `(${ctx.t("user_info:texts.rank_owner")})`
+                                else if(member.permissions.has(8n)) return `(${ctx.t("user_info:texts.rank_adminstrator")})`
+                                else return null
+                            })()
+                        })}`, "> " + member.permissions.toArray().map((x) => `\`${ctx.t(`permissions:${x}`)}\``).join(", ") || "🙅‍♀️ Esse membro não possui permissões...")
                     }
                     msg.edit({
                         embeds: [secondy_embed],

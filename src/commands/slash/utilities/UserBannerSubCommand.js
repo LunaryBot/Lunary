@@ -36,8 +36,19 @@ module.exports = class UserBannerSubCommand extends SubCommand {
 
         const data = { embeds: [embed] }
 
-        // let banner = "https://imgur.com/1uf9gqI.gif"
-        if(user.banner) embed.setImage(`https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${`${user.banner}`.startsWith("a_") ? "gif" : "png"}?size=512`)
+        if(user.banner) {
+            const bannerURL = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${`${user.banner}`.startsWith("a_") ? "gif" : "png"}?size=512`
+            embed.setImage(bannerURL)
+            data.components = [
+                new Discord.MessageActionRow()
+                .addComponents([
+                    new Discord.MessageButton()
+                    .setStyle("LINK")
+                    .setURL(bannerURL)
+                    .setLabel(ctx.t("user_banner:texts.downloadImage"))
+                ])
+            ]
+        }
         else if (user.banner_color) {
             const canvas = Canvas.createCanvas(450, 180)
             const canvasCtx = canvas.getContext('2d')
