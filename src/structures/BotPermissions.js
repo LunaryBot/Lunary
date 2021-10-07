@@ -1,11 +1,11 @@
 const BitField = require('./BitField');
 
 function configPermissions(member, db) {
-    let dbPerms = db.ref(`Servidores/${member.guild.id}/Permissions`).val() || {}
+    let dbPerms = db.permissions || {}
 
     let perms = new Permissions(0)
     
-    Object.entries(dbPerms).forEach(function([key, value]) {
+    Object.entries(Object.fromEntries(dbPerms)).forEach(function([key, value]) {
         if(!member.roles.cache.has(key)) return
         
         perms.add(value)

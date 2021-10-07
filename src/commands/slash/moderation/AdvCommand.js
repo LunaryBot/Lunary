@@ -91,7 +91,8 @@ module.exports = class AdvCommand extends Command {
                 user: user.id,
                 server: ctx.guild.id,
                 reason: encodeURI(reason),
-                date: Date.now()
+                date: Date.now(),
+                id: id
             }), 'ascii').toString('base64')
 
             ctx.client.LogsDB.ref(id).set(log)
@@ -119,6 +120,34 @@ module.exports = class AdvCommand extends Command {
                     message_modlogs(ctx.author, user.user, reason, "adv", ctx.t, id)
                 ]
             })
+
+            let xp = ctx.UserDB.xp
+            if(ctx.UserDB.lastPunishment) {
+                if(!user.user.bot) {
+                    if(user.id == ctx.author || user.id != ctx.UserDB.lastPunishment.user || (user.id == ctx.UserDB.lastPunishment.user && ctx.UserDB.lastPunishment.type != 4)) {
+                        if(reason != ctx.UserDB.lastPunishment.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
+                            xp += generateXP()
+                        }
+                    }
+                }
+            } else xp += generateXP()
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishment: log, xp: xp})
+
+            function generateXP() {
+                let maxXP = 39
+                if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
+                else {
+                    if(reason.replace(/<#\d{18}>/ig, "").trim().length > 12) maxXP += 6
+                    if(/(.*?)<#\d{18}>(.*?)/ig.test(reason)) maxXP += 13
+                }
+                
+                if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{18}\/\d{18}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+
+                const xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+                console.log(`Max XP: ${maxXP} | XP: ${xp}`)
+
+                return xp
+            }
 
             return {
                 content: `:tada: ─ ${ctx.t("general:successfullyPunished", {

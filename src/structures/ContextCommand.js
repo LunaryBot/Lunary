@@ -79,7 +79,7 @@ module.exports = class ContextCommand {
         this.UsersDB = new ObjRef(usersDB || {})
 
         this.GuildDB = this.guild ? new GuildDB(this.GuildsDB.ref(`Servers/${this.guild.id}/`).val()) : null
-        this.UserDB = new UserDB(this.UsersDB.ref(`Users/${this.author.id}/`).val(), !this.dm ? configPermissions(this.member, this.GuildsDB) : null)
+        this.UserDB = new UserDB(this.UsersDB.ref(`Users/${this.author.id}/`).val(), this.author, !this.dm ? configPermissions(this.member, this.GuildDB) : null)
 
         /**
          * @type {Locale}

@@ -15,7 +15,7 @@ module.exports = function confirm_punishment(ctx, user, reason, time) {
     .setDescription(`**- ${ctx.t("general:confirmPunishment.description")}**\nㅤ${user.toString()} (\`${user.tag} - ${user.id}\`)`)
     .addField(`${global.emojis.get("clipboard").mention} • ${ctx.t("general:confirmPunishment.reason")}:`, `ㅤ${reason}${time ? `\n\n**- ${global.emojis.get("time").mention} • ${ctx.t("general:confirmPunishment.duration")}:** \`${time != "..." ? `${format(time)}` : ctx.t("general:confirmPunishment.durationNotDetermined")}\`` : ""}`)
     .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-    .setFooter(`${ctx.t("general:requested_by")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))
+    .setFooter(`${ctx.t("general:requestedBy")}: ${ctx.author.tag}`, ctx.author.displayAvatarURL({ dynamic: true }))
     .setTimestamp()
 
     const data = {

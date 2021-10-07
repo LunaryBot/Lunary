@@ -29,7 +29,7 @@ module.exports = class UserInfoSubCommand extends SubCommand {
         .setAuthor(user.username, `https://cdn.discordapp.com/emojis/${this.client.config.devs.includes(user.id) ? "844347009543569449" : "832083303627620422"}.png?size=128`)
         .setColor(this.client.config.devs.includes(user.id) ? "#FFFAFA" : "#A020F0")
         .setThumbnail(avatar)
-        const badges = user.flags.toArray().map(flag => global.emojis.get(flag).mention).join(" ")
+        const badges = user.flags.toArray().filter(x => x != "VERIFIED_BOT").map(flag => global.emojis.get(flag).mention).join(" ")
 
         const embed_main = new Discord.MessageEmbed(base_embed.toJSON())
         .addField(`:bookmark: ${ctx.t("user_info:texts.userTagDiscord")}`, `\`${user.tag}\``, true)

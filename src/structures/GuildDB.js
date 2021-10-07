@@ -4,11 +4,21 @@ const BitField = require("./BitField")
 
 class GuildDB {
     constructor(data = {}) {
-        this.perms = new Collection()
+        if(!data) data = {}
+        /**
+         * @type {Collection<Permissions>}
+         */
+        this.permissions = new Collection()
         this.chat_modlogs = data.chat_modlogs || null
         this.chat_punish = data.chat_punish || null
         this.muterole = data.muterole || null
         this.configs = new GuildConfigs(data.configs || 0)
+
+        if(typeof data.permissions == "object") {
+            Object.entries(data.permissions || {}).forEach(([key, value]) => {
+                this.permissions.set(key, new Permissions(value))
+            })
+        }
     }
 }
 

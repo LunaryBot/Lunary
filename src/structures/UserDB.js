@@ -1,12 +1,22 @@
-const { Collection } = require("discord.js")
+const { User } = require("discord.js")
 const { Permissions } = require("./BotPermissions")
 const BitField = require("./BitField")
 
 class UserDB {
-    constructor(data = {}, perms) {
+    /**
+     * 
+     * @param {Object} data 
+     * @param {User} user 
+     * @param {Permissions} perms 
+     */
+    constructor(data = {}, user, perms) {
+        this.user = user
         this.aboutme = data.aboutme || ""
         this.configs = new UserConfigs(data.configs || 0)
         this.gifs = data.gifs || {}
+        this.xp = Number(data.xp || 0)
+        this.lastPunishment = data.lastPunishment ? JSON.parse(Buffer.from(data.lastPunishment, 'base64').toString('ascii')) : null
+        if(this.lastPunishment) this.lastPunishment.reason = decodeURIComponent(this.lastPunishment.reason)
         if(perms) this.permissions = perms
     }
 }
