@@ -4,6 +4,7 @@ const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")
 require("./functions/shorten")
 require("./functions/emojis")
+require("./functions/removeAccents")
 const moment = require("moment")
 require("moment-duration-format")
 const firebase = require("firebase")
@@ -54,6 +55,7 @@ class Lunary extends Client {
         this.LogsDB = LogsDB.database()
 
         this.mutes = new Collection()
+        this.imagesCanvas = new Collection()
         
         this.on("shardReconnecting", shard => {
             this.logger.log(`Client reconectado ao Discord!`, { key: ["Client", `Shard ${shard}`], cluster: true, date: true })

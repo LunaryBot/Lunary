@@ -124,13 +124,22 @@ module.exports = class AdvCommand extends Command {
             let xp = ctx.UserDB.xp
             if(ctx.UserDB.lastPunishment) {
                 if(!user.user.bot) {
-                    if(user.id == ctx.author || user.id != ctx.UserDB.lastPunishment.user || (user.id == ctx.UserDB.lastPunishment.user && ctx.UserDB.lastPunishment.type != 4)) {
-                        if(reason != ctx.UserDB.lastPunishment.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
-                            xp += generateXP()
+                    if(user.id != ctx.author.id) {
+                        if(
+                            user.id != ctx.UserDB.lastPunishment.user 
+                            || (user.id == ctx.UserDB.lastPunishment.user && ctx.UserDB.lastPunishment.type != 4)
+                            || ((!isNaN(ctx.UserDB.lastPunishment.date) 
+                            && user.id == ctx.UserDB.lastPunishment.user 
+                            && (Date.now() - ctx.UserDB.lastPunishment.date) > 13 * 1000 * 60))
+                        ) {
+                            if(reason != ctx.UserDB.lastPunishment.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
+                                xp += generateXP()
+                            }
                         }
                     }
                 }
             } else xp += generateXP()
+
             ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishment: log, xp: xp})
 
             function generateXP() {
