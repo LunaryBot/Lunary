@@ -3,7 +3,6 @@ const { Message, CommandInteraction, User, Guild, GuildMember, DMChannel, GuildC
 const ObjRef = require("../utils/objref/ObjRef")
 const { GuildDB } = require("./GuildDB")
 const { UserDB } = require("./UserDB")
-const Language = require("../languages/Language")
 const { configPermissions } = require("./BotPermissions")
 const Locale = require("./Locale")
 
