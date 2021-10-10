@@ -15,11 +15,11 @@ module.exports = class Logger {
         let keys = ""
         let d = new Date(Date.now() - 10800000)
         
+        if(options.cluster && options.cluster.id != undefined) keys += `${chalk.green(`[Cluster ${new String(options.cluster.id)}]`)} `
         if(options.key) {
             if(!Array.isArray(options.key)) keys += `${chalk.green(`[${new String(options.key)}]`)} `
             else options.key.forEach(x => keys += `${chalk.green(`[${new String(x)}]`)} `) 
         }
-        if(options.cluster && options.cluster.id != undefined) keys += `${chalk.green(`[Cluster ${new String(options.cluster.id)}]`)} `
         if(options.date) keys += `${chalk.yellow(`[${formateDate()}]`)} `
 
         console.log(keys + chalk.magenta(text))

@@ -16,8 +16,9 @@ class UserDB {
         this.gifs = data.gifs || {}
         this.xp = Number(data.xp || 0)
         this.luas = Number(data.luas || 0)
-        this.lastPunishment = data.lastPunishment ? JSON.parse(Buffer.from(data.lastPunishment, 'base64').toString('ascii')) : null
-        if(this.lastPunishment) this.lastPunishment.reason = decodeURIComponent(this.lastPunishment.reason)
+        this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null
+        if(this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason)
+        this.punishmentsApplied = data.punishmentsApplied || {bans: 0, kicks: 0, mutes: 0, advs: 0}
         if(perms) this.permissions = perms
     }
 }

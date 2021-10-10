@@ -1,5 +1,12 @@
-node_modules
+/node_modules
+
+# Config Files
 src/config/config.js
-src/data/commands.json
-src/data/mutes.json
 .env
+
+# Data
+/src/data/*.json
+
+# Arquivos temporarios
+/AdvCommand.js
+/reload.js

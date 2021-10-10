@@ -122,17 +122,17 @@ module.exports = class AdvCommand extends Command {
             })
 
             let xp = ctx.UserDB.xp
-            if(ctx.UserDB.lastPunishment) {
+            if(ctx.UserDB.lastPunishmentApplied) {
                 if(!user.user.bot) {
                     if(user.id != ctx.author.id) {
                         if(
-                            user.id != ctx.UserDB.lastPunishment.user 
-                            || (user.id == ctx.UserDB.lastPunishment.user && ctx.UserDB.lastPunishment.type != 4)
-                            || ((!isNaN(ctx.UserDB.lastPunishment.date) 
-                            && user.id == ctx.UserDB.lastPunishment.user 
-                            && (Date.now() - ctx.UserDB.lastPunishment.date) > 13 * 1000 * 60))
+                            user.id != ctx.UserDB.lastPunishmentApplied.user 
+                            || (user.id == ctx.UserDB.lastPunishmentApplied.user && ctx.UserDB.lastPunishmentApplied.type != 4)
+                            || ((!isNaN(ctx.UserDB.lastPunishmentApplied.date) 
+                            && user.id == ctx.UserDB.lastPunishmentApplied.user 
+                            && (Date.now() - ctx.UserDB.lastPunishmentApplied.date) > 13 * 1000 * 60))
                         ) {
-                            if(reason != ctx.UserDB.lastPunishment.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
+                            if(reason != ctx.UserDB.lastPunishmentApplied.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
                                 xp += generateXP()
                             }
                         }
@@ -140,7 +140,7 @@ module.exports = class AdvCommand extends Command {
                 }
             } else xp += generateXP()
 
-            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishment: log, xp: xp})
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs})
 
             function generateXP() {
                 let maxXP = 39

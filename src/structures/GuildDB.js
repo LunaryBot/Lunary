@@ -13,7 +13,13 @@ class GuildDB {
         this.chat_punish = data.chat_punish || null
         this.muterole = data.muterole || null
         this.configs = new GuildConfigs(data.configs || 0)
+        this.reasons = {
+            adv: data.reasons?.adv || [],
+            mute: data.reasons?.mute || [],
+            kick: data.reasons?.kick || [],
+            ban: data.reasons?.ban || []
 
+        }
         if(typeof data.permissions == "object") {
             Object.entries(data.permissions || {}).forEach(([key, value]) => {
                 this.permissions.set(key, new Permissions(value))

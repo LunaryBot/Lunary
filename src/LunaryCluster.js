@@ -10,7 +10,7 @@ const clusterManager = new ClusterManager(`${__dirname}/Lunary.js`,{
 })
 
 clusterManager.on('clusterCreate', cluster => {
-    Logger.log(`Cluster criado!`, { key: "System", cluster: cluster, date: true })
+    Logger.log(`Cluster criado!`, { key: ["Cluster Manager", `Cluster ${cluster.id}`] , date: true })
 });
 
 global.clusterManager = clusterManager
