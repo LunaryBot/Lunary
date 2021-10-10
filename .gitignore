@@ -1,8 +1,10 @@
+# Tralhas do node né
 /node_modules
+/package-lock.json
 
 # Config Files
-src/config/config.js
-.env
+/src/config/config.js
+/.env
 
 # Data
 /src/data/*.json
@@ -10,3 +12,6 @@ src/config/config.js
 # Arquivos temporarios
 /AdvCommand.js
 /reload.js
+
+# Locales
+/src/locales
