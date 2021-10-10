@@ -66,7 +66,7 @@ module.exports = class Command {
     }
 
     isDM() {
-        return this.dm
+        return this.dm == false
     }
 
     verifyPerms(member, me) {

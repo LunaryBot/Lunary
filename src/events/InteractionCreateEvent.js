@@ -36,6 +36,10 @@ module.exports = class InteractionCreateEvent extends Event {
             if(subcommand && subcommand.name && command.subcommands && command.subcommands.find(sc => sc.name == subcommand.name)) command = command.subcommands.find(sc => sc.name == subcommand.name)
             if(!command) return;
 
+            if(!interaction.guild && command.isDM()) return interaction.reply({
+                content: "<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!"
+            })
+
             let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
             if(GuildsDB) GuildsDB = GuildsDB.val() || {}
 

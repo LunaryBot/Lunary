@@ -20,6 +20,7 @@ class GuildDB {
             ban: data.reasons?.ban || []
 
         }
+        
         if(typeof data.permissions == "object") {
             Object.entries(data.permissions || {}).forEach(([key, value]) => {
                 this.permissions.set(key, new Permissions(value))
