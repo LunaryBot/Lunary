@@ -33,12 +33,12 @@ module.exports = class KitsuMangaSubCommand extends SubCommand {
             }
         }))
         .setCustomId("search_manga")
-        .setPlaceholder("Escolha o manga.")
+        .setPlaceholder(ctx.t("kitsu_manga:texts.menuLabel"))
         .setMinValues(1)
         .setMaxValues(1)
 
         ctx.interaction.followUp({
-            content: `<:Kitsu:854675062498000896> | Selecione alguns do resultados encontrados sobre: "\`${search.shorten(300)}\`"`,
+            content: `<:Kitsu:854675062498000896> | ${ctx.t("kitsu_manga:texts.chooseManga", { search: search.shorten(300) })}`,
             components: [new Discord.MessageActionRow().addComponents([menu])]
         }).catch(() => {})
 
@@ -66,16 +66,17 @@ module.exports = class KitsuMangaSubCommand extends SubCommand {
             .setTitle(data.attributes.canonicalTitle)
             .setURL(`https://kitsu.io/manga/` + data.attributes.slug)
             .setThumbnail(data.attributes.posterImage.original)
-            .setDescription(`> :bookmark: **| ID:** \`${data.id}\`
-            > :books: **| Volumes:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : "Não encontrado."}\`
-            > :bookmark_tabs: **| Capítulos:** \`${data.attributes.chapterCount ? data.attributes.chapterCount : "Não encontrado."}\`
+            .setDescription(`> :bookmark: **| ${ctx.t("kitsu_manga:texts.ID")}:** \`${data.id}\`
+            > :books: **| ${ctx.t("kitsu_manga:texts.volumes")}:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : ctx.t("kitsu_manga:texts.notFound")}\`
+            > :bookmark_tabs: **| ${ctx.t("kitsu_manga:texts.chapters")}:** \`${data.attributes.chapterCount ? data.attributes.chapterCount : ctx.t("kitsu_manga:texts.notFound")}\`
             
-            > :calendar: **| Iniciado em:** <t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}:R>)
-            > :calendar_spiral: **| Finalizado em:** ${data.attributes.endDate ? `<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}:R>)` : "Não finalizado."}
+            > :calendar: **| ${ctx.t("kitsu_manga:texts.startedIn")}:** <t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}:R>)
+            > :calendar_spiral: **| ${ctx.t("kitsu_manga:texts.endedIn")}:** ${data.attributes.endDate ? `<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}:R>)` : `\`${ctx.t("kitsu_manga:texts.noEned")}\``}
             
-            > :medal: **| Rank de popularidade:** \`#${data.attributes.popularityRank}°\`\n> :medal: **| Rank de valiações:** \`#${data.attributes.ratingRank}°\`
-            > :star: **| Média de classificação:** \`${data.attributes.averageRating}%\``)
-            .addField(`> :bookmark_tabs: Descrição:`, `>>> \`\`\`${data.attributes.description ?  `${data.attributes.description}`.shorten(300) : "Sem descrição"}\`\`\``)
+            > :medal: **| ${ctx.t("kitsu_manga:texts.popularityRank")}** \`#${data.attributes.popularityRank}°\`
+            > :medal: **| ${ctx.t("kitsu_manga:texts.ratingRank")}:** \`#${data.attributes.ratingRank}°\`
+            > :star: **| ${ctx.t("kitsu_manga:texts.ratingAverage")}** \`${data.attributes.averageRating}%\``)
+            .addField(`> :bookmark_tabs: ${ctx.t("kitsu_manga:texts.description")}:`, `>>> \`\`\`${data.attributes.description ?  `${data.attributes.description}`.shorten(300) : ctx.t("kitsu_manga:texts.noDescription")}\`\`\``)
 
             return {
                 content: null,

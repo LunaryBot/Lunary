@@ -33,12 +33,12 @@ module.exports = class KitsuAnimeSubCommand extends SubCommand {
             }
         }))
         .setCustomId("search_anime")
-        .setPlaceholder("Escolha o anime.")
+        .setPlaceholder(ctx.t("kitsu_anime:texts.menuLabel"))
         .setMinValues(1)
         .setMaxValues(1)
 
         ctx.interaction.followUp({
-            content: `<:Kitsu:854675062498000896> | Selecione alguns do resultados encontrados sobre: "\`${search.shorten(300)}\`"`,
+            content: `<:Kitsu:854675062498000896> | ${ctx.t("kitsu_anime:texts.chooseAnime", { search: search.shorten(300) })}`,
             components: [new Discord.MessageActionRow().addComponents([menu])]
         }).catch(() => {})
 
@@ -66,17 +66,18 @@ module.exports = class KitsuAnimeSubCommand extends SubCommand {
             .setTitle(data.attributes.canonicalTitle)
             .setURL(`https://kitsu.io/anime/` + data.attributes.slug)
             .setThumbnail(data.attributes.posterImage.original)
-            .setDescription(`> :bookmark: **| ID:** \`${data.id}\`
-            > :books: **| Volumes:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : "Não encontrado."}\`
-            > <:VideoPlayer:854889422927560754> **| Episódios:** \`${data.attributes.episodeCount ? data.attributes.episodeCount : "Não encontrado."}\`
-            > :alarm_clock: **| Média de cada episódio:** \`${data.attributes.episodeLength ? data.attributes.episodeLength + " Minutos" : "Não encontrado."}\`
+            .setDescription(`> :bookmark: **| ${ctx.t("kitsu_anime:texts.ID")}:** \`${data.id}\`
+            > :books: **| ${ctx.t("kitsu_anime:texts.volumes")}:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : ctx.t("kitsu_anime:texts.notFound")}\`
+            > <:VideoPlayer:854889422927560754> **| ${ctx.t("kitsu_anime:texts.episodes")}:** \`${data.attributes.episodeCount ? data.attributes.episodeCount : ctx.t("kitsu_anime:texts.notFound")}\`
+            > :alarm_clock: **| ${ctx.t("kitsu_anime:texts.episodeLength")}:** \`${data.attributes.episodeLength ? ctx.t("kitsu_anime:texts.episodeLength", { minutes: data.attributes.episodeLength }) : ctx.t("kitsu_anime:texts.notFound")}\`
             
-            > :calendar: **| Iniciado em:** <t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}:R>)
-            > :calendar_spiral: **| Finalizado em:** ${data.attributes.endDate ? `<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}:R>)` : "Não finalizado."}
+            > :calendar: **| ${ctx.t("kitsu_anime:texts.startedIn")}:** <t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}:R>)
+            > :calendar_spiral: **| ${ctx.t("kitsu_anime:texts.endedIn")}:** ${data.attributes.endDate ? `<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}:R>)` : ctx.t("kitsu_anime:texts.noEned")}
             
-            > :medal: **| Rank de popularidade:** \`#${data.attributes.popularityRank}°\`\n> :medal: **| Rank de valiações:** \`#${data.attributes.ratingRank}°\`
-            > :star: **| Média de classificação:** \`${data.attributes.averageRating}%\``)
-            .addField(`> :bookmark_tabs: Descrição:`, `>>> \`\`\`${data.attributes.description ?  `${data.attributes.description}`.shorten(300) : "Sem descrição"}\`\`\``)
+            > :medal: **| ${ctx.t("kitsu_anime:texts.popularityRank")}:** \`#${data.attributes.popularityRank}°\`
+            > :medal: **| ${ctx.t("kitsu_anime:texts.ratingRank")}:** \`#${data.attributes.ratingRank}°\`
+            > :star: **| ${ctx.t("kitsu_anime:texts.ratingAverage")}:** \`${data.attributes.averageRating}%\``)
+            .addField(`> :bookmark_tabs: ${ctx.t("kitsu_anime:texts.description")}:`, `>>> \`\`\`${data.attributes.description ?  `${data.attributes.description}`.shorten(300) : ctx.t("kitsu_anime:texts.noDescription")}\`\`\``)
 
             return {
                 content: null,

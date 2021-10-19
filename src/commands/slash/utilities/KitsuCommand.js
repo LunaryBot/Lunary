@@ -10,6 +10,9 @@ module.exports = class KitsuCommand extends Command {
             baseCommand: true
         }, client)
 
-        this.subcommands = [new KitsuMangaSubCommand(client, this), new KitsuAnimeSubCommand(client, this)]
+        this.subcommands = [
+            new KitsuMangaSubCommand(client, this), 
+            new KitsuAnimeSubCommand(client, this)
+        ]
     }
 }
