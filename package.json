@@ -27,6 +27,7 @@
     "js-yaml": "^4.1.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.33",
     "node-canvas": "^2.7.0",
     "node-kitsu": "^1.1.1",
     "sydb": "^1.0.1"
