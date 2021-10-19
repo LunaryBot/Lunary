@@ -19,12 +19,16 @@ module.exports = class CleanCommand extends Command {
      */
 
     async run(ctx) {
+        ctx.interaction.deferReply({ ephemeral: true }).catch(() => {})
+
         const amount = Math.floor(ctx.interaction.options.getNumber("amount"))
-        if(!amount || isNaN(amount) || amount > 500 || amount < 2) return ctx.interaction.reply({
+        if(!amount || isNaN(amount) || amount > 500 || amount < 2) return ctx.interaction.followUp({
             embeds: [
                 this.sendError(ctx.t("clean:texts.invalidAmount"), ctx.author)
             ]
         })
+
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
 
         let deletes = 0
         let _amount = amount
@@ -42,11 +46,20 @@ module.exports = class CleanCommand extends Command {
                 limit: ss
             })
 
-            msgs = msgs.filter(msg => Date.now() - msg.createdTimestamp < (14 * 1000 * 60 * 60 * 24) || msg.pinned == true)
-            console.log(`[${i + 1}]: ${ss} | ${msgs.size}`)
-            const messagesD = await ctx.channel.bulkDelete(msgs)
-            deletes += messagesD.size
+            msgs = msgs.filter(msg => Date.now() - msg.createdTimestamp < (14 * 1000 * 60 * 60 * 24) && !msg.pinned && (userID ? userID == msg.author.id : true))
+            const messagesD = await ctx.channel.bulkDelete(msgs).catch(() => {})
+            deletes += messagesD.size || 0
             if(ss != messagesD.size) break;
         }
+
+        if(deletes == 0) return ctx.interaction.followUp({
+            embeds: [
+                this.sendError(ctx.t("clean:texts.noMessagesFound"), ctx.author)
+            ]
+        }).catch(() => {})
+
+        ctx.interaction.followUp({
+            content: `${ctx.t("clean:texts.messagesDelete", { channel: ctx.channel.toString(), size: deletes })}${deletes != amount ? "\n" + ctx.t("clean:texts.faliedDeletingMessages", { size: amount - deletes }) + " :woman_shrugging:" : ""}`
+        }).catch(() => {})
     }
 }

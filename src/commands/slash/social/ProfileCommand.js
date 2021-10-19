@@ -25,7 +25,7 @@ module.exports = class ProfileCommand extends Command {
         const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
         const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{18}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
         
-        if(!user) return await ctx.interaction.reply({
+        if(!user) return await ctx.interaction.followUp({
             embeds: [
                 this.sendError(ctx.t("general:invalidUser"), ctx.author)
             ]
