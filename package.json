@@ -28,6 +28,7 @@
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "node-canvas": "^2.7.0",
+    "node-kitsu": "^1.1.1",
     "sydb": "^1.0.1"
   }
 }

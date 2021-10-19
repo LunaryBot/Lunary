@@ -155,6 +155,45 @@ module.exports = class BanCommand extends Command {
                 ]
             })
 
+            let xp = ctx.UserDB.xp
+            if(membro) {
+                if(ctx.UserDB.lastPunishmentApplied) {
+                    if(!user.user.bot) {
+                        if(user.id != ctx.author.id) {
+                            if(
+                                user.id != ctx.UserDB.lastPunishmentApplied.user 
+                                || (user.id == ctx.UserDB.lastPunishmentApplied.user && ctx.UserDB.lastPunishmentApplied.type != 1)
+                                || ((!isNaN(ctx.UserDB.lastPunishmentApplied.date) 
+                                && user.id == ctx.UserDB.lastPunishmentApplied.user 
+                                && (Date.now() - ctx.UserDB.lastPunishmentApplied.date) > 13 * 1000 * 60))
+                            ) {
+                                if(reason != ctx.UserDB.lastPunishmentApplied.reason && reason != ctx.t("ban:texts.reasonNotInformed")) {
+                                    xp += generateXP()
+                                }
+                            }
+                        }
+                    }
+                } else xp += generateXP()
+            }
+
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, bans: ctx.UserDB.punishmentsApplied.bans + 1})
+
+            function generateXP() {
+                let maxXP = 39
+                if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
+                else {
+                    if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
+                    if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
+                }
+                
+                if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+
+                const xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+                console.log(`Max XP: ${maxXP} | XP: ${xp}`)
+
+                return xp
+            }
+
             return {
                 content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),

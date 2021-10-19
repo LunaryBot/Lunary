@@ -138,11 +138,16 @@ module.exports = class AdvCommand extends Command {
                 }
             } else xp += generateXP()
 
-            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs})
+            ctx.interaction.followUp({
+                content: "Teste",
+                ephemeral: true
+            }).catch(() => {})
+
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs + 1})
 
             function generateXP() {
-                let maxXP = 39
-                if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
+                let maxXP = 13
+                if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 17
                 else {
                     if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
                     if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
@@ -150,7 +155,7 @@ module.exports = class AdvCommand extends Command {
                 
                 if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
 
-                const xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+                const xp = Math.floor(Math.random() * (maxXP - 13)) + 13
                 console.log(`Max XP: ${maxXP} | XP: ${xp}`)
 
                 return xp
