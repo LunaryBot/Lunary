@@ -8,7 +8,6 @@ module.exports = class BanCommand extends Command {
     constructor(client) {
         super({
             name: "ban",
-            category: "moderation",
             dirname: __dirname,
             permissions: {
                 Discord: ["BAN_MEMBERS"],

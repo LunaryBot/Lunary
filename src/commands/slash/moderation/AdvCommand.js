@@ -8,8 +8,6 @@ module.exports = class AdvCommand extends Command {
     constructor(client) {
         super({
             name: "adv",
-            description: "Aplica uma advertência/aviso em um usuário do servidor.",
-            category: "moderation",
             dirname: __dirname,
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],

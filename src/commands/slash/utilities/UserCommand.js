@@ -11,6 +11,10 @@ module.exports = class UserCommand extends Command {
             baseCommand: true
         }, client)
 
-        this.subcommands = [new UserAvatarSubCommand(client, this), new UserBannerSubCommand(client, this), new UserInfoSubCommand(client, this)]
+        this.subcommands = [
+            new UserAvatarSubCommand(client, this), 
+            new UserBannerSubCommand(client, this), 
+            new UserInfoSubCommand(client, this)
+        ]
     }
 }

@@ -7,8 +7,6 @@ module.exports = class KickCommand extends Command {
     constructor(client) {
         super({
             name: "kick",
-            description: "Expulsa um usuário do servidor.",
-            category: "moderation",
             dirname: __dirname,
             permissions: {
                 Discord: ["KICK_MEMBERS"],

@@ -9,8 +9,6 @@ module.exports = class NameCommand extends Command {
     constructor(client) {
         super({
             name: "mute",
-            description: "Silencia um usuário por um período de tempo determinado no servidor.",
-            category: "moderation",
             dirname: __dirname,
             permissions: {
                 Discord: ["MUTE_MEMBERS"],

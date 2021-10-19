@@ -7,7 +7,6 @@ module.exports = class HelpCommand extends Command {
     constructor(client) {
         super({
             name: "help",
-            category: "bot",
             dirname: __dirname,
         }, client)
     }

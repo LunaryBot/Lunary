@@ -7,7 +7,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
     constructor(client, mainCommand) {
         super({
             name: "info",
-            description: "Mostra as informações do banimento de um usuário banido no servidor.",
             dirname: __dirname,
             permissions: {
                 Discord: ["BAN_MEMBERS"],

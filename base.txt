@@ -6,8 +6,6 @@ module.exports = class NameCommand extends Command {
     constructor(client) {
         super({
             name: "",
-            description: "",
-            category: "",
             dirname: __dirname,
             permissions: {
                 Discord: [""],

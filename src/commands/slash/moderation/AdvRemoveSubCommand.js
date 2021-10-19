@@ -6,7 +6,6 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
     constructor(client, mainCommand) {
         super({
             name: "remove",
-            description: "Remove as advertências/avisos de um usuário do servidor.",
             dirname: __dirname,
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],

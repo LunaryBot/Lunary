@@ -12,8 +12,6 @@ module.exports = class EvalCommand extends Command {
     constructor(client) {
         super({
             name: "eval",
-            description: "Execute um código JavaScript",
-            category: "owner",
             dirname: __dirname,
         }, client)
     }

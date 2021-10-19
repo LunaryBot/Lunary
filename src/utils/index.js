@@ -9,4 +9,5 @@ module.exports = {
     ObjRef: require("./objref/ObjRef"),
     highest_position: require("./highest_position"),
     timeString: require("./timeString"),
+    validateUser: require("./validateUser")
 }

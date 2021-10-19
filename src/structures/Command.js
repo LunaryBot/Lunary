@@ -1,6 +1,8 @@
 const _client = require("../Lunary")
 const SubCommand = require("./SubCommand")
 const Discord = require("discord.js")
+const utils = require("../utils/index")
+const data = require("../data/commands.json")
 
 module.exports = class Command {
     /**
@@ -8,9 +10,7 @@ module.exports = class Command {
     */
     constructor({
         name = null,
-        description = null,
         aliases = null,
-        category = null,
         dirname = null,
         subcommands = [],
         permissions = {},
@@ -25,19 +25,9 @@ module.exports = class Command {
         this.name = name
 
         /**
-         * @type {string}
-         */
-        this.description = description
-
-        /**
          * @type {string[]?}
          */
         this.aliases = aliases
-
-        /**
-         * @type {string}
-         */
-        this.category = category
 
         /**
          * @type {string}
@@ -65,38 +55,16 @@ module.exports = class Command {
          this.baseCommand = baseCommand
     }
 
-    isDM() {
-        return this.dm == false
+    get data() {
+        return data[this.name]?.data
     }
 
-    verifyPerms(member, me) {
-        let data = {
-            me: {
-                has: true
-            },
-            member: {
-                has: true,
-                type: "member"
-            }
-        }
+    get utils() {
+        return utils
+    }
 
-        if(this.permissions.me) if(me.hasPermission(this.permissions.me)) data.me.has = false
-
-        if(this.requires.owner) {
-            if(!this.client.config.owners.includes(member.user.id)) data.member = {
-                has: false,
-                type: "owner"
-            }
-            else data.member = {
-                has: true,
-                type: "owner"
-            }
-        } else if(this.permissions.Discord) {
-            if(!member.hasPermission(this.permissions.Discord)) data.member.has = false
-            else data.member.has = true
-        }
-
-        return data
+    isDM() {
+        return this.dm == false
     }
 
     /**
