@@ -1,4 +1,5 @@
 const Command = require("../../../structures/Command")
+const KitsuAnimeSubCommand = require("./KitsuAnimeSubCommand")
 const KitsuMangaSubCommand = require("./KitsuMangaSubCommand")
 
 module.exports = class KitsuCommand extends Command {
@@ -9,6 +10,6 @@ module.exports = class KitsuCommand extends Command {
             baseCommand: true
         }, client)
 
-        this.subcommands = [new KitsuMangaSubCommand(client, this)]
+        this.subcommands = [new KitsuMangaSubCommand(client, this), new KitsuAnimeSubCommand(client, this)]
     }
 }
