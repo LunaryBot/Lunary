@@ -144,11 +144,11 @@ module.exports = class AdvCommand extends Command {
                 let maxXP = 39
                 if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
                 else {
-                    if(reason.replace(/<#\d{18}>/ig, "").trim().length > 12) maxXP += 6
-                    if(/(.*?)<#\d{18}>(.*?)/ig.test(reason)) maxXP += 13
+                    if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
+                    if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
                 }
                 
-                if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{18}\/\d{18}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+                if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
 
                 const xp = Math.floor(Math.random() * (maxXP - 21)) + 21
                 console.log(`Max XP: ${maxXP} | XP: ${xp}`)

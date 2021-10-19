@@ -28,7 +28,7 @@ module.exports = class CleanCommand extends Command {
             ]
         })
 
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
 
         let deletes = 0
         let _amount = amount

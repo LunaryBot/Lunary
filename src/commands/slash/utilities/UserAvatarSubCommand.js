@@ -15,8 +15,8 @@ module.exports = class UserAvatarSubCommand extends SubCommand {
      */
 
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
-        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{18}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{17,19}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
         
         if(!user) return await ctx.interaction.reply({
             embeds: [

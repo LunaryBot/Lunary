@@ -11,11 +11,12 @@ class UserDB {
      */
     constructor(data = {}, user, perms) {
         this.user = user
-        this.aboutme = data.aboutme || `Olá eu sou `
+        this.aboutme = data.aboutme || `Olá eu sou ${user.username} | #ModereaçãoLunática`
         this.configs = new UserConfigs(data.configs || 0)
         this.gifs = data.gifs || {}
         this.xp = Number(data.xp || 0)
         this.luas = Number(data.luas || 0)
+        this.emblem = data.emblem
         this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null
         if(this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason)
         this.punishmentsApplied = data.punishmentsApplied || {bans: 0, kicks: 0, mutes: 0, advs: 0}

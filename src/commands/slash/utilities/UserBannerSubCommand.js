@@ -16,8 +16,8 @@ module.exports = class UserBannerSubCommand extends SubCommand {
      */
 
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
-        const user = (!userID || /^\d{18}$/.test(userID)) ? await this.client.api.users[userID || ctx.author.id].get().catch(() => {}) : null
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = (!userID || /^\d{17,19}$/.test(userID)) ? await this.client.api.users[userID || ctx.author.id].get().catch(() => {}) : null
         if(!user) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("general:invalidUser"), ctx.author)

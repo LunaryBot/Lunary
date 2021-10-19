@@ -22,8 +22,8 @@ module.exports = class ProfileCommand extends Command {
 
     async run(ctx) {
         ctx.interaction.deferReply({ ephemeral: false }).catch(() => {})
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{18})>/, "$1")
-        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{18}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{17,19}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
         
         if(!user) return await ctx.interaction.followUp({
             embeds: [
@@ -170,9 +170,9 @@ module.exports = class ProfileCommand extends Command {
         ctxCanvas.stroke();
 
         ctxCanvas.beginPath();
-        const a = (db.xp + 3000) / 1000
+        const a = db.xp / 1000
 
-        ctxCanvas.arc(60,460,35,Math.PI * 1.5,Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 1))
+        ctxCanvas.arc(60,460,35,Math.PI * 1.5,Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 0))
         ctxCanvas.strokeStyle = '#ffffff'
         ctxCanvas.stroke();
 
@@ -213,7 +213,7 @@ module.exports = class ProfileCommand extends Command {
 
         // add bio text
         ctxCanvas.beginPath();
-        ctxCanvas.font = 'bold 25px sans-serif'
+        ctxCanvas.font = 'bold 23px sans-serif'
         ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText(wordWrap(db.aboutme.shorten(200), 70), 545, 368, 460)
@@ -226,6 +226,14 @@ module.exports = class ProfileCommand extends Command {
             ctxCanvas.textAlign = 'center'
             ctxCanvas.fillText('NO', 660 , 490, 150)
             ctxCanvas.fillText('EMBLEM', 660, 530, 150)
+        } else {
+            const emblem = await loadImage(db.emblem)
+
+            ctxCanvas.shadowBlur = 10;
+            ctxCanvas.shadowOffsetX = 10;
+            ctxCanvas.shadowOffsetY = 10;
+            ctxCanvas.beginPath();
+            ctxCanvas.drawImage(emblem,640,450,110,110);
         }
 
         ctx.interaction.followUp({
