@@ -98,12 +98,15 @@ module.exports = class UserAvatarSubCommand extends SubCommand {
                                 .setLabel(ctx.t("user_avatar:texts.userAvatar"))
                             ])
                         ]
-                    })
-                    break;
+                    }).catch(() => {})
+                break;
                     
-                    case "user-avatar":
-                        
-                    break;
+                 case "user-avatar":
+                    msg.edit({
+                        embeds: [embed_main],
+                        components: [components]
+                    }).catch(() => {})
+                break;
             }
         })
                 
