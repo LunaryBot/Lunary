@@ -59,38 +59,12 @@ module.exports = class SubCommand {
         this.dm = dm
     }
 
-    isDM() {
-        return this.dm
+    get fullName() {
+        return `${this.mainCommand.name} ${this.name}`
     }
 
-    verifyPerms(member, me) {
-        let data = {
-            me: {
-                has: true
-            },
-            member: {
-                has: true,
-                type: "member"
-            }
-        }
-
-        if(this.permissions.me) if(me.hasPermission(this.permissions.me)) data.me.has = false
-
-        if(this.requires.owner) {
-            if(!this.client.config.owners.includes(member.user.id)) data.member = {
-                has: false,
-                type: "owner"
-            }
-            else data.member = {
-                has: true,
-                type: "owner"
-            }
-        } else if(this.permissions.Discord) {
-            if(!member.hasPermission(this.permissions.Discord)) data.member.has = false
-            else data.member.has = true
-        }
-
-        return data
+    isDM() {
+        return this.dm
     }
 
     /**

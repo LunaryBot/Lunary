@@ -55,6 +55,10 @@ module.exports = class Command {
          this.baseCommand = baseCommand
     }
 
+    get fullName() {
+        return this.name
+    }
+
     get data() {
         return data[this.name]?.data
     }

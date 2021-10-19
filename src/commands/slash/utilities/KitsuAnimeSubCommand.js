@@ -4,11 +4,11 @@ const Discord = require("discord.js")
 const { searchAnime } = require("node-kitsu")
 
 module.exports = class KitsuAnimeSubCommand extends SubCommand {
-    constructor(client) {
+    constructor(client, mainCommand) {
         super({
             name: "anime",
             dirname: __dirname
-        }, client)
+        }, mainCommand, client)
     }
 
     /** 
