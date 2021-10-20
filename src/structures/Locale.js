@@ -18,8 +18,7 @@ module.exports = class Locale {
             } else path = this.dirname + `/${path}`
             
             const data = yaml.load(readFileSync(path, 'utf8'));
-            let val = new ObjRef(data, ".").ref(split.slice(1).join(":")).val()
-            if(typeof val == "object" && Array.isArray(val)) val = val.join(",")
+            let val = typeof data == "object" && !Array.isArray(data) ? new ObjRef(data, ".").ref(split.slice(1).join(":")).val() : data
 
             let output = val || ":bug:"
             
