@@ -18,17 +18,16 @@ module.exports = class UserBannerSubCommand extends SubCommand {
     async run(ctx) {
         const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
         const user = (!userID || /^\d{17,19}$/.test(userID)) ? await this.client.api.users[userID || ctx.author.id].get().catch(() => {}) : null
+        
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
         }).catch(() => {})
         
         if(!user.banner && !user.banner_color) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("user_banner:texts.userDoesNotHaveBanner", { user: `<@${user.id}>` }))
             ]
-        })
+        }).catch(() => {})
 
         const embed = new Discord.MessageEmbed()
         .setAuthor(user.username, `https://cdn.discordapp.com/emojis/${this.client.config.devs.includes(user.id) ? "844347009543569449" : "832083303627620422"}.png?size=128`)
@@ -67,6 +66,6 @@ module.exports = class UserBannerSubCommand extends SubCommand {
             data.files = [banner]
         }
 
-        ctx.interaction.reply(data)
+        ctx.interaction.reply(data).catch(() => {})
     }
 }

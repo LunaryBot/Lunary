@@ -20,7 +20,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
     /** 
      * @param {ContextCommand} ctx
      */
-
     async run(ctx) {
         const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{18})>/, "$1")
         if(!/^\d{18}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
@@ -33,7 +32,14 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         
         const bans = await ctx.guild.bans.fetch()
 
-        const ban = bans.find(x => x.user.tag == userRegex || x.user.id == userRegex)
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
+
+        if(!user) return await ctx.interaction.reply({
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
+
+        const ban = bans?.find(x => x.user.tag == userRegex || x.user.id == userRegex)
         if(!ban) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("ban_info:texts.userNotBanned", {
@@ -92,7 +98,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         await ctx.interaction.reply({
             embeds: [embed],
             components: [components]
-        })
+        }).catch(() => {})
 
         const msg = await ctx.interaction.fetchReply()
 
@@ -116,7 +122,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                     embeds: [
                         message_modlogs(ctx.author, ban.user, ctx.t("ban_info:texts.reasonNotInformed"), "unban", ctx.t)
                     ]
-                })
+                }).catch(() => {})
             }
 
             msg.reply({
@@ -125,7 +131,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                     user_tag: ban.user.tag,
                     user_id: ban.user.id
                 })}`
-            })
+            }).catch(() => {})
         })
 
         coletor.on("end", async() => {
@@ -134,7 +140,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             msg.edit({
                 embeds: [embed],
                 components: [components]
-            })
+            }).catch(() => {})
         })
         
     }

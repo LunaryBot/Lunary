@@ -22,15 +22,13 @@ module.exports = class AdvCommand extends Command {
     /** 
      * @param {ContextCommand} ctx
      */
-
     async run(ctx) {
-        const user = await ctx.interaction.options.getMember("user") || await ctx.guild.members.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
 
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")
         if(!reason) {
@@ -38,7 +36,7 @@ module.exports = class AdvCommand extends Command {
                 embeds: [
                     this.sendError(ctx.t("adv:texts.mandatoryReason"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
             else reason = ctx.t("adv:texts.reasonNotInformed")
         }
 
@@ -46,10 +44,10 @@ module.exports = class AdvCommand extends Command {
             embeds: [
                 this.sendError(ctx.t("adv:veryBigReason"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
-            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason))
+            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason)).catch(() => {})
 
             const msg = await ctx.interaction.fetchReply()
             
@@ -117,7 +115,7 @@ module.exports = class AdvCommand extends Command {
                 embeds: [
                     message_modlogs(ctx.author, user.user, reason, "adv", ctx.t, id)
                 ]
-            })
+            }).catch(() => {})
 
             let xp = ctx.UserDB.xp
             if(ctx.UserDB.lastPunishmentApplied) {

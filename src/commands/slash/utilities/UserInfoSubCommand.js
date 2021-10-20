@@ -19,9 +19,7 @@ module.exports = class UserInfoSubCommand extends SubCommand {
         const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{17,19}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
         
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
         }).catch(() => {})
 
         const avatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 });

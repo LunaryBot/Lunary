@@ -26,7 +26,7 @@ module.exports = class CleanCommand extends Command {
             embeds: [
                 this.sendError(ctx.t("clean:texts.invalidAmount"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
 

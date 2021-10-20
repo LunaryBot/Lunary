@@ -24,13 +24,12 @@ module.exports = class NameCommand extends Command {
      */
 
     async run(ctx) {
-        const user = await ctx.interaction.options.getMember("user") || await ctx.guild.members.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
 
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")
         if(!reason) {
@@ -38,7 +37,7 @@ module.exports = class NameCommand extends Command {
                 embeds: [
                     this.sendError(ctx.t("mute:texts.mandatoryReason"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
             else reason = ctx.t("mute:texts.reasonNotInformed")
         }
 
@@ -46,19 +45,19 @@ module.exports = class NameCommand extends Command {
             embeds: [
                 this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
             ]
-        })
+        }).catch(() => {})
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("general:userMissingPermissionsToPunish"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("general:veryBigReason"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         let time = ctx.interaction.options.getString("time") || "..."
         if(time != "...") {
@@ -67,7 +66,7 @@ module.exports = class NameCommand extends Command {
                 embeds: [
                     this.sendError(ctx.t("mute:texts.invalidTime"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
         }
 
         let muterole = ctx.guild.roles.cache.get(ctx.GuildDB.muterole)
@@ -94,16 +93,16 @@ module.exports = class NameCommand extends Command {
             embeds: [
                 this.sendError(ctx.t("mute:texts.lunyMissingPermissionsToManagerMuterole"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(muterole && user.roles.cache.has(muterole.id)) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("mute:texts.userMuted"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
-            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason, time))
+            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason, time)).catch(() => {})
 
             const msg = await ctx.interaction.fetchReply()
             
@@ -194,7 +193,7 @@ module.exports = class NameCommand extends Command {
                 embeds: [
                     message_modlogs(ctx.author, user.user, reason, "mute", ctx.t, id, time)
                 ]
-            })
+            }).catch(() => {})
 
             if(time != "...") {
                 const timeout = setTimeout(() => ctx.client.emit("muteEnd", data), time)

@@ -25,13 +25,12 @@ module.exports = class BanCommand extends Command {
      */
 
     async run(ctx) {
-        const user = await ctx.interaction.options.getUser("user") || await this.client.users.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null
 
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")
         if(!reason) {
@@ -39,7 +38,7 @@ module.exports = class BanCommand extends Command {
                 embeds: [
                     this.sendError(ctx.t("ban:texts.mandatoryReason"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
             else reason = ctx.t("ban:texts.reasonNotInformed")
         }
 
@@ -49,23 +48,23 @@ module.exports = class BanCommand extends Command {
               embeds: [
                 this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
               ]
-            })
+            }).catch(() => {})
             
             if(!highest_position(ctx.interaction.member, membro)) return await ctx.interaction.reply({
                 embeds: [
                     this.sendError(ctx.t("general:userMissingPermissionsToPunish"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
         }
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("ban:veryBigReason"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
-            await ctx.interaction.reply(confirm_punish(ctx, user, reason))
+            await ctx.interaction.reply(confirm_punish(ctx, user, reason)).catch(() => {})
 
             const msg = await ctx.interaction.fetchReply()
             
@@ -153,7 +152,7 @@ module.exports = class BanCommand extends Command {
                         .setStyle("LINK")
                     ])
                 ]
-            })
+            }).catch(() => {})
 
             let xp = ctx.UserDB.xp
             if(membro) {

@@ -238,7 +238,7 @@ module.exports = class ProfileCommand extends Command {
 
         ctx.interaction.followUp({
             files: [new Discord.MessageAttachment(canvas.toBuffer(), `${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.png`)]
-        })
+        }).catch(() => {})
     }
 }
 

@@ -20,13 +20,12 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
      */
 
     async run(ctx) {
-        const user = await ctx.interaction.options.getUser("user") || await this.client.users.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null
 
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
 
         let logs = await ctx.client.LogsDB.ref().once("value")
         logs = Object.entries(logs.val() || {}).map(function([k, v]) {
@@ -40,7 +39,7 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
             embeds: [
                 this.sendError(ctx.t("adv_remove:texts.noWarning"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         await logs.forEach(x => ctx.client.LogsDB.ref(x.id).remove())
 
@@ -50,6 +49,6 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
                 user_tag: user.tag,
                 user_id: user.id,
             })}`
-        })
+        }).catch(() => {})
     }
 }

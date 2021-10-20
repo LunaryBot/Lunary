@@ -22,13 +22,12 @@ module.exports = class KickCommand extends Command {
      */
 
     async run(ctx) {
-        const user = await ctx.interaction.options.getMember("user") || await ctx.guild.members.fetch(ctx.interaction.options.getString("user-id")).catch(() => {})
+        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
+        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
 
         if(!user) return await ctx.interaction.reply({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+        }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")
         if(!reason) {
@@ -36,7 +35,7 @@ module.exports = class KickCommand extends Command {
                 embeds: [
                     this.sendError(ctx.t("kick:texts.mandatoryReason"), ctx.author)
                 ]
-            })
+            }).catch(() => {})
             else reason = ctx.t("kick:texts.reasonNotInformed")
         }
 
@@ -44,22 +43,22 @@ module.exports = class KickCommand extends Command {
             embeds: [
                 this.sendError(ctx.t("general:lunyMissingPermissionsToPunish"), ctx.author)
             ]
-        })
+        }).catch(() => {})
             
         if(!highest_position(ctx.member, user)) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("general:userMissingPermissionsToPunish"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(reason > 400) return ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("kick:texts.veryBigReason"), ctx.author)
             ]
-        })
+        }).catch(() => {})
 
         if(!ctx.UserDB.configs.has("QUICK_PUNISHMENT")) {
-            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason))
+            await ctx.interaction.reply(confirm_punish(ctx, user.user, reason)).catch(() => {})
 
             const msg = await ctx.interaction.fetchReply()
             
@@ -138,7 +137,7 @@ module.exports = class KickCommand extends Command {
                 embeds: [
                     message_modlogs(ctx.author, user.user, reason, "kick", ctx.t, id)
                 ]
-            })
+            }).catch(() => {})
 
             return {
                 content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
