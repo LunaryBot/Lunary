@@ -1,6 +1,8 @@
 # Tralhas do node né
 /node_modules
 /package-lock.json
+/src/lib/node_modules
+/src/lib/package-lock.json
 
 # Config Files
 /src/config/config.js

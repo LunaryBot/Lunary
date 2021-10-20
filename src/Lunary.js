@@ -1,4 +1,4 @@
-const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require("discord.js")
+const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require("./lib")
 const ClusterClient = require("./system/cluster/ClusterClient")
 const ShardManager = require("./system/cluster/ShardManager")
 const Logger = require("./utils/logger")

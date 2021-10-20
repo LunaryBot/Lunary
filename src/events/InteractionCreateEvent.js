@@ -1,5 +1,5 @@
 const Event = require("../structures/Event")
-const { Interaction, CommandInteraction, MessageEmbed } = require("discord.js")
+const { Interaction, CommandInteraction, MessageEmbed } = require("../lib")
 const { configPermissions } = require("../structures/BotPermissions")
 const ContextCommand = require("../structures/ContextCommand")
 const Command = require("../structures/Command")
