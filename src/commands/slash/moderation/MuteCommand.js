@@ -1,6 +1,6 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("discord.js")
+const Discord = require("../../../lib")
 const sydb = require("sydb")
 const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish, timeString, format_time: {format}} = require("../../../utils/index")

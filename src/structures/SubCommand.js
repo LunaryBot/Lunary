@@ -1,6 +1,6 @@
 const _client = require("../Lunary")
 const Command = require("./Command")
-const Discord = require("discord.js")
+const Discord = require("../lib")
 
 module.exports = class SubCommand {
     /**

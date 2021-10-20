@@ -1,6 +1,5 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("discord.js")
 const formatSizeUnits = require("../../../utils/formatSizeUnits")
 const formatNumber = new Intl.NumberFormat("pt-BR").format
 

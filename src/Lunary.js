@@ -41,7 +41,6 @@ class Lunary extends Client {
         })
         this.config = require("./config/config")
         this.cluster = new ClusterClient(this)
-        this.shard = new ShardManager(this)
         this.logger = new Logger(this.cluster)
 
         firebase.initializeApp(this.config.firebaseConfigGuilds)

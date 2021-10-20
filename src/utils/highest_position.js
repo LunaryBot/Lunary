@@ -1,4 +1,4 @@
-const { GuildMember } = require("discord.js")
+const { GuildMember } = require("../lib")
 
 /**
  * @param {GuildMember} member1

@@ -1,4 +1,4 @@
-const { Collection } = require("discord.js")
+const { Collection } = require("../lib")
 const { Permissions } = require("./BotPermissions")
 const BitField = require("./BitField")
 

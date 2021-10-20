@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const Discord = require("../lib")
 const ContextCommand = require("../structures/ContextCommand")
 const { format } = require("./format_time")
 

@@ -1,6 +1,6 @@
 const _client = require("../Lunary")
 const SubCommand = require("./SubCommand")
-const Discord = require("discord.js")
+const Discord = require("../lib")
 const utils = require("../utils/index")
 const data = require("../data/commands.json")
 

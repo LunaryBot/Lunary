@@ -1,6 +1,6 @@
 const emojis = require("../config/emojis")
 const regexEmoji = /<a?:|>/g
-const regexAnimateEmoji = /<a:.{2,32}:\d{18}>/
+const regexAnimateEmoji = /<a:.{2,32}:\d{17,19}>/
 
 module.exports = {
     get: function getEmoji(name) {

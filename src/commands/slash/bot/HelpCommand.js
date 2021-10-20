@@ -1,6 +1,6 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("discord.js")
+const Discord = require("../../../lib")
 const { version } = require("../../../../package.json")
 
 module.exports = class HelpCommand extends Command {

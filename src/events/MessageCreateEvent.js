@@ -1,4 +1,4 @@
-const { Message, MessageEmbed } = require("discord.js")
+const { Message, MessageEmbed } = require("../lib")
 const { configPermissions } = require("../structures/BotPermissions")
 const ContextCommand = require("../structures/ContextCommand")
 const Event = require("../structures/Event");

@@ -1,6 +1,6 @@
 const Event = require("../structures/Event")
 const sydb = require("sydb")
-const { GuildMember } = require("discord.js")
+const { GuildMember } = require("../lib")
 const mutesdb = new sydb(__dirname + "/../data/mutes.json")
 const { GuildDB } = require("../structures/GuildDB")
 

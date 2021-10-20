@@ -1,5 +1,5 @@
 const _client = require("../Lunary")
-const { Message, CommandInteraction, User, Guild, GuildMember, DMChannel, GuildChannel } = require("discord.js")
+const { Message, CommandInteraction, User, Guild, GuildMember, GuildChannel } = require("../lib")
 const ObjRef = require("../utils/objref/ObjRef")
 const { GuildDB } = require("./GuildDB")
 const { UserDB } = require("./UserDB")

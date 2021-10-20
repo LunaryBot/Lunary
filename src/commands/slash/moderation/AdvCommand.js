@@ -1,6 +1,6 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("discord.js")
+const Discord = require("../../../lib")
 const AdvRemoveSubCommand = require("./AdvRemoveSubcommand")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, confirm_punish} = require("../../../utils/index")
 

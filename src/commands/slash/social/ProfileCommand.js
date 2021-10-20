@@ -1,6 +1,6 @@
 const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("discord.js")
+const Discord = require("../../../lib")
 const { loadImage, createCanvas } = require("node-canvas")
 const { UserDB } = require("../../../structures/UserDB")
 const { readFileSync } = require("fs")
