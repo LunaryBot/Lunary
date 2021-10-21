@@ -136,11 +136,6 @@ module.exports = class AdvCommand extends Command {
                 }
             } else xp += generateXP()
 
-            ctx.interaction.followUp({
-                content: "Teste",
-                ephemeral: true
-            }).catch(() => {})
-
             ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs + 1})
 
             function generateXP() {
@@ -153,10 +148,15 @@ module.exports = class AdvCommand extends Command {
                 
                 if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
 
-                const xp = Math.floor(Math.random() * (maxXP - 13)) + 13
-                console.log(`Max XP: ${maxXP} | XP: ${xp}`)
+                const _xp = Math.floor(Math.random() * maxXP) + 1
+                console.log(`Max XP: ${maxXP} | XP: ${_xp}`)
 
-                return xp
+                if(Number(`${((xp + _xp) / 1000)}`.charAt(0)) > Number(`${(xp / 1000)}`.charAt(0))) ctx.interaction.followUp({
+                    content: ctx.t("general:levelUP", {level: Number(`${xp + _xp}`.charAt(0)), user: ctx.author.toString()}),
+                    ephemeral: true
+                }).catch(() => {})
+
+                return _xp
             }
 
             return {

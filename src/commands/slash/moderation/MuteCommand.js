@@ -200,6 +200,50 @@ module.exports = class NameCommand extends Command {
                 ctx.client.mutes.set(`${ctx.guild.id}_${user.id}`, timeout)
             }
 
+            let xp = ctx.UserDB.xp
+            if(ctx.UserDB.lastPunishmentApplied) {
+                if(!user.user.bot) {
+                    if(user.id != ctx.author.id) {
+                        if(time != "..." && time > 10 * 1000 * 60) {
+                            if(
+                                user.id != ctx.UserDB.lastPunishmentApplied.user 
+                                || (user.id == ctx.UserDB.lastPunishmentApplied.user && ctx.UserDB.lastPunishmentApplied.type != 3)
+                                || ((!isNaN(ctx.UserDB.lastPunishmentApplied.date) 
+                                && user.id == ctx.UserDB.lastPunishmentApplied.user 
+                                && (Date.now() - ctx.UserDB.lastPunishmentApplied.date) > 13 * 1000 * 60))
+                            ) {
+                                if(reason != ctx.UserDB.lastPunishmentApplied.reason && reason != ctx.t("adv:texts.reasonNotInformed")) {
+                                    xp += generateXP()
+                                }
+                            }
+                        }
+                    }
+                }
+            } else xp += generateXP()
+
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs + 1})
+
+            function generateXP() {
+                let maxXP = 21
+                if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 17
+                else {
+                    if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
+                    if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
+                }
+                
+                if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+
+                const _xp = Math.floor(Math.random() * maxXP) + 1
+                console.log(`Max XP: ${maxXP} | XP: ${_xp}`)
+
+                if(Number(`${((xp + _xp) / 1000)}`.charAt(0)) > Number(`${(xp / 1000)}`.charAt(0))) ctx.interaction.followUp({
+                    content: ctx.t("general:levelUP", {level: Number(`${xp + _xp}`.charAt(0)), user: ctx.author.toString()}),
+                    ephemeral: true
+                }).catch(() => {})
+
+                return _xp
+            }
+
             return {
                 content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),

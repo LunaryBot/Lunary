@@ -187,10 +187,15 @@ module.exports = class BanCommand extends Command {
                 
                 if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
 
-                const xp = Math.floor(Math.random() * (maxXP - 21)) + 21
-                console.log(`Max XP: ${maxXP} | XP: ${xp}`)
+                const _xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+                console.log(`Max XP: ${maxXP} | XP: ${_xp}`)
 
-                return xp
+                if(Number(`${((xp + _xp) / 1000)}`.charAt(0)) > Number(`${(xp / 1000)}`.charAt(0))) ctx.interaction.followUp({
+                    content: ctx.t("general:levelUP", {level: Number(`${xp + _xp}`.charAt(0)), user: ctx.author.toString()}),
+                    ephemeral: true
+                }).catch(() => {})
+                
+                return _xp
             }
 
             return {
