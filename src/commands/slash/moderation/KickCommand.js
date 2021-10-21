@@ -135,6 +135,15 @@ module.exports = class KickCommand extends Command {
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
                     message_modlogs(ctx.author, user.user, reason, "kick", ctx.t, id)
+                ],
+                components: [
+                    new Discord.MessageActionRow()
+                    .addComponents([
+                        new Discord.MessageButton()
+                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setLabel("Lunary logs(Beta)")
+                        .setStyle("LINK")
+                    ])
                 ]
             }).catch(() => {})
 

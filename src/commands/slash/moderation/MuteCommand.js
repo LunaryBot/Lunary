@@ -192,6 +192,15 @@ module.exports = class NameCommand extends Command {
             if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
                 embeds: [
                     message_modlogs(ctx.author, user.user, reason, "mute", ctx.t, id, time)
+                ],
+                components: [
+                    new Discord.MessageActionRow()
+                    .addComponents([
+                        new Discord.MessageButton()
+                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setLabel("Lunary logs(Beta)")
+                        .setStyle("LINK")
+                    ])
                 ]
             }).catch(() => {})
 
