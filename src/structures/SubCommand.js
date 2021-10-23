@@ -1,6 +1,7 @@
 const _client = require("../Lunary")
 const Command = require("./Command")
 const Discord = require("../lib")
+const utils = require("../utils/index")
 
 module.exports = class SubCommand {
     /**
@@ -61,6 +62,10 @@ module.exports = class SubCommand {
 
     get fullName() {
         return `${this.mainCommand.name} ${this.name}`
+    }
+
+    get utils() {
+        return utils
     }
 
     isDM() {
