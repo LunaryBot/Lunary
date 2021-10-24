@@ -10,6 +10,10 @@ module.exports = class InteractionCreateEvent extends Event {
         this.bansCache = new Collection()
         setInterval(() => {
             this.bansCache.clear()
+            this.client.logger.log("Cache de auto complete limpo.", {
+                cluster: true,
+                date: true
+            })
         }, 10 * 1000 * 60)
     }
 
@@ -85,38 +89,52 @@ module.exports = class InteractionCreateEvent extends Event {
      * @param {CommandInteraction} interaction
      */
     async autocompleteBanInfo(interaction) {
-        const getData = async() => {
-            const bans = [ ...(await interaction.guild.bans.fetch()).values() ]?.map(ban => ban.user)
-            const requestTime = Date.now()
-            return {
-                validTime: requestTime + (1 * 1000 * 60),
-                requestTime,
-                bans
+        let outout = []
+        if(interaction.guild) {
+            const getData = async() => {
+                this.client.logger.log("Request para auto complete de ban.", {
+                    cluster: true,
+                    date: true,
+                    key: `Shard ${interaction.guild.shardId}`
+                })
+    
+                const bans = [ ...(await interaction.guild.bans.fetch()).values() ]?.map(ban => ban.user)
+                const requestTime = Date.now()
+                return {
+                    validTime: requestTime + (1 * 1000 * 60),
+                    requestTime,
+                    bans
+                }
             }
+    
+            /**
+             * @type {{
+             * validTime: number,
+             * requestTime: number,
+             * bans: User[]
+             * }}
+             */
+            let data = this.bansCache.get(interaction.guildId)
+            if(!data || data.validTime <= Date.now()) {
+                data = await getData()
+                this.bansCache.set(interaction.guildId, data)
+            }
+    
+            const input = interaction.options.get("user")?.value?.toLowerCase()
+    
+            const arr = data.bans?.map(user => {
+                return {
+                    name: user.tag,
+                    value: user.id
+                }
+            }).slice(0, 25)
+            
+            outout = input ? arr.filter(ban => 
+                ban.name.toLowerCase().includes(input) || ban.value.toLowerCase().includes(input)
+            ) : arr
         }
-
-        /**
-         * @type {{
-         * validTime: number,
-         * requestTime: number,
-         * bans: User[]
-         * }}
-         */
-        let data = this.bansCache.get(`${interaction.guildId}`)
-        if(!data || data.validTime <= Date.now()) data = await getData()
-
-        const input = interaction.options.get("user")?.value?.toLowerCase()
-
-        const arr = data.bans?.map(user => {
-            return {
-                name: user.tag,
-                value: user.id
-            }
-        }).slice(0, 25)
         
-        const outout = input ? arr.filter(ban => ban.name.toLowerCase().includes(input) || ban.value.toLowerCase().includes(input)) : arr 
-        
-        this.client.api.interactions(interaction.id, interaction.token).callback.post({ 
+        return this.client.api.interactions(interaction.id, interaction.token).callback.post({ 
             data: { 
                 type: 8,
                 data: { 

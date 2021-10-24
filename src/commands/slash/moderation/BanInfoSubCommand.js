@@ -131,7 +131,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             components.components.find(x => x.customId == "unban").setDisabled()
 
             msg.edit({
-                embeds: [embed],
                 components: [components]
             }).catch(() => {})
         })
