@@ -14,8 +14,8 @@ module.exports = class Command {
         dirname = null,
         subcommands = [],
         permissions = {},
-        dm = false,
-        baseCommand = false
+        baseCommand = false,
+        dm
     }, client) {
         this.client = client
 

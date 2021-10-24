@@ -21,8 +21,8 @@ module.exports = class BanInfoSubCommand extends SubCommand {
      * @param {ContextCommand} ctx
      */
     async run(ctx) {
-        const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{18})>/, "$1")
-        if(!/^\d{18}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
+        const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{17,19})>/, "$1")
+        if(!/^\d{17,19}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
             embeds: [
                 this.sendError(ctx.t("ban_info:texts.userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
@@ -31,13 +31,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         }).catch(() => {})
         
         const bans = await ctx.guild.bans.fetch()
-
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
-
-        if(!user) return await ctx.interaction.reply({
-            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
-        }).catch(() => {})
 
         const ban = bans?.find(x => x.user.tag == userRegex || x.user.id == userRegex)
         if(!ban) return await ctx.interaction.reply({
