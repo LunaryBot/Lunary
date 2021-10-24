@@ -16,9 +16,13 @@ module.exports = class UserBannerSubCommand extends SubCommand {
      */
 
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = (!userID || /^\d{17,19}$/.test(userID)) ? await this.client.api.users[userID || ctx.author.id].get().catch(() => {}) : null
-        
+        const userID = (ctx.interaction.options.getUser("user") || ctx.author).id
+        const user = await this.client.api.users[userID].get().catch(() => {})
+
+        if(!user) return await ctx.interaction.reply({
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getUser("user")?.id })
+        }).catch(() => {})
+
         if(!user) return await ctx.interaction.reply({
             content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
         }).catch(() => {})

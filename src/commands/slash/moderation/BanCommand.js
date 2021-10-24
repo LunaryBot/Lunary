@@ -3,6 +3,7 @@ const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("../../../lib")
 const BanInfoSubCommand = require("./BanInfoSubCommand")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
+const BanSoftSubCommand = require("./BanSoftSubCommand")
 
 module.exports = class BanCommand extends Command {
     constructor(client) {
@@ -17,7 +18,10 @@ module.exports = class BanCommand extends Command {
             dm: false
         }, client)
 
-        this.subcommands = [new BanInfoSubCommand(client, this)]
+        this.subcommands = [
+            new BanInfoSubCommand(client, this),
+            new BanSoftSubCommand(client, this)
+        ]
     }
 
     /** 
@@ -25,11 +29,10 @@ module.exports = class BanCommand extends Command {
      */
 
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = this.utils.validateUser(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null
+        const user = ctx.interaction.options.getUser("user")
 
         if(!user) return await ctx.interaction.reply({
-            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getUser("user")?.id })
         }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")

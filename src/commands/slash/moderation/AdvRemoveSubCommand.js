@@ -22,8 +22,11 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
     async run(ctx) {
         ctx.interaction.deferReply().catch(() => {})
 
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = this.utils.validateUser(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null
+        const user = ctx.interaction.options.getUser("user")
+
+        if(!user) return await ctx.interaction.reply({
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getUser("user")?.id })
+        }).catch(() => {})
 
         if(!user) return await ctx.interaction.followUp({
             content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })

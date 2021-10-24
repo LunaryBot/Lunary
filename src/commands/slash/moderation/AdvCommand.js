@@ -23,11 +23,10 @@ module.exports = class AdvCommand extends Command {
      * @param {ContextCommand} ctx
      */
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = this.utils.validateUser(userID) ? await ctx.guild.members.fetch(userID).catch(() => {}) : null
+        const user = ctx.interaction.options.getMember("user")
 
         if(!user) return await ctx.interaction.reply({
-            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getMember("user")?.id })
         }).catch(() => {})
 
         let reason = ctx.interaction.options.getString("reason")

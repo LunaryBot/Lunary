@@ -22,16 +22,13 @@ module.exports = class ProfileCommand extends Command {
 
     async run(ctx) {
         ctx.interaction.deferReply({ ephemeral: false }).catch(() => {})
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{17,19}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
-        
+        const user = ctx.interaction.options.getUser("user") || ctx.author
+
         if(!user) return await ctx.interaction.followUp({
-            embeds: [
-                this.sendError(ctx.t("general:invalidUser"), ctx.author)
-            ]
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getUser("user")?.id })
         }).catch(() => {})
 
-        const db = userID == ctx.author.id ? ctx.UserDB : new UserDB((await this.client.UsersDB.ref(`Users/${user.id}`).once("value")).val() || {}, user)
+        const db = user.id == ctx.author.id ? ctx.UserDB : new UserDB((await this.client.UsersDB.ref(`Users/${user.id}`).once("value")).val() || {}, user)
 
         const canvas = createCanvas(800,600);
         const ctxCanvas = canvas.getContext('2d');

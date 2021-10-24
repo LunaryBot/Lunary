@@ -70,14 +70,13 @@ module.exports = class InteractionCreateEvent extends Event {
             
             await command.run(ctx)
         } catch (e) {
-            console.log(e)
             interaction.channel.send({
                 content: `${interaction.user.toString()}`,
                 embeds: [
                     new MessageEmbed()
                     .setColor("#FF0000")
                     .setDescription("Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx).")
-                    .addField("Erro:", `\`\`\`js\n${`${e}`.shorten(1990)}\`\`\``)
+                    .addField("Erro:", `\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``)
                     .setFooter("Desculpa pelo transtorno.")
                 ]
             }).catch(() => {})
@@ -120,7 +119,7 @@ module.exports = class InteractionCreateEvent extends Event {
                 this.bansCache.set(interaction.guildId, data)
             }
     
-            const input = interaction.options.get("user")?.value?.toLowerCase()
+            const input = interaction.options.get("user")?.value?.toLowerCase().replace(/<@!?(\d{17,19})>/, "$1")
     
             const arr = data.bans?.map(user => {
                 return {

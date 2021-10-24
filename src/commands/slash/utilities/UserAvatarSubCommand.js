@@ -15,12 +15,11 @@ module.exports = class UserAvatarSubCommand extends SubCommand {
      */
 
     async run(ctx) {
-        const userID = ctx.interaction.options.getString("user")?.replace(/<@!?(\d{17,19})>/, "$1")
-        const user = !userID || userID == ctx.author.id ? ctx.author : (/^\d{17,19}$/.test(userID) ? await this.client.users.fetch(userID).catch(() => {}) : null)  
-        
+        const user = ctx.interaction.options.getUser("user") || ctx.author
+
         if(!user) return await ctx.interaction.reply({
-            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
-        })
+            content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getUser("user")?.id })
+        }).catch(() => {})
 
         const avatar = user.displayAvatarURL({ dynamic: true, format: "png" });
 
@@ -32,7 +31,7 @@ module.exports = class UserAvatarSubCommand extends SubCommand {
             .setLabel(ctx.t("user_avatar:texts.downloadImage"))
         ])
         
-        const member = await ctx.guild.members.fetch(user.id).catch(() => {})
+        const member = user.id == ctx.author.id ? ctx.member : ctx.interaction.options.getMember("user")
         const serverAvatar = member?.displayAvatarURL({ dynamic: true, format: "png" });
         
         if(member) components.addComponents([
@@ -56,7 +55,6 @@ module.exports = class UserAvatarSubCommand extends SubCommand {
         }).catch(() => {})
         
         if(!member) return
-
 
         const msg = await ctx.interaction.fetchReply()
         
