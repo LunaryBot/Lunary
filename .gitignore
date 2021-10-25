@@ -7,13 +7,16 @@
 # Config Files
 /src/config/config.js
 /.env
+/config.yml
 
 # Data
 /src/data/*.json
+!/src/data/profile.json
 
 # Arquivos temporarios
 /AdvCommand.js
 /reload.js
 
 # Locales
-/src/locales
+/src/locales/*
+!/src/locales/pt-BR

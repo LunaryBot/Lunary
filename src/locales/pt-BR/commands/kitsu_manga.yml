@@ -1,0 +1,22 @@
+help:
+  name: kitsu manga
+  description: Veja as informações de um manga em kitsu.io
+  category: Utilitários
+  examples:
+    - title: Veja as informações de Darling in the FranXX em Kitsu.
+      usage: "query:Darling in the FranXX"
+texts:
+  chooseManga: "Selecione alguns do resultados encontrados sobre: \"`{search}`\""
+  menuLabel: Escolha o manga
+  ID: ID
+  volumes: Volumes
+  chapters: Capítulos
+  startedIn: Iniciado em
+  endedIn: Finalizado em
+  popularityRank: Rank de popularidade
+  ratingRank: Rank de valiações
+  ratingAverage: Média de classificação
+  description: Descrição
+  noDescription: Sem descrição
+  noEned: Não finalizado
+  notFound: Não encontrado

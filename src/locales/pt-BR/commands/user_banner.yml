@@ -1,0 +1,7 @@
+help:
+  name: user banner
+  description: Veja o banner de um usuário.
+  category: Utilitários
+texts:
+  userDoesNotHaveBanner: "{user} não possui um banner, talvez ele não tenha um Discord Nitro ou ele não quis colocar uma imagem ou cor para banner."
+  downloadImage: Baixar imagem

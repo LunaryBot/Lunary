@@ -1,0 +1,27 @@
+help:
+  name: mute
+  description: Silencia um usuário por um período de tempo determinado no servidor.
+  category: Moderação
+  examples:
+    examples:
+    - title: Pune um usuário usando a menção.
+      usage: "user user:{@user}"
+    - title: Pune um usuário usando o id.
+      usage: "user user:{userID}"
+    - title: Pune um usuário usando com um motivo.
+      usage: "user user:{@user} reason:{reason}"
+    - title: Pune um usuário usando por um tempo determinado.
+      usage: "user user:{@user} time:{time}"
+    - title: Pune um usuário sem notificar via dm.
+      usage: "user user:{@user} notify-dm:{notify-dm}"
+texts:
+  mandatoryReason: É preciso informar um motivo para o silenciamento. `[Opção de motivo obrigatório ativa]`
+  veryBigReason: O motivo deve conter no máximo `400` caracteres.
+  reasonNotInformed: Motivo não informado.
+  default_dm_message: "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}\n**`[DURAÇÃO]`:** {time}"
+  invalidTime: O tempo inserido para o mute é inválido.
+  duration: Duração
+  lunyMissingPermissionsToManagerMuterole: Eu não tenho permissão para gerenciar o cargo de mute(`{muterole_name}`).
+  userMuted: O usuário já está mutado.
+  createMuterole: Criando o cargo de mute
+  durationNotDetermined: Não determinado.

@@ -13,6 +13,8 @@ const Command = require("./structures/Command")
 const Event = require("./structures/Event")
 const Locale = require("./structures/Locale")
 global.emojis = require("./utils/emojisInstance")
+const {readFileSync} = require("fs")
+const { load } = require("js-yaml")
 
 class Lunary extends Client {
     constructor() {
@@ -39,7 +41,8 @@ class Lunary extends Client {
                 ThreadMemberManager: 0
             })
         })
-        this.config = require("./config/config")
+        this.config = load(readFileSync(__dirname + "/../config.yml", "utf8"))
+        this.config.token = process.env.DISCORD_TOKEN
         this.cluster = new ClusterClient(this)
         this.logger = new Logger(this.cluster)
 

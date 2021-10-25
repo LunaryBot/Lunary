@@ -1,0 +1,26 @@
+and: e
+invalidUser: <:Per:833078041084166164> | **Oops**, infelizmente eu não consegui achar um usuário referente à `{reference}`... Pedimos desculpas pelo inconveniente. *(talvez ele possa até estar no mundo da lua... ¯\_(ツ)_/¯)*
+lunyMissingPermissionsToPunish: Eu não tenho permissão para punir esse usuário.
+userMissingPermissionsToPunish: Você não pode punir um membro com funções iguais/superiores a sua.
+userMissingPermissions: <:sigh:885721398788632586> **|** Para utilizar esse comando você precisa da permissão `{permissions}`, e infelizmente (ou felizmente), você não possui essa permissão...
+lunyMissingPermissions: <:cry:902169710949445643> **|** Eu não tenho permissão para executar esse comando, eu preciso da permissão `{permissions}`.
+requestedBy: Requisitado por
+successfullyPunished: "{author_mention}, o usuário {user_mention} (`{user_tag} - {user_id}`) foi punido com sucesso{notifyDM}\n\n**ID da Punição:**\n```{id}```\n||Obrigado pela preferência! :partying_face:||"
+notNotifyDm: ", mas infelizmente não foi possível notifica-lo via DM."
+levelUP: "<a:wow:900062924285046804> **| {user} Level up!**\n:partying_face: **|** Você upou seu nível de moderação lunático para `Moderador - Nível {level}`!\n:face_with_hand_over_mouth: **|** Continue assim, e também continue me utilizando, irei ficar muito feliz em ajudar. *Quem sabe seu nome pode ficar marcado nos 10 maiores moderadores lunáticos!*"
+
+# Message confirm punishment
+confirmPunishment:
+  title: "Confirme a punição a seguir:"
+  description: Você realmente deseja punir o usuário informado?
+  reason: Motivo inserido
+  duration: Duração
+  durationNotDetermined: Não determinado.
+
+# Modlogs message
+modlogs:
+  user: User
+  author: Autor
+  reason: Motivo
+  duration: Duração
+  durationNotDetermined: Não determinado.

@@ -2,7 +2,6 @@ const _client = require("../Lunary")
 const SubCommand = require("./SubCommand")
 const Discord = require("../lib")
 const utils = require("../utils/index")
-const data = require("../data/commands.json")
 
 module.exports = class Command {
     /**
@@ -57,10 +56,6 @@ module.exports = class Command {
 
     get fullName() {
         return this.name
-    }
-
-    get data() {
-        return data[this.name]?.data
     }
 
     get utils() {

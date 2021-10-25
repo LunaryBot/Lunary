@@ -1,0 +1,9 @@
+help:
+  name: clean
+  description:
+  category: Administração
+texts:
+  invalidAmount: É preciso informar uma quantidade de 2 até 500 mensagens para serem apagadas.
+  noMessagesFound: Não encontrei nenhuma mensagem para ser apagada, só para lembrar, eu não posso deletar mensagens envidadas há mais de duas semanas (`14 dias`) devido a uma limitação do Discord para nós bots <:sigh:885721398788632586>.
+  messagesDelete: O canal de texto {channel} teve **{size} mensagens** apagadas.
+  faliedDeletingMessages: "Mas infelizmente, não pude deletar {size} mensagens por um dos seguintes motivos:\n**-** Serem mensagens enviadas a mais de duas semanas (`14 dias`);\n**-** Serem mensagens que estão fixadas;\n**-** Não estarem selecionadas no filtro definido;\n**-** Ou simplesmente não existirem."
