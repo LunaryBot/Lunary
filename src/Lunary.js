@@ -1,18 +1,18 @@
-const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require("./lib")
-const ClusterClient = require("./system/cluster/ClusterClient")
-const ShardManager = require("./system/cluster/ShardManager")
-const Logger = require("./utils/logger")
-require("./functions/shorten")
-require("./functions/emojis")
-require("./functions/removeAccents")
+const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require(__dirname + "/lib")
+const ClusterClient = require(__dirname + "/system/cluster/ClusterClient.js")
+const ShardManager = require(__dirname + "/system/cluster/ShardManager.js")
+const Logger = require(__dirname + "/utils/logger.js")
+require(__dirname + "/functions/shorten.js")
+require(__dirname + "/functions/emojis.js")
+require(__dirname + "/functions/removeAccents.js")
 const moment = require("moment")
 require("moment-duration-format")
 require("moment-timezone")
 const firebase = require("firebase")
-const Command = require("./structures/Command")
-const Event = require("./structures/Event")
-const Locale = require("./structures/Locale")
-global.emojis = require("./utils/emojisInstance")
+const Command = require(__dirname + "/structures/Command.js")
+const Event = require(__dirname + "/structures/Event.js")
+const Locale = require(__dirname + "/structures/Locale.js")
+global.emojis = require(__dirname + "/utils/emojisInstance.js")
 const {readFileSync} = require("fs")
 const { load } = require("js-yaml")
 
@@ -77,7 +77,7 @@ class Lunary extends Client {
      */
     loadLocales() {
         this.locales = []
-        require("./handlers/localeHandler")(this)
+        require(__dirname + "/handlers/localeHandler.js")(this)
         return this.locales
     }
 
@@ -87,7 +87,7 @@ class Lunary extends Client {
      */
     loadEvents() {
         this.events = []
-        require("./handlers/eventHandler")(this)
+        require(__dirname + "/handlers/eventHandler.js")(this)
         return this.events
     }
 
@@ -97,7 +97,7 @@ class Lunary extends Client {
      */
     loadCommands() {
         this.commands = {}
-        require("./handlers/commandHandler")(this)
+        require(__dirname + "/handlers/commandHandler.js")(this)
         return this.commands
     }
 

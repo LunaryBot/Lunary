@@ -1,4 +1,4 @@
-const { GuildMember } = require("../lib")
+const { GuildMember } = require(__dirname + "/../lib")
 
 /**
  * @param {GuildMember} member1

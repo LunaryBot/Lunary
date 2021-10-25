@@ -1,7 +1,7 @@
-const SubCommand = require("../../../structures/SubCommand")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
-const { ObjRef, message_modlogs } = require("../../../utils")
+const SubCommand = require(__dirname + "/../../../structures/SubCommand.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
+const { ObjRef, message_modlogs } = require(__dirname + "/../../../utils")
 
 module.exports = class BanInfoSubCommand extends SubCommand {
     constructor(client, mainCommand) {

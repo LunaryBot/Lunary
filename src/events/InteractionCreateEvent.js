@@ -1,7 +1,7 @@
-const Event = require("../structures/Event")
-const { Interaction, CommandInteraction, MessageEmbed, Collection, User } = require("../lib")
-const ContextCommand = require("../structures/ContextCommand")
-const Command = require("../structures/Command")
+const Event = require(__dirname + "/../structures/Event.js")
+const { Interaction, CommandInteraction, MessageEmbed, Collection, User } = require(__dirname + "/../lib")
+const ContextCommand = require(__dirname + "/../structures/ContextCommand.js")
+const Command = require(__dirname + "/../structures/Command.js")
 
 module.exports = class InteractionCreateEvent extends Event {
     constructor(client) {

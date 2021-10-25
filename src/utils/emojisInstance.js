@@ -1,4 +1,4 @@
-const emojis = require("../config/emojis")
+const emojis = require(__dirname + "/../config/emojis")
 const regexEmoji = /<a?:|>/g
 const regexAnimateEmoji = /<a:.{2,32}:\d{17,19}>/
 

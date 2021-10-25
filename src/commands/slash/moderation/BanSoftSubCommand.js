@@ -1,7 +1,7 @@
-const SubCommand = require("../../../structures/SubCommand")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
+const SubCommand = require(__dirname + "/../../../structures/SubCommand.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require(__dirname + "/../../../utils/index.js")
 
 module.exports = class BanSoftSubCommand extends SubCommand {
     constructor(client, mainCommand) {

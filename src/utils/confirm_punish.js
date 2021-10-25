@@ -1,6 +1,6 @@
-const Discord = require("../lib")
-const ContextCommand = require("../structures/ContextCommand")
-const { format } = require("./format_time")
+const Discord = require(__dirname + "/../lib")
+const ContextCommand = require(__dirname + "/../structures/ContextCommand")
+const { format } = require(__dirname + "/format_time")
 
 /**
  * 

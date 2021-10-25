@@ -1,4 +1,4 @@
-const Util = require("discord.js").Util;
+const Util = require(__dirname + "/../../lib").Util;
 
 module.exports = class ShardManager {
     constructor(client) {

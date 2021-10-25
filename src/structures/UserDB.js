@@ -1,6 +1,6 @@
-const { User } = require("../lib")
-const { Permissions } = require("./BotPermissions")
-const BitField = require("./BitField")
+const { User } = require(__dirname + "/../lib")
+const { Permissions } = require(__dirname + "/./BotPermissions.js")
+const BitField = require(__dirname + "/./BitField.js")
 
 class UserDB {
     /**

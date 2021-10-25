@@ -1,9 +1,9 @@
-const Command = require("../../../structures/Command")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
-const BanInfoSubCommand = require("./BanInfoSubCommand")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
-const BanSoftSubCommand = require("./BanSoftSubCommand")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
+const BanInfoSubCommand = require(__dirname + "/BanInfoSubCommand.js")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require(__dirname + "/../../../utils/index.js")
+const BanSoftSubCommand = require(__dirname + "/BanSoftSubCommand.js")
 
 module.exports = class BanCommand extends Command {
     constructor(client) {

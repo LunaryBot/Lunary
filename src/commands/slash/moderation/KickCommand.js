@@ -1,7 +1,7 @@
-const Command = require("../../../structures/Command")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require(__dirname + "/../../../utils/index.js")
 
 module.exports = class KickCommand extends Command {
     constructor(client) {

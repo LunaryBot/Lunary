@@ -1,9 +1,9 @@
-const Command = require("../../../structures/Command")
-const ContextCommand = require("../../../structures/ContextCommand")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require("child_process");
-const Discord = require("../../../lib");
-const {timeString, randomCharacters, format_time: { format }} = require("../../../utils/index")
+const Discord = require(__dirname + "/../../../lib");
+const {timeString, randomCharacters, format_time: { format }} = require(__dirname + "/../../../utils/index.js")
 const moment = require("moment")
 require("moment-duration-format")
 const sydb = require("sydb")

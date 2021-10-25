@@ -1,5 +1,5 @@
-const setValue = require("./setValue")
-const { isObject } = require("./Utils")
+const setValue = require(__dirname + "/setValue")
+const { isObject } = require(__dirname + "/Utils")
 
 module.exports = class ObjRef {
     constructor(obj, sep = "/") {

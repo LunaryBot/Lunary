@@ -1,8 +1,8 @@
-const { Message, MessageEmbed } = require("../lib")
-const { configPermissions } = require("../structures/BotPermissions")
-const ContextCommand = require("../structures/ContextCommand")
-const Event = require("../structures/Event");
-const ObjRef = require("../utils/objref/ObjRef");
+const { Message, MessageEmbed } = require(__dirname + "/../lib")
+const { configPermissions } = require(__dirname + "/../structures/BotPermissions.js")
+const ContextCommand = require(__dirname + "/../structures/ContextCommand.js")
+const Event = require(__dirname + "/../structures/Event.js");
+const ObjRef = require(__dirname + "/../utils/objref/ObjRef.js");
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 
 module.exports = class MessageCreateEvent extends Event {

@@ -1,21 +1,21 @@
-const EventEmitter = require('events');
-const fs = require('fs');
-const path = require('path');
-const Discord = require('discord.js');
-const os = require('os');
-const Util = require('./Util.js');
-const Cluster = require('./Cluster.js')
+const EventEmitter = require("events");
+const fs = require("fs");
+const path = require("path");
+const Discord = require(__dirname + "/../../lib");
+const os = require("os");
+const Util = require(__dirname + "/Util.js");
+const Cluster = require(__dirname + "/Cluster.js")
 
 class ClusterManager extends EventEmitter {
     constructor(file, options = {}) {
         super();
         options = Util.mergeDefault(
           {
-            totalClusters: 'auto',
-            totalShards: 'auto',
+            totalClusters: "auto",
+            totalShards: "auto",
             shardArgs: [],
             execArgv: [],
-            mode: 'process',
+            mode: "process",
             token: process.env.DISCORD_TOKEN,
           },
           options,
@@ -23,22 +23,22 @@ class ClusterManager extends EventEmitter {
     this.respawn = true;
     this.file = file;
 
-    if (!file) throw new Error('CLIENT_INVALID_OPTION', 'File', 'specified.');
+    if (!file) throw new Error("CLIENT_INVALID_OPTION", "File", "specified.");
     if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
 
     const stats = fs.statSync(this.file);
-    if (!stats.isFile()) throw new Error('CLIENT_INVALID_OPTION', 'File', 'a file');
+    if (!stats.isFile()) throw new Error("CLIENT_INVALID_OPTION", "File", "a file");
 
-    this.totalShards = options.totalShards || 'auto';
-    this.totalClusters = options.totalClusters || 'auto';
+    this.totalShards = options.totalShards || "auto";
+    this.totalClusters = options.totalClusters || "auto";
     this.mode = options.mode;
     this.shardArgs = options.shardArgs;
     this.execArgv = options.execArgv;
 
-    this.shardList = options.shardList || 'auto';
-    if (this.shardList !== 'auto') this.shardList = [...new Set(this.shardList)];
+    this.shardList = options.shardList || "auto";
+    if (this.shardList !== "auto") this.shardList = [...new Set(this.shardList)];
 
-    this.token = options.token ? options.token.replace(/^Bot\s*/i, '') : null;
+    this.token = options.token ? options.token.replace(/^Bot\s*/i, "") : null;
 
     this.clusters = new Map();
     this.shardclusterlist = null;
@@ -52,12 +52,12 @@ class ClusterManager extends EventEmitter {
   }
 
   async spawn(amount = this.totalShards, delay = 5500, spawnTimeout) {
-    if (amount === 'auto') {
+    if (amount === "auto") {
       amount = await Discord.fetchRecommendedShards(this.token, 1000);
       this.totalShards = amount;
     }
     let clusteramount = this.totalClusters;
-    if (clusteramount === 'auto') {
+    if (clusteramount === "auto") {
       clusteramount = os.cpus().length;
       this.totalClusters = clusteramount;
     }
@@ -87,26 +87,26 @@ class ClusterManager extends EventEmitter {
     const cluster = new Cluster(this, id,  shardstospawn, totalshards);
     this.clusters.set(id, cluster);
 
-    this.emit('clusterCreate', cluster);
+    this.emit("clusterCreate", cluster);
     return cluster;
   }
 
    broadcastEval(script, cluster) {
-    return this._performOnShards('eval', [script], cluster);
+    return this._performOnShards("eval", [script], cluster);
    }
 
    fetchClientValues(prop, cluster) {
-    return this._performOnShards('fetchClientValue', [prop], cluster);
+    return this._performOnShards("fetchClientValue", [prop], cluster);
    }
 
   _performOnShards(method, args, cluster) {
 
-    if (typeof cluster=== 'number') {
+    if (typeof cluster=== "number") {
       if (this.clusters.has(cluster)) return this.clusers.get(cluster)[method](...args);
-      return Promise.reject(new Error('CLUSTERING_CLUSTER_NOT_FOUND', cluster));
+      return Promise.reject(new Error("CLUSTERING_CLUSTER_NOT_FOUND", cluster));
     }
 
-    // if (this.clusters.size !== this.totalClusters) return Promise.reject(new Error('CLUSTERING_IN_PROCESS'));
+    // if (this.clusters.size !== this.totalClusters) return Promise.reject(new Error("CLUSTERING_IN_PROCESS"));
 
     const promises = [];
     for (const cl of this.clusters.values()) promises.push(cl[method](...args));
@@ -130,7 +130,7 @@ class ClusterManager extends EventEmitter {
 }
 module.exports = ClusterManager;
 
-Object.defineProperty(Array.prototype, 'chunk', {
+Object.defineProperty(Array.prototype, "chunk", {
   value: function(chunkSize) {
     var R = [];
     for (var i = 0; i < this.length; i += chunkSize)

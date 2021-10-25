@@ -1,5 +1,5 @@
 const { existsSync, readFileSync } = require("fs")
-const ObjRef = require("../utils/objref/ObjRef")
+const ObjRef = require(__dirname + "/../utils/objref/ObjRef.js")
 const yaml = require("js-yaml")
 
 module.exports = class Locale {

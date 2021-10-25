@@ -1,6 +1,6 @@
-const SubCommand = require("../../../structures/SubCommand")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
+const SubCommand = require(__dirname + "/../../../structures/SubCommand.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
 
 module.exports = class AdvRemoveSubCommand extends SubCommand {
     constructor(client, mainCommand) {

@@ -1,7 +1,7 @@
-const Command = require("../../../structures/Command")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
-const formatSizeUnits = require("../../../utils/formatSizeUnits")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
+const formatSizeUnits = require(__dirname + "/../../../utils/formatSizeUnits.js")
 const formatNumber = new Intl.NumberFormat("pt-BR").format
 
 module.exports = class PingCommand extends Command {
@@ -38,7 +38,7 @@ module.exports = class PingCommand extends Command {
 
                 cluster = {
                     id: i + 1,
-                    name: this.client.config.clusterName[Number(i)],
+                    name: this.client.config.clustersName[Number(i)],
                     shards: cluster ? cluster[1] : "N\\A",
                     ping: cluster ? `~${cluster[2]}ms` : "N\\A",
                     guilds: cluster ? formatNumber(cluster[3]) : "N\\A",
@@ -54,7 +54,7 @@ module.exports = class PingCommand extends Command {
                 content: s.join("\n") + l + "\n+" + k + "+" + "```"
             })
         } else {
-            let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.dm ? 0 : ctx.guild.shardId) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clusterName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`
+            let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.dm ? 0 : ctx.guild.shardId) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clustersName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`
             
             let ping = Date.now()
             let msg = await ctx.message.reply({

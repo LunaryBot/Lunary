@@ -1,8 +1,8 @@
-const Event = require("../structures/Event")
+const Event = require(__dirname + "/../structures/Event.js")
 const sydb = require("sydb")
-const { GuildMember } = require("../lib")
+const { GuildMember } = require(__dirname + "/../lib")
 const mutesdb = new sydb(__dirname + "/../data/mutes.json")
-const { GuildDB } = require("../structures/GuildDB")
+const { GuildDB } = require(__dirname + "/../structures/GuildDB.js")
 
 module.exports = class GuildMemberRemoveEvent extends Event {
   constructor(client) {

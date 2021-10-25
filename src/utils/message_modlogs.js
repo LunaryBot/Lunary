@@ -1,5 +1,5 @@
-const { MessageEmbed } = require("../lib")
-const { format } = require("./format_time")
+const { MessageEmbed } = require(__dirname + "/../lib")
+const { format } = require(__dirname + "/format_time")
 const p = {
     ban: {
         cor: "RED",

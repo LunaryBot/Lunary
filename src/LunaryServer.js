@@ -1,5 +1,5 @@
 const express = require("express")
-const apiRouter = require("./LunaryServerAPI")
+const apiRouter = require(__dirname + "/LunaryServerAPI")
 
 module.exports = function initServer() {
     const app = express()
@@ -9,7 +9,7 @@ module.exports = function initServer() {
 
     app.use("/api", apiRouter)
 
-    app.listen(16, "0.0.0.0")
+    app.listen(process.env.PORT)
 
     return app
 }

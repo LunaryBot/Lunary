@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require(__dirname + "/../../lib");
 const { Events } = Discord.Constants
 const Util = Discord.Util;
 class ClusterClient{
@@ -8,27 +8,27 @@ class ClusterClient{
     mode = this.mode;
     this.parentPort = null;
      
-     if (mode === 'process') {
-        process.on('message', this._handleMessage.bind(this));
-        client.on('ready', () => {
+     if (mode === "process") {
+        process.on("message", this._handleMessage.bind(this));
+        client.on("ready", () => {
           process.send({ _ready: true });
         });
-        client.on('disconnect', () => {
+        client.on("disconnect", () => {
           process.send({ _disconnect: true });
         });
-        client.on('reconnecting', () => {
+        client.on("reconnecting", () => {
           process.send({ _reconnecting: true });
         });
-      } else if (mode === 'worker') {
-        this.parentPort = require('worker_threads').parentPort;
-        this.parentPort.on('message', this._handleMessage.bind(this));
-        client.on('ready', () => {
+      } else if (mode === "worker") {
+        this.parentPort = require("worker_threads").parentPort;
+        this.parentPort.on("message", this._handleMessage.bind(this));
+        client.on("ready", () => {
           this.parentPort.postMessage({ _ready: true });
         });
-        client.on('disconnect', () => {
+        client.on("disconnect", () => {
           this.parentPort.postMessage({ _disconnect: true });
         });
-        client.on('reconnecting', () => {
+        client.on("reconnecting", () => {
           this.parentPort.postMessage({ _reconnecting: true });
         });
       }
@@ -65,12 +65,12 @@ class ClusterClient{
    
   send(message) {
     return new Promise((resolve, reject) => {
-      if (this.mode === 'process') {
+      if (this.mode === "process") {
         process.send(message, err => {
           if (err) reject(err);
           else resolve();
         });
-      } else if (this.mode === 'worker') {
+      } else if (this.mode === "worker") {
         this.parentPort.postMessage(message);
         resolve();
       }
@@ -82,7 +82,7 @@ class ClusterClient{
    * @param {number} [shard] Shard to fetch property from, all if undefined
    * @returns {Promise<*>|Promise<Array<*>>}
    * @example
-   * client.shard.fetchClientValues('guilds.cache.size')
+   * client.shard.fetchClientValues("guilds.cache.size")
    *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
    *   .catch(console.error);
    * @see {@link ClusterManager#fetchClientValues}
@@ -93,14 +93,14 @@ class ClusterClient{
 
       const listener = message => {
         if (!message || message._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
-        parent.removeListener('message', listener);
+        parent.removeListener("message", listener);
         if (!message._error) resolve(message._result);
         else reject(Util.makeError(message._error));
       };
-      parent.on('message', listener);
+      parent.on("message", listener);
 
       this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch(err => {
-        parent.removeListener('message', listener);
+        parent.removeListener("message", listener);
         reject(err);
       });
     });
@@ -112,7 +112,7 @@ class ClusterClient{
    * @param {number} [cluster] Cluster to run script on, all if undefined
    * @returns {Promise<*>|Promise<Array<*>>} Results of the script execution
    * @example
-   * client.cluster.broadcastEval('this.guilds.cache.size')
+   * client.cluster.broadcastEval("this.guilds.cache.size")
    *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
    *   .catch(console.error);
    * @see {@link ClusterManager#broadcastEval}
@@ -120,18 +120,18 @@ class ClusterClient{
   broadcastEval(script, cluster) {
     return new Promise((resolve, reject) => {
       const parent = this.parentPort || process;
-      script = typeof script === 'function' ? `(${script})(this)` : script;
+      script = typeof script === "function" ? `(${script})(this)` : script;
 
       const listener = message => {
         if (!message || message._sEval !== script || message._sEvalShard !== cluster) return;
-        parent.removeListener('message', listener);
+        parent.removeListener("message", listener);
         if (!message._error) resolve(message._result);
         else reject(Util.makeError(message._error));
       };
-      parent.on('message', listener);
+      parent.on("message", listener);
 
       this.send({ _sEval: script, _sEvalShard: cluster }).catch(err => {
-        parent.removeListener('message', listener);
+        parent.removeListener("message", listener);
         reject(err);
       });
     });
@@ -144,15 +144,15 @@ class ClusterClient{
   async _handleMessage(message) {
     if (!message) return;
     if (message._fetchProp) {
-      const props = message._fetchProp.split('.');
+      const props = message._fetchProp.split(".");
       let value = this.client;
       for (const prop of props) value = value[prop];
-      this._respond('fetchProp', { _fetchProp: message._fetchProp, _result: value });
+      this._respond("fetchProp", { _fetchProp: message._fetchProp, _result: value });
     } else if (message._eval) {
       try {
-        this._respond('eval', { _eval: message._eval, _result: await this.client._eval(message._eval) });
+        this._respond("eval", { _eval: message._eval, _result: await this.client._eval(message._eval) });
       } catch (err) {
-        this._respond('eval', { _eval: message._eval, _error: Util.makePlainError(err) });
+        this._respond("eval", { _eval: message._eval, _error: Util.makePlainError(err) });
       }
     }
   }
@@ -172,7 +172,7 @@ class ClusterClient{
     } else {
       client.emit(
         Events.WARN,
-        'Multiple clients created in child process/worker; only the first will handle clustering helpers.',
+        "Multiple clients created in child process/worker; only the first will handle clustering helpers.",
       );
     }
     return this._singleton;

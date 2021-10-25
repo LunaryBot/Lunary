@@ -1,6 +1,6 @@
 const fs = require("fs");
-const Event = require("../structures/Event");
-const client = require("../Lunary");
+const Event = require(__dirname + "/../structures/Event.js");
+const client = require(__dirname + "/../Lunary.js");
 
 
 /**

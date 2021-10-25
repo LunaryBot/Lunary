@@ -1,7 +1,7 @@
-const Command = require("../../../structures/Command")
-const UserAvatarSubCommand = require("./UserAvatarSubCommand")
-const UserBannerSubCommand = require("./UserBannerSubCommand")
-const UserInfoSubCommand = require("./UserInfoSubCommand")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const UserAvatarSubCommand = require(__dirname + "/UserAvatarSubCommand.js")
+const UserBannerSubCommand = require(__dirname + "/UserBannerSubCommand.js")
+const UserInfoSubCommand = require(__dirname + "/UserInfoSubCommand.js")
 
 module.exports = class UserCommand extends Command {
     constructor(client) {

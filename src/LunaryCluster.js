@@ -1,7 +1,7 @@
 require("dotenv").config()
-const ClusterManager = require("./system/cluster/ClusterManager");
-const {token} = require("./config/config");
-const Logger = require("./utils/logger");
+const ClusterManager = require(__dirname + "/system/cluster/ClusterManager.js");
+const token = process.env.DISCORD_TOKEN
+const Logger = require(__dirname + "/utils/logger.js");
 const clusterManager = new ClusterManager(`${__dirname}/Lunary.js`,{
     totalShards: 1,
     totalClusters: 1, 
@@ -14,5 +14,5 @@ clusterManager.on('clusterCreate', cluster => {
 });
 
 global.clusterManager = clusterManager
-clusterManager.spawn()
-require("./LunaryServer")()
+clusterManager.spawn(undefined, undefined, -1)
+require(__dirname + "/LunaryServer")()

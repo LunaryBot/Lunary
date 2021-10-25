@@ -12,7 +12,7 @@
     "url": "git+https://github.com/LunaryBot/LunaryBot.git"
   },
   "author": "JVOPINHO",
-  "license": "ISC",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/LunaryBot/LunaryBot/issues"
   },
@@ -63,7 +63,7 @@
     "typescript": "^4.4.3"
   },
   "engines": {
-    "node": ">=16.6.0",
+    "node": "16.x",
     "npm": ">=7.0.0"
   }
 }

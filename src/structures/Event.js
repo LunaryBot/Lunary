@@ -1,4 +1,4 @@
-const client = require("../Lunary")
+const client = require(__dirname + "/../Lunary.js")
 
 module.exports = class Event {
     /**

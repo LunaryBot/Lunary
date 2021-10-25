@@ -1,9 +1,9 @@
-const Command = require("../../../structures/Command")
-const ContextCommand = require("../../../structures/ContextCommand")
-const Discord = require("../../../lib")
+const Command = require(__dirname + "/../../../structures/Command.js")
+const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Discord = require(__dirname + "/../../../lib")
 const sydb = require("sydb")
 const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish, timeString, format_time: {format}} = require("../../../utils/index")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish, timeString, format_time: {format}} = require(__dirname + "/../../../utils/index.js")
 
 module.exports = class NameCommand extends Command {
     constructor(client) {

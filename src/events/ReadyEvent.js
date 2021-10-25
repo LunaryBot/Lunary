@@ -1,4 +1,4 @@
-const Event = require("../structures/Event")
+const Event = require(__dirname + "/../structures/Event.js")
 const sydb = require("sydb")
 const mutesdb = new sydb(__dirname + "/../data/mutes.json")
 

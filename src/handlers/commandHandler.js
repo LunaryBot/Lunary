@@ -1,6 +1,6 @@
 const { readdirSync } = require("fs")
-const client = require("../Lunary")
-const Command = require("../structures/Command")
+const client = require(__dirname + "/../Lunary.js")
+const Command = require(__dirname + "/../structures/Command.js")
 
 /**
  * 
