@@ -70,6 +70,9 @@ module.exports = class InteractionCreateEvent extends Event {
             
             if(!ctx.dm) {
                 const ps = command.verifyPerms(ctx.member, ctx.me, ctx.UserDB.permissions)
+
+                if(!ps.member.has) return interaction.reply(ctx.t("general:userMissingPermissions", { permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(", ")}))
+                if(!ps.me.has) return interaction.reply(ctx.t("general:lunyMissingPermissions", { permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(", ")}))
             }
             await command.run(ctx)
         } catch (e) {
