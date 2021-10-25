@@ -9,7 +9,7 @@ module.exports = class CleanCommand extends Command {
             dirname: __dirname,
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],
-                Lunar: ["MANAGE_MESSAGES"]
+                me: ["MANAGE_MESSAGES"]
             }
         }, client)
     }

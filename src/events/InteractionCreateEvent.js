@@ -55,7 +55,7 @@ module.exports = class InteractionCreateEvent extends Event {
 
             let UsersDB = await this.client.UsersDB.ref().once('value')
             UsersDB = UsersDB.val() || {}
-
+            
             const ctx = new ContextCommand({
                 client: this.client,
                 interaction: interaction,
@@ -68,6 +68,9 @@ module.exports = class InteractionCreateEvent extends Event {
                 dm: !Boolean(interaction.guild)
             }, { guildsDB: GuildsDB, usersDB: UsersDB })
             
+            if(!ctx.dm) {
+                const ps = command.verifyPerms(ctx.member, ctx.me, ctx.UserDB.permissions)
+            }
             await command.run(ctx)
         } catch (e) {
             interaction.channel.send({

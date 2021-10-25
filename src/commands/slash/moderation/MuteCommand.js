@@ -13,7 +13,7 @@ module.exports = class NameCommand extends Command {
             permissions: {
                 Discord: ["MUTE_MEMBERS"],
                 Bot: ["LUNAR_MUTE_MEMBERS"],
-                Lunar: ["MANAGE_CHANNELS", "MANAGE_ROLES"]
+                me: ["MANAGE_CHANNELS", "MANAGE_ROLES"]
             },
             dm: false
         }, client)

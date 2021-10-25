@@ -90,4 +90,32 @@ module.exports = class Command {
 
         return embed
     }
+
+    /**
+     * @param {Discord.GuildMember} member
+     * @param {Discord.GuildMember} me
+     * @param {Discord.BitField} lunyPermissions
+     */
+    verifyPerms(member, me, lunyPermissions) {
+        const data = {
+            me: {
+                has: true
+            },
+            member: {
+                has: true
+            }
+        }
+
+        if(this.permissions.me) if(!me.permissions.has(this.permissions.me)) data.me.has = false
+
+        if(this.permissions.Discord) {
+            if(!member.permissions.has(this.permissions.Discord)) data.member.has = false
+        }
+
+        if(this.permissions.Bot && lunyPermissions && !data.member.has) {
+            if(lunyPermissions.has(this.permissions.Bot)) data.member.has = true
+        }
+
+        return data
+    }
 }

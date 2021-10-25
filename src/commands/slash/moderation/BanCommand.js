@@ -13,7 +13,7 @@ module.exports = class BanCommand extends Command {
             permissions: {
                 Discord: ["BAN_MEMBERS"],
                 Bot: ["LUNAR_BAN_MEMBERS"],
-                Lunar: ["BAN_MEMBERS"]
+                me: ["BAN_MEMBERS"]
             },
             dm: false
         }, client)

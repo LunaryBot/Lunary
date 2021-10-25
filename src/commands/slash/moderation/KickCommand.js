@@ -11,7 +11,7 @@ module.exports = class KickCommand extends Command {
             permissions: {
                 Discord: ["KICK_MEMBERS"],
                 Bot: ["LUNAR_KICK_MEMBERS"],
-                Lunar: ["KICK_MEMBERS"]
+                me: ["KICK_MEMBERS"]
             },
             dm: false
         }, client)
