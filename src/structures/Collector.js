@@ -1,5 +1,5 @@
 const { EventEmitter } = require('events')
-const { client } = require(__dirname + "/../Lunary.js")
+const { client } = require("../Lunary.js")
   
 module.exports = class CollectorBase extends EventEmitter {
     /**

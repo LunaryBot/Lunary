@@ -1,12 +1,12 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
 const { loadImage, createCanvas } = require("node-canvas")
-const { UserDB } = require(__dirname + "/../../../structures/UserDB.js")
+const { UserDB } = require("../../../structures/UserDB.js")
 const { readFileSync } = require("fs")
 const yaml = require("js-yaml")
 const Sydb = require("sydb")
-const profileDB = new Sydb(__dirname + "/../../../data/profile")
+const profileDB = new Sydb("../../../data/profile")
 
 module.exports = class ProfileCommand extends Command {
     constructor(client) {

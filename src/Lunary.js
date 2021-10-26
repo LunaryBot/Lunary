@@ -1,18 +1,18 @@
-const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require(__dirname + "/lib")
-const ClusterClient = require(__dirname + "/system/cluster/ClusterClient.js")
-const ShardManager = require(__dirname + "/system/cluster/ShardManager.js")
-const Logger = require(__dirname + "/utils/logger.js")
-require(__dirname + "/functions/shorten.js")
-require(__dirname + "/functions/emojis.js")
-require(__dirname + "/functions/removeAccents.js")
+const { Permissions, Client, Collection, Constants: { InviteScopes }, Options } = require("./lib")
+const ClusterClient = require("./system/cluster/ClusterClient.js")
+const ShardManager = require("./system/cluster/ShardManager.js")
+const Logger = require("./utils/logger.js")
+require("./functions/shorten.js")
+require("./functions/emojis.js")
+require("./functions/removeAccents.js")
 const moment = require("moment")
 require("moment-duration-format")
 require("moment-timezone")
 const firebase = require("firebase")
-const Command = require(__dirname + "/structures/Command.js")
-const Event = require(__dirname + "/structures/Event.js")
-const Locale = require(__dirname + "/structures/Locale.js")
-global.emojis = require(__dirname + "/utils/emojisInstance.js")
+const Command = require("./structures/Command.js")
+const Event = require("./structures/Event.js")
+const Locale = require("./structures/Locale.js")
+global.emojis = require("./utils/emojisInstance.js")
 const {readFileSync} = require("fs")
 const { load } = require("js-yaml")
 
@@ -41,7 +41,7 @@ class Lunary extends Client {
                 ThreadMemberManager: 0
             })
         })
-        this.config = load(readFileSync(__dirname + "/../config.yml", "utf8"))
+        this.config = load(readFileSync("./../config.yml", "utf8"))
         this.config.token = process.env.DISCORD_TOKEN
         this.cluster = new ClusterClient(this)
         this.logger = new Logger(this.cluster)
@@ -77,7 +77,7 @@ class Lunary extends Client {
      */
     loadLocales() {
         this.locales = []
-        require(__dirname + "/handlers/localeHandler.js")(this)
+        require("./handlers/localeHandler.js")(this)
         return this.locales
     }
 
@@ -87,7 +87,7 @@ class Lunary extends Client {
      */
     loadEvents() {
         this.events = []
-        require(__dirname + "/handlers/eventHandler.js")(this)
+        require("./handlers/eventHandler.js")(this)
         return this.events
     }
 
@@ -97,7 +97,7 @@ class Lunary extends Client {
      */
     loadCommands() {
         this.commands = {}
-        require(__dirname + "/handlers/commandHandler.js")(this)
+        require("./handlers/commandHandler.js")(this)
         return this.commands
     }
 

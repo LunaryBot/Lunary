@@ -1,6 +1,6 @@
-const SubCommand = require(__dirname + "/../../../structures/SubCommand.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
+const SubCommand = require("../../../structures/SubCommand.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
 const { searchManga } = require("node-kitsu")
 
 module.exports = class KitsuMangaSubCommand extends SubCommand {

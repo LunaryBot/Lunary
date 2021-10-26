@@ -123,3 +123,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# ffmpeg
+/ffmpeg.exe
+/ffprobe.exe
+/ffplay.exe

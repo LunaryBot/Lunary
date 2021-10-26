@@ -1,4 +1,4 @@
-const Util = require(__dirname + "/../../lib").Util;
+const Util = require("../../lib").Util;
 
 module.exports = class ShardManager {
     constructor(client) {

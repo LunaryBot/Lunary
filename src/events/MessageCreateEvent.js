@@ -1,8 +1,8 @@
-const { Message, MessageEmbed } = require(__dirname + "/../lib")
-const { configPermissions } = require(__dirname + "/../structures/BotPermissions.js")
-const ContextCommand = require(__dirname + "/../structures/ContextCommand.js")
-const Event = require(__dirname + "/../structures/Event.js");
-const ObjRef = require(__dirname + "/../utils/objref/ObjRef.js");
+const { Message, MessageEmbed } = require("../lib")
+const { configPermissions } = require("../structures/BotPermissions.js")
+const ContextCommand = require("../structures/ContextCommand.js")
+const Event = require("../structures/Event.js");
+const ObjRef = require("../utils/objref/ObjRef.js");
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 
 module.exports = class MessageCreateEvent extends Event {
@@ -23,7 +23,7 @@ module.exports = class MessageCreateEvent extends Event {
     
     let GuildsDB = message.guild ? await this.client.db.ref().once('value') : null
     if(GuildsDB) GuildsDB = GuildsDB.val() || {}
-    
+
     const defaultprefix = this.client.config.prefix
     const regexp = new RegExp(`^(${`${message.guild ? new ObjRef(GuildsDB).ref(`Servidores/${message.guild.id}/prefix`).val() || defaultprefix : defaultprefix}`.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}|<@!?${this.client.user.id}>)( )*`, 'gi')
     if (!message.content.match(regexp)) return

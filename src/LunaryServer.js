@@ -1,5 +1,5 @@
 const express = require("express")
-const apiRouter = require(__dirname + "/LunaryServerAPI")
+const apiRouter = require("./LunaryServerAPI")
 
 module.exports = function initServer() {
     const app = express()

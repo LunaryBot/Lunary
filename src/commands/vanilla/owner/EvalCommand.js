@@ -1,13 +1,13 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require("child_process");
-const Discord = require(__dirname + "/../../../lib");
-const {timeString, randomCharacters, format_time: { format }} = require(__dirname + "/../../../utils/index.js")
+const Discord = require("../../../lib");
+const {timeString, randomCharacters, format_time: { format }} = require("../../../utils/index.js")
 const moment = require("moment")
 require("moment-duration-format")
 const sydb = require("sydb")
-const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
+const mutesdb = new sydb("../../../data/mutes.json")
 
 module.exports = class EvalCommand extends Command {
     constructor(client) {

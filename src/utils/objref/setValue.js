@@ -1,4 +1,4 @@
-const { isObject } = require(__dirname + "/Utils")
+const { isObject } = require("./Utils")
 
 const isUnsafeKey = key => {
   return key === '__proto__' || key === 'constructor' || key === 'prototype';

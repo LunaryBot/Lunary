@@ -1,8 +1,8 @@
-const Event = require(__dirname + "/../structures/Event.js")
-const { GuildDB } = require(__dirname + "/../structures/GuildDB.js")
+const Event = require("../structures/Event.js")
+const { GuildDB } = require("../structures/GuildDB.js")
 const sydb = require("sydb")
 const mutesdb = new sydb(__dirname + "/../data/mutes.json")
-const {message_modlogs, message_punish} = require(__dirname + "/../utils/index")
+const {message_modlogs, message_punish} = require("../utils/index")
 const reason = "Tempo de mute expirou."
 
 module.exports = class MuteEndEvent extends Event {

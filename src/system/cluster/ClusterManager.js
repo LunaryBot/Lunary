@@ -1,10 +1,10 @@
 const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
-const Discord = require(__dirname + "/../../lib");
+const Discord = require("../../lib");
 const os = require("os");
-const Util = require(__dirname + "/Util.js");
-const Cluster = require(__dirname + "/Cluster.js")
+const Util = require("./Util.js");
+const Cluster = require("./Cluster.js")
 
 class ClusterManager extends EventEmitter {
     constructor(file, options = {}) {

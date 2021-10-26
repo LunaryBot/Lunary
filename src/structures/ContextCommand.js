@@ -1,10 +1,10 @@
-const _client = require(__dirname + "/../Lunary.js")
-const { Message, CommandInteraction, User, Guild, GuildMember, GuildChannel } = require(__dirname + "/../lib")
-const ObjRef = require(__dirname + "/../utils/objref/ObjRef.js")
-const { GuildDB } = require(__dirname + "/GuildDB.js")
-const { UserDB } = require(__dirname + "/UserDB.js")
-const { configPermissions } = require(__dirname + "/BotPermissions.js")
-const Locale = require(__dirname + "/Locale.js")
+const _client = require("../Lunary.js")
+const { Message, CommandInteraction, User, Guild, GuildMember, GuildChannel } = require("../lib")
+const ObjRef = require("../utils/objref/ObjRef.js")
+const { GuildDB } = require("./GuildDB.js")
+const { UserDB } = require("./UserDB.js")
+const { configPermissions } = require("./BotPermissions.js")
+const Locale = require("./Locale.js")
 
 module.exports = class ContextCommand {
     constructor({client, message = null, interaction = null, args = null, guild, channel, user, command, slash = false, prefix, dm = false}, { usersDB, guildsDB }) {

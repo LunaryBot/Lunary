@@ -1,11 +1,11 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require("child_process");
-const Discord = require(__dirname + "/../../../lib");
-const MemberBotPermissions = require(__dirname + "/../../../structures/BotPermissions.js");
-const message_modlogs = require(__dirname + "/../../../utils/message_modlogs.js");
-const message_punish = require(__dirname + "/../../../utils/message_punish.js");
+const Discord = require("../../../lib");
+const MemberBotPermissions = require("../../../structures/BotPermissions.js");
+const message_modlogs = require("../../../utils/message_modlogs.js");
+const message_punish = require("../../../utils/message_punish.js");
 let m = { label: "Rogue", value: "rogue", description: "Sneak n stab", emoji: { name: "emoji_1", id: "870329125259337769" } }
 
 module.exports = class EvalCommand extends Command {

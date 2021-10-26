@@ -1,4 +1,4 @@
-const { Message, Collection } = require(__dirname + "/../lib")
+const { Message, Collection } = require("../lib")
 
 // /<(a)?:([\w\d]{2,32})+:(\d{17,19})>/g
 Object.defineProperties(Message.prototype, {
