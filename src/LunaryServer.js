@@ -1,4 +1,6 @@
 const express = require("express")
+const { join } = require("path")
+const path = require("path/posix")
 const apiRouter = require("./LunaryServerAPI")
 
 module.exports = function initServer() {
@@ -8,6 +10,7 @@ module.exports = function initServer() {
     })
 
     app.use("/api", apiRouter)
+    app.use("/database", express.static(join(__dirname, "../database")))
 
     app.listen(process.env.PORT)
 

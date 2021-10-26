@@ -78,7 +78,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
                 if(_log.type == 1 &&_log.user == ban.user.id && _log.server == ctx.guild.id && banReason.replace(regex, "$2") == decodeURI(_log.reason))  {
                     components.addComponents([
                         new Discord.MessageButton()
-                        .setURL(`${this.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setURL(`${this.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])

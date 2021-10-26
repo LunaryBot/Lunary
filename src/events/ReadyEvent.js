@@ -9,7 +9,7 @@ module.exports = class ReadyEvent extends Event {
 
   async run() {
     this.client.logger.log(`Client conectado ao Discord!`, { key: "Client", cluster: true, date: true })
-    let mutes = Object.entries(mutesdb.ref().val()).filter(([k, v]) => !k.endsWith("pendent_") && v.time != "..." && this.client.guilds.cache.get(v.server))
+    let mutes = Object.entries(mutesdb.ref().val()).filter(([k, v]) => !k.endsWith("pendent_") && v.end != "..." && this.client.guilds.cache.get(v.server))
 
     mutes.forEach(async([k, v]) => {
       const guild = this.client.guilds.cache.get(v.server)

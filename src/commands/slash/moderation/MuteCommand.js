@@ -196,7 +196,7 @@ module.exports = class NameCommand extends Command {
                     new Discord.MessageActionRow()
                     .addComponents([
                         new Discord.MessageButton()
-                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
