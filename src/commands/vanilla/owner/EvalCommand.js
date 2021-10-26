@@ -7,7 +7,7 @@ const {timeString, randomCharacters, format_time: { format }} = require("../../.
 const moment = require("moment")
 require("moment-duration-format")
 const sydb = require("sydb")
-const mutesdb = new sydb("../../../data/mutes.json")
+const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
 
 module.exports = class EvalCommand extends Command {
     constructor(client) {

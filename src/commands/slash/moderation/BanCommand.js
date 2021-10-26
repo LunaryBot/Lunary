@@ -160,7 +160,7 @@ module.exports = class BanCommand extends Command {
             let xp = ctx.UserDB.xp
             if(membro) {
                 if(ctx.UserDB.lastPunishmentApplied) {
-                    if(!user.user.bot) {
+                    if(!user.bot) {
                         if(user.id != ctx.author.id) {
                             if(
                                 user.id != ctx.UserDB.lastPunishmentApplied.user 

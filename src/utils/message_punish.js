@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("/../lib")
+const { MessageEmbed } = require("../lib")
 const { format } = require("./format_time")
 const p = {
     "ban": {

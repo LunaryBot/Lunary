@@ -41,7 +41,7 @@ class Lunary extends Client {
                 ThreadMemberManager: 0
             })
         })
-        this.config = load(readFileSync("./../config.yml", "utf8"))
+        this.config = load(readFileSync(__dirname + "/../config.yml", "utf8"))
         this.config.token = process.env.DISCORD_TOKEN
         this.cluster = new ClusterClient(this)
         this.logger = new Logger(this.cluster)
