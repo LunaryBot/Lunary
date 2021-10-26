@@ -256,7 +256,7 @@ module.exports = class NameCommand extends Command {
                 content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
                     author_mention: ctx.author.toString(),
                     user_mention: user.toString(),
-                    user_tag: user.tag,
+                    user_tag: user.user.tag,
                     user_id: user.id,
                     id: id,
                     notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
