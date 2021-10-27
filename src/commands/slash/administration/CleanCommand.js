@@ -1,6 +1,6 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
 
 module.exports = class CleanCommand extends Command {
     constructor(client) {

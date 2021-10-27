@@ -10,6 +10,7 @@
 # Data
 /src/data/*.json
 !/src/data/profile.json
+/database
 
 # Arquivos temporarios
 /AdvCommand.js
@@ -123,3 +124,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# ffmpeg
+/ffmpeg.exe
+/ffprobe.exe
+/ffplay.exe

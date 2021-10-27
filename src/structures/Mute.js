@@ -1,4 +1,4 @@
-const client = require(__dirname + "/../Lunary.js")
+const client = require("../Lunary.js")
 const sydb = require("sydb")
 const mutesdb = new sydb(__dirname + "/../data/mutes.json")
 

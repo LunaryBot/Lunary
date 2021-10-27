@@ -1,9 +1,9 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
-const BanInfoSubCommand = require(__dirname + "/BanInfoSubCommand.js")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require(__dirname + "/../../../utils/index.js")
-const BanSoftSubCommand = require(__dirname + "/BanSoftSubCommand.js")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index.js")
+const BanInfoSubCommand = require("./BanInfoSubCommand.js")
+const BanSoftSubCommand = require("./BanSoftSubCommand.js")
 
 module.exports = class BanCommand extends Command {
     constructor(client) {
@@ -150,7 +150,7 @@ module.exports = class BanCommand extends Command {
                     new Discord.MessageActionRow()
                     .addComponents([
                         new Discord.MessageButton()
-                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
@@ -160,7 +160,7 @@ module.exports = class BanCommand extends Command {
             let xp = ctx.UserDB.xp
             if(membro) {
                 if(ctx.UserDB.lastPunishmentApplied) {
-                    if(!user.user.bot) {
+                    if(!user.bot) {
                         if(user.id != ctx.author.id) {
                             if(
                                 user.id != ctx.UserDB.lastPunishmentApplied.user 

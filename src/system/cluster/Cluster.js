@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const path = require("path");
-const Discord = require(__dirname + "/../../lib");
+const Discord = require("../../lib");
 const Util = Discord.Util;
 let childProcess = null;
 let Worker = null;

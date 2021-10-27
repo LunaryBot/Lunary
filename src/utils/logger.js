@@ -1,5 +1,5 @@
 const chalk = require("chalk")
-const formateNumber = require(__dirname + "/formateNumber")
+const formateNumber = require("./formateNumber")
 
 module.exports = class Logger {
     constructor(cluster) {

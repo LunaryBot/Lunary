@@ -1,5 +1,5 @@
 const fs = require("fs");
-const Locale = require(__dirname + "/../structures/Locale.js");
+const Locale = require("../structures/Locale.js");
 
 module.exports = (client) => {
     let locales = fs.readdirSync(__dirname + "/../locales")

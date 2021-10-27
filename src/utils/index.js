@@ -1,13 +1,13 @@
 module.exports = {
-    confirm_punish: require(__dirname + "/confirm_punish.js"),
-    message_punish: require(__dirname + "/message_punish.js"),
-    message_modlogs: require(__dirname + "/message_modlogs.js"),
-    randomCharacters: require(__dirname + "/randomCharacters.js"),
-    removeAcents: require(__dirname + "/removeAcents.js"),
-    formatSizeUnits: require(__dirname + "/formatSizeUnits.js"),
-    format_time: require(__dirname + "/format_time.js"),
-    ObjRef: require(__dirname + "/objref/ObjRef.js"),
-    highest_position: require(__dirname + "/highest_position.js"),
-    timeString: require(__dirname + "/timeString.js"),
-    validateUser: require(__dirname + "/validateUser.js")
+    confirm_punish: require("./confirm_punish.js"),
+    message_punish: require("./message_punish.js"),
+    message_modlogs: require("./message_modlogs.js"),
+    randomCharacters: require("./randomCharacters.js"),
+    removeAcents: require("./removeAcents.js"),
+    formatSizeUnits: require("./formatSizeUnits.js"),
+    format_time: require("./format_time.js"),
+    ObjRef: require("./objref/ObjRef.js"),
+    highest_position: require("./highest_position.js"),
+    timeString: require("./timeString.js"),
+    validateUser: require("./validateUser.js")
 }

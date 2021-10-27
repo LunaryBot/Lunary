@@ -1,7 +1,7 @@
-const SubCommand = require(__dirname + "/../../../structures/SubCommand.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
-const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require(__dirname + "/../../../utils/index.js")
+const SubCommand = require("../../../structures/SubCommand.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
+const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index.js")
 
 module.exports = class BanSoftSubCommand extends SubCommand {
     constructor(client, mainCommand) {
@@ -142,7 +142,7 @@ module.exports = class BanSoftSubCommand extends SubCommand {
                     new Discord.MessageActionRow()
                     .addComponents([
                         new Discord.MessageButton()
-                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
+                        .setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
@@ -152,7 +152,7 @@ module.exports = class BanSoftSubCommand extends SubCommand {
             let xp = ctx.UserDB.xp
             if(membro) {
                 if(ctx.UserDB.lastPunishmentApplied) {
-                    if(!user.user.bot) {
+                    if(!user.bot) {
                         if(user.id != ctx.author.id) {
                             if(
                                 user.id != ctx.UserDB.lastPunishmentApplied.user 

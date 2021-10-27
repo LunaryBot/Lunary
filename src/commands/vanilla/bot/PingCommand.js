@@ -1,7 +1,7 @@
-const Command = require(__dirname + "/../../../structures/Command.js")
-const ContextCommand = require(__dirname + "/../../../structures/ContextCommand.js")
-const Discord = require(__dirname + "/../../../lib")
-const formatSizeUnits = require(__dirname + "/../../../utils/formatSizeUnits.js")
+const Command = require("../../../structures/Command.js")
+const ContextCommand = require("../../../structures/ContextCommand.js")
+const Discord = require("../../../lib")
+const formatSizeUnits = require("../../../utils/formatSizeUnits.js")
 const formatNumber = new Intl.NumberFormat("pt-BR").format
 
 module.exports = class PingCommand extends Command {

@@ -1,4 +1,4 @@
-const BitField = require(__dirname + "/BitField.js");
+const BitField = require("./BitField.js");
 
 function configPermissions(member, db) {
     let dbPerms = db.permissions || {}

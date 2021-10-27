@@ -1,4 +1,4 @@
-const Discord = require(__dirname + "/../../lib");
+const Discord = require("../../lib");
 const { Events } = Discord.Constants
 const Util = Discord.Util;
 class ClusterClient{

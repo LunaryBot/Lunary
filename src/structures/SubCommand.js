@@ -1,7 +1,7 @@
-const _client = require(__dirname + "/../Lunary.js")
-const Command = require(__dirname + "/./Command.js")
-const Discord = require(__dirname + "/../lib")
-const utils = require(__dirname + "/../utils/index.js")
+const _client = require("../Lunary.js")
+const Command = require("./Command.js")
+const Discord = require("../lib")
+const utils = require("../utils/index.js")
 
 module.exports = class SubCommand {
     /**
