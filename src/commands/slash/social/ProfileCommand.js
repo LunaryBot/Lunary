@@ -6,7 +6,7 @@ const { UserDB } = require("../../../structures/UserDB.js")
 const { readFileSync } = require("fs")
 const yaml = require("js-yaml")
 const Sydb = require("sydb")
-const profileDB = new Sydb("../../../data/profile")
+const profileDB = new Sydb(__dirname + "/../../../data/profile")
 
 module.exports = class ProfileCommand extends Command {
     constructor(client) {

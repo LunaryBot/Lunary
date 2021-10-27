@@ -10,6 +10,7 @@
 # Data
 /src/data/*.json
 !/src/data/profile.json
+/database
 
 # Arquivos temporarios
 /AdvCommand.js
