@@ -22,11 +22,10 @@ module.exports = class InteractionCreateEvent extends Event {
      * @param {Interaction} interaction 
      * @returns 
      */
-
     async run(interaction) {
         if(interaction.isCommand()) return this.executeCommand(interaction)
         if(interaction.isAutocomplete()) {
-            if(`${interaction.commandName} ${interaction.options._subcommand}` == "ban info") return this.autocompleteBanInfo(interaction)
+            if(["ban info", "ban remove"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteBanInfo(interaction)
         }
     }
     
@@ -34,8 +33,8 @@ module.exports = class InteractionCreateEvent extends Event {
      * 
      * @param {CommandInteraction} interaction
      */
-    
     async executeCommand(interaction) {
+        interaction.com
         try {
             /**
              * @type {Command}
