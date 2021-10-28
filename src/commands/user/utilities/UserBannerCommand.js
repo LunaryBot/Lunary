@@ -1,22 +1,21 @@
-const SubCommand = require("../../../structures/SubCommand.js")
+const Command = require("../../../structures/Command.js")
 const ContextCommand = require("../../../structures/ContextCommand.js")
 const Discord = require("../../../lib")
 const Canvas = require("node-canvas")
 
-module.exports = class UserBannerSubCommand extends SubCommand {
-    constructor(client, mainCommand) {
+module.exports = class UserBannerCommand extends Command {
+    constructor(client) {
         super({
-            name: "banner",
+            name: "User Banner",
             dirname: __dirname
-        }, mainCommand, client)
+        }, client)
     }
 
     /** 
      * @param {ContextCommand} ctx
      */
-
     async run(ctx) {
-        const userID = (ctx.interaction.options.getUser("user") || ctx.author).id
+        const userID = ctx.interaction.options.getUser("user")?.id
         const user = await this.client.api.users[userID].get().catch(() => {})
 
         if(!user) return await ctx.interaction.reply({
