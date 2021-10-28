@@ -42,11 +42,21 @@ module.exports = class BanRemoveSubCommand extends SubCommand {
             ]
         }).catch(() => {})
 
-        const reason = ctx.interaction.options.getString("reason") || ctx.t("ban_remove:texts.noReason")
+        const reason = ctx.interaction.options.getString("reason") || ctx.t("ban_remove:texts.reasonNotInformed")
 
         await ctx.guild.members.unban(ban.user.id, `${ctx.t("ban_remove:texts.requestedBy", {
             user_tag: `${ctx.author.tag}`,
-        }).shorten(500)}: ${ctx.author.tag}`)
+            reason
+        })}`.shorten(500))
+
+        if(ctx.GuildDB.configs.has("LOG_UNBAN")) {
+            const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs)
+            if(channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432)) channel_modlogs.send({
+                embeds: [
+                    message_modlogs(ctx.author, ban.user, ctx.t("ban_remove:texts.reasonNotInformed"), "unban", ctx.t)
+                ]
+            }).catch(() => {})
+        }
 
         ctx.interaction.followUp({
             content: `:white_check_mark: ─ ${ctx.t("ban_remove:texts.removeBan", {
