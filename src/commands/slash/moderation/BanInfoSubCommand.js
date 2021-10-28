@@ -21,8 +21,9 @@ module.exports = class BanInfoSubCommand extends SubCommand {
      * @param {ContextCommand} ctx
      */
     async run(ctx) {
+        ctx.interaction.deferReply().catch(() => {})
         const userRegex = `${ctx.interaction.options.getString("user")}`.replace(/<@!?(\d{17,19})>/, "$1")
-        if(!/^\d{17,19}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.reply({
+        if(!/^\d{17,19}$|^.{0,32}#\d{4}$/.test(userRegex)) return await ctx.interaction.followUp({
             embeds: [
                 this.sendError(ctx.t("ban_info:texts.userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
@@ -33,7 +34,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
         const bans = await ctx.guild.bans.fetch()
 
         const ban = bans?.find(x => x.user.tag == userRegex || x.user.id == userRegex)
-        if(!ban) return await ctx.interaction.reply({
+        if(!ban) return await ctx.interaction.followUp({
             embeds: [
                 this.sendError(ctx.t("ban_info:texts.userNotBanned", {
                     user: `${ctx.interaction.options.getString("user")}`
@@ -88,7 +89,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             }
         }
 
-        await ctx.interaction.reply({
+        await ctx.interaction.followUp({
             embeds: [embed],
             components: [components]
         }).catch(() => {})

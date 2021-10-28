@@ -42,7 +42,9 @@ module.exports = class InteractionCreateEvent extends Event {
             let command = this.client.commands.slash.find(c => c.name == interaction.commandName.toLowerCase())
             if(!command) return;
             const subcommand = interaction.options.data.find(x => ["SUB_COMMAND_GROUP", "SUB_COMMAND"].includes(x.type))
-            if(subcommand && subcommand.name && command.subcommands && command.subcommands.find(sc => sc.name == subcommand.name)) command = command.subcommands.find(sc => sc.name == subcommand.name)
+            if(subcommand && subcommand.name && command.subcommands && command.subcommands.find(sc => sc.name == subcommand.name)) {
+                command = command.subcommands.find(sc => sc.name == subcommand.name)
+            }
             if(!command) return;
 
             if(!interaction.guild && command.isDM()) return interaction.reply({
