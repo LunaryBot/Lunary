@@ -1,5 +1,5 @@
 const Event = require("../structures/Event.js")
-const { Interaction, CommandInteraction, MessageEmbed, Collection, User } = require("../lib")
+const { Interaction, CommandInteraction, MessageEmbed, Collection, User, ContextMenuInteraction } = require("../lib")
 const ContextCommand = require("../structures/ContextCommand.js")
 const Command = require("../structures/Command.js")
 
@@ -24,6 +24,7 @@ module.exports = class InteractionCreateEvent extends Event {
      */
     async run(interaction) {
         if(interaction.isCommand()) return this.executeCommand(interaction)
+        if(interaction.isContextMenu()) this.executeUserCommand(interaction)
         if(interaction.isAutocomplete()) {
             if(["ban info", "ban remove"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteBanInfo(interaction)
         }
@@ -34,7 +35,6 @@ module.exports = class InteractionCreateEvent extends Event {
      * @param {CommandInteraction} interaction
      */
     async executeCommand(interaction) {
-        interaction.com
         try {
             /**
              * @type {Command}
@@ -66,6 +66,59 @@ module.exports = class InteractionCreateEvent extends Event {
                 command: command,
                 mainCommand: this.client.commands.slash.find(c => c.name == interaction.commandName),
                 slash: true,
+                dm: !Boolean(interaction.guild)
+            }, { guildsDB: GuildsDB, usersDB: UsersDB })
+            
+            if(!ctx.dm) {
+                const ps = command.verifyPerms(ctx.member, ctx.me, ctx.UserDB.permissions)
+
+                if(!ps.member.has) return interaction.reply(ctx.t("general:userMissingPermissions", { permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(", ")}))
+                if(!ps.me.has) return interaction.reply(ctx.t("general:lunyMissingPermissions", { permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(", ")}))
+            }
+            await command.run(ctx)
+        } catch (e) {
+            interaction.channel.send({
+                content: `${interaction.user.toString()}`,
+                embeds: [
+                    new MessageEmbed()
+                    .setColor("#FF0000")
+                    .setDescription("Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx).")
+                    .addField("Erro:", `\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``)
+                    .setFooter("Desculpa pelo transtorno.")
+                ]
+            }).catch(() => {})
+        }
+    }
+
+    /**
+     * @param {ContextMenuInteraction} interaction
+     */
+    async executeUserCommand(interaction) {
+        try {
+            /**
+             * @type {Command}
+             */
+            const command = this.client.commands.user.find(c => c.name == interaction.commandName)
+            if(!command) return;
+
+            if(!interaction.guild && command.isDM()) return interaction.reply({
+                content: "<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!"
+            })
+
+            let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
+            if(GuildsDB) GuildsDB = GuildsDB.val() || {}
+
+            let UsersDB = await this.client.UsersDB.ref().once('value')
+            UsersDB = UsersDB.val() || {}
+            
+            const ctx = new ContextCommand({
+                client: this.client,
+                interaction: interaction,
+                guild: interaction.guild,
+                channel: interaction.channel,
+                user: interaction.user,
+                command: command,
+                mainCommand: command,
                 dm: !Boolean(interaction.guild)
             }, { guildsDB: GuildsDB, usersDB: UsersDB })
             
