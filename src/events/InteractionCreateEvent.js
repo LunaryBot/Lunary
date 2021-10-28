@@ -105,6 +105,13 @@ module.exports = class InteractionCreateEvent extends Event {
                 content: "<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!"
             })
 
+            if(interaction.guild) {
+                if(!interaction.channel.permissionsFor(interaction.user.id).has("SEND_MESSAGES")) return interaction.reply({
+                    content: "<:Per:833078041084166164> • Você não tem permissão para usar esse comando aqui!",
+                    ephemeral: true
+                })
+            } // Copilot que sugeriu, to com medo...
+
             let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null
             if(GuildsDB) GuildsDB = GuildsDB.val() || {}
 
