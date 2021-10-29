@@ -98,6 +98,6 @@ node .
 #### If you want to contribute to my repository, make code improvements.
 - Fork this repository for your profile and make the desired changes.
 - If you need slash commands, just ask some developer on the [support server](https://discord.gg/8K6Zry9Crx).
-- Once they're done, make a pull request to the `canary` branch if you are contributing to the new version, or the `beta` branch if you are contributing to the beta version, or the `master` branch if you are contributing to the stable and running version.
+- Once they're done, make a pull request to the `canary` branch if you are contributing to the new version, or the `master` branch if you are contributing to the stable and running version.
 
 ![Lunary Bot](https://media.discordapp.net/attachments/826844594464489494/902217896858619944/hi_hi_DgQwYJL.png)
