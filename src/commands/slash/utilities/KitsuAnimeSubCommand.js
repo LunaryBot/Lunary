@@ -69,7 +69,7 @@ module.exports = class KitsuAnimeSubCommand extends SubCommand {
             .setDescription(`> :bookmark: **| ${ctx.t("kitsu_anime:texts.ID")}:** \`${data.id}\`
             > :books: **| ${ctx.t("kitsu_anime:texts.volumes")}:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : ctx.t("kitsu_anime:texts.notFound")}\`
             > <:VideoPlayer:854889422927560754> **| ${ctx.t("kitsu_anime:texts.episodes")}:** \`${data.attributes.episodeCount ? data.attributes.episodeCount : ctx.t("kitsu_anime:texts.notFound")}\`
-            > :alarm_clock: **| ${ctx.t("kitsu_anime:texts.episodeLength")}:** \`${data.attributes.episodeLength ? ctx.t("kitsu_anime:texts.episodeLength", { minutes: data.attributes.episodeLength }) : ctx.t("kitsu_anime:texts.notFound")}\`
+            > :alarm_clock: **| ${ctx.t("kitsu_anime:texts.episodeMinutes")}:** \`${data.attributes.episodeLength ? ctx.t("kitsu_anime:texts.episodeLength", { minutes: data.attributes.episodeLength }) : ctx.t("kitsu_anime:texts.notFound")}\`
             
             > :calendar: **| ${ctx.t("kitsu_anime:texts.startedIn")}:** <t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.createdAt).getTime() + 3600000) /1000.0)}:R>)
             > :calendar_spiral: **| ${ctx.t("kitsu_anime:texts.endedIn")}:** ${data.attributes.endDate ? `<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}> (<t:${Math.floor((new Date(data.attributes.endDate).getTime() + 3600000) /1000.0)}:R>)` : ctx.t("kitsu_anime:texts.noEned")}

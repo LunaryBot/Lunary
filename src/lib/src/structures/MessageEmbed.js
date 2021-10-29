@@ -436,6 +436,8 @@ class MessageEmbed {
    * @returns {EmbedField}
    */
   static normalizeField(name, value, inline = false) {
+    name = `${name}`
+    value = `${value}`
     return {
       name: Util.verifyString(name, RangeError, 'EMBED_FIELD_NAME', false),
       value: Util.verifyString(value, RangeError, 'EMBED_FIELD_VALUE', false),

@@ -1,4 +1,5 @@
 const Command = require("../../../structures/Command.js")
+const ChannelInfoSubCommand = require("./ChannelInfoSubCommand.js")
 
 module.exports = class ChannelCommand extends Command {
     constructor(client) {
@@ -8,6 +9,6 @@ module.exports = class ChannelCommand extends Command {
             baseCommand: true
         }, client)
 
-        this.subcommands = []
+        this.subcommands = [new ChannelInfoSubCommand(client, this)]
     }
 }
