@@ -4,6 +4,7 @@ const Discord = require("../../../lib")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish} = require("../../../utils/index.js")
 const BanInfoSubCommand = require("./BanInfoSubCommand.js")
 const BanSoftSubCommand = require("./BanSoftSubCommand.js")
+const BanRemoveSubCommand = require("./BanRemoveSubCommand.js")
 
 module.exports = class BanCommand extends Command {
     constructor(client) {
@@ -20,7 +21,8 @@ module.exports = class BanCommand extends Command {
 
         this.subcommands = [
             new BanInfoSubCommand(client, this),
-            new BanSoftSubCommand(client, this)
+            new BanSoftSubCommand(client, this),
+            new BanRemoveSubCommand(client, this)
         ]
     }
 

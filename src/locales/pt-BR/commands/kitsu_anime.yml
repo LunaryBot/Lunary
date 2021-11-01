@@ -11,7 +11,8 @@ texts:
   ID: ID
   volumes: Volumes
   episodes: Episódios
-  episodeLength: \{minutes} Minutos
+  episodeMinutes: Minutos por episódios
+  episodeLength: "{minutes} Minutos"
   startedIn: Iniciado em
   endedIn: Finalizado em
   popularityRank: Rank de popularidade
