@@ -19,9 +19,13 @@ module.exports = class ChannelInfoSubCommand extends SubCommand {
         const channel = ctx.interaction.options.getChannel("channel") || ctx.channel
 
         const embed = new Discord.MessageEmbed()
-        .setTitle(`${channel.name}`)
-        .setColor(channel.type == "GUILD_NEWS" ? "#7289DA" : "#FFB6C1")
-
+        .setTitle(`${channel.isText() ? ":pencil:" : ":loud_sound:"}${channel.nsfw ? ":underage:" : ""}${ctx.guild.rulesChannelId == channel.id ? ":closed_book:" : ""} ${channel.name}`)
+        .setColor(channel.isText() ? "#A020F0" : "#FFFAFA")
+        .setDescription(channel.isText() ? (channel.topic || "Tópico do canal não definido.") : "")
+        .addField(":bookmark: Menção do canal:", `\`${channel.toString()}\``, true)
+        .addField(":open_file_folder: ID", `\`${channel.id}\``, true)
+        .addField(":calendar_spiral: Conta criada em", `<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}:R>)`)
+        
         ctx.interaction.reply({
             embeds: [embed]
         })
