@@ -3,6 +3,7 @@ const ContextCommand = require("../../../structures/ContextCommand.js")
 const Discord = require("../../../lib")
 const AdvRemoveSubCommand = require("./AdvRemoveSubCommand.js")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, confirm_punish} = require("../../../utils/index.js")
+const AdvListSubCommand = require("./AdvListSubCommand.js")
 
 module.exports = class AdvCommand extends Command {
     constructor(client) {
@@ -16,7 +17,10 @@ module.exports = class AdvCommand extends Command {
             dm: false
         }, client)
 
-        this.subcommands = [new AdvRemoveSubCommand(client, this)]
+        this.subcommands = [
+            new AdvRemoveSubCommand(client, this),
+            new AdvListSubCommand(client, this)
+        ]
     }
 
     /** 
