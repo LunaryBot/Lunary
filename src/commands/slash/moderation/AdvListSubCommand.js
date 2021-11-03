@@ -2,10 +2,10 @@ const SubCommand = require("../../../structures/SubCommand.js")
 const ContextCommand = require("../../../structures/ContextCommand.js")
 const Discord = require("../../../lib")
 
-module.exports = class AdvRemoveSubCommand extends SubCommand {
+module.exports = class AdvListSubCommand extends SubCommand {
     constructor(client, mainCommand) {
         super({
-            name: "remove",
+            name: "list",
             dirname: __dirname,
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],
@@ -22,13 +22,12 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
     async run(ctx) {
         ctx.interaction.deferReply().catch(() => {})
 
-        const user = ctx.interaction.options.getUser("user")
+        const user = ctx.interaction.options.getUser("user") || ctx.author
 
         if(!user) return await ctx.interaction.followUp({
             content: ctx.t("general:invalidUser", { reference: ctx.interaction.options.getString("user") })
         }).catch(() => {})
         
-        const amount = ctx.interaction.options.getString("amount")
         let logs = await ctx.client.LogsDB.ref().once("value")
         logs = Object.entries(logs.val() || {}).map(function([k, v]) {
             const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'))
@@ -42,18 +41,35 @@ module.exports = class AdvRemoveSubCommand extends SubCommand {
                 this.sendError(ctx.t("adv_remove:texts.noWarning"), ctx.author)
             ]
         }).catch(() => {})
+        let text = ""
 
-        const deladvs = amount != "all" ? advs.slice(0, (amount || 1)) : advs
-        console.log(deladvs.length)
+        for(let i = 0; i < advs.length; i++) {
+            const adv = advs[i]
+            text += `\n- [${adv.id}][${data(adv.date)}] (${await this.client.users.fetch(adv.author).then(user => user.tag).catch(() => {})}/${adv.user}): ${decodeURI(adv.reason)}`
+        }
+        
+        const embed = new Discord.MessageEmbed()
+        .setAuthor(`Advertências de ${user.tag}`, user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+        .setColor("YELLOW")
+        .setDescription(`\`\`\`diff\n${text}\`\`\``)
 
-        await deladvs.forEach(x => ctx.client.LogsDB.ref(x.id).remove())
-
-        await ctx.interaction.followUp({
-            content: `:white_check_mark: ─ ${ctx.t(`adv_remove:texts.deletedWarning${deladvs.length > 1 ? "s" : ""}`, {
-                size: deladvs.length,
-                user_tag: user.tag,
-                user_id: user.id,
-            })}`
+        ctx.interaction.followUp({
+            embeds: [embed]
         }).catch(() => {})
     }
+}
+
+function data(a) {
+    let data = new Date(a)
+    const ano = data.getFullYear()
+    let m = data.getMonth() + 1
+    if(m < 10) m = "0" + m
+    let d = data.getDate()
+    if(d < 10) d = "0" + d
+    data.setHours(data.getHours() - 3)
+    let h = data.getUTCHours()
+    if(h < 10) h = "0" + h
+    let min = data.getMinutes()
+    if(min < 10) min = "0" + min
+    return `${d}/${m}/${ano} - ${h}:${min}`
 }

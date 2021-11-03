@@ -194,7 +194,7 @@ module.exports = class InteractionCreateEvent extends Event {
                     name: user.tag,
                     value: user.id
                 }
-            }).slice(0, 25)
+            })
             
             outout = input ? arr.filter(ban => 
                 ban.name.toLowerCase().includes(input) || ban.value.toLowerCase().includes(input)
@@ -205,7 +205,7 @@ module.exports = class InteractionCreateEvent extends Event {
             data: { 
                 type: 8,
                 data: { 
-                    choices: [...outout] 
+                    choices: [...outout].slice(0, 25)
                 } 
             } 
         })
