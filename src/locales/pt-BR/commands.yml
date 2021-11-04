@@ -1,5 +1,6 @@
 - name: adv
   description: Aplica uma advertência/aviso em um usuário do servidor.
+  category: Moderação
   botUserPermissions:
     - LUNAR_ADV_MEMBERS
   userDiscordPermissions:
@@ -16,6 +17,7 @@
       usage: user user:{@user} notify-dm:{notify-dm}
 - name: adv remove
   description: Remove as advertências/avisos de um usuário do servidor.
+  category: Moderação
   botUserPermissions:
     - LUNAR_ADV_MEMBERS
   userDiscordPermissions:
@@ -23,6 +25,7 @@
   dm: false
   examples: null
 - name: ban
+  category: Moderação
   description: Bane um usuário do servidor.
   lunyDiscordPermissions:
     - BAN_MEMBERS
@@ -42,6 +45,7 @@
       usage: user user:{@user} notify-dm:{notify-dm}
 - name: ban info
   description: Mostra as informações do banimento de um usuário banido no servidor.
+  category: Moderação
   lunyDiscordPermissions:
     - BAN_MEMBERS
   botUserPermissions:
@@ -56,6 +60,7 @@
       usage: user:{user-tag}
 - name: clean
   description: ':bug:'
+  category: Administração
   lunyDiscordPermissions:
     - MANAGE_MESSAGES
   userDiscordPermissions:
@@ -64,13 +69,16 @@
   examples: null
 - name: eval
   description: Execute um código JavaScript.
+  category: Owner
   dm: true
   examples: null
 - name: help
+  category: Luny
   description: Meu comando de ajuda.
   dm: true
   examples: null
 - name: kick
+  category: Moderação
   description: Expulsa um usuário do servidor.
   lunyDiscordPermissions:
     - KICK_MEMBERS
@@ -90,18 +98,21 @@
       usage: user user:{@user} notify-dm:{notify-dm}
 - name: kitsu anime
   description: Veja as informações de um anime em kitsu.io
+  category: Utiliratios
   dm: false
   examples:
     - title: Veja as informações de Sword Art Online em Kitsu.
       usage: query:Sword Art Online
 - name: kitsu manga
   description: Veja as informações de um manga em kitsu.io
+  category: Utilitarios
   dm: false
   examples:
     - title: Veja as informações de Darling in the FranXX em Kitsu.
       usage: query:Darling in the FranXX
 - name: mute
   description: Silencia um usuário por um período de tempo determinado no servidor.
+  category: Moderação
   lunyDiscordPermissions:
     - MANAGE_CHANNELS
     - MANAGE_ROLES
@@ -124,21 +135,26 @@
         usage: user user:{@user} notify-dm:{notify-dm}
 - name: ping
   description: Veja meu ping.
+  category: Luny
   dm: true
   examples: null
 - name: profile
   description: ':bug:'
+  category: Social
   dm: true
   examples: null
 - name: user avatar
+  category: Utilitarios
   description: Veja o avatar de um usuário.
   dm: false
   examples: null
 - name: user banner
+  category: Utilitarios
   description: Veja o banner de um usuário.
   dm: false
   examples: null
 - name: user info
+  category: Utilitarios
   description: Veja as informações de um usuário.
   dm: false
   examples: null

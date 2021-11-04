@@ -29,33 +29,81 @@ module.exports = class AdvListSubCommand extends SubCommand {
         }).catch(() => {})
         
         let logs = await ctx.client.LogsDB.ref().once("value")
-        logs = Object.entries(logs.val() || {}).map(function([k, v]) {
+        logs = Object.entries(logs.val() || {}).map(function([k, v], i) {
             const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'))
             data.id = k
             return data
         }).filter(x => x.server == ctx.guild.id)
 
-        const advs = logs.filter(x => x.user == user.id && x.type == 4)?.sort((a, b) => b.date - a.date)
+        const advs = logs.filter(x => x.user == user.id && x.type == 4)?.sort((a, b) => b.date - a.date).map((data, i) => { data.index = i; return data })
         if(!advs.length) return ctx.interaction.followUp({
             embeds: [
-                this.sendError(ctx.t("adv_remove:texts.noWarning"), ctx.author)
+                this.sendError(ctx.t("adv_list:texts.noWarning"), ctx.author)
             ]
         }).catch(() => {})
-        let text = ""
-
-        for(let i = 0; i < advs.length; i++) {
-            const adv = advs[i]
-            text += `\n- [${adv.id}][${data(adv.date)}] (${await this.client.users.fetch(adv.author).then(user => user.tag).catch(() => {})}/${adv.user}): ${decodeURI(adv.reason)}`
-        }
         
-        const embed = new Discord.MessageEmbed()
-        .setAuthor(`Advertências de ${user.tag}`, user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-        .setColor("YELLOW")
-        .setDescription(`\`\`\`diff\n${text}\`\`\``)
+        const chunk = this.utils.chunk(advs, 3)
+        let index = 0
 
-        ctx.interaction.followUp({
-            embeds: [embed]
-        }).catch(() => {})
+        await ctx.interaction.followUp(await chunkPage())//.catch(() => {})
+
+        const msg = await ctx.interaction.fetchReply()
+
+        const collector = msg.createMessageComponentCollector({time: 2 * 60 * 1000, filter: int => int.user.id == ctx.author.id})
+
+        collector.on("collect", 
+        /**
+         * @param {Discord.ButtonInteraction} button
+         */
+        async button => {
+            button.deferUpdate().catch(() => {})
+            switch(button.customId) {
+                case "next":
+                    if(index >= chunk.length) index = 0
+                    else index++
+                break;
+                case "back":
+                    if(index <= 0) index = chunk.length
+                    else index--
+                break;
+            }
+
+            console.log(index)
+
+            await msg.edit(await chunkPage(index)).catch(() => {})
+        })
+
+        async function chunkPage(_index = 0) {
+            const embed = new Discord.MessageEmbed()
+            .setAuthor(`Advertências de ${user.tag}`, "https://media.discordapp.net/attachments/880176654801059860/905286547421659166/emoji.png")
+            .setColor("YELLOW")
+            .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
+
+            for(let i = 0; i < chunk[_index].length; i++) {
+                const adv = chunk[_index][i]
+                const author = await ctx.client.users.fetch(adv.author).catch(() => {}) || { tag: "Desconhecido#0000", id: "0".repeat(18) }
+                embed.addField(`\`[ ${adv.index+1} ]\`: ${adv.id}`, `**- ${ctx.t("adv_list:texts.reason")}:** \`\`\`${decodeURI(adv.reason)}\`\`\`\n- **Punido por:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.date + 3600000) /1000.0)}>`)
+            }
+
+            const components = new Discord.MessageActionRow()
+            .addComponents([
+                new Discord.MessageButton()
+                .setEmoji("905602424495026206")
+                .setCustomId("back")
+                .setStyle("SECONDARY")
+                .setDisabled(!_index),
+                new Discord.MessageButton()
+                .setEmoji("905602508037181451")
+                .setCustomId("next")
+                .setStyle("SECONDARY")
+                .setDisabled(!chunk[_index + 1]?.length)
+            ])
+
+            return {
+                embeds: [embed],
+                components: [components]
+            }
+        }
     }
 }
 

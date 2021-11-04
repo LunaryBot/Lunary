@@ -69,6 +69,7 @@ class Lunary extends Client {
         this.loadEvents()
         this.loadCommands()
         this.login(this.config.token)
+        this.commands
     }
 
     /**
