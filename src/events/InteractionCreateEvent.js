@@ -8,8 +8,9 @@ module.exports = class InteractionCreateEvent extends Event {
         super("interactionCreate", client)
 
         this.bansCache = new Collection()
+        this.advsCache = new Collection()
         setInterval(() => {
-            this.bansCache.clear()
+            this.advsCache.clear()
             this.client.logger.log("Cache de auto complete limpo.", {
                 cluster: true,
                 date: true
@@ -26,7 +27,8 @@ module.exports = class InteractionCreateEvent extends Event {
         if(interaction.isCommand()) return this.executeCommand(interaction)
         if(interaction.isContextMenu()) this.executeUserCommand(interaction)
         if(interaction.isAutocomplete()) {
-            if(["ban info", "ban remove"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteBanInfo(interaction)
+            if(["ban info", "ban remove"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteBan(interaction)
+            if(["adv info", "adv edit"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteAdv(interaction)
         }
     }
     
@@ -155,8 +157,8 @@ module.exports = class InteractionCreateEvent extends Event {
      * 
      * @param {CommandInteraction} interaction
      */
-    async autocompleteBanInfo(interaction) {
-        let outout = []
+    async autocompleteBan(interaction) {
+        let output = []
         if(interaction.guild) {
             const getData = async() => {
                 this.client.logger.log("Request para auto complete de ban.", {
@@ -196,7 +198,7 @@ module.exports = class InteractionCreateEvent extends Event {
                 }
             })
             
-            outout = input ? arr.filter(ban => 
+            output = input ? arr.filter(ban => 
                 ban.name.toLowerCase().includes(input) || ban.value.toLowerCase().includes(input)
             ) : arr
         }
@@ -205,7 +207,73 @@ module.exports = class InteractionCreateEvent extends Event {
             data: { 
                 type: 8,
                 data: { 
-                    choices: [...outout].slice(0, 25)
+                    choices: [...output].slice(0, 25)
+                } 
+            } 
+        })
+    }
+
+    /**
+     * 
+     * @param {CommandInteraction} interaction
+     */
+    async autocompleteAdv(interaction) {
+        let output = []
+        if(interaction.guild) {
+            const getData = async() => {
+                this.client.logger.log("Request para auto complete de adv's.", {
+                    cluster: true,
+                    date: true,
+                    key: `Shard ${interaction.guild.shardId}`
+                })
+
+                const logs = await this.client.LogsDB.ref().once("value")
+                const advs = Object.entries(logs.val() || {}).map(function([k, v], i) {
+                    const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'))
+                    return data
+                }).filter(x => x.server == interaction.guild.id && x.type == 4)?.sort((a, b) => b.date - a.date).map(x => x.id).filter(x => x)
+
+                const requestTime = Date.now()
+                return {
+                    validTime: requestTime + (1 * 1000 * 60),
+                    requestTime,
+                    advs
+                }
+            }
+    
+            /**
+             * @type {{
+             * validTime: number,
+             * requestTime: number,
+             * advs: string[]
+             * }}
+             */
+            let data = this.advsCache.get(interaction.guildId)
+            if(!data || data.validTime <= Date.now()) {
+                data = await getData()
+                this.advsCache.set(interaction.guildId, data)
+            }
+    
+            const input = interaction.options.get("id")?.value?.toLowerCase()
+    
+            const arr = data.advs?.map(id => {
+                return {
+                    name: id,
+                    value: id
+                }
+            })
+            
+            output = input ? arr.filter(adv => {
+                return adv.value.toLowerCase().includes(input)
+            }) : arr
+        }
+        
+
+        return this.client.api.interactions(interaction.id, interaction.token).callback.post({ 
+            data: { 
+                type: 8,
+                data: { 
+                    choices: [...output].slice(0, 25)
                 } 
             } 
         })
