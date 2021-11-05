@@ -4,9 +4,9 @@ help:
   category: Moderação
 texts:
   warningNotFound: <:Per:833078041084166164> | **Oops**, eu não encontrei advertência com o ID `{id}` nesse servidor. Ou você digitou o ID errado, ou a advertência foi removida, ou ela foi sugada por um buraco negro :woman_shrugging:.
+  punishedBy: Advertido por
   reason: Motivo
-  unkownUser: Desconhecido#0000.
-  punishedBy: Punido por
+  unkownUser: Desconhecido
   buttons:
     remove: Deletar
     edit: Editar

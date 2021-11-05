@@ -81,7 +81,7 @@ module.exports = class AdvListSubCommand extends SubCommand {
 
             for(let i = 0; i < chunk[_index].length; i++) {
                 const adv = chunk[_index][i]
-                const author = await ctx.client.users.fetch(adv.author).catch(() => {}) || { tag: ctx.t("adv_list:texts.unkownUser"), id: "0".repeat(18) }
+                const author = await ctx.client.users.fetch(adv.author).catch(() => {}) || { username: ctx.t("adv_list:texts.unkownUser"), discriminator: "0000", id: adv.user }
                 embed.addField(`\`[ ${adv.index+1} ]\`: ${adv.id}`, `**- ${ctx.t("adv_list:texts.reason")}:** \`\`\`${decodeURI(adv.reason)}\`\`\`\n- **${ctx.t("adv_list:texts.punishedBy")}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.date + 3600000) /1000.0)}>`)
             }
 

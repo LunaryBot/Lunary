@@ -5,6 +5,6 @@ help:
 texts:
   noWarning: O usuário não possui advertências nesse servidor.
   reason: Motivo
-  unkownUser: Desconhecido#0000.
+  unkownUser: Desconhecido
   punishedBy: Punido por
   title: Advertências de {user}

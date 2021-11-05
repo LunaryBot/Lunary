@@ -51,7 +51,15 @@ module.exports = class AdvInfoSubCommand extends SubCommand {
             .setStyle("SECONDARY")
         ])
 
+        const user = await this.client.users.fetch(adv.user).catch(() => {}) || { tag: ctx.t("adv_list:texts.unkownUser") + "#0000", toString: () => `<@${adv.user}>`}
+        const author = await this.client.users.fetch(adv.author).catch(() => {}) || { username: ctx.t("adv_list:texts.unkownUser"), discriminator: "0000"}
         const embed = new Discord.MessageEmbed()
+        .setAuthor("Informações sobre a advertência", "https://cdn.discordapp.com/emojis/833078041084166164.png?size=128")
+        .setColor("#fee75c")
+        .addField("<:cry:902169710949445643> Usuário advertido", `${user.toString()} (\`${user.tag} - ${adv.user}\`)`)
+        .addField("<:sigh:885721398788632586> Motivo", `\`\`\`${decodeURI(adv.reason)}\`\`\`\n- **${ctx.t("adv_list:texts.punishedBy")}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n—  <t:${Math.floor((adv.date + 3600000) /1000.0)}>`)
+        .addField(":hammer: ID", `\`${adv.id}\``)
+        .setThumbnail(user.displayAvatarURL({ size: 1024 }))
 
         ctx.interaction.followUp({
             embeds: [embed],
