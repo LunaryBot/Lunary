@@ -38,7 +38,7 @@ module.exports = class KitsuMangaSubCommand extends SubCommand {
         .setMaxValues(1)
 
         ctx.interaction.followUp({
-            content: `<:Kitsu:854675062498000896> | ${ctx.t("kitsu_manga:texts.chooseManga", { search: search.shorten(300) })}`,
+            content: `<:Kitsu:854675062498000896> | ${ctx.t("kitsu_manga:texts.chooseManga", { search: search.shorten(300).replace(/`/g, "") })}`,
             components: [new Discord.MessageActionRow().addComponents([menu])]
         }).catch(() => {})
 

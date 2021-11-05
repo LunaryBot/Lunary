@@ -45,7 +45,7 @@ module.exports = class AdvListSubCommand extends SubCommand {
         const chunk = this.utils.chunk(advs, 3)
         let index = 0
 
-        await ctx.interaction.followUp(await chunkPage())//.catch(() => {})
+        await ctx.interaction.followUp(await chunkPage()).catch(() => {})
 
         const msg = await ctx.interaction.fetchReply()
 
@@ -75,14 +75,14 @@ module.exports = class AdvListSubCommand extends SubCommand {
 
         async function chunkPage(_index = 0) {
             const embed = new Discord.MessageEmbed()
-            .setAuthor(`Advertências de ${user.tag}`, "https://media.discordapp.net/attachments/880176654801059860/905286547421659166/emoji.png")
+            .setAuthor(ctx.t("adv_list:texts.title", { user: user.tag }), "https://media.discordapp.net/attachments/880176654801059860/905286547421659166/emoji.png")
             .setColor("YELLOW")
             .setThumbnail(user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
 
             for(let i = 0; i < chunk[_index].length; i++) {
                 const adv = chunk[_index][i]
-                const author = await ctx.client.users.fetch(adv.author).catch(() => {}) || { tag: "Desconhecido#0000", id: "0".repeat(18) }
-                embed.addField(`\`[ ${adv.index+1} ]\`: ${adv.id}`, `**- ${ctx.t("adv_list:texts.reason")}:** \`\`\`${decodeURI(adv.reason)}\`\`\`\n- **Punido por:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.date + 3600000) /1000.0)}>`)
+                const author = await ctx.client.users.fetch(adv.author).catch(() => {}) || { tag: ctx.t("adv_list:texts.unkownUser"), id: "0".repeat(18) }
+                embed.addField(`\`[ ${adv.index+1} ]\`: ${adv.id}`, `**- ${ctx.t("adv_list:texts.reason")}:** \`\`\`${decodeURI(adv.reason)}\`\`\`\n- **${ctx.t("adv_list:texts.punishedBy")}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.date + 3600000) /1000.0)}>`)
             }
 
             const components = new Discord.MessageActionRow()
@@ -105,19 +105,4 @@ module.exports = class AdvListSubCommand extends SubCommand {
             }
         }
     }
-}
-
-function data(a) {
-    let data = new Date(a)
-    const ano = data.getFullYear()
-    let m = data.getMonth() + 1
-    if(m < 10) m = "0" + m
-    let d = data.getDate()
-    if(d < 10) d = "0" + d
-    data.setHours(data.getHours() - 3)
-    let h = data.getUTCHours()
-    if(h < 10) h = "0" + h
-    let min = data.getMinutes()
-    if(min < 10) min = "0" + min
-    return `${d}/${m}/${ano} - ${h}:${min}`
 }

@@ -1,7 +1,10 @@
 help:
-  name: adv remove
-  description: Remove as advertências/avisos de um usuário do servidor.
+  name: adv list
+  description: Exibe as advertências de um usuário.
   category: Moderação
 texts:
   noWarning: O usuário não possui advertências nesse servidor.
   reason: Motivo
+  unkownUser: Desconhecido#0000.
+  punishedBy: Punido por
+  title: Advertências de {user}
