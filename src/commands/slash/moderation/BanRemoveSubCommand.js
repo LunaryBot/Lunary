@@ -59,11 +59,11 @@ module.exports = class BanRemoveSubCommand extends SubCommand {
         }
 
         ctx.interaction.followUp({
-            content: `:white_check_mark: ─ ${ctx.t("ban_remove:texts.removeBan", {
+            content: ctx.t("ban_remove:texts.removeBan", {
                 author_mention: ctx.author.toString(),
                 user_tag: ban.user.tag,
                 user_id: ban.user.id
-            })}`
+            })
         }).catch(() => {})
     }
 }

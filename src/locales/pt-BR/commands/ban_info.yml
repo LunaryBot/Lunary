@@ -13,5 +13,5 @@ texts:
     title: Informações do banimento
     userBanned: "Usuário banido:"
     reason: Motivo inserido
-  removeBan: "**Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+  removeBan: ":white_check_mark: ─ **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
   reasonNotInformed: Motivo não informado.

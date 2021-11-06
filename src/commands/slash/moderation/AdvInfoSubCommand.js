@@ -49,6 +49,7 @@ module.exports = class AdvInfoSubCommand extends SubCommand {
             .setEmoji("905968459362492456")
             .setLabel(ctx.t("adv_info:texts.buttons.edit"))
             .setStyle("SECONDARY")
+            .setDisabled()
         ])
 
         const user = await this.client.users.fetch(adv.user).catch(() => {}) || { tag: ctx.t("adv_list:texts.unkownUser") + "#0000", toString: () => `<@${adv.user}>`}
@@ -65,5 +66,44 @@ module.exports = class AdvInfoSubCommand extends SubCommand {
             embeds: [embed],
             components: [components]
         }).catch(() => {})
+
+        const msg = await ctx.interaction.fetchReply()
+
+        const collector = msg.createMessageComponentCollector({
+            filter: c => c.user.id == ctx.author.id,
+            max: 1,
+            time: 1 * 1000 * 60
+        })
+
+        
+        collector.on("collect", 
+        /**
+         * @param {Discord.ButtonInteraction} button
+         */
+        async button => {
+            await button.deferUpdate().catch(() => {})
+            
+            switch(button.customId) {
+                case "adv-remove":
+                    await this.client.LogsDB.ref(id).remove()
+                    await msg.reply({
+                        content: ctx.t("adv_info:texts.warningRemoved", { 
+                            id,
+                            author_mention: ctx.author.toString(),
+                            user_tag: user.tag,
+                            user_id: user.id
+                        })
+                    }).catch(() => {})
+                break;
+            }
+        })
+
+        collector.on("end", async() => {
+            components.components.find(x => x.customId == "adv-remove").setDisabled()
+    
+            msg.edit({
+                components: [components]
+            }).catch(() => {})
+        })
     }
 }

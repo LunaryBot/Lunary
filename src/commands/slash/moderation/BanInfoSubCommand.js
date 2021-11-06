@@ -120,11 +120,11 @@ module.exports = class BanInfoSubCommand extends SubCommand {
             }
 
             msg.reply({
-                content: `:white_check_mark: ─ ${ctx.t("ban_info:texts.removeBan", {
+                content: ctx.t("ban_info:texts.removeBan", {
                     author_mention: ctx.author.toString(),
                     user_tag: ban.user.tag,
                     user_id: ban.user.id
-                })}`
+                })
             }).catch(() => {})
         })
 

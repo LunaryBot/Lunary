@@ -4,6 +4,7 @@ help:
   category: Moderação
 texts:
   warningNotFound: <:Per:833078041084166164> | **Oops**, eu não encontrei advertência com o ID `{id}` nesse servidor. Ou você digitou o ID errado, ou a advertência foi removida, ou ela foi sugada por um buraco negro :woman_shrugging:.
+  warningRemoved:  ":white_check_mark: ─ **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) teve a advertência `{id}` com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
   punishedBy: Advertido por
   reason: Motivo
   unkownUser: Desconhecido
