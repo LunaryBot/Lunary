@@ -13,11 +13,13 @@ const ReactionCollector = require('./ReactionCollector');
 const Sticker = require('./Sticker');
 const { Error } = require('../errors');
 const ReactionManager = require('../managers/ReactionManager');
-const { InteractionTypes, MessageTypes, SystemMessageTypes } = require('../util/Constants');
+const { InteractionTypes, MessageTypes, SystemMessageTypes, EmojisNames } = require('../util/Constants');
 const MessageFlags = require('../util/MessageFlags');
 const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
 const Util = require('../util/Util');
+const EmojiRegex = require("../util/EmojiRegex")
+const Emoji = require('./Emoji');
 
 /**
  * Represents a message on Discord.
@@ -430,6 +432,27 @@ class Message extends Base {
    */
   get url() {
     return `https://discord.com/channels/${this.guildId ?? '@me'}/${this.channelId}/${this.id}`;
+  }
+
+  get emojis() {
+    this._emojis = new Collection()
+    for (let match of this.content.matchAll(/<(a)?:([\w\d]{2,32})+:(\d{17,19})>/g)) {
+      const [ ,animated,name,id ] = match
+      const data = this.client.emojis.cache.get(id) || { 
+        animated: Boolean(animated), id, name, 
+        url: this.client.rest.cdn.Emoji(id, Boolean(animated) ? 'gif' : 'png')
+      }
+
+      const emoji = new Emoji(this.client, data)
+      if(this._emojis.get(emoji.id)) this._emojis.set(emoji.id + "~" + Number(this._emojis.filter(x => x.id == emoji.id).size + 1), emoji)
+      else this._emojis.set(emoji.id, emoji)
+    }
+
+    for (let math of this.content.matchAll(EmojiRegex)) {
+      console.log(math)
+    }
+
+    return this._emojis
   }
 
   /**
