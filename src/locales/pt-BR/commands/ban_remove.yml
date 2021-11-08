@@ -1,6 +1,6 @@
 help:
   name: ban remove
-  description: Mostra as informações do banimento de um usuário banido no servidor.
+  description: Retira o banimento de um usuário do servidor.
   category: Moderação
   examples:
     - title: Remove o banimento pelo id de um usuário.

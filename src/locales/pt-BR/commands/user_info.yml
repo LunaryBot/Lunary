@@ -2,6 +2,8 @@ help:
   name: user info
   description: Veja as informações de um usuário.
   category: Utilitários
+  examples:
+   - user:{@user}
 texts:
   userTagDiscord: Tag do Discord
   userIdDiscord: ID do Discord

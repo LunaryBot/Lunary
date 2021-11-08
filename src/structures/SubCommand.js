@@ -149,9 +149,14 @@ class CommandGroup {
         this.subcommands = subcommands
 
         /**
-         * @type {Command}
+         * @type {Command[]}
          */
          this.mainCommand = mainCommand
+
+        /**
+         * @type {boolean}
+         */
+        this.baseCommand = true
     }
 
     get fullName() {

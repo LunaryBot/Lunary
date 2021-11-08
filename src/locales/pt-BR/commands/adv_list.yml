@@ -1,7 +1,10 @@
 help:
   name: adv list
-  description: Exibe as advertências de um usuário.
+  description: Exibe as advertências/avisos de um usuário no servidor.
   category: Moderação
+  examples:
+    - title: Exibe as informações de uma advertência de um usuário.
+      usage: user:{@user}
 texts:
   noWarning: O usuário não possui advertências nesse servidor.
   reason: Motivo

@@ -2,6 +2,13 @@ help:
   name: adv remove user
   description: Remove as advertências/avisos de um usuário do servidor.
   category: Moderação
+  examples:
+    - title: Remove a última advertência/aviso de um usuário.
+      usage: user:{@user}
+    - title: Remove um número de advertências/avisos de um usuário.
+      usage: user:{@user} amount:{amount}
+    - title: Remove todas as advertências/avisos de um usuário.
+      usage: user:{@user} amount:all
 texts:
   noWarning: O usuário não possui advertências nesse servidor.
   deletedWarning: O usuário `{user_tag}` (`{user_id}`) teve `uma` advertência deletada.

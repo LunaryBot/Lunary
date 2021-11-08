@@ -5,7 +5,7 @@ const sydb = require("sydb")
 const {message_modlogs, message_punish, randomCharacters, ObjRef, highest_position, confirm_punish, timeString, format_time: {format}} = require("../../../utils/index.js")
 const mutesdb = new sydb(__dirname + "/../../../data/mutes.json")
 
-module.exports = class NameCommand extends Command {
+module.exports = class MuteCommand extends Command {
     constructor(client) {
         super({
             name: "mute",

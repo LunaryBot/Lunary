@@ -27,8 +27,8 @@ module.exports = class InteractionCreateEvent extends Event {
         if(interaction.isCommand()) return this.executeCommand(interaction)
         if(interaction.isContextMenu()) this.executeUserCommand(interaction)
         if(interaction.isAutocomplete()) {
-            if(["ban info", "ban remove"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteBan(interaction)
-            if(["adv info", "adv edit"].includes(`${interaction.commandName} ${interaction.options._subcommand}`)) return this.autocompleteAdv(interaction)
+            if(interaction.commandName == "ban") return this.autocompleteBan(interaction)
+            if(interaction.commandName == "adv") return this.autocompleteAdv(interaction)
         }
     }
     
@@ -172,7 +172,7 @@ module.exports = class InteractionCreateEvent extends Event {
                 const bans = [ ...(await interaction.guild.bans.fetch()).values() ]?.map(ban => ban.user)
                 const requestTime = Date.now()
                 return {
-                    validTime: requestTime + (1 * 1000 * 60),
+                    validTime: requestTime + (3 * 1000 * 60),
                     requestTime,
                     bans
                 }
