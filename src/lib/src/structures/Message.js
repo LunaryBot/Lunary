@@ -449,7 +449,12 @@ class Message extends Base {
     }
 
     for (let math of this.content.matchAll(EmojiRegex)) {
-      console.log(math)
+      const emoji = {
+        id: math[0],
+        name: math[0]
+      }
+      if(this._emojis.get(emoji.id)) this._emojis.set(emoji.id + "~" + Number(this._emojis.filter(x => x.id == emoji.id).size + 1), emoji)
+      else this._emojis.set(emoji.id, emoji)
     }
 
     return this._emojis
