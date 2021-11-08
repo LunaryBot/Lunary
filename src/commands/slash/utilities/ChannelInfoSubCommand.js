@@ -24,7 +24,7 @@ module.exports = class ChannelInfoSubCommand extends SubCommand {
         .setDescription(channel.isText() ? (channel.topic || "Tópico do canal não definido.") : "")
         .addField(":bookmark: Menção do canal:", `\`${channel.toString()}\``, true)
         .addField(":open_file_folder: ID", `\`${channel.id}\``, true)
-        .addField(":calendar_spiral: Conta criada em", `<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}:R>)`)
+        .addField(":calendar_spiral: Canal criado em", `<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}> (<t:${Math.floor((channel.createdTimestamp + 3600000) /1000.0)}:R>)`)
         
         ctx.interaction.reply({
             embeds: [embed]

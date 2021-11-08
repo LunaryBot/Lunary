@@ -45,7 +45,7 @@ module.exports = class SubCommand {
         this.mainCommand = mainCommand
 
         /**
-         * @type {SubCommand[]}
+         * @type {SubCommand[]|CommandGroup[]}
          */
         this.subcommands = subcommands
 
@@ -61,7 +61,7 @@ module.exports = class SubCommand {
     }
 
     get fullName() {
-        return `${this.mainCommand.name} ${this.name}`
+        return `${this.mainCommand.fullName} ${this.name}`
     }
 
     get utils() {
@@ -118,5 +118,43 @@ module.exports = class SubCommand {
         }
 
         return embed
+    }
+    
+    static get CommandGroup() {
+        return CommandGroup
+    }
+}
+
+class CommandGroup {
+    /**
+    * @param {Command} mainCommand
+    * @param {_client} client
+    */
+    constructor({name, __dirname, subcommands}, mainCommand, client) {
+        this.client = client
+
+        /**
+         * @type {string}
+         */
+        this.name = name
+
+        /**
+         * @type {string}
+         */
+        this.dirname = __dirname
+
+        /**
+         * @type {SubCommand[]}
+         */
+        this.subcommands = subcommands
+
+        /**
+         * @type {Command}
+         */
+         this.mainCommand = mainCommand
+    }
+
+    get fullName() {
+        return `${this.mainCommand.fullName} ${this.name}`
     }
 }

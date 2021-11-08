@@ -13,7 +13,7 @@ module.exports = (client) => {
     client.commands[type] = []
     let pastas = readdirSync(`${__dirname}/../commands/${type}`)
     for (pasta of pastas) {
-      let commands = readdirSync(`${__dirname}/../commands/${type}/${pasta}`).filter(file => file.endsWith("Command.js") && !file.endsWith("SubCommand.js"));
+      let commands = readdirSync(`${__dirname}/../commands/${type}/${pasta}`).filter(file => file.endsWith("Command.js") && !["SubCommand.js", "CommandGroup.js"].includes(file.endsWith()));
       for (command of commands) {
         let base = require(__dirname + `/../commands/${type}/${pasta}/${command}`)
         if(typeof base == "function") {

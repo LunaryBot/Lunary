@@ -34,7 +34,7 @@ module.exports = class Command {
         this.dirname = dirname
 
         /**
-         * @type {SubCommand[]}
+         * @type {SubCommand[]|CommandGroup[]}
          */
         this.subcommands = subcommands
 

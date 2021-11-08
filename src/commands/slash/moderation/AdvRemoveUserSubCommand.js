@@ -2,10 +2,10 @@ const SubCommand = require("../../../structures/SubCommand.js")
 const ContextCommand = require("../../../structures/ContextCommand.js")
 const Discord = require("../../../lib")
 
-module.exports = class AdvRemoveSubCommand extends SubCommand {
+module.exports = class AdvRemoveUserSubCommand extends SubCommand {
     constructor(client, mainCommand) {
         super({
-            name: "remove",
+            name: "user",
             dirname: __dirname,
             permissions: {
                 Discord: ["MANAGE_MESSAGES"],
