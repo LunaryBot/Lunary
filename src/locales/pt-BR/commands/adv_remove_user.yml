@@ -1,5 +1,5 @@
 help:
-  name: adv remove
+  name: adv remove user
   description: Remove as advertências/avisos de um usuário do servidor.
   category: Moderação
 texts:

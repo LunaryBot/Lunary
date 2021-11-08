@@ -39,7 +39,7 @@ module.exports = class AdvRemoveUserSubCommand extends SubCommand {
         const advs = logs.filter(x => x.user == user.id && x.type == 4)?.sort((a, b) => b.date - a.date)
         if(!advs.length) return ctx.interaction.followUp({
             embeds: [
-                this.sendError(ctx.t("adv_remove:texts.noWarning"), ctx.author)
+                this.sendError(ctx.t("adv_remove_user:texts.noWarning"), ctx.author)
             ]
         }).catch(() => {})
 
@@ -49,7 +49,7 @@ module.exports = class AdvRemoveUserSubCommand extends SubCommand {
         await deladvs.forEach(x => ctx.client.LogsDB.ref(x.id).remove())
 
         await ctx.interaction.followUp({
-            content: `:white_check_mark: ─ ${ctx.t(`adv_remove:texts.deletedWarning${deladvs.length > 1 ? "s" : ""}`, {
+            content: `:white_check_mark: ─ ${ctx.t(`adv_remove_user:texts.deletedWarning${deladvs.length > 1 ? "s" : ""}`, {
                 size: deladvs.length,
                 user_tag: user.tag,
                 user_id: user.id,
