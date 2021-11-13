@@ -11,7 +11,7 @@ class UserDB {
      */
     constructor(data = {}, user, perms) {
         this.user = user
-        this.aboutme = data.aboutme || `Olá eu sou ${user.username} | #ModereaçãoLunática`
+        this.aboutme = data.aboutme || `Olá eu sou ${user.username} e estou no mundo da lua, #ModereaçãoLunática`
         this.configs = new UserConfigs(data.configs || 0)
         this.gifs = data.gifs || {}
         this.xp = Number(data.xp || 0)
@@ -19,7 +19,7 @@ class UserDB {
         this.emblem = data.emblem
         this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null
         if(this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason)
-        this.punishmentsApplied = data.punishmentsApplied || {bans: 0, kicks: 0, mutes: 0, advs: 0}
+        this.bans = data.bans || 0
         if(perms) this.permissions = perms
     }
 }

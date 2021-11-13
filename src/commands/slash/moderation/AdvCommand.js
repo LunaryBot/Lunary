@@ -150,7 +150,7 @@ module.exports = class AdvCommand extends Command {
                 }
             } else xp += generateXP()
 
-            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, advs: ctx.UserDB.punishmentsApplied.advs + 1})
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp,})
 
             function generateXP() {
                 let maxXP = 13

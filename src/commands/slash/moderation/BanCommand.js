@@ -180,7 +180,7 @@ module.exports = class BanCommand extends Command {
                 } else xp += generateXP()
             }
 
-            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, bans: ctx.UserDB.punishmentsApplied.bans + 1})
+            ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: log, xp: xp, bans: ctx.UserDB.bans + 1})
 
             function generateXP() {
                 let maxXP = 39
