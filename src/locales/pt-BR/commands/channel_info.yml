@@ -1,0 +1,14 @@
+help:
+  name: channel info
+  description: Exibe informações sobre um canal.
+  examples:
+    - ""
+    -  channel:{channel}
+texts:
+  channelTopicIsNotDefined: Canal não tem um tópico definido.
+  channelMention: Menção do canal
+  slowModeDelay: Modo lento
+  slowModeIsNotEnabled: Modo lento não está ativado.
+  userLimit: Limite de usuários
+  userLimitIsNotDefined: Sem limite.
+  createdAt: Canal criado em

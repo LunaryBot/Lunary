@@ -37,7 +37,7 @@ module.exports = class AdvRemoveIdSubCommand extends SubCommand {
             content: ctx.t("adv_remove_id:texts.warningNotFound", { id: id.replace(/`/g, "") })
         }).catch(() => {})
 
-        const user = await this.client.users.fetch(adv.user).catch(() => {}) || { tag: ctx.t("adv_list:texts.unkownUser") + "#0000", toString: () => `<@${adv.user}>`}
+        const user = await this.client.users.fetch(adv.user).catch(() => {}) || { tag: ctx.t("adv_remove_id:texts.unkownUser") + "#0000", toString: () => `<@${adv.user}>`}
 
         await this.client.LogsDB.ref(id).remove()
         await ctx.interaction.followUp({
