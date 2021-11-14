@@ -50,6 +50,17 @@ module.exports = class ProfileCommand extends Command {
             })()
         })()
 
+        const xpRank = Object.entries(ctx.UsersDB.ref("Users").val())
+        .filter(([k, v]) => v["xp"])
+        .sort((a, b) => b[1]["xp"] - a[1]["xp"])
+        .slice(0, 100).findIndex(([k, v]) => k == user.id) + 1
+        const pos = xpRank ? ((i) => {
+            if(i == 1) return "1st"
+            if(i == 2) return "2nd"
+            if(i == 3) return "3rd"
+            return `${i}th`
+        })(xpRank) : "N/A"
+
         //add background
         ctxCanvas.drawImage(background,300,65,475,250);
 
@@ -186,6 +197,34 @@ module.exports = class ProfileCommand extends Command {
         ctxCanvas.font = 'bold 20px sans-serif'
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText('MOD', 60, 410, 70)
+
+        ctxCanvas.beginPath();
+        ctxCanvas.arc(150,460,40,0,Math.PI * 2);
+        ctxCanvas.fillStyle = '#ffffff'
+        ctxCanvas.fill();
+
+        ctxCanvas.beginPath();
+        ctxCanvas.font = 'bold 25px sans-serif'
+        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText(pos, 150,460,50)
+        ctxCanvas.font = 'bold 20px sans-serif'
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText('RANK', 150, 480, 50)
+
+        ctxCanvas.beginPath();
+        ctxCanvas.arc(240,460,40,0,Math.PI * 2);
+        ctxCanvas.fillStyle = '#ffffff'
+        ctxCanvas.fill();
+
+        ctxCanvas.beginPath();
+        ctxCanvas.font = 'bold 25px sans-serif'
+        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText(db.bans, 240,460,50)
+        ctxCanvas.font = 'bold 20px sans-serif'
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText('BANS', 240, 480, 50)
 
         // add bio line
         ctxCanvas.beginPath();
