@@ -252,7 +252,7 @@ module.exports = class ProfileCommand extends Command {
         ctxCanvas.font = 'bold 23px sans-serif'
         ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
         ctxCanvas.textAlign = 'center'
-        ctxCanvas.fillText(wordWrap(db.aboutme.shorten(200), 70), 545, 368, 460)
+        ctxCanvas.fillText(wordWrap(db.aboutme.shorten(200), 50), 545, 368, 460)
 
         // Emblema
         if (!db.emblem){
@@ -260,8 +260,8 @@ module.exports = class ProfileCommand extends Command {
             ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
             ctxCanvas.font = 'bold 25px sans-serif'
             ctxCanvas.textAlign = 'center'
-            ctxCanvas.fillText('NO', 660 , 490, 150)
-            ctxCanvas.fillText('EMBLEM', 660, 530, 150)
+            ctxCanvas.fillText(ctx.t("profile:texts.noEmblem1"), 680, 490, 150)
+            ctxCanvas.fillText(ctx.t("profile:texts.noEmblem2"), 685, 530, 150)
         } else {
             const emblem = await (async() => {
                 return this.client.imagesCanvas.get(db.emblem) || await (async() => {
@@ -298,12 +298,11 @@ module.exports = class ProfileCommand extends Command {
         ctxCanvas.fillText('BADGES', 370, 456, 80)
 
         // Load badges images
-        let badgeX = 315
+        let badgeX = 317
         let badgeY = 457
-        const flags = (new Discord.UserFlags(477135)).toArray().filter(x => x != "VERIFIED_BOT")
-        const _ = [...flags, ...flags]
-        for(let i in _) {
-            const flagName = _[i]
+        const flags = user.flags.toArray().filter(x => !["VERIFIED_BOT", "TEAM_USER"].includes(x))
+        for(let i in flags) {
+            const flagName = flags[i]
             const badge = await (async(image) => {
                 return this.client.imagesCanvas.get(image) || await (async() => {
                     const img = await loadImage(image)
@@ -317,12 +316,15 @@ module.exports = class ProfileCommand extends Command {
             if(badgeX >= 565) {
                 badgeX = 315
                 badgeY += 37
-            } 
+            }
         }
 
         ctxCanvas.stroke()
 
         ctx.interaction.followUp({
+            content: ctx.t("profile:texts.contentMessage", {
+                user: user.toString()
+            }),
             files: [new Discord.MessageAttachment(canvas.toBuffer(), `${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.png`)]
         }).catch(() => {})
     }
