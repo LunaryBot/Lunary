@@ -47,6 +47,17 @@ module.exports = class UserProfileCommand extends Command {
             })()
         })()
 
+        const xpRank = Object.entries(ctx.UsersDB.ref("Users").val())
+        .filter(([k, v]) => v["xp"])
+        .sort((a, b) => b[1]["xp"] - a[1]["xp"])
+        .slice(0, 100).findIndex(([k, v]) => k == user.id) + 1
+        const pos = xpRank ? ((i) => {
+            if(i == 1) return "1st"
+            if(i == 2) return "2nd"
+            if(i == 3) return "3rd"
+            return `${i}th`
+        })(xpRank) : "N/A"
+
         //add background
         ctxCanvas.drawImage(background,300,65,475,250);
 
@@ -123,7 +134,7 @@ module.exports = class UserProfileCommand extends Command {
 
         ctxCanvas.lineTo(canvas.width-5,315);
         ctxCanvas.lineTo(canvas.width-5,canvas.height-25);
-        ctxCanvas.lineTo(300, canvas.height - 25);
+        ctxCanvas.lineTo(300, canvas.height - 20);
         ctxCanvas.fillStyle = "#262626"
         ctxCanvas.shadowColor = "rgba(0,0,0,0.5)";
         ctxCanvas.shadowBlur = 40;
@@ -184,6 +195,34 @@ module.exports = class UserProfileCommand extends Command {
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText('MOD', 60, 410, 70)
 
+        ctxCanvas.beginPath();
+        ctxCanvas.arc(150,460,40,0,Math.PI * 2);
+        ctxCanvas.fillStyle = '#ffffff'
+        ctxCanvas.fill();
+
+        ctxCanvas.beginPath();
+        ctxCanvas.font = 'bold 25px sans-serif'
+        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText(pos, 150,460,50)
+        ctxCanvas.font = 'bold 20px sans-serif'
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText('RANK', 150, 480, 50)
+
+        ctxCanvas.beginPath();
+        ctxCanvas.arc(240,460,40,0,Math.PI * 2);
+        ctxCanvas.fillStyle = '#ffffff'
+        ctxCanvas.fill();
+
+        ctxCanvas.beginPath();
+        ctxCanvas.font = 'bold 25px sans-serif'
+        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText(db.bans, 240,460,50)
+        ctxCanvas.font = 'bold 20px sans-serif'
+        ctxCanvas.textAlign = 'center'
+        ctxCanvas.fillText('BANS', 240, 480, 50)
+
         // add bio line
         ctxCanvas.beginPath();
         ctxCanvas.moveTo(370, 338);
@@ -210,18 +249,25 @@ module.exports = class UserProfileCommand extends Command {
         ctxCanvas.font = 'bold 23px sans-serif'
         ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
         ctxCanvas.textAlign = 'center'
-        ctxCanvas.fillText(wordWrap(db.aboutme.shorten(200), 70), 545, 368, 460)
+        ctxCanvas.fillText(wordWrap(db.aboutme.shorten(200), 50), 545, 368, 460)
 
-        // badge
+        // Emblema
         if (!db.emblem){
             ctxCanvas.beginPath();
             ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
             ctxCanvas.font = 'bold 25px sans-serif'
             ctxCanvas.textAlign = 'center'
-            ctxCanvas.fillText('NO', 660 , 490, 150)
-            ctxCanvas.fillText('EMBLEM', 660, 530, 150)
+            ctxCanvas.fillText(ctx.t("profile:texts.noEmblem1"), 680, 490, 150)
+            ctxCanvas.fillText(ctx.t("profile:texts.noEmblem2"), 685, 530, 150)
         } else {
-            const emblem = await loadImage(db.emblem)
+            const emblem = await (async() => {
+                return this.client.imagesCanvas.get(db.emblem) || await (async() => {
+                    const img = await loadImage(db.emblem)
+                    ctx.client.imagesCanvas.set(db.emblem, img)
+    
+                    return img
+                })()
+            })()
 
             ctxCanvas.shadowBlur = 10;
             ctxCanvas.shadowOffsetX = 10;
@@ -230,7 +276,52 @@ module.exports = class UserProfileCommand extends Command {
             ctxCanvas.drawImage(emblem,640,450,110,110);
         }
 
+        // Badges
+        ctxCanvas.beginPath();
+        ctxCanvas.moveTo(410,450);
+        ctxCanvas.lineTo(580,450);
+        ctxCanvas.arcTo(600,450,600,470,20);
+        ctxCanvas.lineTo(600,480);
+        ctxCanvas.arcTo(600,570,580,570,20);
+        ctxCanvas.lineTo(330,570);
+        ctxCanvas.arcTo(310,570,310,550,20);
+        ctxCanvas.lineTo(310,470);
+        ctxCanvas.arcTo(310,450,330,450,20);
+        ctxCanvas.stroke();
+
+        ctxCanvas.beginPath();
+        ctxCanvas.font = 'bold 18px sans-serif'
+        ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
+        ctxCanvas.fillText('BADGES', 370, 456, 80)
+
+        // Load badges images
+        let badgeX = 317
+        let badgeY = 457
+        const flags = user.flags.toArray().filter(x => !["VERIFIED_BOT", "TEAM_USER"].includes(x))
+        for(let i in flags) {
+            const flagName = flags[i]
+            const badge = await (async(image) => {
+                return this.client.imagesCanvas.get(image) || await (async() => {
+                    const img = await loadImage(image)
+                    ctx.client.imagesCanvas.set(image, img)
+    
+                    return img
+                })()
+            })(global.emojis.get(flagName).url)
+            ctxCanvas.drawImage(badge, badgeX, badgeY, 35, 35)
+            badgeX += 40
+            if(badgeX >= 565) {
+                badgeX = 315
+                badgeY += 37
+            }
+        }
+
+        ctxCanvas.stroke()
+
         ctx.interaction.followUp({
+            content: ctx.t("profile:texts.contentMessage", {
+                user: user.toString()
+            }),
             files: [new Discord.MessageAttachment(canvas.toBuffer(), `${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.png`)]
         }).catch(() => {})
     }
