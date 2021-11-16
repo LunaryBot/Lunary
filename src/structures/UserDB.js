@@ -12,6 +12,8 @@ class UserDB {
     constructor(data = {}, user, perms) {
         this.user = user
         this.aboutme = data.aboutme || `Olá eu sou ${user.username} e estou no mundo da lua, #ModereaçãoLunática`
+        this.background = data.background || "default"
+        this.design = data.design || "DEFAULT_BLACK_DESIGN"
         this.configs = new UserConfigs(data.configs || 0)
         this.gifs = data.gifs || {}
         this.xp = Number(data.xp || 0)

@@ -15,6 +15,7 @@ const Locale = require("./structures/Locale.js")
 global.emojis = require("./utils/emojisInstance.js")
 const {readFileSync} = require("fs")
 const { load } = require("js-yaml")
+const Template = require("./structures/Template")
 
 class Lunary extends Client {
     constructor() {
@@ -68,6 +69,7 @@ class Lunary extends Client {
         this.loadLocales()
         this.loadEvents()
         this.loadCommands()
+        this.loadDesignsProfile()
         this.login(this.config.token)
         this.commands
     }
@@ -100,6 +102,16 @@ class Lunary extends Client {
         this.commands = {}
         require("./handlers/commandHandler.js")(this)
         return this.commands
+    }
+
+    /**
+     * 
+     * @returns {Template[]}
+     */
+    loadDesignsProfile() {
+        this.designsProfile = []
+        require("./handlers/designsProfileHandler")(this)
+        return this.designsProfile
     }
 
     /**

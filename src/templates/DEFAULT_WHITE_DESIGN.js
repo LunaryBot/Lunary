@@ -6,9 +6,9 @@ const { UserDB } = require("../structures/UserDB")
 const Sydb = require("sydb")
 const profileDB = new Sydb(__dirname + "/../data/profile")
 
-module.exports = class DefaultBlackDesign extends Template {
+module.exports = class DefaultWhiteDesign extends Template {
     constructor(client) {
-        super(client, { name: "DEFAULT_BLACK_DESIGN", dirname: __dirname })
+        super(client, { name: "DEFAULT_WHITE_DESIGN", dirname: __dirname })
     }
 
     /**
@@ -108,7 +108,7 @@ module.exports = class DefaultBlackDesign extends Template {
         ctxCanvas.beginPath();
         ctxCanvas.arc(150,225,75, 0, Math.PI * 2);
         ctxCanvas.lineWidth = 6;
-        ctxCanvas.strokeStyle = 'rgba(255,255,255,0.6)'
+        ctxCanvas.strokeStyle = 'rgba(0, 0, 0, 0.4)'
         ctxCanvas.stroke();
         ctxCanvas.closePath();
         ctxCanvas.save();
@@ -136,7 +136,7 @@ module.exports = class DefaultBlackDesign extends Template {
         ctxCanvas.lineTo(canvas.width-5,canvas.height-25);
         ctxCanvas.lineTo(300, canvas.height - 20);
         ctxCanvas.fillStyle = "#e7e7e7"
-        ctxCanvas.shadowColor = "rgba(0,0,0,0.5)";
+        ctxCanvas.shadowColor = "rgba(0,0,0,0.4)";
         ctxCanvas.shadowBlur = 40;
         ctxCanvas.shadowOffsetX = -10;
         ctxCanvas.shadowOffsetY = -40;
@@ -149,7 +149,7 @@ module.exports = class DefaultBlackDesign extends Template {
         ctxCanvas.lineTo(575,10);
         ctxCanvas.lineTo(600,80);
         ctxCanvas.lineTo(800,80);
-        ctxCanvas.fillStyle = "rgba(255,255,255,0.3)";
+        ctxCanvas.fillStyle = "#A020F0";
         ctxCanvas.shadowBlur = 30;
         ctxCanvas.shadowOffsetX = 0;
         ctxCanvas.shadowOffsetY = 30;
@@ -158,7 +158,7 @@ module.exports = class DefaultBlackDesign extends Template {
         //luas title
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 30px sans-serif'
-        ctxCanvas.fillStyle = 'rgba(255,255,255,0.8)'
+        ctxCanvas.fillStyle = '#DCDCDC'
         ctxCanvas.textAlign = 'left'
         ctxCanvas.fillText('Luas',610,40,50)
 
@@ -202,7 +202,7 @@ module.exports = class DefaultBlackDesign extends Template {
 
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 25px sans-serif'
-        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.fillStyle = "#A020F0"
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText(rankPosition, 150,460,50)
         ctxCanvas.font = 'bold 20px sans-serif'
@@ -216,7 +216,7 @@ module.exports = class DefaultBlackDesign extends Template {
 
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 25px sans-serif'
-        ctxCanvas.fillStyle = "rgba(0,0,0,0.7)"
+        ctxCanvas.fillStyle = "#A020F0"
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText(bans, 240,460,50)
         ctxCanvas.font = 'bold 20px sans-serif'
@@ -235,24 +235,24 @@ module.exports = class DefaultBlackDesign extends Template {
         ctxCanvas.lineTo(310, 358)
         ctxCanvas.arcTo(310,338,330,338,20)
         ctxCanvas.lineWidth = 1;
-        ctxCanvas.strokeStyle = 'rgba(255,255,255,0.4)'
+        ctxCanvas.strokeStyle = 'rgba(0, 0, 0, 0.4)'
         ctxCanvas.stroke();
 
         // add bio title
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 20px sans-serif'
-        ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
+        ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)'
         ctxCanvas.fillText('BIO', 350, 345, 50)
         // add bio text
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 23px sans-serif'
-        ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
+        ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)'
         ctxCanvas.textAlign = 'center'
         ctxCanvas.fillText(wordWrap(bio.shorten(200), 50), 545, 368, 460)
         // Emblema
         if (!emblem){
             ctxCanvas.beginPath();
-            ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
+            ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)'
             ctxCanvas.font = 'bold 25px sans-serif'
             ctxCanvas.textAlign = 'center'
             ctxCanvas.fillText("NO", 680, 490, 150)
@@ -289,7 +289,7 @@ module.exports = class DefaultBlackDesign extends Template {
 
         ctxCanvas.beginPath();
         ctxCanvas.font = 'bold 18px sans-serif'
-        ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)'
+        ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)'
         ctxCanvas.fillText('BADGES', 370, 456, 80)
         // Load badges images
         let badgeX = 317
@@ -300,7 +300,7 @@ module.exports = class DefaultBlackDesign extends Template {
             const badge = await (async(image) => {
                 return this.client.imagesCanvas.get(image) || await (async() => {
                     const img = await loadImage(image)
-                    ctx.client.imagesCanvas.set(image, img)
+                    this.client.imagesCanvas.set(image, img)
     
                     return img
                 })()
