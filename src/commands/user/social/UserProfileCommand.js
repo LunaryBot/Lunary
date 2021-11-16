@@ -1,9 +1,7 @@
 const Command = require("../../../structures/Command.js")
 const ContextCommand = require("../../../structures/ContextCommand.js")
 const Discord = require("../../../lib")
-const { loadImage, createCanvas } = require("node-canvas")
 const { UserDB } = require("../../../structures/UserDB.js")
-const DefaultBlack = require("../../../templates/DEFAULT_BLACK_DESIGN.js")
 
 module.exports = class UserProfileCommand extends Command {
     constructor(client) {
@@ -11,8 +9,6 @@ module.exports = class UserProfileCommand extends Command {
             name: "User Profile",
             dirname: __dirname
         }, client)
-
-        this.template = new DefaultBlack(client)
     }
 
     /** 
