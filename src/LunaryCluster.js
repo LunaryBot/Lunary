@@ -11,8 +11,8 @@ const clusterManager = new ClusterManager(`${__dirname}/Lunary.js`,{
 
 clusterManager.on('clusterCreate', cluster => {
     Logger.log(`Cluster criado!`, { key: ["Cluster Manager", `Cluster ${cluster.id}`] , date: true })
-});
+})
 
 global.clusterManager = clusterManager
-clusterManager.spawn(undefined, undefined, -1)
+clusterManager.spawn(undefined, undefined, -1).then(() => console.log("Tudo on?"))
 require("./LunaryServer")()

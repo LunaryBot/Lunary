@@ -1,7 +1,6 @@
 const express = require("express")
 const { join } = require("path")
-const path = require("path/posix")
-const apiRouter = require("./LunaryServerAPI")
+const apiRouter = require("./API/LunaryServerAPI")
 
 module.exports = function initServer() {
     const app = express()
