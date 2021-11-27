@@ -28,15 +28,15 @@ module.exports = class ReadyEvent extends Event {
       const fn = async() => {
         const guilds = await this.client.cluster.broadcastEval(`this.guilds.cache.size`).then(x => x.reduce((c, d) => c + d, 0))
         
-        await DblApi.postStats({
-          serverCount: guilds,
-          shardCount: this.client.cluster.info?.TOTAL_SHARDS || 0
-        })
+        // await DblApi.postStats({
+        //   serverCount: guilds,
+        //   shardCount: this.client.cluster.info?.TOTAL_SHARDS || 0
+        // })
 
         this.client.logger.log(`Enviado estatísticas para o Top.gg!`, { key: ["Client", "DBL"], cluster: true, date: true })
       }
       fn()
-      setInterval(fn, 10 * 1000 * 60 * 60)
+      setInterval(fn, 10 * 1000 * 60)
     }
   }
 }

@@ -16,6 +16,7 @@ global.emojis = require("./utils/emojisInstance.js")
 const {readFileSync} = require("fs")
 const { load } = require("js-yaml")
 const Template = require("./structures/Template")
+const config = load(readFileSync(__dirname + "/../config.yml", "utf8"))
 
 class Lunary extends Client {
     constructor() {
@@ -32,7 +33,7 @@ class Lunary extends Client {
                 ApplicationCommandManager: 0,
                 GuildBanManager: 0,
                 GuildInviteManager: 0,
-                MessageManager: 0,
+                MessageManager: config.messageCacheLimit,
 		        PresenceManager: 0,
                 UserManager: 0,
                 GuildStickerManager: 0,
@@ -42,7 +43,7 @@ class Lunary extends Client {
                 ThreadMemberManager: 0
             })
         })
-        this.config = load(readFileSync(__dirname + "/../config.yml", "utf8"))
+        this.config = config
         this.config.token = process.env.DISCORD_TOKEN
         this.cluster = new ClusterClient(this)
         this.logger = new Logger(this.cluster)

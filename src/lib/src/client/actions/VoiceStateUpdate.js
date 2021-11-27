@@ -24,7 +24,7 @@ class VoiceStateUpdate extends Action {
       }
 
       // Emit event
-      if (member?.user.id === client.user.id) {
+      if (member?.user?.id === client.user.id) {
         client.emit('debug', `[VOICE] received voice state update: ${JSON.stringify(data)}`);
         client.voice.onVoiceStateUpdate(data);
       }

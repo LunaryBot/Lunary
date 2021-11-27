@@ -81,6 +81,7 @@ module.exports = class InteractionCreateEvent extends Event {
             }
             await command.run(ctx)
         } catch (e) {
+            console.log(e)
             interaction.channel.send({
                 content: `${interaction.user.toString()}`,
                 embeds: [
