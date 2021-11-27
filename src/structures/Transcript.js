@@ -42,7 +42,7 @@ module.exports = class Transcript {
             {messages}
         </body>
         </html>
-        `.replace(/\s/g, "")
+        `.replace(/\n|\s{4}/g, "")
         .replace(/\{channel\}/g, this.channel.name)
     }
 
@@ -51,14 +51,47 @@ module.exports = class Transcript {
      */
     static messageToHTML(message) {
         let html = `<div class="message" id="${message.id}">`
-        if(message.content) html += `<div class="content">${this.toHTML(message.content)}</div>`
+        if(message.content) html += `<div class="content">${this.toHTML(message.content, {emoji: true, largeEmoji: true})}</div>`
         if(message.embeds?.length) {
             html += message.embeds.map(embed => {
-                let embedHtml = `<div class="embed">`
-                if(embed.title) embedHtml += `<div class="title">${this.toHTML(embed.title)}</div>`
-                if(embed.description) embedHtml += `<div class="description">${this.toHTML(embed.description)}</div>`
-            })
+                let embedHtml = `<div class="embed"><div class="embed-color" style="background-color:${embed.hexColor}"></div><div class="embed-content-container">`
+                let htmlEmbedContent = "";
+                let htmlEmbedText = "";
+                if(embed.author) {
+                    let embedAuthotHtml = "";
+
+                    if(embed.author.iconURL) embedAuthotHtml += `<img class="embed-author-avatar" src="${embed.author.iconURL}">`
+                    if(embed.author.name) {
+                        if(embed.author.url) embedAuthotHtml += `<div class="embed-author-name"><a href="${embed.author.url}">${embed.author.name}</a></div>`
+                        else embedAuthotHtml += `<span class="embed-author-name">${embed.author.name}</span>`
+                    }
+
+                    htmlEmbedText += `<div class="embed-author">${embedAuthotHtml}</div>`
+                }
+                if(embed.title) htmlEmbedText += `<div class="title">${this.toHTML(embed.title, {
+                    emoji: true,
+                    stripLinks: true,
+                    hyperlinks: false,
+                    code: false,
+                    inlineCode: false
+                })}</div>`
+                if(embed.description) htmlEmbedText += `<div class="description">${this.toHTML(embed.description, {emoji: true})}</div>`
+                
+                if(htmlEmbedText) htmlEmbedContent += `<div class="embed-text">${htmlEmbedText}</div>`;
+
+                if(embed.thumbnail?.url) htmlEmbedContent += `<a href="${embed.thumbnail.url}"><img class="embed-thumbnail" src="${embed.thumbnail.url}" /></a>`
+
+                if(htmlEmbedContent) embedHtml += `<div class="embed-content">${htmlEmbedContent}</div>`;
+
+                embedHtml += "</div></div>";
+
+                return embedHtml;
+            }).join("")
         }
+
+        html += "</div>"
+
+        return html;
     }
 
     /**
