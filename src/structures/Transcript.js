@@ -47,6 +47,21 @@ module.exports = class Transcript {
     }
 
     /**
+     * @param {Message} message
+     */
+    static messageToHTML(message) {
+        let html = `<div class="message" id="${message.id}">`
+        if(message.content) html += `<div class="content">${this.toHTML(message.content)}</div>`
+        if(message.embeds?.length) {
+            html += message.embeds.map(embed => {
+                let embedHtml = `<div class="embed">`
+                if(embed.title) embedHtml += `<div class="title">${this.toHTML(embed.title)}</div>`
+                if(embed.description) embedHtml += `<div class="description">${this.toHTML(embed.description)}</div>`
+            })
+        }
+    }
+
+    /**
      * @param {Message[]} messages 
      */
     static createMessagesGroups(messages) {
