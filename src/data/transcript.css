@@ -244,7 +244,8 @@ img {
 
 .embed-content {
     width: 100%;
-    display: flex
+    display: flex;
+    margin: 1.1%;
 }
 
 .embed-text {
@@ -255,6 +256,10 @@ img {
     display:flex;
     align-items:center;
     margin-bottom:5px
+}
+
+.embed-author a {
+    color: white;
 }
 
 .embed-author-avatar {

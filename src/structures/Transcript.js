@@ -1,4 +1,4 @@
-const { Collection, Message, GuildChannel } = require("../lib");
+const { Collection, Message, GuildChannel, User } = require("../lib");
 const _client = require("../Lunary.js");
 const fs = require("fs");
 const css = (fs.readFileSync(__dirname + "/../data/transcript.css", "utf8") || "").replace(/\n|\s/g, "");
@@ -27,8 +27,11 @@ module.exports = class Transcript {
     }
 
     generate() {
+        const groups = this.constructor.createMessagesGroups(this.messages);
 
-        return `<!DOCTYPE html>
+        const messagesHtml = groups.map(group => this.constructor.messageGroupToHTML(group)).join("");
+        
+        const html = `<!DOCTYPE html>
         <html lang="pt-br">
         <head>
             <meta charset=utf-8>
@@ -42,6 +45,9 @@ module.exports = class Transcript {
         </html>
         `.replace(/\n|\s{4}/g, "")
         .replace(/\{channel\}/g, this.channel.name)
+        .replace(/\{messages\}/g, messagesHtml);
+
+        return Buffer.from(html, "utf8");
     }
 
     /**
@@ -85,6 +91,25 @@ module.exports = class Transcript {
         return groups;
     }
 
+    
+
+    /**
+     * @param {{
+     * messages: Message[],
+     * author: User
+     * index: number
+     * }} group
+     */
+    static messageGroupToHTML(group) {
+        const author = group.author;
+        let html = `<div class="message-group"><div class="author-avatar-content"><img src="${author.displayAvatarURL({ format: "png", dynamic: true, size: 1024 })}" class="author-avatar" /></div><div class="messages"><span class="author-name" title="${author.tag}" data-user-id="${author.id}">${author.username}${author.bot ? `<span class="bot-tag">BOT</span>` : ""}</span><span class="timestamp">${new Date(group.messages[0].createdTimestamp).toLocaleString()}</span>`;
+        group.messages.forEach(message => {
+            html += this.messageToHTML(message);
+        });
+        html += `</div></div>`;
+        return html;
+    }
+
     /**
      * @param {Message} message
      */
@@ -113,7 +138,7 @@ module.exports = class Transcript {
                     hyperlinks: true,
                     code: false
                 })}</div>`
-                if(embed.description) htmlEmbedText += `<div class="description">${this.toHTML(embed.description, {
+                if(embed.description) htmlEmbedText += `<div class="embed-description">${this.toHTML(embed.description, {
                     emoji: true,
                     hyperlinks: true,
                 })}</div>`
@@ -164,9 +189,12 @@ module.exports = class Transcript {
         text = text.replace(/\n/g, "<br>")
             
         if(options.quote !== false) {
-            text = text.replace(/^>\s(.{1,})/g, '<span class="quote"></span> $1')
-            text = text.replace(/<br>>\s(.{1,})/g, '<br><span class="quote"></span> $1')
+            text = text.replace(/^>\s(.*?)/g, '<span class="quote">$1</span>')
+            text = text.replace(/<br>>\s(.*?)/g, '<br><span class="quote">$1</span>')
         }
+
+        if(options.stripLinks !== false) text = text.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/ig, '<a href="$1">$1</a>');
+        // if (options.hyperlinks == true) text = text.replace(/\[(.*?)\]\((.*?)\)/ig, '<a href="$2">$1</a>')
 
         if (options.emoji === true) {
             text = text.replace(emojiRegex, `<img class="emoji-${(() => {
@@ -177,21 +205,18 @@ module.exports = class Transcript {
             })() ? "large" : "small"}" name="$2" alt="<$1:$2:$3>" animated="$1" src="https://cdn.discordapp.com/emojis/$3" />`);
         };
 
-        if (options.bold != false) text = text.replace(/\*\*(.{1,})\*\*/ig,'<strong>$1</strong>');
+        if (options.bold != false) text = text.replace(/\*\*(.*?)\*\*/ig,'<strong>$1</strong>');
 
-        if (options.underline !== false) text = text.replace(/\_\_(.{1,})\_\_/ig,'<u>$1</u>');
+        if (options.underline !== false) text = text.replace(/\_\_(.*?)\_\_/ig,'<u>$1</u>');
 
-        if (options.italics != false) text = text.replace(/\*(.{1,})\*|_(.{1,})_/ig,'<i>$1$2</i>');
+        if (options.italics != false) text = text.replace(/\*(.*?)\*|_(.*?)_/ig,'<i>$1$2</i>');
 
-        if (options.strike !== false) text = text.replace(/~~(.{1,})~~/ig, '<strike>$1</strike>');
+        if (options.strike !== false) text = text.replace(/~~(.*?)~~/ig, '<strike>$1</strike>');
 
-        if (options.code !== false) text = text.replace(/```(.{1,})```/ig,'<div class="codeblock">$1</div>');
+        if (options.code !== false) text = text.replace(/```(.*?)```/ig,'<div class="codeblock">$1</div>');
 
-        if (options.inlineCode !== false) text = text.replace(/`(.{1,})`/ig,'<span class="code">$1</span>');
+        if (options.inlineCode !== false) text = text.replace(/`(.*?)`/ig,'<span class="code">$1</span>');
         
-        if(options.stripLinks !== false) text = text.replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/ig, '<a href="$1">$1</a>');
-        
-        if (options.hyperlinks == true) text = text.replace(/\[(.{1,})\]\(<a href="((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)">((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)<\/a>\)/ig, '<a href="$2">$1</a>')
     
         return `<span class="markdown">${text}</span>`
     }

@@ -5,6 +5,7 @@ const {message_modlogs, message_punish, randomCharacters, ObjRef, confirm_punish
 const AdvListSubCommand = require("./AdvListSubCommand.js")
 const AdvInfoSubCommand = require("./AdvInfoSubCommand.js")
 const AdvRemoveCommandGroup = require("./AdvRemoveCommandGroup.js")
+const Transcript = require("../../../structures/Transcript.js")
 
 module.exports = class AdvCommand extends Command {
     constructor(client) {
@@ -128,6 +129,20 @@ module.exports = class AdvCommand extends Command {
                         .setLabel("Lunary logs(Beta)")
                         .setStyle("LINK")
                     ])
+                ],
+                files: [
+                    new Discord.MessageAttachment(new Transcript(ctx.client, ctx.channel, [
+                        ...ctx.channel.messages.cache.values(), 
+                        ...[...(ctx.channel.messages.cache.size >= ctx.client.config.messageCacheLimit 
+                            ? new Map() 
+                            : await ctx.channel.messages.fetch({ 
+                                limit: ctx.client.config.messageCacheLimit
+                            })
+                        ).values()]
+                        .sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+                        .slice(ctx.client.config.messageCacheLimit - ctx.channel.messages.cache.size)
+                    ].slice(0, ctx.client.config.messageCacheLimit))
+                    .generate(), `${ctx.channel.name}-transcript.html`)
                 ]
             }).catch(() => {})
 
