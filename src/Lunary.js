@@ -124,7 +124,8 @@ class Lunary extends Client {
     *   guild:string,
     *   redirect:string,
     *   redirect_uri:string,
-    *   state:string
+    *   state:string,
+    *   response_type: string
     * }} options
     */
      generateOauth2(options = {}) {
@@ -138,7 +139,6 @@ class Lunary extends Client {
     
         const query = new URLSearchParams({
             client_id: client_id,
-            response_type: "code"
         });
     
         const { scopes } = options;
@@ -166,7 +166,10 @@ class Lunary extends Client {
             query.set('guild_id', guildId);
         }
 
-        if(options.redirect_uri || options.redirect) query.set('redirect_uri', options.redirect_uri || options.redirect)
+        if(options.redirect_uri || options.redirect) {
+            query.set('redirect_uri', options.redirect_uri || options.redirect)
+            query.set('response_type', options.response_type || 'code')
+        }
         if(options.state) query.set('state', options.state)
     
         return `${this.options.http.api}${this.api.oauth2.authorize}?${query.toString()}`;

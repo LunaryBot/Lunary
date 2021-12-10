@@ -14,6 +14,7 @@ module.exports = class Command {
         subcommands = [],
         permissions = {},
         baseCommand = false,
+        premium_type = null,
         dm
     }, client) {
         this.client = client
@@ -52,6 +53,11 @@ module.exports = class Command {
          * @type {boolean}
          */
          this.baseCommand = baseCommand
+
+        /**
+         * @type {boolean}
+         */
+         this.premium_type = premium_type
     }
 
     get fullName() {

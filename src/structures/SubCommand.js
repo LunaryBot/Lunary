@@ -15,7 +15,8 @@ module.exports = class SubCommand {
         dirname = null,
         subcommands = [],
         permissions = {},
-        dm
+        dm,
+        premium_type = null,
     }, mainCommand, client) {
         this.client = client
 
@@ -58,6 +59,11 @@ module.exports = class SubCommand {
          * @type {boolean}
          */
         this.dm = dm
+
+        /**
+         * @type {boolean}
+        */
+        this.premium_type = premium_type
     }
 
     get fullName() {

@@ -217,7 +217,61 @@ module.exports = class Transcript {
 
         if (options.inlineCode !== false) text = text.replace(/`(.*?)`/ig,'<span class="code">$1</span>');
         
-    
         return `<span class="markdown">${text}</span>`
     }
-}
+
+    /**
+     * @param {string} str
+     * @param {Message} message
+     */
+    static cleanMentions(str, message) {
+        str = str.replace(/<@!?[0-9]+>/g, input => {
+            const id = input.replace(/<|!|>|@/g, '');
+        
+            const member = message.mentions.members.get(id);
+            if (member) {
+                return removeMentions(`<span class="mention">@${member.displayName}</span>`);
+            } else {
+                const user = message.mentions.users.get(id);
+                return user ? removeMentions(`<span class="mention">@${user.username}</span>`) : input;
+            }
+        })
+        .replace(/<#[0-9]+>/g, input => {
+            const channel = message.mentions.channels.get(input.replace(/<|#|>/g, ''));
+            return channel ? `<span class="mention">#${channel.name}</span>` : input;
+        })
+        .replace(/<@&[0-9]+>/g, input => {
+            const role = message.guild.roles.cache.get(input.replace(/<|@|>|&/g, '')); 
+            let hex = "7289da";
+            let rgb = [125, 125, 255];
+            if(role.color != 0) {
+                hex = decToHex(role.color);
+                rgb = hexToRgb(hex);
+            }; 
+            return role ? `<span class="mention-role" style="color:#${hex};background:rgba(${rgb.join(", ")}, .1);">@${role.name}</span>` : input;
+          })
+          .replace(/@everyone/g, '<span class="mention-role" style="color:#7289da;background:rgba(125, 125, 255, .1);">@everyone</span>')
+          .replace(/@here/g, '<span class="mention-role" style="color:#7289da;background:rgba(125, 125, 255, .1);">@here</span>')
+    };
+};
+
+function removeMentions(str) {
+    return str.replace(/@/g, '@\u200b');
+};
+
+function decToHex(d) {
+    let hex = Number(d).toString(16);
+    hex = "000000".substr(0, 6 - hex.length) + hex;
+    return hex;
+};
+  
+function hexToRgb(string) {
+    let aRgbHex = string.match(/.{1,2}/g);
+    let rgb = [
+      parseInt(aRgbHex[0], 16),
+      parseInt(aRgbHex[1], 16),
+      parseInt(aRgbHex[2], 16)
+    ];
+
+    return rgb;
+};
