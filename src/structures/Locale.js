@@ -31,7 +31,6 @@ module.exports = class Locale {
 			if (val)
 				variablesKeys.map(function (x) {
 					let a = variables[x];
-					if (!a) return;
 
 					let regex = new RegExp(`{${x}}`, "g");
 					output = output.replace(regex, a);

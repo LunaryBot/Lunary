@@ -239,7 +239,7 @@ module.exports = class UserInfoSubCommand extends SubCommand {
 													return `(${ctx.t(
 														"user_info:texts.rank_adminstrator"
 													)})`;
-												else return null;
+												else return "";
 											})(),
 										}
 									)}`,

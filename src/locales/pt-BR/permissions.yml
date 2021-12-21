@@ -35,11 +35,11 @@ MANAGE_WEBHOOKS: Gerenciar WebHooks
 MANAGE_EMOJIS_AND_STICKERS: Gerenciar Emojis e Figurinhas
 USE_APPLICATION_COMMANDS: Usar Comandos de Aplicativos
 REQUEST_TO_SPEAK: Pedir para Falar
+MANAGE_EVENTS: Gerenciar Eventos
 MANAGE_THREADS: Gerenciar Conversas
-USE_PUBLIC_THREADS: Criar Tópicos Públicos
 CREATE_PUBLIC_THREADS: Criar Tópicos Públicos
-USE_PRIVATE_THREADS: Criar Tópicos Privados
 CREATE_PRIVATE_THREADS: Criar Tópicos Privados
 USE_EXTERNAL_STICKERS: Usar Figurinhas Externas
 SEND_MESSAGES_IN_THREADS: Enviar Mensagens em Tópicos
 START_EMBEDDED_ACTIVITIES: Iniciar Atividades Incorporadas
+MODERATE_MEMBERS: Moderar Membros
