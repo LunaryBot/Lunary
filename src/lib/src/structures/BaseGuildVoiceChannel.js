@@ -68,14 +68,10 @@ class BaseGuildVoiceChannel extends GuildChannel {
 	 */
 	get joinable() {
 		if (!this.viewable) return false;
-		if (
-			!this.permissionsFor(this.client.user).has(
-				Permissions.FLAGS.CONNECT,
-				false
-			)
-		)
-			return false;
-		return true;
+		const permissions = this.permissionsFor(this.client.user);
+		if (permissions.has(Permissions.FLAGS.ADMINISTRATOR, false)) return true;
+		if (!permissions.has(Permissions.FLAGS.CONNECT, false)) return false;
+		return this.guild.me.communicationDisabledUntilTimestamp < Date.now();
 	}
 
 	/**

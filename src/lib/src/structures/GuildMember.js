@@ -6,6 +6,7 @@ const TextBasedChannel = require("./interfaces/TextBasedChannel");
 const { Error } = require("../errors");
 const GuildMemberRoleManager = require("../managers/GuildMemberRoleManager");
 const Permissions = require("../util/Permissions");
+const SnowflakeUtil = require('../util/SnowflakeUtil');
 
 /**
  * Represents a member of a guild on Discord.
@@ -52,6 +53,12 @@ class GuildMember extends Base {
 		 */
 		this.pending = false;
 
+		/**
+		 * The timestamp this member's timeout will be removed
+		 * @type {?number}
+		 */
+		this.communicationDisabledUntilTimestamp = null;
+
 		this._roles = [];
 		if (data) this._patch(data);
 	}
@@ -84,6 +91,11 @@ class GuildMember extends Base {
 		}
 		if ("roles" in data) this._roles = data.roles;
 		this.pending = data.pending ?? false;
+
+		if ('communication_disabled_until' in data) {
+			this.communicationDisabledUntilTimestamp =
+			data.communication_disabled_until && Date.parse(data.communication_disabled_until);
+		}
 	}
 
 	_clone() {
@@ -156,6 +168,15 @@ class GuildMember extends Base {
 	 */
 	get joinedAt() {
 		return this.joinedTimestamp ? new Date(this.joinedTimestamp) : null;
+	}
+
+	/**
+	 * The time this member's timeout will be removed
+	 * @type {?Date}
+	 * @readonly
+	 */
+	get communicationDisabledUntil() {
+		return this.communicationDisabledUntilTimestamp && new Date(this.communicationDisabledUntilTimestamp);
 	}
 
 	/**
@@ -281,6 +302,30 @@ class GuildMember extends Base {
 	}
 
 	/**
+	 * Data that can be resolved to a Date object for timeouts. This can be:
+	 * * A number in milliseconds representing a duration
+	 * * A DateResolvable
+	 * @typedef {DateResolvable} TimeoutDateResolvable
+	 */
+
+	/**
+	 * Times this guild member out.
+	 * @param {TimeoutDateResolvable|null} timeout The date, timestamp, or time in milliseconds
+	 * for the member's communication to be disabled until. Provide `null` to remove the timeout.
+	 * @param {string} [reason] The reason for this timeout.
+	 * @returns {Promise<GuildMember>}
+	 * @example
+	 * // Time a guild member out for 5 minutes
+	 * guildMember.timeout(5 * 60 * 1000, 'They deserved it')
+	 *   .then(console.log)
+	 *   .catch(console.error);
+	 */
+	timeout(timeout, reason) {
+		if (typeof timeout === 'number' && timeout < SnowflakeUtil.EPOCH) timeout += Date.now();
+		return this.edit({ communicationDisabledUntil: timeout }, reason);
+	}
+
+	/**
 	 * The data for editing a guild member.
 	 * @typedef {Object} GuildMemberEditData
 	 * @property {?string} [nick] The nickname to set for the member
@@ -376,6 +421,7 @@ class GuildMember extends Base {
 			this.nickname === member.nickname &&
 			this.avatar === member.avatar &&
 			this.pending === member.pending &&
+			this.communicationDisabledUntilTimestamp === member.communicationDisabledUntilTimestamp &&
 			(this._roles === member._roles ||
 				(this._roles.length === member._roles.length &&
 					this._roles.every((role, i) => role === member._roles[i])))
