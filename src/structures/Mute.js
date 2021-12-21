@@ -1,6 +1,6 @@
-const client = require("../Lunary.js");
-const sydb = require("sydb");
-const mutesdb = new sydb(__dirname + "/../data/mutes.json");
+const client = require('../Lunary.js');
+const sydb = require('sydb');
+const mutesdb = new sydb(__dirname + '/../data/mutes.json');
 
 class Mute {
 	/**

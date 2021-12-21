@@ -1,24 +1,17 @@
-const Event = require("../structures/Event.js");
-const {
-	Interaction,
-	CommandInteraction,
-	MessageEmbed,
-	Collection,
-	User,
-	ContextMenuInteraction,
-} = require("../lib");
-const ContextCommand = require("../structures/ContextCommand.js");
-const Command = require("../structures/Command.js");
+const Event = require('../structures/Event.js');
+const { Interaction, CommandInteraction, MessageEmbed, Collection, User, ContextMenuInteraction } = require('../lib');
+const ContextCommand = require('../structures/ContextCommand.js');
+const Command = require('../structures/Command.js');
 
 module.exports = class InteractionCreateEvent extends Event {
 	constructor(client) {
-		super("interactionCreate", client);
+		super('interactionCreate', client);
 
 		this.bansCache = new Collection();
 		this.advsCache = new Collection();
 		setInterval(() => {
 			this.advsCache.clear();
-			this.client.logger.log("Cache de auto complete limpo.", {
+			this.client.logger.log('Cache de auto complete limpo.', {
 				cluster: true,
 				date: true,
 			});
@@ -34,10 +27,8 @@ module.exports = class InteractionCreateEvent extends Event {
 		if (interaction.isCommand()) return this.executeCommand(interaction);
 		if (interaction.isContextMenu()) this.executeUserCommand(interaction);
 		if (interaction.isAutocomplete()) {
-			if (interaction.commandName == "ban")
-				return this.autocompleteBan(interaction);
-			if (interaction.commandName == "adv")
-				return this.autocompleteAdv(interaction);
+			if (interaction.commandName == 'ban') return this.autocompleteBan(interaction);
+			if (interaction.commandName == 'adv') return this.autocompleteAdv(interaction);
 		}
 	}
 
@@ -50,38 +41,25 @@ module.exports = class InteractionCreateEvent extends Event {
 			/**
 			 * @type {Command}
 			 */
-			let command = this.client.commands.slash.find(
-				(c) => c.name == interaction.commandName.toLowerCase()
-			);
+			let command = this.client.commands.slash.find(c => c.name == interaction.commandName.toLowerCase());
 			if (!command) return;
 			if (command.subcommands?.length) {
 				let subcommand;
-				if (interaction.options._group)
-					subcommand = command.subcommands.find(
-						(c) => c.name == interaction.options._group
-					);
-				subcommand =
-					(subcommand || command).subcommands?.find(
-						(c) =>
-							c.name == interaction.options._subcommand ||
-							c.name == interaction.options._group
-					) || subcommand;
+				if (interaction.options._group) subcommand = command.subcommands.find(c => c.name == interaction.options._group);
+				subcommand = (subcommand || command).subcommands?.find(c => c.name == interaction.options._subcommand || c.name == interaction.options._group) || subcommand;
 				if (subcommand) command = subcommand;
 			}
 			if (!command) return;
 
 			if (!interaction.guild && command.isDM())
 				return interaction.reply({
-					content:
-						"<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!",
+					content: '<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!',
 				});
 
-			let GuildsDB = interaction.guild
-				? await this.client.db.ref().once("value")
-				: null;
+			let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null;
 			if (GuildsDB) GuildsDB = GuildsDB.val() || {};
 
-			let UsersDB = await this.client.UsersDB.ref().once("value");
+			let UsersDB = await this.client.UsersDB.ref().once('value');
 			UsersDB = UsersDB.val() || {};
 
 			const ctx = new ContextCommand(
@@ -92,37 +70,27 @@ module.exports = class InteractionCreateEvent extends Event {
 					channel: interaction.channel,
 					user: interaction.user,
 					command: command,
-					mainCommand: this.client.commands.slash.find(
-						(c) => c.name == interaction.commandName
-					),
+					mainCommand: this.client.commands.slash.find(c => c.name == interaction.commandName),
 					slash: true,
 					dm: !Boolean(interaction.guild),
 				},
-				{ guildsDB: GuildsDB, usersDB: UsersDB }
+				{ guildsDB: GuildsDB, usersDB: UsersDB },
 			);
 
 			if (!ctx.dm) {
-				const ps = command.verifyPerms(
-					ctx.member,
-					ctx.me,
-					ctx.UserDB.permissions
-				);
+				const ps = command.verifyPerms(ctx.member, ctx.me, ctx.UserDB.permissions);
 
 				if (!ps.member.has)
 					return interaction.reply(
-						ctx.t("general:userMissingPermissions", {
-							permissions: command.permissions.Discord?.map((x) =>
-								ctx.t(`permissions:${x}`)
-							).join(", "),
-						})
+						ctx.t('general:userMissingPermissions', {
+							permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(', '),
+						}),
 					);
 				if (!ps.me.has)
 					return interaction.reply(
-						ctx.t("general:lunyMissingPermissions", {
-							permissions: command.permissions.Discord?.map((x) =>
-								ctx.t(`permissions:${x}`)
-							).join(", "),
-						})
+						ctx.t('general:lunyMissingPermissions', {
+							permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(', '),
+						}),
 					);
 			}
 			await command.run(ctx);
@@ -133,15 +101,10 @@ module.exports = class InteractionCreateEvent extends Event {
 					content: `${interaction.user.toString()}`,
 					embeds: [
 						new MessageEmbed()
-							.setColor("#FF0000")
-							.setDescription(
-								"Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx)."
-							)
-							.addField(
-								"Erro:",
-								`\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``
-							)
-							.setFooter("Desculpa pelo transtorno."),
+							.setColor('#FF0000')
+							.setDescription('Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx).')
+							.addField('Erro:', `\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``)
+							.setFooter('Desculpa pelo transtorno.'),
 					],
 				})
 				.catch(() => {});
@@ -156,36 +119,26 @@ module.exports = class InteractionCreateEvent extends Event {
 			/**
 			 * @type {Command}
 			 */
-			const command = this.client.commands.user.find(
-				(c) => c.name == interaction.commandName
-			);
+			const command = this.client.commands.user.find(c => c.name == interaction.commandName);
 			if (!command) return;
 
 			if (!interaction.guild && command.isDM())
 				return interaction.reply({
-					content:
-						"<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!",
+					content: '<:Per:833078041084166164> • Esse comando não pode ser usado em mensagens diretas!',
 				});
 
 			if (interaction.guild) {
-				if (
-					!interaction.channel
-						.permissionsFor(interaction.user.id)
-						.has("SEND_MESSAGES")
-				)
+				if (!interaction.channel.permissionsFor(interaction.user.id).has('SEND_MESSAGES'))
 					return interaction.reply({
-						content:
-							"<:Per:833078041084166164> • Você não tem permissão para usar esse comando aqui!",
+						content: '<:Per:833078041084166164> • Você não tem permissão para usar esse comando aqui!',
 						ephemeral: true,
 					});
 			} // Copilot que sugeriu, to com medo...
 
-			let GuildsDB = interaction.guild
-				? await this.client.db.ref().once("value")
-				: null;
+			let GuildsDB = interaction.guild ? await this.client.db.ref().once('value') : null;
 			if (GuildsDB) GuildsDB = GuildsDB.val() || {};
 
-			let UsersDB = await this.client.UsersDB.ref().once("value");
+			let UsersDB = await this.client.UsersDB.ref().once('value');
 			UsersDB = UsersDB.val() || {};
 
 			const ctx = new ContextCommand(
@@ -199,31 +152,23 @@ module.exports = class InteractionCreateEvent extends Event {
 					mainCommand: command,
 					dm: !Boolean(interaction.guild),
 				},
-				{ guildsDB: GuildsDB, usersDB: UsersDB }
+				{ guildsDB: GuildsDB, usersDB: UsersDB },
 			);
 
 			if (!ctx.dm) {
-				const ps = command.verifyPerms(
-					ctx.member,
-					ctx.me,
-					ctx.UserDB.permissions
-				);
+				const ps = command.verifyPerms(ctx.member, ctx.me, ctx.UserDB.permissions);
 
 				if (!ps.member.has)
 					return interaction.reply(
-						ctx.t("general:userMissingPermissions", {
-							permissions: command.permissions.Discord?.map((x) =>
-								ctx.t(`permissions:${x}`)
-							).join(", "),
-						})
+						ctx.t('general:userMissingPermissions', {
+							permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(', '),
+						}),
 					);
 				if (!ps.me.has)
 					return interaction.reply(
-						ctx.t("general:lunyMissingPermissions", {
-							permissions: command.permissions.Discord?.map((x) =>
-								ctx.t(`permissions:${x}`)
-							).join(", "),
-						})
+						ctx.t('general:lunyMissingPermissions', {
+							permissions: command.permissions.Discord?.map(x => ctx.t(`permissions:${x}`)).join(', '),
+						}),
 					);
 			}
 			await command.run(ctx);
@@ -234,15 +179,10 @@ module.exports = class InteractionCreateEvent extends Event {
 					content: `${interaction.user.toString()}`,
 					embeds: [
 						new MessageEmbed()
-							.setColor("#FF0000")
-							.setDescription(
-								"Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx)."
-							)
-							.addField(
-								"Erro:",
-								`\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``
-							)
-							.setFooter("Desculpa pelo transtorno."),
+							.setColor('#FF0000')
+							.setDescription('Aconteceu um erro ao executar o comando, que tal reportar ele para a minha equipe?\nVocê pode relatar ele no meu [servidor de suporte](https://discord.gg/8K6Zry9Crx).')
+							.addField('Erro:', `\`\`\`js\n${`${e}`.shorten(1000)}\`\`\``)
+							.setFooter('Desculpa pelo transtorno.'),
 					],
 				})
 				.catch(() => {});
@@ -257,15 +197,13 @@ module.exports = class InteractionCreateEvent extends Event {
 		let output = [];
 		if (interaction.guild) {
 			const getData = async () => {
-				this.client.logger.log("Request para auto complete de ban.", {
+				this.client.logger.log('Request para auto complete de ban.', {
 					cluster: true,
 					date: true,
 					key: `Shard ${interaction.guild.shardId}`,
 				});
 
-				const bans = [
-					...(await interaction.guild.bans.fetch()).values(),
-				]?.map((ban) => ban.user);
+				const bans = [...(await interaction.guild.bans.fetch()).values()]?.map(ban => ban.user);
 				const requestTime = Date.now();
 				return {
 					validTime: requestTime + 3 * 1000 * 60,
@@ -288,36 +226,28 @@ module.exports = class InteractionCreateEvent extends Event {
 			}
 
 			const input = interaction.options
-				.get("user")
+				.get('user')
 				?.value?.toLowerCase()
-				.replace(/<@!?(\d{17,19})>/, "$1");
+				.replace(/<@!?(\d{17,19})>/, '$1');
 
-			const arr = data.bans?.map((user) => {
+			const arr = data.bans?.map(user => {
 				return {
 					name: user.tag,
 					value: user.id,
 				};
 			});
 
-			output = input
-				? arr.filter(
-						(ban) =>
-							ban.name.toLowerCase().includes(input) ||
-							ban.value.toLowerCase().includes(input)
-				  )
-				: arr;
+			output = input ? arr.filter(ban => ban.name.toLowerCase().includes(input) || ban.value.toLowerCase().includes(input)) : arr;
 		}
 
-		return this.client.api
-			.interactions(interaction.id, interaction.token)
-			.callback.post({
+		return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+			data: {
+				type: 8,
 				data: {
-					type: 8,
-					data: {
-						choices: [...output].slice(0, 25),
-					},
+					choices: [...output].slice(0, 25),
 				},
-			});
+			},
+		});
 	}
 
 	/**
@@ -334,20 +264,16 @@ module.exports = class InteractionCreateEvent extends Event {
 					key: `Shard ${interaction.guild.shardId}`,
 				});
 
-				const logs = await this.client.LogsDB.ref().once("value");
+				const logs = await this.client.LogsDB.ref().once('value');
 				const advs = Object.entries(logs.val() || {})
 					.map(function ([k, v], i) {
-						const data = JSON.parse(
-							Buffer.from(v, "base64").toString("ascii")
-						);
+						const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'));
 						return data;
 					})
-					.filter(
-						(x) => x.server == interaction.guild.id && x.type == 4
-					)
+					.filter(x => x.server == interaction.guild.id && x.type == 4)
 					?.sort((a, b) => b.date - a.date)
-					.map((x) => x.id)
-					.filter((x) => x);
+					.map(x => x.id)
+					.filter(x => x);
 
 				const requestTime = Date.now();
 				return {
@@ -370,9 +296,9 @@ module.exports = class InteractionCreateEvent extends Event {
 				this.advsCache.set(interaction.guildId, data);
 			}
 
-			const input = interaction.options.get("id")?.value?.toLowerCase();
+			const input = interaction.options.get('id')?.value?.toLowerCase();
 
-			const arr = data.advs?.map((id) => {
+			const arr = data.advs?.map(id => {
 				return {
 					name: id,
 					value: id,
@@ -380,22 +306,20 @@ module.exports = class InteractionCreateEvent extends Event {
 			});
 
 			output = input
-				? arr.filter((adv) => {
+				? arr.filter(adv => {
 						return adv.value.toLowerCase().includes(input);
 				  })
 				: arr;
 		}
 
-		return this.client.api
-			.interactions(interaction.id, interaction.token)
-			.callback.post({
+		return this.client.api.interactions(interaction.id, interaction.token).callback.post({
+			data: {
+				type: 8,
 				data: {
-					type: 8,
-					data: {
-						choices: [...output].slice(0, 25),
-					},
+					choices: [...output].slice(0, 25),
 				},
-			});
+			},
+		});
 	}
 };
 

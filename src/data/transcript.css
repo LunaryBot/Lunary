@@ -37,7 +37,7 @@ userInfo {
 }
 
 body {
-	font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: Whitney, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 17px;
 	background-color: #36393e;
 	color: #dcddde;
@@ -79,7 +79,7 @@ img {
 	padding: 2px;
 	border-radius: 3px;
 	font-size: 85%;
-	font-family: Consolas, "Courier New", Courier, monospace;
+	font-family: Consolas, 'Courier New', Courier, monospace;
 }
 
 .codeblock {
@@ -90,7 +90,7 @@ img {
 	padding: 8px;
 	border: 2px solid;
 	border-radius: 5px;
-	font-family: Consolas, "Courier New", Courier, monospace;
+	font-family: Consolas, 'Courier New', Courier, monospace;
 }
 
 .emoji {

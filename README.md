@@ -24,20 +24,20 @@ DISCORD_TOKEN=Discord Bot Token
 
 ```yml
 # Bot Prefix
-prefix: ""
+prefix: ''
 
 # Default Locale
-defaultLocale: "pt-BR"
+defaultLocale: 'pt-BR'
 
 # Developers id list
 devs:
-    - "id"
-    - "id"
+    - 'id'
+    - 'id'
 
 # Clusters Name
 clustersName:
-    0: "Cluster 1"
-    1: "Cluster 2"
+    0: 'Cluster 1'
+    1: 'Cluster 2'
 
 # Database Config
 firebaseConfigGuilds:

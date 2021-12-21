@@ -1,25 +1,13 @@
-const _client = require("../Lunary.js");
-const SubCommand = require("./SubCommand.js");
-const Discord = require("../lib");
-const utils = require("../utils/index.js");
+const _client = require('../Lunary.js');
+const SubCommand = require('./SubCommand.js');
+const Discord = require('../lib');
+const utils = require('../utils/index.js');
 
 module.exports = class Command {
 	/**
 	 * @param {_client} client
 	 */
-	constructor(
-		{
-			name = null,
-			aliases = null,
-			dirname = null,
-			subcommands = [],
-			permissions = {},
-			baseCommand = false,
-			premium_type = null,
-			dm,
-		},
-		client
-	) {
+	constructor({ name = null, aliases = null, dirname = null, subcommands = [], permissions = {}, baseCommand = false, premium_type = null, dm }, client) {
 		this.client = client;
 
 		/**
@@ -83,10 +71,8 @@ module.exports = class Command {
 		if (user instanceof Discord.GuildMember) user = user.user;
 
 		const embed = new Discord.MessageEmbed()
-			.setDescription(
-				`**${global.emojis.get("nop").mention} • ${description}**`
-			)
-			.setColor("#FF0000")
+			.setDescription(`**${global.emojis.get('nop').mention} • ${description}**`)
+			.setColor('#FF0000')
 			.setTimestamp();
 
 		if (user instanceof Discord.User) {
@@ -94,9 +80,9 @@ module.exports = class Command {
 				user.tag,
 				user.displayAvatarURL({
 					dynamic: true,
-					format: "png",
+					format: 'png',
 					size: 1024,
-				})
+				}),
 			);
 		}
 
@@ -118,17 +104,14 @@ module.exports = class Command {
 			},
 		};
 
-		if (this.permissions.me)
-			if (!me.permissions.has(this.permissions.me)) data.me.has = false;
+		if (this.permissions.me) if (!me.permissions.has(this.permissions.me)) data.me.has = false;
 
 		if (this.permissions.Discord) {
-			if (!member.permissions.has(this.permissions.Discord))
-				data.member.has = false;
+			if (!member.permissions.has(this.permissions.Discord)) data.member.has = false;
 		}
 
 		if (this.permissions.Bot && lunyPermissions && !data.member.has) {
-			if (lunyPermissions.has(this.permissions.Bot))
-				data.member.has = true;
+			if (lunyPermissions.has(this.permissions.Bot)) data.member.has = true;
 		}
 
 		return data;

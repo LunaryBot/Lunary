@@ -1,17 +1,17 @@
-const { isObject } = require("./Utils");
+const { isObject } = require('./Utils');
 
-const isUnsafeKey = (key) => {
-	return key === "__proto__" || key === "constructor" || key === "prototype";
+const isUnsafeKey = key => {
+	return key === '__proto__' || key === 'constructor' || key === 'prototype';
 };
 
-const validateKey = (key) => {
+const validateKey = key => {
 	if (isUnsafeKey(key)) {
 		throw new Error(`Cannot set unsafe key: "${key}"`);
 	}
 };
 
-const toString = (input) => {
-	return Array.isArray(input) ? input.flat().map(String).join(",") : input;
+const toString = input => {
+	return Array.isArray(input) ? input.flat().map(String).join(',') : input;
 };
 
 const memoize = (input, fn) => {
@@ -23,35 +23,30 @@ const memoize = (input, fn) => {
 	return val;
 };
 
-const isNumber = (value) => {
-	if (value.trim() !== "") {
+const isNumber = value => {
+	if (value.trim() !== '') {
 		const number = Number(value);
 		return { is: Number.isInteger(number), number };
 	}
 	return { is: false };
 };
 
-const splitString = (input, sep = "/") => {
-	if (typeof input === "symbol") {
+const splitString = (input, sep = '/') => {
+	if (typeof input === 'symbol') {
 		return [input];
 	}
 
 	const keys = Array.isArray(input) ? input : input.split(sep);
 
-	if (typeof input === "string" && sep != "/" && /\//.test(input)) {
+	if (typeof input === 'string' && sep != '/' && /\//.test(input)) {
 		return [input];
 	}
 
 	for (let i = 0; i < keys.length; i++) {
-		if (typeof keys[i] !== "string") break;
+		if (typeof keys[i] !== 'string') break;
 		const { is, number } = isNumber(keys[i]);
 
-		while (
-			keys[i] &&
-			i < keys.length &&
-			keys[i].endsWith("\\") &&
-			typeof keys[i + 1] === "string"
-		) {
+		while (keys[i] && i < keys.length && keys[i].endsWith('\\') && typeof keys[i + 1] === 'string') {
 			keys[i] = keys[i].slice(0, -1) + sep + keys.splice(i + 1, 1);
 		}
 	}

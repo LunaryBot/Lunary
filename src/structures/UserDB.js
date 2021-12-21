@@ -1,6 +1,6 @@
-const { User } = require("../lib");
-const { Permissions } = require("./BotPermissions.js");
-const BitField = require("./BitField.js");
+const { User } = require('../lib');
+const { Permissions } = require('./BotPermissions.js');
+const BitField = require('./BitField.js');
 
 class UserDB {
 	/**
@@ -11,27 +11,16 @@ class UserDB {
 	 */
 	constructor(data = {}, user, perms) {
 		this.user = user;
-		this.aboutme =
-			data.aboutme ||
-			`Olá eu sou ${user.username} e estou no mundo da lua, #ModereaçãoLunática`;
-		this.background = data.background || "default";
-		this.design = data.design || "DEFAULT_BLACK_DESIGN";
+		this.aboutme = data.aboutme || `Olá eu sou ${user.username} e estou no mundo da lua, #ModereaçãoLunática`;
+		this.background = data.background || 'default';
+		this.design = data.design || 'DEFAULT_BLACK_DESIGN';
 		this.configs = new UserConfigs(data.configs || 0);
 		this.gifs = data.gifs || {};
 		this.xp = Number(data.xp || 0);
 		this.luas = Number(data.luas || 0);
 		this.emblem = data.emblem;
-		this.lastPunishmentApplied = data.lastPunishmentApplied
-			? JSON.parse(
-					Buffer.from(data.lastPunishmentApplied, "base64").toString(
-						"ascii"
-					)
-			  )
-			: null;
-		if (this.lastPunishmentApplied)
-			this.lastPunishmentApplied.reason = decodeURIComponent(
-				this.lastPunishmentApplied.reason
-			);
+		this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null;
+		if (this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason);
 		this.bans = data.bans || 0;
 		if (perms) this.permissions = perms;
 	}

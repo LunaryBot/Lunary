@@ -1,6 +1,6 @@
-const { Collection } = require("../lib");
-const { Permissions } = require("./BotPermissions.js");
-const BitField = require("./BitField.js");
+const { Collection } = require('../lib');
+const { Permissions } = require('./BotPermissions.js');
+const BitField = require('./BitField.js');
 
 class GuildDB {
 	constructor(data = {}) {
@@ -22,11 +22,9 @@ class GuildDB {
 		this.premium_type = data.premium_type || null;
 		this.premium_started = data.premium_started || null;
 		this.premium_duration = data.premium_duration || null;
-		this.premium_expire = this.premium_type
-			? this.premium_started + this.premium_duration
-			: null;
+		this.premium_expire = this.premium_type ? this.premium_started + this.premium_duration : null;
 
-		if (typeof data.permissions == "object") {
+		if (typeof data.permissions == 'object') {
 			Object.entries(data.permissions || {}).forEach(([key, value]) => {
 				this.permissions.set(key, new Permissions(value));
 			});

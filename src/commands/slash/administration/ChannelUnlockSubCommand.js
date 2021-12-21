@@ -1,21 +1,21 @@
-const SubCommand = require("../../../structures/SubCommand.js");
-const ContextCommand = require("../../../structures/ContextCommand.js");
-const Discord = require("../../../lib");
+const SubCommand = require('../../../structures/SubCommand.js');
+const ContextCommand = require('../../../structures/ContextCommand.js');
+const Discord = require('../../../lib');
 
 module.exports = class ChannelUnlockSubCommand extends SubCommand {
 	constructor(client, mainCommand) {
 		super(
 			{
-				name: "unlock",
+				name: 'unlock',
 				dirname: __dirname,
 				dm: null,
 				permissons: {
-					Discord: ["MANAGE_MESSAGES"],
-					Bot: ["MANAGE_CHANNELS"],
+					Discord: ['MANAGE_MESSAGES'],
+					Bot: ['MANAGE_CHANNELS'],
 				},
 			},
 			mainCommand,
-			client
+			client,
 		);
 	}
 
@@ -25,36 +25,25 @@ module.exports = class ChannelUnlockSubCommand extends SubCommand {
 
 	async run(ctx) {
 		ctx.interaction.deferReply().catch(() => {});
-		const channel =
-			ctx.interaction.options.getChannel("channel") || ctx.channel;
+		const channel = ctx.interaction.options.getChannel('channel') || ctx.channel;
 
 		if (channel.isVoice())
-			if (channel.permissionsFor(ctx.guild.roles.everyone).has("CONNECT"))
+			if (channel.permissionsFor(ctx.guild.roles.everyone).has('CONNECT'))
 				return ctx.interaction
 					.followUp({
-						content: ctx.t(
-							"channel_unlock:texts.channelNotLocked",
-							{
-								channel: channel.toString(),
-							}
-						),
+						content: ctx.t('channel_unlock:texts.channelNotLocked', {
+							channel: channel.toString(),
+						}),
 					})
 					.catch(() => {});
 
 		if (channel.isText())
-			if (
-				channel
-					.permissionsFor(ctx.guild.roles.everyone)
-					.has("SEND_MESSAGES")
-			)
+			if (channel.permissionsFor(ctx.guild.roles.everyone).has('SEND_MESSAGES'))
 				return ctx.interaction
 					.followUp({
-						content: ctx.t(
-							"channel_unlock:texts.channelNotLocked",
-							{
-								channel: channel.toString(),
-							}
-						),
+						content: ctx.t('channel_unlock:texts.channelNotLocked', {
+							channel: channel.toString(),
+						}),
 					})
 					.catch(() => {});
 
@@ -70,12 +59,12 @@ module.exports = class ChannelUnlockSubCommand extends SubCommand {
 			.followUp({
 				embeds: [
 					new Discord.MessageEmbed()
-						.setColor("#A020F0")
-						.setTitle(ctx.t("channel_unlock:texts.title"))
+						.setColor('#A020F0')
+						.setTitle(ctx.t('channel_unlock:texts.title'))
 						.setDescription(
-							ctx.t("channel_unlock:texts.description", {
+							ctx.t('channel_unlock:texts.description', {
 								channel: channel.toString(),
-							})
+							}),
 						),
 				],
 			})

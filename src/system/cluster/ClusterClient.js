@@ -1,4 +1,4 @@
-const Discord = require("../../lib");
+const Discord = require('../../lib');
 const { Events } = Discord.Constants;
 const Util = Discord.Util;
 class ClusterClient {
@@ -8,27 +8,27 @@ class ClusterClient {
 		mode = this.mode;
 		this.parentPort = null;
 
-		if (mode === "process") {
-			process.on("message", this._handleMessage.bind(this));
-			client.on("ready", () => {
+		if (mode === 'process') {
+			process.on('message', this._handleMessage.bind(this));
+			client.on('ready', () => {
 				process.send({ _ready: true });
 			});
-			client.on("disconnect", () => {
+			client.on('disconnect', () => {
 				process.send({ _disconnect: true });
 			});
-			client.on("reconnecting", () => {
+			client.on('reconnecting', () => {
 				process.send({ _reconnecting: true });
 			});
-		} else if (mode === "worker") {
-			this.parentPort = require("worker_threads").parentPort;
-			this.parentPort.on("message", this._handleMessage.bind(this));
-			client.on("ready", () => {
+		} else if (mode === 'worker') {
+			this.parentPort = require('worker_threads').parentPort;
+			this.parentPort.on('message', this._handleMessage.bind(this));
+			client.on('ready', () => {
 				this.parentPort.postMessage({ _ready: true });
 			});
-			client.on("disconnect", () => {
+			client.on('disconnect', () => {
 				this.parentPort.postMessage({ _disconnect: true });
 			});
-			client.on("reconnecting", () => {
+			client.on('reconnecting', () => {
 				this.parentPort.postMessage({ _reconnecting: true });
 			});
 		}
@@ -49,15 +49,12 @@ class ClusterClient {
 	get info() {
 		let clustermode = process.env.CLUSTER_MANAGER_MODE;
 		if (!clustermode) return;
-		if (clustermode !== "worker" && clustermode !== "process")
-			throw new Error(
-				"NO CHILD/MASTER EXISTS OR SUPPLIED CLUSTER_MANAGER_MODE IS INCORRECT"
-			);
+		if (clustermode !== 'worker' && clustermode !== 'process') throw new Error('NO CHILD/MASTER EXISTS OR SUPPLIED CLUSTER_MANAGER_MODE IS INCORRECT');
 		let data;
-		if (clustermode === "process") {
+		if (clustermode === 'process') {
 			const shardlist = [];
-			let parseshardlist = process.env.SHARD_LIST.split(",");
-			parseshardlist.forEach((c) => shardlist.push(Number(c)));
+			let parseshardlist = process.env.SHARD_LIST.split(',');
+			parseshardlist.forEach(c => shardlist.push(Number(c)));
 			data = {
 				SHARD_LIST: shardlist,
 				TOTAL_SHARDS: Number(process.env.TOTAL_SHARDS),
@@ -66,19 +63,19 @@ class ClusterClient {
 				CLUSTER_MANAGER_MODE: clustermode,
 			};
 		} else {
-			data = require("worker_threads").workerData;
+			data = require('worker_threads').workerData;
 		}
 		return data;
 	}
 
 	send(message) {
 		return new Promise((resolve, reject) => {
-			if (this.mode === "process") {
-				process.send(message, (err) => {
+			if (this.mode === 'process') {
+				process.send(message, err => {
 					if (err) reject(err);
 					else resolve();
 				});
-			} else if (this.mode === "worker") {
+			} else if (this.mode === 'worker') {
 				this.parentPort.postMessage(message);
 				resolve();
 			}
@@ -99,25 +96,18 @@ class ClusterClient {
 		return new Promise((resolve, reject) => {
 			const parent = this.parentPort || process;
 
-			const listener = (message) => {
-				if (
-					!message ||
-					message._sFetchProp !== prop ||
-					message._sFetchPropShard !== shard
-				)
-					return;
-				parent.removeListener("message", listener);
+			const listener = message => {
+				if (!message || message._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
+				parent.removeListener('message', listener);
 				if (!message._error) resolve(message._result);
 				else reject(Util.makeError(message._error));
 			};
-			parent.on("message", listener);
+			parent.on('message', listener);
 
-			this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch(
-				(err) => {
-					parent.removeListener("message", listener);
-					reject(err);
-				}
-			);
+			this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch(err => {
+				parent.removeListener('message', listener);
+				reject(err);
+			});
 		});
 	}
 
@@ -135,24 +125,18 @@ class ClusterClient {
 	broadcastEval(script, cluster) {
 		return new Promise((resolve, reject) => {
 			const parent = this.parentPort || process;
-			script =
-				typeof script === "function" ? `(${script})(this)` : script;
+			script = typeof script === 'function' ? `(${script})(this)` : script;
 
-			const listener = (message) => {
-				if (
-					!message ||
-					message._sEval !== script ||
-					message._sEvalShard !== cluster
-				)
-					return;
-				parent.removeListener("message", listener);
+			const listener = message => {
+				if (!message || message._sEval !== script || message._sEvalShard !== cluster) return;
+				parent.removeListener('message', listener);
 				if (!message._error) resolve(message._result);
 				else reject(Util.makeError(message._error));
 			};
-			parent.on("message", listener);
+			parent.on('message', listener);
 
-			this.send({ _sEval: script, _sEvalShard: cluster }).catch((err) => {
-				parent.removeListener("message", listener);
+			this.send({ _sEval: script, _sEvalShard: cluster }).catch(err => {
+				parent.removeListener('message', listener);
 				reject(err);
 			});
 		});
@@ -167,21 +151,21 @@ class ClusterClient {
 	async _handleMessage(message) {
 		if (!message) return;
 		if (message._fetchProp) {
-			const props = message._fetchProp.split(".");
+			const props = message._fetchProp.split('.');
 			let value = this.client;
 			for (const prop of props) value = value[prop];
-			this._respond("fetchProp", {
+			this._respond('fetchProp', {
 				_fetchProp: message._fetchProp,
 				_result: value,
 			});
 		} else if (message._eval) {
 			try {
-				this._respond("eval", {
+				this._respond('eval', {
 					_eval: message._eval,
 					_result: await this.client._eval(message._eval),
 				});
 			} catch (err) {
-				this._respond("eval", {
+				this._respond('eval', {
 					_eval: message._eval,
 					_error: Util.makePlainError(err),
 				});
@@ -190,7 +174,7 @@ class ClusterClient {
 	}
 
 	_respond(type, message) {
-		this.send(message).catch((err) => {
+		this.send(message).catch(err => {
 			let error = { err };
 
 			error.message = `Error when sending ${type} response to master process: ${err.message}`;
@@ -202,10 +186,7 @@ class ClusterClient {
 		if (!this._singleton) {
 			this._singleton = new this(client, mode);
 		} else {
-			client.emit(
-				Events.WARN,
-				"Multiple clients created in child process/worker; only the first will handle clustering helpers."
-			);
+			client.emit(Events.WARN, 'Multiple clients created in child process/worker; only the first will handle clustering helpers.');
 		}
 		return this._singleton;
 	}
@@ -213,15 +194,12 @@ class ClusterClient {
 	static getinfo() {
 		let clustermode = process.env.CLUSTER_MANAGER_MODE;
 		if (!clustermode) return;
-		if (clustermode !== "worker" && clustermode !== "process")
-			throw new Error(
-				"NO CHILD/MASTER EXISTS OR SUPPLIED CLUSTER_MANAGER_MODE IS INCORRECT"
-			);
+		if (clustermode !== 'worker' && clustermode !== 'process') throw new Error('NO CHILD/MASTER EXISTS OR SUPPLIED CLUSTER_MANAGER_MODE IS INCORRECT');
 		let data;
-		if (clustermode === "process") {
+		if (clustermode === 'process') {
 			const shardlist = [];
-			let parseshardlist = process.env.SHARD_LIST.split(",");
-			parseshardlist.forEach((c) => shardlist.push(Number(c)));
+			let parseshardlist = process.env.SHARD_LIST.split(',');
+			parseshardlist.forEach(c => shardlist.push(Number(c)));
 			data = {
 				SHARD_LIST: shardlist,
 				TOTAL_SHARDS: Number(process.env.TOTAL_SHARDS),
@@ -230,7 +208,7 @@ class ClusterClient {
 				CLUSTER_MANAGER_MODE: clustermode,
 			};
 		} else {
-			data = require("worker_threads").workerData;
+			data = require('worker_threads').workerData;
 		}
 		return data;
 	}

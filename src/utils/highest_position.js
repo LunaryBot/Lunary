@@ -1,4 +1,4 @@
-const { GuildMember } = require("../lib");
+const { GuildMember } = require('../lib');
 
 /**
  * @param {GuildMember} member1
@@ -6,9 +6,7 @@ const { GuildMember } = require("../lib");
  */
 module.exports = function highest_position(member1, member2) {
 	const ownerID = member1.guild.ownerId;
-	const a =
-		member1.roles.highest.position > member2.roles.highest.position &&
-		member2.id != ownerID;
+	const a = member1.roles.highest.position > member2.roles.highest.position && member2.id != ownerID;
 
 	return member1.id == ownerID || a;
 };

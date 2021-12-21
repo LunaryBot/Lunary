@@ -1,5 +1,5 @@
-const { EventEmitter } = require("events");
-const { client } = require("../Lunary.js");
+const { EventEmitter } = require('events');
+const { client } = require('../Lunary.js');
 
 module.exports = class CollectorBase extends EventEmitter {
 	/**
@@ -19,8 +19,8 @@ module.exports = class CollectorBase extends EventEmitter {
 	stopAll() {
 		if (this.ended != true) {
 			this.ended = true;
-			this.emit("ended", this.ended, this.error);
-			this.emit("end", this.collectedSize, this.collected);
+			this.emit('ended', this.ended, this.error);
+			this.emit('end', this.collectedSize, this.collected);
 		}
 	}
 

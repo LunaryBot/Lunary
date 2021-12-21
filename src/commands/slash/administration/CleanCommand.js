@@ -1,19 +1,19 @@
-const Command = require("../../../structures/Command.js");
-const ContextCommand = require("../../../structures/ContextCommand.js");
-const Discord = require("../../../lib");
+const Command = require('../../../structures/Command.js');
+const ContextCommand = require('../../../structures/ContextCommand.js');
+const Discord = require('../../../lib');
 
 module.exports = class CleanCommand extends Command {
 	constructor(client) {
 		super(
 			{
-				name: "clean",
+				name: 'clean',
 				dirname: __dirname,
 				permissions: {
-					Discord: ["MANAGE_MESSAGES"],
-					me: ["MANAGE_MESSAGES"],
+					Discord: ['MANAGE_MESSAGES'],
+					me: ['MANAGE_MESSAGES'],
 				},
 			},
-			client
+			client,
 		);
 	}
 
@@ -24,22 +24,15 @@ module.exports = class CleanCommand extends Command {
 	async run(ctx) {
 		ctx.interaction.deferReply({ ephemeral: true }).catch(() => {});
 
-		const amount = Math.floor(ctx.interaction.options.getNumber("amount"));
+		const amount = Math.floor(ctx.interaction.options.getNumber('amount'));
 		if (!amount || isNaN(amount) || amount > 500 || amount < 2)
 			return ctx.interaction
 				.followUp({
-					embeds: [
-						this.sendError(
-							ctx.t("clean:texts.invalidAmount"),
-							ctx.author
-						),
-					],
+					embeds: [this.sendError(ctx.t('clean:texts.invalidAmount'), ctx.author)],
 				})
 				.catch(() => {});
 
-		const userID = ctx.interaction.options
-			.getString("user")
-			?.replace(/<@!?(\d{17,19})>/, "$1");
+		const userID = ctx.interaction.options.getString('user')?.replace(/<@!?(\d{17,19})>/, '$1');
 
 		let deletes = 0;
 		let _amount = amount;
@@ -57,16 +50,8 @@ module.exports = class CleanCommand extends Command {
 				limit: ss,
 			});
 
-			msgs = msgs.filter(
-				(msg) =>
-					Date.now() - msg.createdTimestamp <
-						14 * 1000 * 60 * 60 * 24 &&
-					!msg.pinned &&
-					(userID ? userID == msg.author.id : true)
-			);
-			const messagesD = await ctx.channel
-				.bulkDelete(msgs)
-				.catch(() => {});
+			msgs = msgs.filter(msg => Date.now() - msg.createdTimestamp < 14 * 1000 * 60 * 60 * 24 && !msg.pinned && (userID ? userID == msg.author.id : true));
+			const messagesD = await ctx.channel.bulkDelete(msgs).catch(() => {});
 			deletes += messagesD.size || 0;
 			if (ss != messagesD.size) break;
 		}
@@ -74,28 +59,23 @@ module.exports = class CleanCommand extends Command {
 		if (deletes == 0)
 			return ctx.interaction
 				.followUp({
-					embeds: [
-						this.sendError(
-							ctx.t("clean:texts.noMessagesFound"),
-							ctx.author
-						),
-					],
+					embeds: [this.sendError(ctx.t('clean:texts.noMessagesFound'), ctx.author)],
 				})
 				.catch(() => {});
 
 		ctx.interaction
 			.followUp({
-				content: `${ctx.t("clean:texts.messagesDelete", {
+				content: `${ctx.t('clean:texts.messagesDelete', {
 					channel: ctx.channel.toString(),
 					size: deletes,
 				})}${
 					deletes != amount
-						? "\n" +
-						  ctx.t("clean:texts.faliedDeletingMessages", {
+						? '\n' +
+						  ctx.t('clean:texts.faliedDeletingMessages', {
 								size: amount - deletes,
 						  }) +
-						  " :woman_shrugging:"
-						: ""
+						  ' :woman_shrugging:'
+						: ''
 				}`,
 			})
 			.catch(() => {});

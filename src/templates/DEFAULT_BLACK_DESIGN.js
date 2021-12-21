@@ -1,14 +1,14 @@
-const { loadImage, createCanvas } = require("node-canvas");
-const { UserFlags } = require("../lib");
-const ContextCommand = require("../structures/ContextCommand");
-const Template = require("../structures/Template");
-const { UserDB } = require("../structures/UserDB");
-const Sydb = require("sydb");
-const profileDB = new Sydb(__dirname + "/../data/profile");
+const { loadImage, createCanvas } = require('node-canvas');
+const { UserFlags } = require('../lib');
+const ContextCommand = require('../structures/ContextCommand');
+const Template = require('../structures/Template');
+const { UserDB } = require('../structures/UserDB');
+const Sydb = require('sydb');
+const profileDB = new Sydb(__dirname + '/../data/profile');
 
 module.exports = class DefaultBlackDesign extends Template {
 	constructor(client) {
-		super(client, { name: "DEFAULT_BLACK_DESIGN", dirname: __dirname });
+		super(client, { name: 'DEFAULT_BLACK_DESIGN', dirname: __dirname });
 	}
 
 	/**
@@ -27,29 +27,15 @@ module.exports = class DefaultBlackDesign extends Template {
 	 * luas: number
 	 * }}
 	 */
-	async build({
-		avatar,
-		username,
-		leftBackgroundName = "left_discord_background",
-		backgroundName = "default",
-		bio = "#ModeraçãoLunatica",
-		flags,
-		emblem,
-		rankPosition = "N/A",
-		xp = 0,
-		bans = 0,
-		luas = 0,
-	}) {
+	async build({ avatar, username, leftBackgroundName = 'left_discord_background', backgroundName = 'default', bio = '#ModeraçãoLunatica', flags, emblem, rankPosition = 'N/A', xp = 0, bans = 0, luas = 0 }) {
 		const canvas = createCanvas(800, 600);
-		const ctxCanvas = canvas.getContext("2d");
+		const ctxCanvas = canvas.getContext('2d');
 
 		const leftBackground =
-			this.client.imagesCanvas.get("left_discord_background") ||
+			this.client.imagesCanvas.get('left_discord_background') ||
 			(await (async () => {
-				const img = await loadImage(
-					"https://media.discordapp.net/attachments/880176654801059860/895718801163812894/unknown.png?width=271&height=498"
-				);
-				this.client.imagesCanvas.set("left_discord_background", img);
+				const img = await loadImage('https://media.discordapp.net/attachments/880176654801059860/895718801163812894/unknown.png?width=271&height=498');
+				this.client.imagesCanvas.set('left_discord_background', img);
 				return img;
 			})());
 
@@ -57,10 +43,7 @@ module.exports = class DefaultBlackDesign extends Template {
 			return (
 				this.client.imagesCanvas.get(backgroundName) ||
 				(await (async () => {
-					const img = await loadImage(
-						profileDB.ref(`backgrounds/${backgroundName}`).val() ||
-							profileDB.ref(`backgrounds/default`).val()
-					);
+					const img = await loadImage(profileDB.ref(`backgrounds/${backgroundName}`).val() || profileDB.ref(`backgrounds/default`).val());
 					this.client.imagesCanvas.set(backgroundName, img);
 
 					return img;
@@ -72,7 +55,7 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.drawImage(background, 300, 65, 475, 250);
 
 		// left card
-		ctxCanvas.fillStyle = "rgba(255,255,255,1)";
+		ctxCanvas.fillStyle = 'rgba(255,255,255,1)';
 		ctxCanvas.beginPath();
 		ctxCanvas.moveTo(0, 65);
 		ctxCanvas.lineTo(0, 535);
@@ -103,22 +86,22 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.lineTo(300, 585);
 		ctxCanvas.lineTo(50, 585);
 		ctxCanvas.arcTo(0, 585, 0, 535, 50);
-		ctxCanvas.fillStyle = "#A020F0";
+		ctxCanvas.fillStyle = '#A020F0';
 		ctxCanvas.fill();
 		ctxCanvas.shadowBlur = 0;
 
 		//add username
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 30px sans-serif";
-		ctxCanvas.fillStyle = "#ffffff";
-		ctxCanvas.textAlign = "center";
+		ctxCanvas.font = 'bold 30px sans-serif';
+		ctxCanvas.fillStyle = '#ffffff';
+		ctxCanvas.textAlign = 'center';
 		ctxCanvas.fillText(username, 150, 350, 280);
 
 		//add avatar
 		ctxCanvas.beginPath();
 		ctxCanvas.arc(150, 225, 75, 0, Math.PI * 2);
 		ctxCanvas.lineWidth = 6;
-		ctxCanvas.strokeStyle = "rgba(255,255,255,0.6)";
+		ctxCanvas.strokeStyle = 'rgba(255,255,255,0.6)';
 		ctxCanvas.stroke();
 		ctxCanvas.closePath();
 		ctxCanvas.save();
@@ -145,8 +128,8 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.lineTo(canvas.width - 5, 315);
 		ctxCanvas.lineTo(canvas.width - 5, canvas.height - 25);
 		ctxCanvas.lineTo(300, canvas.height - 20);
-		ctxCanvas.fillStyle = "#e7e7e7";
-		ctxCanvas.shadowColor = "rgba(0,0,0,0.5)";
+		ctxCanvas.fillStyle = '#e7e7e7';
+		ctxCanvas.shadowColor = 'rgba(0,0,0,0.5)';
 		ctxCanvas.shadowBlur = 40;
 		ctxCanvas.shadowOffsetX = -10;
 		ctxCanvas.shadowOffsetY = -40;
@@ -159,7 +142,7 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.lineTo(575, 10);
 		ctxCanvas.lineTo(600, 80);
 		ctxCanvas.lineTo(800, 80);
-		ctxCanvas.fillStyle = "rgba(255,255,255,0.3)";
+		ctxCanvas.fillStyle = 'rgba(255,255,255,0.3)';
 		ctxCanvas.shadowBlur = 30;
 		ctxCanvas.shadowOffsetX = 0;
 		ctxCanvas.shadowOffsetY = 30;
@@ -167,77 +150,71 @@ module.exports = class DefaultBlackDesign extends Template {
 
 		//luas title
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 30px sans-serif";
-		ctxCanvas.fillStyle = "rgba(255,255,255,0.8)";
-		ctxCanvas.textAlign = "left";
-		ctxCanvas.fillText("Luas", 610, 40, 50);
+		ctxCanvas.font = 'bold 30px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(255,255,255,0.8)';
+		ctxCanvas.textAlign = 'left';
+		ctxCanvas.fillText('Luas', 610, 40, 50);
 
 		//luas amount
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 30px sans-serif";
-		ctxCanvas.textAlign = "left";
+		ctxCanvas.font = 'bold 30px sans-serif';
+		ctxCanvas.textAlign = 'left';
 		ctxCanvas.fillText(luas, 613, 68, 140);
 
 		// xp
 		ctxCanvas.arc(60, 460, 35, 0, Math.PI * 2);
 		ctxCanvas.lineWidth = 10;
-		ctxCanvas.strokeStyle = "rgba(0,0,0,0.4)";
+		ctxCanvas.strokeStyle = 'rgba(0,0,0,0.4)';
 		ctxCanvas.stroke();
 
 		ctxCanvas.beginPath();
 		const a = xp / 1000;
 
-		ctxCanvas.arc(
-			60,
-			460,
-			35,
-			Math.PI * 1.5,
-			Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 0)
-		);
-		ctxCanvas.strokeStyle = "#ffffff";
+		ctxCanvas.arc(60, 460, 35, Math.PI * 1.5, Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 0));
+		ctxCanvas.strokeStyle = '#ffffff';
 		ctxCanvas.stroke();
 
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 25px sans-serif";
-		ctxCanvas.fillStyle = "#ffffff";
-		ctxCanvas.textAlign = "center";
-		ctxCanvas.fillText(a.toFixed(0) || "0", 60, 460, 35);
+		ctxCanvas.font = 'bold 25px sans-serif';
+		ctxCanvas.fillStyle = '#ffffff';
+		ctxCanvas.textAlign = 'center';
+		ctxCanvas.fillText(a.toFixed(0) || '0', 60, 460, 35);
 
-		ctxCanvas.font = "bold 20px sans-serif";
-		ctxCanvas.textAlign = "center";
-		ctxCanvas.fillText("LEVEL", 60, 480, 35);
+		ctxCanvas.font = 'bold 20px sans-serif';
+		ctxCanvas.textAlign = 'center';
+		ctxCanvas.fillText('LEVEL', 60, 480, 35);
 
-		ctxCanvas.font = "bold 20px sans-serif";
-		ctxCanvas.textAlign = "center";
-		ctxCanvas.fillText("MOD", 60, 410, 70);
+		ctxCanvas.font = 'bold 20px sans-serif';
+		ctxCanvas.textAlign = 'center';
+		ctxCanvas.fillText('MOD', 60, 410, 70);
 
 		ctxCanvas.beginPath();
 		ctxCanvas.arc(150, 460, 40, 0, Math.PI * 2);
-		ctxCanvas.fillStyle = "#ffffff";
+		ctxCanvas.fillStyle = '#ffffff';
 		ctxCanvas.fill();
 
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 25px sans-serif";
-		ctxCanvas.fillStyle = "rgba(0,0,0,0.7)";
-		ctxCanvas.textAlign = "center";
+		ctxCanvas.font = 'bold 25px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(0,0,0,0.7)';
+		ctxCanvas.textAlign = 'center';
 		ctxCanvas.fillText(rankPosition, 150, 460, 50);
-		ctxCanvas.font = "bold 20px sans-serif";
-		ctxCanvas.textAlign = "center";
-		ctxCanvas.fillText("RANK", 150, 480, 50);
+		ctxCanvas.font = 'bold 20px sans-serif';
+		ctxCanvas.textAlign = 'center';
+		ctxCanvas.fillText('RANK', 150, 480, 50);
 
 		ctxCanvas.beginPath();
 		ctxCanvas.arc(240, 460, 40, 0, Math.PI * 2);
-		ctxCanvas.fillStyle = "#ffffff";
+		ctxCanvas.fillStyle = '#ffffff';
 		ctxCanvas.fill();
 
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 25px sans-serif";
-		ctxCanvas.fillStyle = "rgba(0,0,0,0.7)";
-		ctxCanvas.textAlign = "center";
+		ctxCanvas.font = 'bold 25px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(0,0,0,0.7)';
+		ctxCanvas.textAlign = 'center';
 		ctxCanvas.fillText(bans, 240, 460, 50);
-		ctxCanvas.font = "bold 20px sans-serif";
-		ctxCanvas.textAlign = "center";
-		ctxCanvas.fillText("BANS", 240, 480, 50);
+		ctxCanvas.font = 'bold 20px sans-serif';
+		ctxCanvas.textAlign = 'center';
+		ctxCanvas.fillText('BANS', 240, 480, 50);
 
 		// add bio line
 		ctxCanvas.beginPath();
@@ -251,28 +228,28 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.lineTo(310, 358);
 		ctxCanvas.arcTo(310, 338, 330, 338, 20);
 		ctxCanvas.lineWidth = 1;
-		ctxCanvas.strokeStyle = "rgba(255,255,255,0.4)";
+		ctxCanvas.strokeStyle = 'rgba(255,255,255,0.4)';
 		ctxCanvas.stroke();
 
 		// add bio title
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 20px sans-serif";
-		ctxCanvas.fillStyle = "rgba(255,255,255,0.4)";
-		ctxCanvas.fillText("BIO", 350, 345, 50);
+		ctxCanvas.font = 'bold 20px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)';
+		ctxCanvas.fillText('BIO', 350, 345, 50);
 		// add bio text
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 23px sans-serif";
-		ctxCanvas.fillStyle = "rgba(255,255,255,0.4)";
-		ctxCanvas.textAlign = "center";
+		ctxCanvas.font = 'bold 23px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)';
+		ctxCanvas.textAlign = 'center';
 		ctxCanvas.fillText(wordWrap(bio.shorten(200), 50), 545, 368, 460);
 		// Emblema
 		if (!emblem) {
 			ctxCanvas.beginPath();
-			ctxCanvas.fillStyle = "rgba(255,255,255,0.4)";
-			ctxCanvas.font = "bold 25px sans-serif";
-			ctxCanvas.textAlign = "center";
-			ctxCanvas.fillText("NO", 680, 490, 150);
-			ctxCanvas.fillText("EMBLEM", 685, 530, 150);
+			ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)';
+			ctxCanvas.font = 'bold 25px sans-serif';
+			ctxCanvas.textAlign = 'center';
+			ctxCanvas.fillText('NO', 680, 490, 150);
+			ctxCanvas.fillText('EMBLEM', 685, 530, 150);
 		} else {
 			const emblemImage = await (async () => {
 				return (
@@ -307,18 +284,16 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.stroke();
 
 		ctxCanvas.beginPath();
-		ctxCanvas.font = "bold 18px sans-serif";
-		ctxCanvas.fillStyle = "rgba(255,255,255,0.4)";
-		ctxCanvas.fillText("BADGES", 370, 456, 80);
+		ctxCanvas.font = 'bold 18px sans-serif';
+		ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)';
+		ctxCanvas.fillText('BADGES', 370, 456, 80);
 		// Load badges images
 		let badgeX = 317;
 		let badgeY = 457;
-		flags = flags
-			.toArray()
-			.filter((x) => !["VERIFIED_BOT", "TEAM_USER"].includes(x));
+		flags = flags.toArray().filter(x => !['VERIFIED_BOT', 'TEAM_USER'].includes(x));
 		for (let i in flags) {
 			const flagName = flags[i];
-			const badge = await (async (image) => {
+			const badge = await (async image => {
 				return (
 					this.client.imagesCanvas.get(image) ||
 					(await (async () => {
@@ -344,21 +319,21 @@ module.exports = class DefaultBlackDesign extends Template {
 };
 
 function wordWrap(str, maxWidth) {
-	var newLineStr = "\n";
+	var newLineStr = '\n';
 	var done = false;
-	var res = "";
+	var res = '';
 	while (str.length > maxWidth) {
 		var found = false;
 		for (var i = maxWidth - 1; i >= 0; i--) {
 			if (testWhite(str.charAt(i))) {
-				res = res + [str.slice(0, i), newLineStr].join("");
+				res = res + [str.slice(0, i), newLineStr].join('');
 				str = str.slice(i + 1);
 				found = true;
 				break;
 			}
 		}
 		if (!found) {
-			res += [str.slice(0, maxWidth), newLineStr].join("");
+			res += [str.slice(0, maxWidth), newLineStr].join('');
 			str = str.slice(maxWidth);
 		}
 	}

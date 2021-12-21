@@ -4,10 +4,7 @@ class BitField {
 	}
 
 	any(bit) {
-		return (
-			(this.bitfield & this.constructor.resolve(bit)) !==
-			this.constructor.defaultBit
-		);
+		return (this.bitfield & this.constructor.resolve(bit)) !== this.constructor.defaultBit;
 	}
 
 	equals(bit) {
@@ -32,8 +29,7 @@ class BitField {
 		for (const bit of bits) {
 			total |= this.constructor.resolve(bit);
 		}
-		if (Object.isFrozen(this))
-			return new this.constructor(this.bitfield | total);
+		if (Object.isFrozen(this)) return new this.constructor(this.bitfield | total);
 		this.bitfield |= total;
 		return this;
 	}
@@ -43,29 +39,23 @@ class BitField {
 		for (const bit of bits) {
 			total |= this.constructor.resolve(bit);
 		}
-		if (Object.isFrozen(this))
-			return new this.constructor(this.bitfield & ~total);
+		if (Object.isFrozen(this)) return new this.constructor(this.bitfield & ~total);
 		this.bitfield &= ~total;
 		return this;
 	}
 
 	serialize(...hasParams) {
 		const serialized = {};
-		for (const [flag, bit] of Object.entries(this.constructor.FLAGS))
-			serialized[flag] = this.has(bit, ...hasParams);
+		for (const [flag, bit] of Object.entries(this.constructor.FLAGS)) serialized[flag] = this.has(bit, ...hasParams);
 		return serialized;
 	}
 
 	toArray(...hasParams) {
-		return Object.keys(this.constructor.FLAGS).filter((bit) =>
-			this.has(bit, ...hasParams)
-		);
+		return Object.keys(this.constructor.FLAGS).filter(bit => this.has(bit, ...hasParams));
 	}
 
 	toJSON() {
-		return typeof this.bitfield === "number"
-			? this.bitfield
-			: this.bitfield.toString();
+		return typeof this.bitfield === 'number' ? this.bitfield : this.bitfield.toString();
 	}
 
 	valueOf() {
@@ -80,13 +70,9 @@ class BitField {
 		const { defaultBit } = this;
 		if (typeof defaultBit === typeof bit && bit >= defaultBit) return bit;
 		if (bit instanceof BitField) return bit.bitfield;
-		if (Array.isArray(bit))
-			return bit
-				.map((p) => this.resolve(p))
-				.reduce((prev, p) => prev | p, defaultBit);
-		if (typeof bit === "string" && typeof this.FLAGS[bit] !== "undefined")
-			return this.FLAGS[bit];
-		throw new Error("BITFIELD_INVALID");
+		if (Array.isArray(bit)) return bit.map(p => this.resolve(p)).reduce((prev, p) => prev | p, defaultBit);
+		if (typeof bit === 'string' && typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit];
+		throw new Error('BITFIELD_INVALID');
 	}
 }
 

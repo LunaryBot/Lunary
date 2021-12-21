@@ -1,4 +1,4 @@
-const _client = require("../Lunary.js");
+const _client = require('../Lunary.js');
 
 module.exports = class Template {
 	/**

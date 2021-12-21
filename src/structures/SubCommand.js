@@ -1,27 +1,14 @@
-const _client = require("../Lunary.js");
-const Command = require("./Command.js");
-const Discord = require("../lib");
-const utils = require("../utils/index.js");
+const _client = require('../Lunary.js');
+const Command = require('./Command.js');
+const Discord = require('../lib');
+const utils = require('../utils/index.js');
 
 module.exports = class SubCommand {
 	/**
 	 * @param {_client} client
 	 * @param {Command} mainCommand
 	 */
-	constructor(
-		{
-			name = null,
-			description = null,
-			aliases = null,
-			dirname = null,
-			subcommands = [],
-			permissions = {},
-			dm,
-			premium_type = null,
-		},
-		mainCommand,
-		client
-	) {
+	constructor({ name = null, description = null, aliases = null, dirname = null, subcommands = [], permissions = {}, dm, premium_type = null }, mainCommand, client) {
 		this.client = client;
 
 		/**
@@ -97,17 +84,14 @@ module.exports = class SubCommand {
 			},
 		};
 
-		if (this.permissions.me)
-			if (!me.permissions.has(this.permissions.me)) data.me.has = false;
+		if (this.permissions.me) if (!me.permissions.has(this.permissions.me)) data.me.has = false;
 
 		if (this.permissions.Discord) {
-			if (!member.permissions.has(this.permissions.Discord))
-				data.member.has = false;
+			if (!member.permissions.has(this.permissions.Discord)) data.member.has = false;
 		}
 
 		if (this.permissions.Bot && lunyPermissions && !data.member.has) {
-			if (lunyPermissions.has(this.permissions.Bot))
-				data.member.has = true;
+			if (lunyPermissions.has(this.permissions.Bot)) data.member.has = true;
 		}
 
 		return data;
@@ -121,10 +105,8 @@ module.exports = class SubCommand {
 		if (user instanceof Discord.GuildMember) user = user.user;
 
 		const embed = new Discord.MessageEmbed()
-			.setDescription(
-				`**${global.emojis.get("nop").mention} • ${description}**`
-			)
-			.setColor("#FF0000")
+			.setDescription(`**${global.emojis.get('nop').mention} • ${description}**`)
+			.setColor('#FF0000')
 			.setTimestamp();
 
 		if (user instanceof Discord.User) {
@@ -132,9 +114,9 @@ module.exports = class SubCommand {
 				user.tag,
 				user.displayAvatarURL({
 					dynamic: true,
-					format: "png",
+					format: 'png',
 					size: 1024,
-				})
+				}),
 			);
 		}
 

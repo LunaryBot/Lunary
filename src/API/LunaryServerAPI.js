@@ -1,6 +1,6 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
-router.get("/guild/:id_guild", async (req, res) => {
+router.get('/guild/:id_guild', async (req, res) => {
 	const guildID = req.params.id_guild;
 	const data = await getGuild(guildID);
 	res.json(data);
@@ -32,27 +32,27 @@ async function getGuild(guildID) {
                 }
                 return data
             } else return null
-        })()`
+        })()`,
 			)
-			.then((x) => x.find((x) => x != null));
+			.then(x => x.find(x => x != null));
 		if (!guild)
 			return {
 				status: 404,
-				statusText: "Not Found",
+				statusText: 'Not Found',
 				data: null,
 				query: `Guild ${guildID}`,
 			};
 
 		return {
 			status: 200,
-			statusText: "OK",
+			statusText: 'OK',
 			data: guild,
 			query: `Guild ${guildID}`,
 		};
 	} catch (e) {
 		return {
 			status: 400,
-			statusText: "Internal Server Error",
+			statusText: 'Internal Server Error',
 			data: null,
 			query: `Guild ${guildID}`,
 		};

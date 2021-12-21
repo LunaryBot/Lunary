@@ -4,25 +4,25 @@ const {
 	Collection,
 	Constants: { InviteScopes },
 	Options,
-} = require("./lib");
-const ClusterClient = require("./system/cluster/ClusterClient.js");
-const ShardManager = require("./system/cluster/ShardManager.js");
-const Logger = require("./utils/logger.js");
-require("./functions/shorten.js");
+} = require('./lib');
+const ClusterClient = require('./system/cluster/ClusterClient.js');
+const ShardManager = require('./system/cluster/ShardManager.js');
+const Logger = require('./utils/logger.js');
+require('./functions/shorten.js');
 // require("./functions/emojis.js")
-require("./functions/removeAccents.js");
-const moment = require("moment");
-require("moment-duration-format");
-require("moment-timezone");
-const firebase = require("firebase");
-const Command = require("./structures/Command.js");
-const Event = require("./structures/Event.js");
-const Locale = require("./structures/Locale.js");
-global.emojis = require("./utils/emojisInstance.js");
-const { readFileSync } = require("fs");
-const { load } = require("js-yaml");
-const Template = require("./structures/Template");
-const config = load(readFileSync(__dirname + "/../config.yml", "utf8"));
+require('./functions/removeAccents.js');
+const moment = require('moment');
+require('moment-duration-format');
+require('moment-timezone');
+const firebase = require('firebase');
+const Command = require('./structures/Command.js');
+const Event = require('./structures/Event.js');
+const Locale = require('./structures/Locale.js');
+global.emojis = require('./utils/emojisInstance.js');
+const { readFileSync } = require('fs');
+const { load } = require('js-yaml');
+const Template = require('./structures/Template');
+const config = load(readFileSync(__dirname + '/../config.yml', 'utf8'));
 
 class Lunary extends Client {
 	constructor() {
@@ -32,7 +32,7 @@ class Lunary extends Client {
 			intents: 1719,
 			ws: {
 				properties: {
-					$browser: "Discord iOS",
+					$browser: 'Discord iOS',
 				},
 			},
 			makeCache: Options.cacheWithLimits({
@@ -58,24 +58,18 @@ class Lunary extends Client {
 		this.GuildsDB = firebase.database();
 		this.db = this.GuildsDB;
 
-		const UsersDB = firebase.initializeApp(
-			this.config.firebaseConfigUsers,
-			"users"
-		);
+		const UsersDB = firebase.initializeApp(this.config.firebaseConfigUsers, 'users');
 		this.UsersDB = UsersDB.database();
 
-		const LogsDB = firebase.initializeApp(
-			this.config.firebaseConfigLogs,
-			"logs"
-		);
+		const LogsDB = firebase.initializeApp(this.config.firebaseConfigLogs, 'logs');
 		this.LogsDB = LogsDB.database();
 
 		this.mutes = new Collection();
 		this.imagesCanvas = new Collection();
 
-		this.on("shardReconnecting", (shard) => {
+		this.on('shardReconnecting', shard => {
 			this.logger.log(`Client reconectado ao Discord!`, {
-				key: ["Client", `Shard ${shard}`],
+				key: ['Client', `Shard ${shard}`],
 				cluster: true,
 				date: true,
 			});
@@ -97,7 +91,7 @@ class Lunary extends Client {
 	 */
 	loadLocales() {
 		this.locales = [];
-		require("./handlers/localeHandler.js")(this);
+		require('./handlers/localeHandler.js')(this);
 		return this.locales;
 	}
 
@@ -107,7 +101,7 @@ class Lunary extends Client {
 	 */
 	loadEvents() {
 		this.events = [];
-		require("./handlers/eventHandler.js")(this);
+		require('./handlers/eventHandler.js')(this);
 		return this.events;
 	}
 
@@ -117,7 +111,7 @@ class Lunary extends Client {
 	 */
 	loadCommands() {
 		this.commands = {};
-		require("./handlers/commandHandler.js")(this);
+		require('./handlers/commandHandler.js')(this);
 		return this.commands;
 	}
 
@@ -127,7 +121,7 @@ class Lunary extends Client {
 	 */
 	loadDesignsProfile() {
 		this.designsProfile = [];
-		require("./handlers/designsProfileHandler")(this);
+		require('./handlers/designsProfileHandler')(this);
 		return this.designsProfile;
 	}
 
@@ -145,13 +139,11 @@ class Lunary extends Client {
 	 * }} options
 	 */
 	generateOauth2(options = {}) {
-		if (typeof options !== "object")
-			throw new TypeError("INVALID_TYPE", "options", "object", true);
+		if (typeof options !== 'object') throw new TypeError('INVALID_TYPE', 'options', 'object', true);
 		let client_id = options.client_id;
 
 		if (!client_id) {
-			if (!this.application)
-				throw new Error("CLIENT_NOT_READY", "generate an invite link");
+			if (!this.application) throw new Error('CLIENT_NOT_READY', 'generate an invite link');
 			else client_id = this.application.id;
 		}
 
@@ -160,65 +152,37 @@ class Lunary extends Client {
 		});
 
 		const { scopes } = options;
-		if (typeof scopes === "undefined")
-			throw new TypeError("INVITE_MISSING_SCOPES");
+		if (typeof scopes === 'undefined') throw new TypeError('INVITE_MISSING_SCOPES');
 
-		if (!Array.isArray(scopes))
-			throw new TypeError(
-				"INVALID_TYPE",
-				"scopes",
-				"Array of OAuth2 Scopes",
-				true
-			);
+		if (!Array.isArray(scopes)) throw new TypeError('INVALID_TYPE', 'scopes', 'Array of OAuth2 Scopes', true);
 
-		if (
-			!scopes.some((scope) =>
-				["bot", "applications.commands"].includes(scope)
-			) &&
-			scopes.length == 0
-		)
-			throw new TypeError("OAUTH2_MISSING_SCOPES");
+		if (!scopes.some(scope => ['bot', 'applications.commands'].includes(scope)) && scopes.length == 0) throw new TypeError('OAUTH2_MISSING_SCOPES');
 
-		const invalidScope = scopes.find(
-			(scope) => !InviteScopes.includes(scope)
-		);
-		if (invalidScope)
-			throw new TypeError(
-				"INVALID_ELEMENT",
-				"Array",
-				"scopes",
-				invalidScope
-			);
+		const invalidScope = scopes.find(scope => !InviteScopes.includes(scope));
+		if (invalidScope) throw new TypeError('INVALID_ELEMENT', 'Array', 'scopes', invalidScope);
 
-		query.set("scope", scopes.join(" "));
+		query.set('scope', scopes.join(' '));
 
 		if (options.permissions) {
 			const permissions = Permissions.resolve(options.permissions);
-			if (permissions) query.set("permissions", permissions);
+			if (permissions) query.set('permissions', permissions);
 		}
 
-		if (options.disableGuildSelect) query.set("disable_guild_select", true);
+		if (options.disableGuildSelect) query.set('disable_guild_select', true);
 
 		if (options.guild) {
 			const guildId = this.guilds.resolveId(options.guild);
-			if (!guildId)
-				throw new TypeError(
-					"INVALID_TYPE",
-					"options.guild",
-					"GuildResolvable"
-				);
-			query.set("guild_id", guildId);
+			if (!guildId) throw new TypeError('INVALID_TYPE', 'options.guild', 'GuildResolvable');
+			query.set('guild_id', guildId);
 		}
 
 		if (options.redirect_uri || options.redirect) {
-			query.set("redirect_uri", options.redirect_uri || options.redirect);
-			query.set("response_type", options.response_type || "code");
+			query.set('redirect_uri', options.redirect_uri || options.redirect);
+			query.set('response_type', options.response_type || 'code');
 		}
-		if (options.state) query.set("state", options.state);
+		if (options.state) query.set('state', options.state);
 
-		return `${this.options.http.api}${
-			this.api.oauth2.authorize
-		}?${query.toString()}`;
+		return `${this.options.http.api}${this.api.oauth2.authorize}?${query.toString()}`;
 	}
 }
 
@@ -226,5 +190,5 @@ const client = new Lunary();
 
 module.exports = client;
 
-process.on("warning", () => console.log("Erro!"));
+process.on('warning', () => console.log('Erro!'));
 client.init();
