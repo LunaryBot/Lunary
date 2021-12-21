@@ -1,26 +1,27 @@
-'use strict';
+"use strict";
 
-const Action = require('./Action');
-const { Events, VoiceBasedChannelTypes } = require('../../util/Constants');
+const Action = require("./Action");
+const { Events, VoiceBasedChannelTypes } = require("../../util/Constants");
 
 class MessageReactionRemoveAll extends Action {
-  handle(data) {
-    // Verify channel
-    const channel = this.getChannel(data);
-    if (!channel || VoiceBasedChannelTypes.includes(channel.type)) return false;
+	handle(data) {
+		// Verify channel
+		const channel = this.getChannel(data);
+		if (!channel || VoiceBasedChannelTypes.includes(channel.type))
+			return false;
 
-    // Verify message
-    const message = this.getMessage(data, channel);
-    if (!message) return false;
+		// Verify message
+		const message = this.getMessage(data, channel);
+		if (!message) return false;
 
-    // Copy removed reactions to emit for the event.
-    const removed = message.reactions.cache.clone();
+		// Copy removed reactions to emit for the event.
+		const removed = message.reactions.cache.clone();
 
-    message.reactions.cache.clear();
-    this.client.emit(Events.MESSAGE_REACTION_REMOVE_ALL, message, removed);
+		message.reactions.cache.clear();
+		this.client.emit(Events.MESSAGE_REACTION_REMOVE_ALL, message, removed);
 
-    return { message };
-  }
+		return { message };
+	}
 }
 
 /**

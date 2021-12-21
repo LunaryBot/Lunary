@@ -3,10 +3,10 @@ help:
   description: Limpa uma quantidade de 2 até 500 mensagens no canal.
   category: Administração
   examples:
-  - title: Apaga uma quantidade de mensagens no canal que foi executado o comando.
-    usage: amount:{amountClear}
-  - title: Apaga uma quantidade de mensagens filtrando as mensagens de um usuário no canal que foi executado o comando.
-    usage: amount:{amountClear} user:{userID}
+    - title: Apaga uma quantidade de mensagens no canal que foi executado o comando.
+      usage: amount:{amountClear}
+    - title: Apaga uma quantidade de mensagens filtrando as mensagens de um usuário no canal que foi executado o comando.
+      usage: amount:{amountClear} user:{userID}
 texts:
   invalidAmount: É preciso informar uma quantidade de 2 até 500 mensagens para serem apagadas.
   noMessagesFound: Não encontrei nenhuma mensagem para ser apagada, só para lembrar, eu não posso deletar mensagens envidadas há mais de duas semanas (`14 dias`) devido a uma limitação do Discord para nós bots <:sigh:885721398788632586>.

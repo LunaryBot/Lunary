@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const BitField = require('./BitField');
+const BitField = require("./BitField");
 
 /**
  * Data structure that makes it easy to interact with a {@link ClientApplication#flags} bitfield.
@@ -33,12 +33,12 @@ class ApplicationFlags extends BitField {}
  * @see {@link https://discord.com/developers/docs/resources/application#application-object-application-flags}
  */
 ApplicationFlags.FLAGS = {
-  GATEWAY_PRESENCE: 1 << 12,
-  GATEWAY_PRESENCE_LIMITED: 1 << 13,
-  GATEWAY_GUILD_MEMBERS: 1 << 14,
-  GATEWAY_GUILD_MEMBERS_LIMITED: 1 << 15,
-  VERIFICATION_PENDING_GUILD_LIMIT: 1 << 16,
-  EMBEDDED: 1 << 17,
+	GATEWAY_PRESENCE: 1 << 12,
+	GATEWAY_PRESENCE_LIMITED: 1 << 13,
+	GATEWAY_GUILD_MEMBERS: 1 << 14,
+	GATEWAY_GUILD_MEMBERS_LIMITED: 1 << 15,
+	VERIFICATION_PENDING_GUILD_LIMIT: 1 << 16,
+	EMBEDDED: 1 << 17,
 };
 
 module.exports = ApplicationFlags;

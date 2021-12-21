@@ -7,7 +7,8 @@ export const AnonymousGuild = mod.AnonymousGuild;
 export const Application = mod.Application;
 export const ApplicationCommand = mod.ApplicationCommand;
 export const ApplicationCommandManager = mod.ApplicationCommandManager;
-export const ApplicationCommandPermissionsManager = mod.ApplicationCommandPermissionsManager;
+export const ApplicationCommandPermissionsManager =
+	mod.ApplicationCommandPermissionsManager;
 export const ApplicationFlags = mod.ApplicationFlags;
 export const Base = mod.Base;
 export const BaseClient = mod.BaseClient;
@@ -33,7 +34,8 @@ export const ClientVoiceManager = mod.ClientVoiceManager;
 export const Collection = mod.Collection;
 export const Collector = mod.Collector;
 export const CommandInteraction = mod.CommandInteraction;
-export const CommandInteractionOptionResolver = mod.CommandInteractionOptionResolver;
+export const CommandInteractionOptionResolver =
+	mod.CommandInteractionOptionResolver;
 export const Constants = mod.Constants;
 export const ContextMenuInteraction = mod.ContextMenuInteraction;
 export const DMChannel = mod.DMChannel;
@@ -43,7 +45,8 @@ export const DiscordAPIError = mod.DiscordAPIError;
 export const Emoji = mod.Emoji;
 export const Formatters = mod.Formatters;
 export const Guild = mod.Guild;
-export const GuildApplicationCommandManager = mod.GuildApplicationCommandManager;
+export const GuildApplicationCommandManager =
+	mod.GuildApplicationCommandManager;
 export const GuildAuditLogs = mod.GuildAuditLogs;
 export const GuildAuditLogsEntry = mod.GuildAuditLogsEntry;
 export const GuildBan = mod.GuildBan;

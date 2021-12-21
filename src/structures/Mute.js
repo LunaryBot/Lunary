@@ -1,40 +1,40 @@
-const client = require("../Lunary.js")
-const sydb = require("sydb")
-const mutesdb = new sydb(__dirname + "/../data/mutes.json")
+const client = require("../Lunary.js");
+const sydb = require("sydb");
+const mutesdb = new sydb(__dirname + "/../data/mutes.json");
 
 class Mute {
-    /**
-     * 
-     * @param {client} client 
-     * @param {string} key 
-     */
-    constructor(client, key) {
-        this.client = client
-        this.key = key
-        
-        /**
-         * @type {Object}
-         */
-        const data = mutesdb.ref(key).val()
+	/**
+	 *
+	 * @param {client} client
+	 * @param {string} key
+	 */
+	constructor(client, key) {
+		this.client = client;
+		this.key = key;
 
-        /**
-         * @type {string}
-         */
-        this.user = data.user
+		/**
+		 * @type {Object}
+		 */
+		const data = mutesdb.ref(key).val();
 
-        /**
-         * @type {number}
-         */
-        this.end = data.end
+		/**
+		 * @type {string}
+		 */
+		this.user = data.user;
 
-        /**
-         * @type {String[]}
-         */
-        this.roles = data.roles
+		/**
+		 * @type {number}
+		 */
+		this.end = data.end;
 
-        /**
-         * @type {setTimeout}
-         */
-         this.timeout = setTimeout()
-    }
+		/**
+		 * @type {String[]}
+		 */
+		this.roles = data.roles;
+
+		/**
+		 * @type {setTimeout}
+		 */
+		this.timeout = setTimeout();
+	}
 }

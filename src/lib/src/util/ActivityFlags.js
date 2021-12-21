@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const BitField = require('./BitField');
+const BitField = require("./BitField");
 
 /**
  * Data structure that makes it easy to interact with an {@link Activity#flags} bitfield.
@@ -27,12 +27,12 @@ class ActivityFlags extends BitField {}
  * @see {@link https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags}
  */
 ActivityFlags.FLAGS = {
-  INSTANCE: 1 << 0,
-  JOIN: 1 << 1,
-  SPECTATE: 1 << 2,
-  JOIN_REQUEST: 1 << 3,
-  SYNC: 1 << 4,
-  PLAY: 1 << 5,
+	INSTANCE: 1 << 0,
+	JOIN: 1 << 1,
+	SPECTATE: 1 << 2,
+	JOIN_REQUEST: 1 << 3,
+	SYNC: 1 << 4,
+	PLAY: 1 << 5,
 };
 
 module.exports = ActivityFlags;

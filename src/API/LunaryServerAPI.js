@@ -1,16 +1,18 @@
-const router = require("express").Router()
+const router = require("express").Router();
 
-router.get("/guild/:id_guild", async(req, res) => {
-    const guildID = req.params.id_guild
-    const data = await getGuild(guildID)
-    res.json(data)
-})
+router.get("/guild/:id_guild", async (req, res) => {
+	const guildID = req.params.id_guild;
+	const data = await getGuild(guildID);
+	res.json(data);
+});
 
-module.exports = router
+module.exports = router;
 
- async function getGuild(guildID) {
-    try {
-        const guild = await clusterManager.broadcastEval(`(() => { 
+async function getGuild(guildID) {
+	try {
+		const guild = await clusterManager
+			.broadcastEval(
+				`(() => { 
             const guild = this.guilds.cache.get("${guildID}")
             if(guild) {
                 const data = {
@@ -30,26 +32,29 @@ module.exports = router
                 }
                 return data
             } else return null
-        })()`).then(x => x.find(x => x != null))
-        if(!guild) return {
-            status: 404,
-            statusText: "Not Found",
-            data: null,
-            query: `Guild ${guildID}`
-        }
-    
-        return {
-            status: 200,
-            statusText: "OK",
-            data: guild,
-            query: `Guild ${guildID}`
-        }
-    } catch (e) {
-        return {
-            status: 400,
-            statusText: "Internal Server Error",
-            data: null,
-            query: `Guild ${guildID}`
-        }
-    }
+        })()`
+			)
+			.then((x) => x.find((x) => x != null));
+		if (!guild)
+			return {
+				status: 404,
+				statusText: "Not Found",
+				data: null,
+				query: `Guild ${guildID}`,
+			};
+
+		return {
+			status: 200,
+			statusText: "OK",
+			data: guild,
+			query: `Guild ${guildID}`,
+		};
+	} catch (e) {
+		return {
+			status: 400,
+			statusText: "Internal Server Error",
+			data: null,
+			query: `Guild ${guildID}`,
+		};
+	}
 }

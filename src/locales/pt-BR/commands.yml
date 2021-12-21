@@ -117,7 +117,7 @@
     - title: Pune um usuário sem notificar via dm.
       usage: soft user:{@user} notify-dm:{notify-dm}
 - name: channel info
-  description: ':bug:'
+  description: ":bug:"
   dm: false
   examples: null
 - name: clean

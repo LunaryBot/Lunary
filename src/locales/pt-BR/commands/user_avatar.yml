@@ -3,7 +3,7 @@ help:
   description: Veja o avatar de um usuário.
   category: Utilitários
   examples:
-   - user:{@user}
+    - user:{@user}
 texts:
   downloadImage: Baixar imagem
   serverAvatar: Avatar de servidor

@@ -2,8 +2,8 @@ help:
   name: profile
   description: Exibe o perfil do usuário.
   examples:
-   - ""
-   - user:{@user}
+    - ""
+    - user:{@user}
 texts:
   noEmblem1: SEM
   noEmblem2: EMBLEMA

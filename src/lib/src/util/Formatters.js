@@ -1,25 +1,25 @@
-'use strict';
+"use strict";
 
 const {
-  blockQuote,
-  bold,
-  channelMention,
-  codeBlock,
-  formatEmoji,
-  hideLinkEmbed,
-  hyperlink,
-  inlineCode,
-  italic,
-  memberNicknameMention,
-  quote,
-  roleMention,
-  spoiler,
-  strikethrough,
-  time,
-  TimestampStyles,
-  underscore,
-  userMention,
-} = require('@discordjs/builders');
+	blockQuote,
+	bold,
+	channelMention,
+	codeBlock,
+	formatEmoji,
+	hideLinkEmbed,
+	hyperlink,
+	inlineCode,
+	italic,
+	memberNicknameMention,
+	quote,
+	roleMention,
+	spoiler,
+	strikethrough,
+	time,
+	TimestampStyles,
+	underscore,
+	userMention,
+} = require("@discordjs/builders");
 
 /**
  * Contains various Discord-specific functions for formatting messages.

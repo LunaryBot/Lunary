@@ -1,45 +1,66 @@
-const Event = require("../structures/Event.js")
-const sydb = require("sydb")
-const { Api } = require("@top-gg/sdk")
-const mutesdb = new sydb(__dirname + "/../data/mutes.json")
-const DblApi = new Api(process.env.DBL_TOKEN)
+const Event = require("../structures/Event.js");
+const sydb = require("sydb");
+const { Api } = require("@top-gg/sdk");
+const mutesdb = new sydb(__dirname + "/../data/mutes.json");
+const DblApi = new Api(process.env.DBL_TOKEN);
 module.exports = class ReadyEvent extends Event {
-  constructor(client) {
-    super("ready", client)
-  }
+	constructor(client) {
+		super("ready", client);
+	}
 
-  async run() {
-    this.client.logger.log(`Client conectado ao Discord!`, { key: "Client", cluster: true, date: true })
-    let mutes = Object.entries(mutesdb.ref().val()).filter(([k, v]) => !k.endsWith("pendent_") && v.end != "..." && this.client.guilds.cache.get(v.server))
+	async run() {
+		this.client.logger.log(`Client conectado ao Discord!`, {
+			key: "Client",
+			cluster: true,
+			date: true,
+		});
+		let mutes = Object.entries(mutesdb.ref().val()).filter(
+			([k, v]) =>
+				!k.endsWith("pendent_") &&
+				v.end != "..." &&
+				this.client.guilds.cache.get(v.server)
+		);
 
-    mutes.forEach(async([k, v]) => {
-      const guild = this.client.guilds.cache.get(v.server)
-      const member = await guild.members.fetch(v.user)
-      if(!member || !member.roles.cache.get(v.muterole)) return
+		mutes.forEach(async ([k, v]) => {
+			const guild = this.client.guilds.cache.get(v.server);
+			const member = await guild.members.fetch(v.user);
+			if (!member || !member.roles.cache.get(v.muterole)) return;
 
-      const time = v.end - Date.now()
-      if(time > 0) {
-        const timeout = setTimeout(() => this.client.emit("muteEnd", v), time)
-        this.client.mutes.set(`${k}`, timeout)
-      } else setTimeout(() => this.client.emit("muteEnd", v), time)
-    })
+			const time = v.end - Date.now();
+			if (time > 0) {
+				const timeout = setTimeout(
+					() => this.client.emit("muteEnd", v),
+					time
+				);
+				this.client.mutes.set(`${k}`, timeout);
+			} else setTimeout(() => this.client.emit("muteEnd", v), time);
+		});
 
-    if(this.client.cluster.info?.CLUSTER_COUNT == this.client.cluster.id + 1) {
-      const fn = async() => {
-        const guilds = await this.client.cluster.broadcastEval(`this.guilds.cache.size`).then(x => x.reduce((c, d) => c + d, 0))
-        
-        // await DblApi.postStats({
-        //   serverCount: guilds,
-        //   shardCount: this.client.cluster.info?.TOTAL_SHARDS || 0
-        // })
+		if (
+			this.client.cluster.info?.CLUSTER_COUNT ==
+			this.client.cluster.id + 1
+		) {
+			const fn = async () => {
+				const guilds = await this.client.cluster
+					.broadcastEval(`this.guilds.cache.size`)
+					.then((x) => x.reduce((c, d) => c + d, 0));
 
-        this.client.logger.log(`Enviado estatísticas para o Top.gg!`, { key: ["Client", "DBL"], cluster: true, date: true })
-      }
-      fn()
-      setInterval(fn, 10 * 1000 * 60)
-    }
-  }
-}
+				// await DblApi.postStats({
+				//   serverCount: guilds,
+				//   shardCount: this.client.cluster.info?.TOTAL_SHARDS || 0
+				// })
+
+				this.client.logger.log(`Enviado estatísticas para o Top.gg!`, {
+					key: ["Client", "DBL"],
+					cluster: true,
+					date: true,
+				});
+			};
+			fn();
+			setInterval(fn, 10 * 1000 * 60);
+		}
+	}
+};
 
 /* 
 

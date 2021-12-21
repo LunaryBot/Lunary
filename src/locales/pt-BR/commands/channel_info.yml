@@ -3,7 +3,7 @@ help:
   description: Exibe informações sobre um canal.
   examples:
     - ""
-    -  channel:{channel}
+    - channel:{channel}
 texts:
   channelTopicIsNotDefined: Canal não tem um tópico definido.
   channelMention: Menção do canal

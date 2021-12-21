@@ -18,14 +18,14 @@
 discord.js is a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the
 [Discord API](https://discord.com/developers/docs/intro).
 
-- Object-oriented
-- Predictable abstractions
-- Performant
-- 100% coverage of the Discord API
+-   Object-oriented
+-   Predictable abstractions
+-   Performant
+-   100% coverage of the Discord API
 
 ## Installation
 
-**Node.js 16.6.0 or newer is required.**  
+**Node.js 16.6.0 or newer is required.**
 
 ```sh-session
 npm install discord.js
@@ -35,15 +35,16 @@ pnpm add discord.js
 
 ### Optional packages
 
-- [zlib-sync](https://www.npmjs.com/package/zlib-sync) for WebSocket data compression and inflation (`npm install zlib-sync`)
-- [erlpack](https://github.com/discord/erlpack) for significantly faster WebSocket data (de)serialisation (`npm install discord/erlpack`)
-- [bufferutil](https://www.npmjs.com/package/bufferutil) for a much faster WebSocket connection (`npm install bufferutil`)
-- [utf-8-validate](https://www.npmjs.com/package/utf-8-validate) in combination with `bufferutil` for much faster WebSocket processing (`npm install utf-8-validate`)
-- [@discordjs/voice](https://github.com/discordjs/voice) for interacting with the Discord Voice API
+-   [zlib-sync](https://www.npmjs.com/package/zlib-sync) for WebSocket data compression and inflation (`npm install zlib-sync`)
+-   [erlpack](https://github.com/discord/erlpack) for significantly faster WebSocket data (de)serialisation (`npm install discord/erlpack`)
+-   [bufferutil](https://www.npmjs.com/package/bufferutil) for a much faster WebSocket connection (`npm install bufferutil`)
+-   [utf-8-validate](https://www.npmjs.com/package/utf-8-validate) in combination with `bufferutil` for much faster WebSocket processing (`npm install utf-8-validate`)
+-   [@discordjs/voice](https://github.com/discordjs/voice) for interacting with the Discord Voice API
 
 ## Example usage
 
 Install all required dependencies:
+
 ```sh-session
 npm install discord.js @discordjs/rest discord-api-types
 yarn add discord.js @discordjs/rest discord-api-types
@@ -51,68 +52,71 @@ pnpm add discord.js @discordjs/rest discord-api-types
 ```
 
 Register a slash command against the Discord API:
+
 ```js
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
 
-const commands = [{
-  name: 'ping',
-  description: 'Replies with Pong!'
-}]; 
+const commands = [
+	{
+		name: "ping",
+		description: "Replies with Pong!",
+	},
+];
 
-const rest = new REST({ version: '9' }).setToken('token');
+const rest = new REST({ version: "9" }).setToken("token");
 
 (async () => {
-  try {
-    console.log('Started refreshing application (/) commands.');
+	try {
+		console.log("Started refreshing application (/) commands.");
 
-    await rest.put(
-      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-      { body: commands },
-    );
+		await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+			body: commands,
+		});
 
-    console.log('Successfully reloaded application (/) commands.');
-  } catch (error) {
-    console.error(error);
-  }
+		console.log("Successfully reloaded application (/) commands.");
+	} catch (error) {
+		console.error(error);
+	}
 })();
 ```
 
 Afterwards we can create a quite simple example bot:
+
 ```js
-const { Client, Intents } = require('discord.js');
+const { Client, Intents } = require("discord.js");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+client.on("ready", () => {
+	console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
+client.on("interactionCreate", async (interaction) => {
+	if (!interaction.isCommand()) return;
 
-  if (interaction.commandName === 'ping') {
-    await interaction.reply('Pong!');
-  }
+	if (interaction.commandName === "ping") {
+		await interaction.reply("Pong!");
+	}
 });
 
-client.login('token');
+client.login("token");
 ```
 
 ## Links
 
-- [Website](https://discord.js.org/) ([source](https://github.com/discordjs/website))
-- [Documentation](https://discord.js.org/#/docs)
-- [Guide](https://discordjs.guide/) ([source](https://github.com/discordjs/guide))
-  See also the [Update Guide](https://discordjs.guide/additional-info/changes-in-v13.html), including updated and removed items in the library.
-- [Discord.js Discord server](https://discord.gg/djs)
-- [Discord API Discord server](https://discord.gg/discord-api)
-- [GitHub](https://github.com/discordjs/discord.js)
-- [NPM](https://www.npmjs.com/package/discord.js)
-- [Related libraries](https://discord.com/developers/docs/topics/community-resources#libraries)
+-   [Website](https://discord.js.org/) ([source](https://github.com/discordjs/website))
+-   [Documentation](https://discord.js.org/#/docs)
+-   [Guide](https://discordjs.guide/) ([source](https://github.com/discordjs/guide))
+    See also the [Update Guide](https://discordjs.guide/additional-info/changes-in-v13.html), including updated and removed items in the library.
+-   [Discord.js Discord server](https://discord.gg/djs)
+-   [Discord API Discord server](https://discord.gg/discord-api)
+-   [GitHub](https://github.com/discordjs/discord.js)
+-   [NPM](https://www.npmjs.com/package/discord.js)
+-   [Related libraries](https://discord.com/developers/docs/topics/community-resources#libraries)
 
 ### Extensions
 
-- [RPC](https://www.npmjs.com/package/discord-rpc) ([source](https://github.com/discordjs/RPC))
+-   [RPC](https://www.npmjs.com/package/discord-rpc) ([source](https://github.com/discordjs/RPC))
 
 ## Contributing
 
