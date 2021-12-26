@@ -1,7 +1,6 @@
 const Command = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
-const sydb = require('sydb');
 const {
 	message_modlogs,
 	message_punish,
@@ -12,7 +11,6 @@ const {
 	timeString,
 	format_time: { format },
 } = require('../../../utils/index.js');
-const mutesdb = new sydb(__dirname + '/../../../data/mutes.json');
 
 module.exports = class MuteCommand extends Command {
 	constructor(client) {
