@@ -27,7 +27,7 @@ const p = {
 	},
 };
 
-module.exports = function message_modlogs(author, user, reason, type, t, lang = 'pt-BR', id, time) {
+module.exports = function message_modlogs(author, user, reason, type, t, id, time) {
 	const embed = new MessageEmbed()
 		.setColor(p[type].cor)
 		.setThumbnail(author.displayAvatarURL({ dynamic: true, format: 'png' }))

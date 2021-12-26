@@ -21,9 +21,9 @@ module.exports = class MuteCommand extends Command {
 				name: 'mute',
 				dirname: __dirname,
 				permissions: {
-					Discord: ['MUTE_MEMBERS'],
+					Discord: ['MODERATE_MEMBERS'],
 					Bot: ['LUNAR_MUTE_MEMBERS'],
-					me: ['MANAGE_CHANNELS', 'MANAGE_ROLES'],
+					me: ['MODERATE_MEMBERS'],
 				},
 				dm: false,
 			},
@@ -79,53 +79,59 @@ module.exports = class MuteCommand extends Command {
 				})
 				.catch(() => {});
 
-		let time = ctx.interaction.options.getString('time') || '...';
-		if (time != '...') {
-			time = timeString(time);
-			if (isNaN(time) || time == 0)
-				return ctx.interaction
-					.reply({
-						embeds: [this.sendError(ctx.t('mute:texts.invalidTime'), ctx.author)],
-					})
-					.catch(() => {});
-		}
+		const menu = new Discord.MessageSelectMenu()
+			.setPlaceholder(ctx.t('mute:texts.selectTime'))
+			.addOptions([
+				{ label: ctx.t('mute:texts.60seconds'), value: (1 * 1000 * 60).toString() },
+				{ label: ctx.t('mute:texts.5minutes'), value: (5 * 1000 * 60).toString() },
+				{ label: ctx.t('mute:texts.10minutes'), value: (10 * 1000 * 60).toString() },
+				{ label: ctx.t('mute:texts.30minutes'), value: (30 * 1000 * 60).toString() },
+				{ label: ctx.t('mute:texts.1hour'), value: (1 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.3hours'), value: (3 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.5hours'), value: (5 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.12hours'), value: (12 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.24hours'), value: (24 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.3days'), value: (3 * 24 * 1000 * 60 * 60).toString() },
+				{ label: ctx.t('mute:texts.7days'), value: (7 * 24 * 1000 * 60 * 60).toString() }
+			])
+			.setMaxValues(1)
+			.setMinValues(1)
+			.setCustomId('mute_time');
 
-		let muterole = ctx.guild.roles.cache.get(ctx.GuildDB.muterole);
+		await ctx.interaction.reply({
+			content: ctx.t('mute:texts.selectTimeMessage'),
+			components: [
+				new Discord.MessageActionRow()
+				.addComponents(menu)
+			]
+		})
 
-		if (!muterole) {
-			const muterolePerms = new Discord.Permissions();
+		const _msg = await ctx.interaction.fetchReply();
+		/**
+		 * @type {Discord.SelectMenuInteraction}
+		 */
+		const response = await _msg.awaitMessageComponent({
+			componentType: 'SELECT_MENU',
+			filter: (m) => {
+				m.deferUpdate();
+				return m.user.id === ctx.author.id
+			},
+			time: 1 * 1000 * 60
+		}).catch(() => {
+			ctx.interaction.editReply({
+				components: [
+					new Discord.MessageActionRow()
+					.addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))
+				]
+			})
+		})
 
-			if (ctx.me.permissions.has('READ_MESSAGE_HISTORY')) muterolePerms.add('READ_MESSAGE_HISTORY');
-			if (ctx.me.permissions.has('VIEW_CHANNEL')) muterolePerms.add('VIEW_CHANNEL');
-			muterole = await ctx.guild.roles.create({
-				data: {
-					name: '🔇>>Mutado-Lunar',
-					color: '#FFFAFA',
-					permissions: muterolePerms.bitfield,
-					hoist: true,
-					mentionable: false,
-				},
-				reason: ctx.t('mute:texts.createMuterole'),
-			});
-			this.client.db.ref(`Servers/${ctx.guild.id}/`).update({ muterole: muterole.id });
-		}
+		if(!response) return;
 
-		if (muterole && ctx.guild.roles.cache.get(muterole.id).position >= ctx.guild.me.roles.highest.position)
-			return ctx.interaction
-				.reply({
-					embeds: [this.sendError(ctx.t('mute:texts.lunyMissingPermissionsToManagerMuterole'), ctx.author)],
-				})
-				.catch(() => {});
-
-		if (muterole && user.roles.cache.has(muterole.id))
-			return ctx.interaction
-				.reply({
-					embeds: [this.sendError(ctx.t('mute:texts.userMuted'), ctx.author)],
-				})
-				.catch(() => {});
+		const time = Number(response.values[0]);
 
 		if (!ctx.UserDB.configs.has('QUICK_PUNISHMENT')) {
-			await ctx.interaction.reply(confirm_punish(ctx, user.user, reason, time)).catch(() => {});
+			await ctx.interaction.editReply(confirm_punish(ctx, user.user, reason, time)).catch(() => {});
 
 			const msg = await ctx.interaction.fetchReply();
 
@@ -149,7 +155,7 @@ module.exports = class MuteCommand extends Command {
 			});
 		} else {
 			const _mute = await mute();
-			ctx.interaction.reply(_mute).catch(() => {});
+			ctx.interaction.editReply(_mute).catch(() => {});
 		}
 
 		async function mute() {
@@ -157,19 +163,21 @@ module.exports = class MuteCommand extends Command {
 				return {
 					embeds: [this.sendError(ctx.t('general:texts.lunyMissingPermissionsToPunish'), ctx.author)],
 				};
-			let notifyDM = true;
+
+				
+				let notifyDM = true;
 			try {
 				if (ctx.interaction.options.getBoolean('notify-dm') != false)
-					await user.send(
-						ctx.t('mute:texts.default_dm_messages_punish', {
+				await user.send(
+						ctx.t('mute:texts.default_dm_message', {
 							emoji: ':mute:',
 							guild_name: ctx.guild.name,
 							reason: reason,
-							time: time != '...' ? format(time) : ctx.t('general:durationNotDetermined'),
+							time: format(1000 * 60 * 10),
 						}),
-					);
-			} catch (_) {
-				notifyDM = false;
+						);
+					} catch (_) {
+						notifyDM = false;
 			}
 
 			let logs = await ctx.client.LogsDB.ref().once('value');
@@ -177,13 +185,18 @@ module.exports = class MuteCommand extends Command {
 			logs = new ObjRef(logs);
 
 			let id;
-
+			
 			for (let i; ; i++) {
 				id = `${randomCharacters(8)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(10)}`.toLowerCase();
 				if (!logs.ref(id).val()) break;
 			}
 
-			const end = time != '...' ? Date.now() + time : time;
+			await user.timeout(time, ctx.t('mute:texts.punishedBy', {
+				author_tag: ctx.author.tag,
+				reason: reason,
+				id: id,
+			}));
+			
 			const log = Buffer.from(
 				JSON.stringify({
 					type: 3,
@@ -192,35 +205,13 @@ module.exports = class MuteCommand extends Command {
 					server: ctx.guild.id,
 					reason: encodeURI(reason),
 					date: Date.now(),
-					time: time,
+					time: 1000 * 60 * 10,
 				}),
 				'ascii',
 			).toString('base64');
 
 			ctx.client.LogsDB.ref(id).set(log);
 
-			const roles = user.roles.cache.filter(x => !x.managed && x.id != ctx.guild.id).map(x => x.id) || [];
-
-			const data = {
-				user: user.id,
-				server: ctx.guild.id,
-				id: id,
-				roles: roles,
-				muterole: muterole.id,
-				end: end,
-			};
-			mutesdb.ref(`${ctx.guild.id}_${user.id}`).set(data);
-
-			if (roles && roles.length) await user.roles.remove(roles).catch(() => {});
-
-			await user.roles.add(muterole.id);
-
-			// const channel_punish = ctx.guild.channels.cache.get(ctx.GuildDB.chat_punish)
-			// if(channel_punish && channel_punish.permissionsFor(ctx.client.user.id).has(18432)) channel_punish.send({
-			//     embeds: [
-			//         message_punish(ctx.author, user.user, reason, "mute", ctx.t, ctx.client, ctx.UserDB.gifs.mute, time)
-			//     ]
-			// })
 			const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs);
 			if (channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432))
 				channel_modlogs
@@ -230,16 +221,11 @@ module.exports = class MuteCommand extends Command {
 					})
 					.catch(() => {});
 
-			if (time != '...') {
-				const timeout = setTimeout(() => ctx.client.emit('muteEnd', data), time);
-				ctx.client.mutes.set(`${ctx.guild.id}_${user.id}`, timeout);
-			}
-
 			let xp = ctx.UserDB.xp;
 			if (ctx.UserDB.lastPunishmentApplied) {
 				if (!user.user.bot) {
 					if (user.id != ctx.author.id) {
-						if (time != '...' && time > 10 * 1000 * 60) {
+						if (time > 60 * 1000 * 10) {
 							if (user.id != ctx.UserDB.lastPunishmentApplied.user || (user.id == ctx.UserDB.lastPunishmentApplied.user && ctx.UserDB.lastPunishmentApplied.type != 3) || (!isNaN(ctx.UserDB.lastPunishmentApplied.date) && user.id == ctx.UserDB.lastPunishmentApplied.user && Date.now() - ctx.UserDB.lastPunishmentApplied.date > 13 * 1000 * 60)) {
 								if (reason != ctx.UserDB.lastPunishmentApplied.reason && reason != ctx.t('adv:texts.reasonNotInformed')) {
 									xp += generateXP();

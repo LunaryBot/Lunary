@@ -8,7 +8,7 @@ requestedBy: Requisitado por
 successfullyPunished: "{author_mention}, o usuário {user_mention} (`{user_tag} - {user_id}`) foi punido com sucesso{notifyDM}\n\n**ID da Punição:**\n```{id}```\n||Obrigado pela preferência! :partying_face:||"
 notNotifyDm: ", mas infelizmente não foi possível notifica-lo via DM."
 levelUP: "<a:wow:900062924285046804> **| {user} Level up!**\n:partying_face: **|** Você upou seu nível de moderação lunático para `Moderador - Nível {level}`!\n:face_with_hand_over_mouth: **|** Continue assim, e também continue me utilizando, irei ficar muito feliz em ajudar. *Quem sabe seu nome pode ficar marcado nos 10 maiores moderadores lunáticos!*"
-
+timeForSelectionEsgotated: Infelizmente, o tempo para seleção de tempo esgotou.
 # Message confirm punishment
 confirmPunishment:
   title: "Confirme a punição a seguir:"
