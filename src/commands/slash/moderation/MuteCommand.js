@@ -92,7 +92,7 @@ module.exports = class MuteCommand extends Command {
 				{ label: ctx.t('mute:texts.12hours'), value: (12 * 1000 * 60 * 60).toString() },
 				{ label: ctx.t('mute:texts.24hours'), value: (24 * 1000 * 60 * 60).toString() },
 				{ label: ctx.t('mute:texts.3days'), value: (3 * 24 * 1000 * 60 * 60).toString() },
-				{ label: ctx.t('mute:texts.7days'), value: (7 * 24 * 1000 * 60 * 60).toString() }
+				{ label: ctx.t('mute:texts.7days'), value: (7 * 24 * 1000 * 60 * 60).toString() },
 			])
 			.setMaxValues(1)
 			.setMinValues(1)
@@ -100,33 +100,29 @@ module.exports = class MuteCommand extends Command {
 
 		await ctx.interaction.reply({
 			content: ctx.t('mute:texts.selectTimeMessage'),
-			components: [
-				new Discord.MessageActionRow()
-				.addComponents(menu)
-			]
-		})
+			components: [new Discord.MessageActionRow().addComponents(menu)],
+		});
 
 		const _msg = await ctx.interaction.fetchReply();
 		/**
 		 * @type {Discord.SelectMenuInteraction}
 		 */
-		const response = await _msg.awaitMessageComponent({
-			componentType: 'SELECT_MENU',
-			filter: (m) => {
-				m.deferUpdate();
-				return m.user.id === ctx.author.id
-			},
-			time: 1 * 1000 * 60
-		}).catch(() => {
-			ctx.interaction.editReply({
-				components: [
-					new Discord.MessageActionRow()
-					.addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))
-				]
+		const response = await _msg
+			.awaitMessageComponent({
+				componentType: 'SELECT_MENU',
+				filter: m => {
+					m.deferUpdate();
+					return m.user.id === ctx.author.id;
+				},
+				time: 1 * 1000 * 60,
 			})
-		})
+			.catch(() => {
+				ctx.interaction.editReply({
+					components: [new Discord.MessageActionRow().addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))],
+				});
+			});
 
-		if(!response) return;
+		if (!response) return;
 
 		const time = Number(response.values[0]);
 
@@ -164,20 +160,19 @@ module.exports = class MuteCommand extends Command {
 					embeds: [this.sendError(ctx.t('general:texts.lunyMissingPermissionsToPunish'), ctx.author)],
 				};
 
-				
-				let notifyDM = true;
+			let notifyDM = true;
 			try {
 				if (ctx.interaction.options.getBoolean('notify-dm') != false)
-				await user.send(
+					await user.send(
 						ctx.t('mute:texts.default_dm_message', {
 							emoji: ':mute:',
 							guild_name: ctx.guild.name,
 							reason: reason,
 							time: format(1000 * 60 * 10),
 						}),
-						);
-					} catch (_) {
-						notifyDM = false;
+					);
+			} catch (_) {
+				notifyDM = false;
 			}
 
 			let logs = await ctx.client.LogsDB.ref().once('value');
@@ -185,18 +180,21 @@ module.exports = class MuteCommand extends Command {
 			logs = new ObjRef(logs);
 
 			let id;
-			
+
 			for (let i; ; i++) {
 				id = `${randomCharacters(8)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(4)}-${randomCharacters(10)}`.toLowerCase();
 				if (!logs.ref(id).val()) break;
 			}
 
-			await user.timeout(time, ctx.t('mute:texts.punishedBy', {
-				author_tag: ctx.author.tag,
-				reason: reason,
-				id: id,
-			}));
-			
+			await user.timeout(
+				time,
+				ctx.t('mute:texts.punishedBy', {
+					author_tag: ctx.author.tag,
+					reason: reason,
+					id: id,
+				}),
+			);
+
 			const log = Buffer.from(
 				JSON.stringify({
 					type: 3,
