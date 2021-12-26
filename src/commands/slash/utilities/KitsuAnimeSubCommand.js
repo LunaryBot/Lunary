@@ -55,22 +55,24 @@ module.exports = class KitsuAnimeSubCommand extends SubCommand {
 
 		const msg = await ctx.interaction.fetchReply();
 
-		const coletor = msg.createMessageComponentCollector({
-			filter: comp => comp.user.id == ctx.author.id,
-			max: 1,
+		/**
+		 * @type {Discord.SelectMenuInteraction}
+		 */
+		 const response = await msg.awaitMessageComponent({
+			componentType: 'SELECT_MENU',
+			filter: comp => {
+				comp.deferUpdate();
+				return comp.user.id == ctx.author.id
+			},
 			time: 1 * 1000 * 60,
+		})
+		.catch(() => {
+			ctx.interaction.editReply({
+				components: [new Discord.MessageActionRow().addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))],
+			});
 		});
 
-		coletor.on(
-			'collect',
-			/**
-			 * @param {Discord.SelectMenuInteraction} menu
-			 */
-			async menu => {
-				menu.deferUpdate().catch(() => {});
-				msg.edit(createEmbed(results[Number(menu.values[0])])).catch(() => {});
-			},
-		);
+		msg.edit(createEmbed(results[Number(response.values[0])])).catch(() => {});
 
 		function createEmbed(data) {
 			const embed = new Discord.MessageEmbed()
