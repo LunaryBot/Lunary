@@ -44,7 +44,7 @@ module.exports = class EvalCommand extends Command {
 				result = await result;
 			}
 
-			if (typeof result !== 'string') result = await require('util').inspect(result, { depth: 0 });
+			if (typeof result !== 'string') result = await require('util').inspect(result, { depth: ctx.interaction.options.getInteger('depth') || 0 });
 			let end = Date.now() - start;
 
 			let msg = await ctx.interaction.reply({
