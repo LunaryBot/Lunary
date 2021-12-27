@@ -287,6 +287,9 @@ module.exports = class DefaultWhiteDesign extends Template {
 		ctxCanvas.font = 'bold 18px sans-serif';
 		ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)';
 		ctxCanvas.fillText('BADGES', 370, 456, 80);
+		ctxCanvas.shadowOffsetX = 2;
+		ctxCanvas.shadowOffsetY = 2;
+		
 		// Load badges images
 		let badgeX = 317;
 		let badgeY = 457;

@@ -128,7 +128,7 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.lineTo(canvas.width - 5, 315);
 		ctxCanvas.lineTo(canvas.width - 5, canvas.height - 25);
 		ctxCanvas.lineTo(300, canvas.height - 20);
-		ctxCanvas.fillStyle = '#e7e7e7';
+		ctxCanvas.fillStyle = '#262626';
 		ctxCanvas.shadowColor = 'rgba(0,0,0,0.5)';
 		ctxCanvas.shadowBlur = 40;
 		ctxCanvas.shadowOffsetX = -10;
@@ -287,6 +287,9 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.font = 'bold 18px sans-serif';
 		ctxCanvas.fillStyle = 'rgba(255,255,255,0.4)';
 		ctxCanvas.fillText('BADGES', 370, 456, 80);
+		ctxCanvas.shadowOffsetX = 2;
+		ctxCanvas.shadowOffsetY = 2;
+		
 		// Load badges images
 		let badgeX = 317;
 		let badgeY = 457;
@@ -298,7 +301,7 @@ module.exports = class DefaultBlackDesign extends Template {
 					this.client.imagesCanvas.get(image) ||
 					(await (async () => {
 						const img = await loadImage(image);
-						ctx.client.imagesCanvas.set(image, img);
+						this.client.imagesCanvas.set(image, img);
 
 						return img;
 					})())

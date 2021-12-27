@@ -21,7 +21,7 @@ class GuildDB {
 		};
 		this.premium_type = data.premium_type || null;
 		this.premium_started = data.premium_started || null;
-		this.premium_duration = data.premium_duration || null;
+		this.premium_duration = Number(data.premium_duration) || null;
 		this.premium_expire = this.premium_type ? this.premium_started + this.premium_duration : null;
 
 		if (typeof data.permissions == 'object') {
