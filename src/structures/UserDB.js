@@ -23,6 +23,11 @@ class UserDB {
 		if (this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason);
 		this.bans = data.bans || 0;
 		if (perms) this.permissions = perms;
+
+		this.premium = data.premium || false;
+		this.premium_started = data.premium_started || null;
+		this.premium_duration = Number(data.premium_duration) || null;
+		this.premium_expire = this.premium_type ? this.premium_started + this.premium_duration : null;
 	}
 }
 

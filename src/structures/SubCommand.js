@@ -54,7 +54,7 @@ module.exports = class SubCommand {
 		/**
 		 * @type {boolean}
 		 */
-		this.premium_type = premium_type;
+		this.premium_type = premium_type
 	}
 
 	get fullName() {

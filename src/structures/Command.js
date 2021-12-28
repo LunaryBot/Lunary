@@ -48,7 +48,7 @@ module.exports = class Command {
 		/**
 		 * @type {boolean}
 		 */
-		this.premium_type = premium_type;
+		 this.premium_type = premium_type
 	}
 
 	get fullName() {

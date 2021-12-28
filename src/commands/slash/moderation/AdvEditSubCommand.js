@@ -14,6 +14,7 @@ module.exports = class AdvEditSubCommand extends SubCommand {
 					Bot: ['LUNAR_MANAGE_HISTORY'],
 				},
 				dm: false,
+				premium_type: 1
 			},
 			mainCommand,
 			client,
