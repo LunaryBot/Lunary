@@ -6,6 +6,7 @@ const AdvListSubCommand = require('./AdvListSubCommand.js');
 const AdvInfoSubCommand = require('./AdvInfoSubCommand.js');
 const AdvRemoveCommandGroup = require('./AdvRemoveCommandGroup.js');
 const Transcript = require('../../../structures/Transcript.js');
+const AdvEditSubCommand = require('./AdvEditSubCommand.js');
 
 module.exports = class AdvCommand extends Command {
 	constructor(client) {
@@ -22,7 +23,12 @@ module.exports = class AdvCommand extends Command {
 			client,
 		);
 
-		this.subcommands = [new AdvListSubCommand(client, this), new AdvInfoSubCommand(client, this), new AdvRemoveCommandGroup(client, this)];
+		this.subcommands = [
+			new AdvListSubCommand(client, this), 
+			new AdvInfoSubCommand(client, this), 
+			new AdvRemoveCommandGroup(client, this),
+			new AdvEditSubCommand(client, this),
+		];
 	}
 
 	/**
@@ -54,7 +60,7 @@ module.exports = class AdvCommand extends Command {
 		if (reason > 400)
 			return ctx.interaction
 				.reply({
-					embeds: [this.sendError(ctx.t('adv:veryBigReason'), ctx.author)],
+					embeds: [this.sendError(ctx.t('adv:texts.veryBigReason'), ctx.author)],
 				})
 				.catch(() => {});
 

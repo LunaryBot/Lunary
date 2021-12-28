@@ -72,7 +72,7 @@ module.exports = class BanCommand extends Command {
 		if (reason > 400)
 			return ctx.interaction
 				.reply({
-					embeds: [this.sendError(ctx.t('ban:veryBigReason'), ctx.author)],
+					embeds: [this.sendError(ctx.t('ban:texts.veryBigReason'), ctx.author)],
 				})
 				.catch(() => {});
 

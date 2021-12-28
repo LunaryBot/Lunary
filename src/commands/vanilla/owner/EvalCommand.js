@@ -11,8 +11,8 @@ const {
 const moment = require('moment');
 require('moment-duration-format');
 const sydb = require('sydb');
-const mutesdb = new sydb(__dirname + '/../../../data/mutes.json');
 const Transcript = require('../../../structures/Transcript');
+const commands = require("../../../data/commands.json");
 
 module.exports = class EvalCommand extends Command {
 	constructor(client) {

@@ -73,7 +73,7 @@ module.exports = class MuteCommand extends Command {
 		if (reason > 400)
 			return ctx.interaction
 				.reply({
-					embeds: [this.sendError(ctx.t('general:veryBigReason'), ctx.author)],
+					embeds: [this.sendError(ctx.t('mute:texts.veryBigReason'), ctx.author)],
 				})
 				.catch(() => {});
 
@@ -166,7 +166,7 @@ module.exports = class MuteCommand extends Command {
 							emoji: ':mute:',
 							guild_name: ctx.guild.name,
 							reason: reason,
-							time: format(1000 * 60 * 10),
+							time: format(time),
 						}),
 					);
 			} catch (_) {

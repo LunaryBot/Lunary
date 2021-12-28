@@ -67,7 +67,7 @@ module.exports = class BanSoftSubCommand extends SubCommand {
 		if (reason > 400)
 			return ctx.interaction
 				.reply({
-					embeds: [this.sendError(ctx.t('ban_soft:veryBigReason'), ctx.author)],
+					embeds: [this.sendError(ctx.t('ban_soft:texts.veryBigReason'), ctx.author)],
 				})
 				.catch(() => {});
 
