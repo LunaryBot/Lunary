@@ -1,4 +1,4 @@
-const { loadImage, createCanvas } = require('node-canvas');
+const { loadImage, createCanvas, CanvasRenderingContext2D, Canvas } = require('node-canvas');
 const { UserFlags } = require('../lib');
 const ContextCommand = require('../structures/ContextCommand');
 const Template = require('../structures/Template');
@@ -26,10 +26,14 @@ module.exports = class DefaultWhiteDesign extends Template {
 	 * bans: number,
 	 * luas: number
 	 * }}
+	 * @param {CanvasRenderingContext2D} ctxCanvas
+	 * @param {Canvas} canvas
 	 */
-	async build({ avatar, username, leftBackgroundName = 'left_discord_background', backgroundName = 'default', bio = '#ModeraçãoLunatica', flags, emblem, rankPosition = 'N/A', xp = 0, bans = 0, luas = 0 }) {
-		const canvas = createCanvas(800, 600);
-		const ctxCanvas = canvas.getContext('2d');
+	async build({ avatar, username, leftBackgroundName = 'left_discord_background', backgroundName = 'default', bio = '#ModeraçãoLunatica', flags, emblem, rankPosition = 'N/A', xp = 0, bans = 0, luas = 0 }, ctxCanvas, canvas) {
+		if(!ctxCanvas || !canvas) {
+			canvas = createCanvas(800, 600);
+			ctxCanvas = canvas.getContext('2d');
+		}
 
 		const leftBackground =
 			this.client.imagesCanvas.get('left_discord_background') ||
@@ -317,7 +321,7 @@ module.exports = class DefaultWhiteDesign extends Template {
 
 		ctxCanvas.stroke();
 
-		return canvas.toBuffer();
+		return canvas
 	}
 };
 
