@@ -10,7 +10,7 @@ module.exports = class AdvRemoveUserSubCommand extends SubCommand {
 				dirname: __dirname,
 				permissions: {
 					Discord: ['MANAGE_MESSAGES'],
-					Bot: ['LUNAR_ADV_MEMBERS'],
+					Bot: ['LUNAR_MANAGE_HISTORY'],
 				},
 				dm: false,
 			},

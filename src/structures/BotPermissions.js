@@ -30,6 +30,8 @@ class Permissions extends BitField {
 			LUNAR_MUTE_MEMBERS: 1 << 2,
 			LUNAR_ADV_MEMBERS: 1 << 3,
 			LUNAR_NOT_REASON: 1 << 4,
+			LUNAR_VIEW_HISTORY: 1 << 5,
+			LUNAR_MANAGE_HISTORY: 1 << 6,
 		};
 
 		return FLAGS;

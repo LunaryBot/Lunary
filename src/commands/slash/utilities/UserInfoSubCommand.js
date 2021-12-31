@@ -37,10 +37,12 @@ module.exports = class UserInfoSubCommand extends SubCommand {
 			format: 'png',
 			size: 1024,
 		});
+
 		const base_embed = new Discord.MessageEmbed()
 			.setAuthor(user.username)
 			.setColor(member?.displayHexColor || '#A020F0')
 			.setThumbnail(avatar);
+
 		const badges = user.flags
 			.toArray()
 			.filter(x => x != 'VERIFIED_BOT')
@@ -62,7 +64,9 @@ module.exports = class UserInfoSubCommand extends SubCommand {
 				.catch(() => {});
 
 		embed_main.addField(`:star2: ${ctx.t('user_info:texts.memberJoinedTimestamp')}`, `<t:${Math.floor((member.joinedTimestamp + 3600000) / 1000.0)}> (<t:${Math.floor((member.joinedTimestamp + 3600000) / 1000.0)}:R>)`);
+		
 		if (member.premiumSinceTimestamp) embed_main.addField(`<:booster:892131133800742973> ${ctx.t('user_info:texts.memberPremiumSinceTimestamp')}`, `<t:${Math.floor((member.premiumSinceTimestamp + 3600000) / 1000.0)}> (<t:${Math.floor((member.premiumSinceTimestamp + 3600000) / 1000.0)}:R>)`);
+		
 		let secondy_embed = null;
 
 		const comp_back = new Discord.MessageActionRow().addComponents([new Discord.MessageButton().setCustomId('back').setStyle('SECONDARY').setEmoji('858168570055491604')]);
