@@ -30,14 +30,16 @@ module.exports = class UserInfoSubCommand extends SubCommand {
 				})
 				.catch(() => {});
 
+		const member = user.id == ctx.author.id ? ctx.member : ctx.interaction.options.getMember('user');
+
 		const avatar = user.displayAvatarURL({
 			dynamic: true,
 			format: 'png',
 			size: 1024,
 		});
 		const base_embed = new Discord.MessageEmbed()
-			.setAuthor(user.username, `https://cdn.discordapp.com/emojis/${this.client.config.devs.includes(user.id) ? '844347009543569449' : '832083303627620422'}.png?size=128`)
-			.setColor(this.client.config.devs.includes(user.id) ? '#FFFAFA' : '#A020F0')
+			.setAuthor(user.username)
+			.setColor(member?.displayHexColor || '#A020F0')
 			.setThumbnail(avatar);
 		const badges = user.flags
 			.toArray()
@@ -52,7 +54,6 @@ module.exports = class UserInfoSubCommand extends SubCommand {
 
 		if (badges) embed_main.setDescription(`> ${badges}`);
 
-		const member = user.id == ctx.author.id ? ctx.member : ctx.interaction.options.getMember('user');
 		if (!member)
 			return ctx.interaction
 				.reply({
