@@ -3,8 +3,8 @@ help:
   description: Edita o motivo de uma advertência/aviso do servidor.
   category: Moderação
   examples:
-    - title: Exibe as informações de uma advertência pelo id.
-      usage: id:{id}
+    - title: Edita o motivo de uma advertência/aviso pelo id.
+      usage: id:{id} newreason:{newreason}
 texts:
   warningNotFound: <:Per:833078041084166164> | **Oops**, eu não encontrei advertência com o ID `{id}` nesse servidor. Ou você digitou o ID errado, ou a advertência foi removida, ou ela foi sugada por um buraco negro :woman_shrugging:.
   punishedBy: Advertido por
