@@ -55,7 +55,7 @@ module.exports = class ProfileCommand extends Command {
 		const design = this.client.designsProfile.find(template => template.name == db.design) || this.client.designsProfile.find(template => template.name == 'DEFAULT_BLACK_DESIGN');
 		let arr;
 		
-		if(user.avatar.startsWith('a_')) {
+		if(ctx.UserDB.premium && ctx.UserDB.premium_expire < Date.now() && (ctx.UserDB.has('PROFILE_GIF') && user.avatar.startsWith('a_'))) {
 			const fetched = await fetch(user.avatarURL({
 				format: 'png',
 				dynamic: true,

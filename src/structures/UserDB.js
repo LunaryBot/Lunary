@@ -43,6 +43,7 @@ class UserConfigs extends BitField {
 	static get FLAGS() {
 		const FLAGS = {
 			QUICK_PUNISHMENT: 1 << 0,
+			PROFILE_GIF: 1 << 1,
 		};
 
 		return FLAGS;
