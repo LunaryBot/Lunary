@@ -73,8 +73,8 @@ module.exports = class MuteRemoveSubCommand extends SubCommand {
 			.followUp({
 				content: ctx.t('mute_remove:texts.removeMute', {
 					author_mention: ctx.author.toString(),
-					user_tag: ban.user.tag,
-					user_id: ban.user.id,
+					user_tag: user.user.tag,
+					user_id: user.user.id,
 				}),
 			})
 			.catch(() => {});
