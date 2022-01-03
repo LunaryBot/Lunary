@@ -73,7 +73,7 @@ module.exports = class BanRemoveSubCommand extends SubCommand {
 			if (channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432))
 				channel_modlogs
 					.send({
-						embeds: [message_modlogs(ctx.author, ban.user, ctx.t('ban_remove:texts.reasonNotInformed'), 'unban', ctx.t)],
+						embeds: [message_modlogs(ctx.author, ban.user, reason, 'unban', ctx.t)],
 					})
 					.catch(() => {});
 		}

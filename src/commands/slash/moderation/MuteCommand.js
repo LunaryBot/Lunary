@@ -11,6 +11,7 @@ const {
 	timeString,
 	format_time: { format },
 } = require('../../../utils/index.js');
+const MuteCommandSubCommand = require('./MuteRemoveSubCommand.js');
 
 module.exports = class MuteCommand extends Command {
 	constructor(client) {
@@ -27,6 +28,10 @@ module.exports = class MuteCommand extends Command {
 			},
 			client,
 		);
+
+		this.subcommands = [
+			new MuteCommandSubCommand(client, this),
+		]
 	}
 
 	/**

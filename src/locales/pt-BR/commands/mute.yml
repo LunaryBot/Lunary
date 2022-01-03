@@ -3,15 +3,14 @@ help:
   description: Silencia um usuário por um período de tempo determinado no servidor.
   category: Moderação
   examples:
-    examples:
-      - title: Pune um usuário usando a menção.
-        usage: "user user:{@user}"
-      - title: Pune um usuário usando o id.
-        usage: "user user:{userID}"
-      - title: Pune um usuário usando com um motivo.
-        usage: "user user:{@user} reason:{reason}"
-      - title: Pune um usuário sem notificar via dm.
-        usage: "user user:{@user} notify-dm:{notify-dm}"
+    - title: Pune um usuário usando a menção.
+      usage: "user user:{@user}"
+    - title: Pune um usuário usando o id.
+      usage: "user user:{userID}"
+    - title: Pune um usuário usando com um motivo.
+      usage: "user user:{@user} reason:{reason}"
+    - title: Pune um usuário sem notificar via dm.
+      usage: "user user:{@user} notify-dm:{notify-dm}"
 texts:
   mandatoryReason: É preciso informar um motivo para o silenciamento. `[Opção de motivo obrigatório ativa]`
   veryBigReason: O motivo deve conter no máximo `400` caracteres.

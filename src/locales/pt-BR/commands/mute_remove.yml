@@ -1,0 +1,16 @@
+help:
+  name: ban remove
+  description: Retira o silenciamento de um usuário do servidor.
+  category: Moderação
+  examples:
+    - title: Remove o silenciamento pela menção de um usuário.
+      usage: "user:{@user}"
+    - title: Remove o silenciamento pelo id de um usuário.
+      usage: "user:{user-id}"
+    - title: Remove o silenciamento com um motivo.
+      usage: "user:{@user} reason:{reason}"
+texts:
+  userNotMuted: O usuário `{user_tag}` não está silenciado no servidor.
+  removeMute: ":white_check_mark: ─  **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) teve seu silenciamento retirado com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+  requestedBy: "Requisitado por: {user_tag} - Motivo: {reason}"
+  reasonNotInformed: Não informado.
