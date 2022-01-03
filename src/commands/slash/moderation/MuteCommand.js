@@ -29,9 +29,7 @@ module.exports = class MuteCommand extends Command {
 			client,
 		);
 
-		this.subcommands = [
-			new MuteCommandSubCommand(client, this),
-		]
+		this.subcommands = [new MuteCommandSubCommand(client, this)];
 	}
 
 	/**

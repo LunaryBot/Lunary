@@ -30,7 +30,7 @@ module.exports = class DefaultBlackDesign extends Template {
 	 * @param {Canvas} canvas
 	 */
 	async build({ avatar, username, leftBackgroundName = 'left_discord_background', backgroundName = 'default', bio = '#ModeraçãoLunatica', flags, emblem, rankPosition = 'N/A', xp = 0, bans = 0, luas = 0 }, ctxCanvas, canvas) {
-		if(!ctxCanvas || !canvas) {
+		if (!ctxCanvas || !canvas) {
 			canvas = createCanvas(800, 600);
 			ctxCanvas = canvas.getContext('2d');
 		}
@@ -293,7 +293,7 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.fillText('BADGES', 370, 456, 80);
 		ctxCanvas.shadowOffsetX = 2;
 		ctxCanvas.shadowOffsetY = 2;
-		
+
 		// Load badges images
 		let badgeX = 317;
 		let badgeY = 457;
@@ -321,7 +321,7 @@ module.exports = class DefaultBlackDesign extends Template {
 
 		ctxCanvas.stroke();
 
-		return canvas
+		return canvas;
 	}
 };
 

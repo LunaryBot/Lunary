@@ -12,9 +12,9 @@ const moment = require('moment');
 require('moment-duration-format');
 const sydb = require('sydb');
 const Transcript = require('../../../structures/Transcript');
-const commands = require("../../../data/commands.json");
+const commands = require('../../../data/commands.json');
 const GIFEncoder = require('gifencoder');
-const gifFrames = require('gif-frames')
+const gifFrames = require('gif-frames');
 const { writeFileSync } = require('fs');
 const fetch = require('node-fetch');
 const { createCanvas, loadImage } = require('node-canvas');

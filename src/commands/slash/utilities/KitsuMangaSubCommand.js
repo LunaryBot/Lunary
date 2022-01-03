@@ -58,19 +58,20 @@ module.exports = class KitsuMangaSubCommand extends SubCommand {
 		/**
 		 * @type {Discord.SelectMenuInteraction}
 		 */
-		const response = await msg.awaitMessageComponent({
-			componentType: 'SELECT_MENU',
-			filter: comp => {
-				comp.deferUpdate();
-				return comp.user.id == ctx.author.id
-			},
-			time: 1 * 1000 * 60,
-		})
-		.catch(() => {
-			ctx.interaction.editReply({
-				components: [new Discord.MessageActionRow().addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))],
+		const response = await msg
+			.awaitMessageComponent({
+				componentType: 'SELECT_MENU',
+				filter: comp => {
+					comp.deferUpdate();
+					return comp.user.id == ctx.author.id;
+				},
+				time: 1 * 1000 * 60,
+			})
+			.catch(() => {
+				ctx.interaction.editReply({
+					components: [new Discord.MessageActionRow().addComponents(menu.setDisabled(true).setPlaceholder(ctx.t('general:timeForSelectionEsgotated')))],
+				});
 			});
-		});
 
 		msg.edit(createEmbed(results[Number(response.values[0])])).catch(() => {});
 

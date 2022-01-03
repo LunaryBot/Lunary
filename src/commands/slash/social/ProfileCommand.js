@@ -3,7 +3,7 @@ const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const { UserDB } = require('../../../structures/UserDB.js');
 const GIFEncoder = require('gif-encoder-2');
-const gifFrames = require('gif-frames')
+const gifFrames = require('gif-frames');
 const { writeFileSync } = require('fs');
 const fetch = require('node-fetch');
 const { createCanvas } = require('node-canvas');
@@ -54,19 +54,21 @@ module.exports = class ProfileCommand extends Command {
 			: 'N/A';
 		const design = this.client.designsProfile.find(template => template.name == db.design) || this.client.designsProfile.find(template => template.name == 'DEFAULT_BLACK_DESIGN');
 		let arr;
-		
-		if(ctx.UserDB.premium && ctx.UserDB.premium_expire < Date.now() && (ctx.UserDB.has('PROFILE_GIF') && user.avatar.startsWith('a_'))) {
-			const fetched = await fetch(user.avatarURL({
-				format: 'png',
-				dynamic: true,
-			}));
+
+		if (ctx.UserDB.premium && ctx.UserDB.premium_expire < Date.now() && ctx.UserDB.has('PROFILE_GIF') && user.avatar.startsWith('a_')) {
+			const fetched = await fetch(
+				user.avatarURL({
+					format: 'png',
+					dynamic: true,
+				}),
+			);
 			const prebuffer = await fetched.buffer();
 
 			const buffer = await gifFrames({
 				url: prebuffer,
 				frames: '0-100',
 				culmative: true,
-				outputType: 'jpg'
+				outputType: 'jpg',
 			});
 
 			const encoder = new GIFEncoder(800, 600);
@@ -74,55 +76,57 @@ module.exports = class ProfileCommand extends Command {
 			encoder.setDelay(100);
 			encoder.setQuality(10);
 
-
 			encoder.start();
 
 			const canvas = createCanvas(800, 600);
 			const ctxCanvas = canvas.getContext('2d');
 
 			for (const frame of buffer) {
-				await design.build({
-					avatar: frame.getImage()._obj,
-					username: user.username,
-					backgroundName: db.background,
-					rankPosition,
-					xp: db.xp,
-					bans: db.bans,
-					bio: db.aboutme,
-					emblem: db.emblem,
-					flags: user.flags,
-					luas: db.luas,
-					rank: db.rank,
-				}, ctxCanvas, canvas)
+				await design.build(
+					{
+						avatar: frame.getImage()._obj,
+						username: user.username,
+						backgroundName: db.background,
+						rankPosition,
+						xp: db.xp,
+						bans: db.bans,
+						bio: db.aboutme,
+						emblem: db.emblem,
+						flags: user.flags,
+						luas: db.luas,
+						rank: db.rank,
+					},
+					ctxCanvas,
+					canvas,
+				);
 				encoder.addFrame(ctxCanvas);
 			}
 
 			encoder.finish();
 			const fbuffer = encoder.out.getData();
-			arr = new Discord.MessageAttachment(
-				fbuffer, 
-				`${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.gif`,
-			);
+			arr = new Discord.MessageAttachment(fbuffer, `${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.gif`);
 		} else {
 			arr = new Discord.MessageAttachment(
-				(await design.build({
-					avatar: user.avatarURL({
-						format: 'png',
-						dynamic: false,
-					}),
-					username: user.username,
-					backgroundName: db.background,
-					rankPosition,
-					xp: db.xp,
-					bans: db.bans,
-					bio: db.aboutme,
-					emblem: db.emblem,
-					flags: user.flags,
-					luas: db.luas,
-					rank: db.rank,
-				})).toBuffer(),
+				(
+					await design.build({
+						avatar: user.avatarURL({
+							format: 'png',
+							dynamic: false,
+						}),
+						username: user.username,
+						backgroundName: db.background,
+						rankPosition,
+						xp: db.xp,
+						bans: db.bans,
+						bio: db.aboutme,
+						emblem: db.emblem,
+						flags: user.flags,
+						luas: db.luas,
+						rank: db.rank,
+					})
+				).toBuffer(),
 				`${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.png`,
-			)
+			);
 		}
 
 		ctx.interaction
@@ -130,9 +134,7 @@ module.exports = class ProfileCommand extends Command {
 				content: ctx.t('profile:texts.contentMessage', {
 					user: user.toString(),
 				}),
-				files: [
-					arr
-				],
+				files: [arr],
 			})
 			.catch(() => {});
 	}

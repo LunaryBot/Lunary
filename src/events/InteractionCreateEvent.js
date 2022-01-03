@@ -78,11 +78,10 @@ module.exports = class InteractionCreateEvent extends Event {
 			);
 
 			if (command.premium_type) {
-				if(!((ctx.GuildDB.premium_type || 0) >= command.premium_type) || ctx.GuildDB.premium_expire < Date.now()) {
-					return interaction
-						.reply({
-							content: ctx.t('general:guildRequiredPremium'),
-						})
+				if (!((ctx.GuildDB.premium_type || 0) >= command.premium_type) || ctx.GuildDB.premium_expire < Date.now()) {
+					return interaction.reply({
+						content: ctx.t('general:guildRequiredPremium'),
+					});
 				}
 			}
 

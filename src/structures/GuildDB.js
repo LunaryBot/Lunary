@@ -19,7 +19,7 @@ class GuildDB {
 			kick: data.reasons?.kick || [],
 			ban: data.reasons?.ban || [],
 		};
-		
+
 		this.premium_type = data.premium_type || null;
 		this.premium_started = data.premium_started || null;
 		this.premium_duration = Number(data.premium_duration) || null;

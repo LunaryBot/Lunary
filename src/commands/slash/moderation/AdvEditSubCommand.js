@@ -14,7 +14,7 @@ module.exports = class AdvEditSubCommand extends SubCommand {
 					Bot: ['LUNAR_MANAGE_HISTORY'],
 				},
 				dm: false,
-				premium_type: 1
+				premium_type: 1,
 			},
 			mainCommand,
 			client,
@@ -70,12 +70,12 @@ module.exports = class AdvEditSubCommand extends SubCommand {
 		adv = Buffer.from(JSON.stringify(adv)).toString('base64');
 
 		await this.client.LogsDB.ref(id).set(adv);
-		
+
 		ctx.interaction
 			.followUp({
 				content: ctx.t('adv_edit:texts.success', {
 					author: ctx.author.toString(),
-				})
+				}),
 			})
 			.catch(() => {});
 	}

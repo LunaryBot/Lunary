@@ -23,12 +23,7 @@ module.exports = class AdvCommand extends Command {
 			client,
 		);
 
-		this.subcommands = [
-			new AdvListSubCommand(client, this), 
-			new AdvInfoSubCommand(client, this), 
-			new AdvRemoveCommandGroup(client, this),
-			new AdvEditSubCommand(client, this),
-		];
+		this.subcommands = [new AdvListSubCommand(client, this), new AdvInfoSubCommand(client, this), new AdvRemoveCommandGroup(client, this), new AdvEditSubCommand(client, this)];
 	}
 
 	/**

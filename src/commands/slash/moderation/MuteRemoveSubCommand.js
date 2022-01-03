@@ -26,9 +26,9 @@ module.exports = class MuteRemoveSubCommand extends SubCommand {
 	 */
 	async run(ctx) {
 		ctx.interaction.deferReply().catch(() => {});
-		const user = ctx.interaction.options.getMember('user')
-        
-        if (!user)
+		const user = ctx.interaction.options.getMember('user');
+
+		if (!user)
 			return await ctx.interaction
 				.reply({
 					content: ctx.t('general:invalidUser', {
@@ -54,12 +54,12 @@ module.exports = class MuteRemoveSubCommand extends SubCommand {
 		const reason = ctx.interaction.options.getString('reason') || ctx.t('mute_remove:texts.reasonNotInformed');
 
 		await user.timeout(
-            null,
-            `${ctx.t('mute_remove:texts.requestedBy', {
+			null,
+			`${ctx.t('mute_remove:texts.requestedBy', {
 				user_tag: `${ctx.author.tag}`,
 				reason,
-			})}`.shorten(500) 
-        )
+			})}`.shorten(500),
+		);
 
 		const channel_modlogs = ctx.guild.channels.cache.get(ctx.GuildDB.chat_modlogs);
 		if (channel_modlogs && channel_modlogs.permissionsFor(ctx.client.user.id).has(18432))
