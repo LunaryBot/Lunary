@@ -25,3 +25,7 @@ modlogs:
   reason: Motivo
   duration: Duração
   durationNotDetermined: Não determinado.
+
+booleans:
+  true: Sim
+  false: Não
