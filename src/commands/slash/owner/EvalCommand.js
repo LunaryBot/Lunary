@@ -6,12 +6,7 @@ const Discord = require('../../../lib');
 const MemberBotPermissions = require('../../../structures/BotPermissions.js');
 const message_modlogs = require('../../../utils/message_modlogs.js');
 const message_punish = require('../../../utils/message_punish.js');
-let m = {
-	label: 'Rogue',
-	value: 'rogue',
-	description: 'Sneak n stab',
-	emoji: { name: 'emoji_1', id: '870329125259337769' },
-};
+const commands = require("../../../data/commands.json");
 
 module.exports = class EvalCommand extends Command {
 	constructor(client) {

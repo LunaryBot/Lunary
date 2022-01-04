@@ -54,7 +54,7 @@ module.exports = class PingCommand extends Command {
 				content: s.join('\n') + l + '\n+' + k + '+' + '```',
 			});
 		} else {
-			let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.dm ? 0 : ctx.guild.shardId) + 1} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clustersName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`;
+			let a = `**:ping_pong:•Pong!**\n**:satellite_orbital: | Shard:** ${Number(ctx.dm ? 0 : ctx.guild.shardId)} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clustersName[this.client.cluster.id]})]\n**⚡ | Shard Ping:** \`${this.client.ws.ping}ms\`\n**⏰ | Gateway Ping:**`;
 
 			let ping = Date.now();
 			await ctx.interaction.reply({
