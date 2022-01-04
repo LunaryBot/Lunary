@@ -34,7 +34,7 @@ module.exports = class RoleInfoSubCommand extends SubCommand {
             .addField(`:bell: ${ctx.t('role_info:texts.roleMentionable')}`, `${ctx.t(`general:booleans.${!!role.mentionable}`)}`, true)
             .addField(`:robot: ${ctx.t('role_info:texts.roleIntegration')}`, `${ctx.t(`general:booleans.${!!role.managed}`)}`, true)
 		    .addField(`:calendar_spiral: ${ctx.t('role_info:texts.createdAt')}`, `<t:${Math.floor((role.createdTimestamp + 3600000) / 1000.0)}> (<t:${Math.floor((role.createdTimestamp + 3600000) / 1000.0)}:R>)`)
-            .addField(`:shield: ${ctx.t('role_info:texts.permissions')}`, `${role.permissions.toArray().map(x => `\`${ctx.t(`permissions:${x}`)}\``).join(', ')}`)
+            .addField(`:shield: ${ctx.t('role_info:texts.permissions')}`, `${role.permissions.toArray().map(x => `\`${ctx.t(`permissions:${x}`)}\``).join(', ') || '🙅‍♀️ Esse cargo não possui permissões...'}`)
 		
         ctx.interaction.reply({
 			embeds: [embed],
