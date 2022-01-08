@@ -1,6 +1,6 @@
 const Command = require('../../../structures/Command.js');
-const KitsuAnimeSubCommand = require('./KitsuAnimeSubCommand.js');
-const KitsuMangaSubCommand = require('./KitsuMangaSubCommand.js');
+const KitsuAnimeSubCommand = require('../utilities/KitsuAnimeSubCommand.js');
+const KitsuMangaSubCommand = require('../utilities/KitsuMangaSubCommand.js');
 
 module.exports = class KitsuCommand extends Command {
 	constructor(client) {

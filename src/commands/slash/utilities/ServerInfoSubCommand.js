@@ -30,7 +30,7 @@ module.exports = class ServerInfoSubCommand extends SubCommand {
             .setThumbnail(guild.iconURL({ dynamic: true }) || null)
             .addField(`:open_file_folder: ID:`, `\`${guild.id}\``, true)
             .addField(`:crown: ${ctx.t('server_info:texts.serverOwner')}`, `\`${owner.tag}\`\n(${guild.ownerId})`, true)
-            .addField(`:satellite_orbital: ID:`, `${guild.shardId} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clustersName[this.client.cluster.id]})]`, true)
+            .addField(`:satellite_orbital: Shard:`, `${guild.shardId} - [<:foguete:871445461603590164> Cluster ${Number(this.client.cluster.id) + 1} (${this.client.config.clustersName[this.client.cluster.id]})]`, true)
             .addField(`:dividers: ${ctx.t('server_info:texts.serverChannels', { size: guild.channels.cache.size })}`, `>>> :speech_balloon: ${ctx.t('server_info:texts.serverChannelsText', { size: guild.channels.cache.filter(channel => channel.isText() ).size })}\n:loud_sound: ${ctx.t('server_info:texts.serverChannelsVoice', { size: guild.channels.cache.filter(channel => channel.isVoice() ).size })}`, true)
             .addField(`:briefcase: ${ctx.t('server_info:texts.serverRoles', { size: guild.roles.cache.filter(role => role.id != guild.id).size })}`, '\u200b', true)
             .addField(`:busts_in_silhouette: ${ctx.t('server_info:texts.serverMembers', { size: guild.memberCount })}`, `||\n||`, true)

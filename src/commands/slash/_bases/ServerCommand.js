@@ -1,5 +1,5 @@
 const Command = require("../../../structures/Command.js")
-const ServerInfoSubCommand = require("./ServerInfoSubCommand.js")
+const ServerInfoSubCommand = require("../utilities/ServerInfoSubCommand.js")
 
 module.exports = class ServerCommand extends Command {
     constructor(client) {
