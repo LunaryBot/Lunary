@@ -2,6 +2,7 @@ const { Collection, Message, GuildChannel, User } = require('../lib');
 const _client = require('../Lunary.js');
 const fs = require('fs');
 const css = (fs.readFileSync(__dirname + '/../data/transcript.css', 'utf8') || '').replace(/\n|\s/g, '');
+const emojiRegex = /<(a)?:(.{2,32}):(\d{17,19})>/g;
 
 module.exports = class Transcript {
 	/**
@@ -119,7 +120,7 @@ module.exports = class Transcript {
 			html += `<div class="content">${this.toHTML(message.content, {
 				emoji: true,
 				largeEmoji: true,
-			})}</div>`;
+			}, message)}</div>`;
 		if (message.embeds?.length) {
 			html += message.embeds
 				.map(embed => {
@@ -192,9 +193,18 @@ module.exports = class Transcript {
 	 *
 	 * @param {string} text
 	 * @param {boolean{}} options
+	 * @param {Message} message
 	 */
-	static toHTML(text, options = {}) {
-		const emojiRegex = /<(a)?:(.{2,32}):(\d{17,19})>/g;
+	static toHTML(text, options = {}, message) {
+
+		if(message?.mentions) {
+			text = text.replace(/<@!?[0-9]+>/g, input => {
+				const id = input.replace(/<|!|>|@/g, '');
+		  
+				const user = message.mentions.users.get(id);
+				return user ? removeMentions(`<span class="mention">@${user.username}</span>`) : input;
+			})
+		}
 
 		text = text.replace(/\n/g, '<br>');
 
