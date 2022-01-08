@@ -187,7 +187,7 @@ module.exports = class BanSoftSubCommand extends SubCommand {
 			ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({
 				lastPunishmentApplied: log,
 				xp: xp,
-				bans: ctx.UserDB.punishmentsApplied.bans + 1,
+				bans: ctx.UserDB.bans + 1,
 			});
 
 			function generateXP() {
