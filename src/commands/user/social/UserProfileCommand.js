@@ -55,7 +55,7 @@ module.exports = class UserProfileCommand extends Command {
 				}),
 				files: [
 					new Discord.MessageAttachment(
-						await design.build({
+						(await design.build({
 							avatar: user.avatarURL({
 								format: 'png',
 								dynamic: false,
@@ -70,7 +70,7 @@ module.exports = class UserProfileCommand extends Command {
 							flags: user.flags,
 							luas: db.luas,
 							rank: db.rank,
-						}),
+						})).toBuffer(),
 						`${[...user.username].map(x => x.removeAccents()).filter(x => /[a-z]/i.test(x))}_profile.png`,
 					),
 				],
