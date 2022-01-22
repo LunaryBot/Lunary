@@ -1,0 +1,6 @@
+help:
+  name: luas
+  description:
+texts:
+  userLuas: ":pound: {author}, {user} possui **`{luasAmount} lua(s)`**."
+  authorLuas: ":pound: {author}, você possui **`{luasAmount} lua(s)`**."
