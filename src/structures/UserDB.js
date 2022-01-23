@@ -18,6 +18,8 @@ class UserDB {
 		this.gifs = data.gifs || {};
 		this.xp = Number(data.xp || 0);
 		this.luas = Number(data.luas || 0);
+		this.lastDaily = data.lastDaily ? new Date(data.lastDaily) : null;
+		this.lastDailyTimestamp = this.lastDaily?.getDate?.() || null;
 		this.emblem = data.emblem;
 		this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null;
 		if (this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason);
