@@ -16,13 +16,13 @@ module.exports = class LuasCommand extends Command {
 
     async run(ctx) {
         const user = ctx.interaction.options.getUser('user') || ctx.author;
-        const luasAmount = user.id == ctx.author.id ? ctx.UserDB.luas : ctx.UsersDB.ref(`Users/${user.id}/luas`).val();
+        const luasAmount = (user.id == ctx.author.id ? ctx.UserDB.luas : ctx.UsersDB.ref(`Users/${user.id}/luas`).val()) || 0;
 
         ctx.interaction.reply({
             content: ctx.t(`luas:texts.${user.id == ctx.author.id ? "author" : "user"}Luas`, {
                 author: ctx.author.toString(),
                 user: user.toString(),
-                luasAmount: luasAmount
+                luasAmount: luasAmount || 0
             }),
             allowedMentions: {
                 user: true
