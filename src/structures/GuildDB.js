@@ -19,17 +19,20 @@ class GuildDB {
 			kick: data.reasons?.kick || [],
 			ban: data.reasons?.ban || [],
 		};
+		
+		const premium_expire = data.premium_type ? data.premium_started + Number(data.premium_duration) : null;
+		
+		this.premium_type = (premium_expire && premium_expire > Date.now() ? data.premium_type : null) || null;
 
-		this.premium_type = data.premium_type || null;
 		this.premium_started = data.premium_started || null;
-		this.premium_duration = Number(data.premium_duration) || null;
-		this.premium_expire = this.premium_type ? this.premium_started + this.premium_duration : null;
-
+		this.premium_duration = (premium_expire && premium_expire > Date.now() ? Number(data.premium_duration) : null) || null;
+		this.premium_expire = (premium_expire && premium_expire > Date.now() ? this.premium_started + this.premium_duration : null) || null;
+		
 		if (typeof data.permissions == 'object') {
 			Object.entries(data.permissions || {}).forEach(([key, value]) => {
 				this.permissions.set(key, new Permissions(value));
 			});
-		}
+		};
 	}
 }
 
