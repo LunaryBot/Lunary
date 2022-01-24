@@ -1,0 +1,6 @@
+help:
+  name: daily
+  description:
+texts:
+  dailyCooldown: Você ta no cooldown dessa poha, volta {getDailyDate}!
+  dailyCollect: Você coletou {dailyAmount}!
