@@ -18,18 +18,22 @@ class UserDB {
 		this.gifs = data.gifs || {};
 		this.xp = Number(data.xp || 0);
 		this.luas = Number(data.luas || 0);
+
 		this.lastDaily = data.lastDaily ? new Date(data.lastDaily) : null;
-		this.lastDailyTimestamp = this.lastDaily?.getDate?.() || null;
+		this.lastDailyTimestamp = this.lastDaily?.getTime?.() || null;
+		
 		this.emblem = data.emblem;
 		this.lastPunishmentApplied = data.lastPunishmentApplied ? JSON.parse(Buffer.from(data.lastPunishmentApplied, 'base64').toString('ascii')) : null;
 		if (this.lastPunishmentApplied) this.lastPunishmentApplied.reason = decodeURIComponent(this.lastPunishmentApplied.reason);
 		this.bans = data.bans || 0;
 		if (perms) this.permissions = perms;
 
-		this.premium = data.premium || false;
-		this.premium_started = data.premium_started || null;
-		this.premium_duration = Number(data.premium_duration) || null;
-		this.premium_expire = this.premium_type ? this.premium_started + this.premium_duration : null;
+		const premium_expire = data.premium_duration ? data.premium_started + Number(data.premium_duration) : 0;
+
+		this.premium = !!(premium_expire > Date.now());
+		this.premium_started = (premium_expire > Date.now() ? data.premium_started : null) || null;
+		this.premium_duration = (premium_expire > Date.now() ? Number(data.premium_duration) : null) || null;
+		this.premium_expire = premium_expire || null;
 	}
 }
 
