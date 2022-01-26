@@ -1,4 +1,10 @@
 const router = require('express').Router();
+const { Webhook } = require('@top-gg/sdk');
+const dbl = new Webhook(process.env.DBL_PASSWORD);
+
+router.post('/vote', dbl.middleware() ,async (req, res) => {
+	console.log(req.vote);
+});
 
 router.get('/guild/:id_guild', async (req, res) => {
 	const guildID = req.params.id_guild;
