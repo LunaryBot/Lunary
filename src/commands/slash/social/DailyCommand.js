@@ -29,7 +29,8 @@ module.exports = class LuasCommand extends Command {
             ) {
                 return ctx.interaction.reply({
                     content: ctx.t(`daily:texts.dailyCooldown`, {
-                        getDailyDate: `<t:${Math.floor(nDate.getTime() /1000.0)}:R>`
+                        author: ctx.author.toString(),
+                        nextDaily: `<t:${Math.floor(nDate.getTime() /1000.0)}:t>`
                     })
                 });
             };
