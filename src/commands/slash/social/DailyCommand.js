@@ -2,7 +2,7 @@ const Command = require("../../../structures/Command")
 const ContextCommand = require("../../../structures/ContextCommand")
 const Discord = require("discord.js")
 
-module.exports = class LuasCommand extends Command {
+module.exports = class DailyCommand extends Command {
     constructor(client) {
         super({
             name: "daily",
@@ -20,8 +20,6 @@ module.exports = class LuasCommand extends Command {
         const { lastDaily } = ctx.UserDB;
 
         if(lastDaily) {
-            
-
             if(
                 lastDaily.getFullYear() === now.getFullYear() &&
                 lastDaily.getMonth() === now.getMonth() &&
