@@ -3,4 +3,4 @@ help:
   description:
 texts:
   dailyCooldown: Você ta no cooldown dessa poha, volta {getDailyDate}!
-  dailyCollect: Você coletou {dailyAmount}!
+  dailyCollect: ":tada: {author} **|** Você coletou a recompensa diária de hoje e com isso ganhou **`{dailyAmount} lua(s)`**. Volte amanhã({nextDailyDate}) para outra recompensa lunática! :crescent_moon: \nE também não se esqueça que você pode resgatar mais luas acessando minha página na **DBL (Discord Bot List)** e votando em mim... <:YaY:833060366014611456>\n\n{voteLink}"

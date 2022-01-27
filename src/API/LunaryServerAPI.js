@@ -1,9 +1,13 @@
 const router = require('express').Router();
 const { Webhook } = require('@top-gg/sdk');
-const dbl = new Webhook(process.env.DBL_PASSWORD);
+const { default: axios } = require('axios')
 
-router.post('/vote', dbl.middleware() ,async (req, res) => {
+const { DBL_PASSWORD, DISCORD_TOKEN } = process.env;
+const dbl = new Webhook(DBL_PASSWORD);
+
+router.post('/vote', dbl.middleware(), async (req, res) => {
 	console.log(req.vote);
+	res.send('Ok');
 });
 
 router.get('/guild/:id_guild', async (req, res) => {

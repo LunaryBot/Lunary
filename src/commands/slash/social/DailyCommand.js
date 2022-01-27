@@ -15,11 +15,12 @@ module.exports = class LuasCommand extends Command {
      */
 
     async run(ctx) {
-        if(ctx.UserDB.lastDaily) {
-            const { lastDaily } = ctx.UserDB;
+        const now = new Date();
+        const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const { lastDaily } = ctx.UserDB;
+
+        if(lastDaily) {
             
-            const now = new Date();
-            const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
             if(
                 lastDaily.getFullYear() === now.getFullYear() &&
@@ -48,7 +49,10 @@ module.exports = class LuasCommand extends Command {
         
         ctx.interaction.reply({
             content: ctx.t("daily:texts.dailyCollect", {
-                dailyAmount: luas
+                author: ctx.author.toString(),
+                dailyAmount: luas,
+                nextDaily: `<t:${Math.floor(nDate.getTime() /1000.0)}:R>`,
+                voteLink: this.client.config.links.vote
             })
         });
     }
