@@ -1,10 +1,10 @@
-const SubCommand = require('../../../structures/SubCommand.js');
+const { CommandGroup } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const AdvRemoveUserSubCommand = require('./AdvRemoveUserSubCommand.js');
 const AdvRemoveIdSubCommand = require('./AdvRemoveIdSubCommand.js');
 
-module.exports = class AdvRemoveCommandGroup extends SubCommand.CommandGroup {
+module.exports = class AdvRemoveCommandGroup extends CommandGroup {
 	constructor(client, mainCommand) {
 		super(
 			{

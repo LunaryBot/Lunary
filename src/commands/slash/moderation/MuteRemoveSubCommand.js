@@ -1,4 +1,4 @@
-const SubCommand = require('../../../structures/SubCommand.js');
+const { SubCommand } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const { message_modlogs } = require('../../../utils');

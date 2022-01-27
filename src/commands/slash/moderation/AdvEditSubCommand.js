@@ -1,4 +1,4 @@
-const SubCommand = require('../../../structures/SubCommand.js');
+const { SubCommand } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const advRegex = /^.{8}-.{4}-.{4}-.{4}-.{10}$/i;
