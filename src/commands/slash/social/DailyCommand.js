@@ -30,7 +30,7 @@ module.exports = class LuasCommand extends Command {
                 return ctx.interaction.reply({
                     content: ctx.t(`daily:texts.dailyCooldown`, {
                         author: ctx.author.toString(),
-                        nextDaily: `<t:${Math.floor(nDate.getTime() /1000.0)}:t>`
+                        nextDailyDate: `<t:${Math.floor(nDate.getTime() /1000.0)}:t>`
                     })
                 });
             };
@@ -41,7 +41,7 @@ module.exports = class LuasCommand extends Command {
         
         let maxLuas = plan?.maxLuas || 3500; 
         
-        const luas = (Math.floor(Math.random() * (maxLuas - 300 + 1)) + 300) * (Number(plan.multiple) || 1);
+        const luas = (Math.floor(Math.random() * (maxLuas - 700 + 1)) + 700) * (Number(plan.multiple) || 1);
 
         this.client.UsersDB.ref(`Users/${ctx.author.id}`).set({
             lastDaily: Date.now(),
@@ -52,7 +52,7 @@ module.exports = class LuasCommand extends Command {
             content: ctx.t("daily:texts.dailyCollect", {
                 author: ctx.author.toString(),
                 dailyAmount: luas,
-                nextDaily: `<t:${Math.floor(nDate.getTime() /1000.0)}:R>`,
+                nextDailyDate: `<t:${Math.floor(nDate.getTime() /1000.0)}:R>`,
                 voteLink: this.client.config.links.vote
             })
         });
