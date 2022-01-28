@@ -2,6 +2,7 @@ const { SubCommand } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const { ObjRef, message_modlogs } = require('../../../utils');
+const BannedUsersAutoComplete = require('../_autocompletes/BannedUsersAutoComplete.js');
 
 module.exports = class BanInfoSubCommand extends SubCommand {
 	constructor(client, mainCommand) {
@@ -19,6 +20,8 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 			mainCommand,
 			client,
 		);
+
+		Object.defineProperty(this, "autocomplate", { value: new BannedUsersAutoComplete(this, client) });
 	}
 
 	/**
