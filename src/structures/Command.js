@@ -281,6 +281,37 @@ class CommandGroup {
 	}
 }
 
+class AutoComplete {
+	/**
+	 * @param {Command} command
+	 * @param {_client} client
+	 */
+	constructor(command, client) {
+		this.name = command.name;
+		this.command = command;
+		this.client = client;
+
+		this.cache = new Discord.Collection();
+
+		setInterval(() => {
+			this.cache.clear();
+		}, 10 * 1000 * 60);
+	};
+
+	get fullName() {
+		return `${this.command.fullName}`;
+	}
+
+	get utils() {
+		return utils;
+	}
+
+	isDM() {
+		return this.command.isDM();
+	}
+};
+
 module.exports = Command;
 module.exports.SubCommand = SubCommand;
 module.exports.CommandGroup = CommandGroup;
+module.exports.AutoComplete = AutoComplete;
