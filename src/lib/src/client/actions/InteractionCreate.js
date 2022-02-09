@@ -4,6 +4,7 @@ const Action = require("./Action");
 const ButtonInteraction = require("../../structures/ButtonInteraction");
 const CommandInteraction = require("../../structures/CommandInteraction");
 const ContextMenuInteraction = require("../../structures/ContextMenuInteraction");
+const ModalSubmitInteraction = require('../../structures/ModalSubmitInteraction');
 const SelectMenuInteraction = require("../../structures/SelectMenuInteraction");
 const {
 	Events,
@@ -59,6 +60,9 @@ class InteractionCreateAction extends Action {
 				break;
 			case InteractionTypes.AUTOCOMPLETE:
 				InteractionType = CommandInteraction;
+				break;
+			case InteractionTypes.MODAL_SUBMIT:
+				InteractionType = ModalSubmitInteraction;
 				break;
 			default:
 				client.emit(

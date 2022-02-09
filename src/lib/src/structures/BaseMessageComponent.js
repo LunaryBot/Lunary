@@ -55,7 +55,7 @@ class BaseMessageComponent {
 	 * Constructs a MessageComponent based on the type of the incoming data
 	 * @param {MessageComponentOptions} data Data for a MessageComponent
 	 * @param {Client|WebhookClient} [client] Client constructing this component
-	 * @returns {?MessageComponent}
+	 * @returns {?MessageComponent|ModalComponent}
 	 * @private
 	 */
 	static create(data, client) {
@@ -78,6 +78,11 @@ class BaseMessageComponent {
 			case MessageComponentTypes.SELECT_MENU: {
 				const MessageSelectMenu = require("./MessageSelectMenu");
 				component = new MessageSelectMenu(data);
+				break;
+			}
+			case MessageComponentTypes.TEXT_INPUT: {
+				const TextInputComponent = require('./TextInputComponent');
+				component = data instanceof TextInputComponent ? data : new TextInputComponent(data);
 				break;
 			}
 			default:
