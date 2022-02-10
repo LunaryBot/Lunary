@@ -21,7 +21,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 			client,
 		);
 
-		Object.defineProperty(this, "autocomplate", { value: new BannedUsersAutoComplete(this, client) });
+		Object.defineProperty(this, "autocomplete", { value: new BannedUsersAutoComplete(this, client) });
 	}
 
 	/**

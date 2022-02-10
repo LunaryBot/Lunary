@@ -28,10 +28,10 @@ module.exports = class BannedUsersAutoComplete extends AutoComplete {
 			 *  bans: Discord.User[]
 			 * }}
 			 */
-			let data = this.bansCache.get(interaction.guildId);
+			let data = this.cache.get(interaction.guildId);
 			if (!data || data.validTime <= Date.now()) {
 				data = await getData();
-				this.bansCache.set(interaction.guildId, data);
+				this.cache.set(interaction.guildId, data);
 			}
 
 			const input = interaction.options
