@@ -1,6 +1,7 @@
 const { SubCommand } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
+const AdvsIdsAutoComplete = require('../_autocompletes/AdvsIdsAutoComplete.js');
 const advRegex = /^.{8}-.{4}-.{4}-.{4}-.{10}$/i;
 
 module.exports = class AdvInfoSubCommand extends SubCommand {
@@ -18,6 +19,8 @@ module.exports = class AdvInfoSubCommand extends SubCommand {
 			mainCommand,
 			client,
 		);
+
+		Object.defineProperty(this, "autocomplete", { value: new AdvsIdsAutoComplete(this, client) });
 	}
 
 	/**
