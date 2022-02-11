@@ -50,6 +50,6 @@ class ModalSubmitInteraction extends Interaction {
   followUp() {}
 }
 
-InteractionResponses.applyToClass(ModalSubmitInteraction, ['deferUpdate', 'update', 'presentModal']);
+InteractionResponses.applyToClass(ModalSubmitInteraction, ['update', 'presentModal']);
 
 module.exports = ModalSubmitInteraction;
