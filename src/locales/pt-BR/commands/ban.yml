@@ -14,6 +14,23 @@ help:
 texts:
   mandatoryReason: É preciso informar um motivo para o banimento. `[Opção de motivo obrigatório ativa]`
   veryBigReason: O motivo deve conter no máximo `400` caracteres.
-  reasonNotInformed: Motivo não informado.
   default_dm_message: "{emoji} Você foi banido de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
   punishedBy: "Punido por {author_tag} - ID: {id} - Motivo: {reason}"
+  
+  reasonNotInformed:
+    defaultReason: Motivo não informado.
+    confirmNormal: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este **formulário** no botão abaixo para poder especificar o motivo de uma forma mais eficiente!
+    confirmWithReasonsSeteds: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este **formulário** no botão abaixo para poder especificar o motivo, ou selecione um dos motivos pré-definidos na minha dashboard!
+    confirmWithPermission: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este formulário no botão abaixo para poder especificar o motivo, ou já que como você e alguém mais **especial** neste servidor, pode apenas pular isto com o botão de "⏩ Pular"! 🤩
+    confirmWithPermissionAndReasonsSeteds: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este formulário no botão abaixo para poder especificar o motivo, ou utilize os motivos pré-definidos deste servidor, e já que você e alguém **especial** neste servidor, pode apenas pular isto com o botão de "⏩ Pular"! 🤩
+    
+    components:
+      cancel: Cancelar
+      addReason: Adicionar motivo
+      skip: Pular
+      selectReason: Selecionar motivo
+    # Modal
+    modalReason:
+      title: "🌺 Ban Request"
+      label: "📋 Motivo do banimento"
+      placeholder: "Sua estadia aqui acabou!"
