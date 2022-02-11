@@ -3,10 +3,13 @@ const ContextCommand = require('../../../structures/ContextCommand.js');
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require('child_process');
 const Discord = require('../../../lib');
-const MemberBotPermissions = require('../../../structures/BotPermissions.js');
-const message_modlogs = require('../../../utils/message_modlogs.js');
-const message_punish = require('../../../utils/message_punish.js');
-const commands = require("../../../data/commands.json");
+let commands;
+
+try {
+	commands = require("../../../data/commands.json")
+} catch(_) {
+	commands = {};
+}
 
 module.exports = class EvalCommand extends Command {
 	constructor(client) {

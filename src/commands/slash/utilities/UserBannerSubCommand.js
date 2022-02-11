@@ -1,7 +1,7 @@
 const { SubCommand } = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
-const Canvas = require('node-canvas');
+const Canvas = require('canvas');
 
 module.exports = class UserBannerSubCommand extends SubCommand {
 	constructor(client, mainCommand) {

@@ -3,21 +3,15 @@ const ContextCommand = require('../../../structures/ContextCommand.js');
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require('child_process');
 const Discord = require('../../../lib');
-const {
-	timeString,
-	randomCharacters,
-	format_time: { format },
-} = require('../../../utils/index.js');
-const moment = require('moment');
-require('moment-duration-format');
-const sydb = require('sydb');
 const Transcript = require('../../../structures/Transcript');
-const commands = require('../../../data/commands.json');
-const GIFEncoder = require('gifencoder');
-const gifFrames = require('gif-frames');
-const { writeFileSync } = require('fs');
 const fetch = require('node-fetch');
-const { createCanvas, loadImage } = require('node-canvas');
+let commands;
+
+try {
+	commands = require("../../../data/commands.json")
+} catch(_) {
+	commands = {};
+}
 
 module.exports = class EvalCommand extends Command {
 	constructor(client) {

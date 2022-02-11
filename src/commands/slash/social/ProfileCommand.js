@@ -6,7 +6,7 @@ const GIFEncoder = require('gif-encoder-2');
 const gifFrames = require('gif-frames');
 const { writeFileSync } = require('fs');
 const fetch = require('node-fetch');
-const { createCanvas } = require('node-canvas');
+const { createCanvas } = require('canvas');
 
 module.exports = class ProfileCommand extends Command {
 	constructor(client) {

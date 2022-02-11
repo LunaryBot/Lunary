@@ -1,4 +1,4 @@
-const { loadImage, createCanvas, CanvasRenderingContext2D, Canvas } = require('node-canvas');
+const { loadImage, createCanvas, CanvasRenderingContext2D, Canvas } = require('canvas');
 const { UserFlags } = require('../lib');
 const ContextCommand = require('../structures/ContextCommand');
 const Template = require('../structures/Template');
