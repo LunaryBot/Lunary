@@ -1735,6 +1735,7 @@ export class MessageActionRow<
 	public components: T[];
 	public addComponents(...components: U[] | U[][]): this;
 	public setComponents(...components: U[] | U[][]): this;
+	public disableComponents(...components: UserResolvable[] | string[]): this;
 	public spliceComponents(index: number, deleteCount: number, ...components: U[] | U[][]): this;
 	public toJSON(): unknown;
 }
