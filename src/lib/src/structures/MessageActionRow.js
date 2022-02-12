@@ -96,6 +96,38 @@ class MessageActionRow extends BaseMessageComponent {
 	}
 
 	/**
+	 * Disables the components of the action row.
+	 * @param  {?...MessageActionRowComponentResolvable[]} components The components to disable
+	 * @returns {MessageActionRow}
+	 */
+	disableComponents(...components) {
+		if(!components?.length) {
+			this.components.forEach((c) => {
+				c.disabled = true;
+			});
+		} else {
+			const _comps = this.components
+			function disable(c) {
+				_comps.map((comp) => {
+					if(c instanceof BaseMessageComponent) {
+						comp.customId === c.customId ? comp.disabled = true : false;
+					} else {
+						comp.customId === c ? comp.disabled = true : false;
+					}
+				});
+			}
+			
+			if(Array.isArray(components)) {
+				components.forEach(disable)
+			} else {
+				disable(components);
+			}
+		}
+
+		return this;
+	}
+
+	/**
 	 * Transforms the action row to a plain object.
 	 * @returns {APIMessageComponent} The raw data of this action row
 	 */
