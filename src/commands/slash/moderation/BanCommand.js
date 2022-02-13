@@ -29,7 +29,7 @@ module.exports = class BanCommand extends Command {
 	 */
 
 	async run(ctx) {
-		ctx.interaction.deferReply().catch(() => {});
+		await ctx.interaction.deferReply().catch(() => {});
 
 		const user = ctx.interaction.options.getUser('user');
 
@@ -41,6 +41,27 @@ module.exports = class BanCommand extends Command {
 					}),
 				})
 				.catch(() => {});
+
+		const { highest_position } = this.utils;
+
+		const member = ctx.interaction.options.getMember('user');
+		if(member) {
+			if(!member.manageable) {
+				return await ctx.interaction
+					.followUp({
+						content: ctx.t('general:lunyMissingPermissionsToPunish'),
+					})
+					.catch(() => {});
+			}
+			
+			if(!highest_position(ctx.member, member)) {
+				return await ctx.interaction
+					.followUp({
+						content: ctx.t('general:userMissingPermissionsToPunish'),
+					})
+					.catch(() => {});
+			}
+		}
 
 		let reason = ctx.interaction.options.getString('reason');
 		if (!reason) {
@@ -69,7 +90,8 @@ module.exports = class BanCommand extends Command {
 					new Discord.MessageButton()
 						.setLabel(ctx.t('ban:texts.reasonNotInformed.components.skip'))
 						.setStyle('SECONDARY')
-						.setCustomId('skip'),
+						.setCustomId('skip')
+						.setDisabled(!hasPermission),
 					new Discord.MessageButton()
 						.setLabel(ctx.t('ban:texts.reasonNotInformed.components.addReason'))
 						.setStyle('SUCCESS')
@@ -134,11 +156,18 @@ module.exports = class BanCommand extends Command {
 						
 						case 'addReason':
 							const modal = modalReason();
-						i.presentModal(modal);
+							i.presentModal(modal);
 						break;
 				}
 			}
-			)
+			);
+
+			collector.on('end', (collected, reason) => {
+				if(reason === 'Canceled') {
+					ctx.interaction.deleteReply().catch(() => {});
+					return;
+				}
+			})
 
 			modalCollector.on('collect',
 			/**
@@ -153,9 +182,7 @@ module.exports = class BanCommand extends Command {
 
 				confirm();
 			});
-			
-			//ctx.interaction.presentModal(modalReason())
-		}
+		} else confirm("followUp");
 
 		function modalReason() {
 			return new Discord.Modal()
@@ -175,9 +202,87 @@ module.exports = class BanCommand extends Command {
 						)
 				)
 		}
+		
+		async function confirm(action) {
+			const components = new Discord.MessageActionRow()
+				.addComponents(
+					new Discord.MessageButton()
+						.setLabel(ctx.t('ban:texts.confirm.buttons.quickpunishment'))
+						.setStyle('SECONDARY')
+						.setCustomId('quickpunishment')
+						.setEmoji('⚡'),
+					new Discord.MessageButton()
+						.setCustomId('confirm_punishment')
+						.setStyle('SUCCESS')
+						.setEmoji('872635474798346241'),
+					new Discord.MessageButton()
+						.setCustomId('cancel_punishment')
+						.setStyle('DANGER')
+						.setEmoji('872635598660313148'),
+				)
+			
+			ctx.interaction[action || 'editReply']({
+				content: ctx.t('ban:texts.confirm.message', {
+					author: ctx.author.toString(),
+					user: user.toString(),
+					link: ctx.client.config.links.website.dashboard.me,
+				}),
+				components: [components],
+			}).catch(() => {});
 
-		function confirm() {
-			ctx.channel.send(reason)
-		} 
+			const msg = await ctx.interaction.fetchReply();
+
+			const collector = msg.createMessageComponentCollector({
+				filter: (i) => i.user.id == ctx.author.id,
+				time: 1 * 60 * 1000, // 1 minute
+				max: 1,
+			})
+
+			collector.on('collect',
+			/**
+			 * 
+			 * @param {Discord.MessageComponentInteraction} i
+			 */
+			async (i) => {
+				switch(i.component.customId) {
+					case 'cancel_punishment':
+						collector.stop('Canceled');
+					break;
+						
+					case 'confirm_punishment':
+						punishment();
+						collector.stop('Confirmed');
+					break;
+						
+					case 'quickpunishment':
+						punishment(true);
+						collector.stop('Confirmed');
+					break;
+				}
+			})
+		}
+
+		async function punishment(activeQuickPunishment) {
+			let notifyDM = true
+            try {
+                // if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
+                //     emoji: ":hammer:",
+                //     guild_name: ctx.guild.name,
+                //     reason: reason
+                // }))
+            } catch(_) {
+                notifyDM = false
+            }
+
+			let logs = (await ctx.client.LogsDB.ref().once("value")).val() || {}
+ 
+            let id
+             
+            while(!id || logs[id]) {
+                id = `${Date.now().toString(36).substring(0, 8)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 12)}`.toLowerCase()
+            }
+
+			console.log(id)
+		}
 	}
 };
