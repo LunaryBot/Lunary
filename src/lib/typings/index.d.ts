@@ -3485,6 +3485,10 @@ export class ApplicationCommandPermissionsManager<
 	): APIApplicationCommandPermission;
 }
 
+export interface ApplicationCommandAttachmentOption extends BaseApplicationCommandOptionsData {
+	type: ApplicationCommandOptionType.Attachment;
+}
+
 export class BaseGuildEmojiManager extends CachedManager<
 	Snowflake,
 	GuildEmoji,

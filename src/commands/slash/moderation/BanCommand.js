@@ -403,7 +403,7 @@ module.exports = class BanCommand extends Command {
 								&& user.id == lastPunishmentApplied.user 
 								&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
 							) {
-								if(reason != lastPunishmentApplied.reason && reason != ctx.t("ban:texts.reasonNotInformed")) {
+								if(reason != lastPunishmentApplied.reason && reason != ctx.t('general:reasonNotInformed.defaultReason')) {
 									xp += generateXP()
 								}
 							}
