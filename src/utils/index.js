@@ -12,4 +12,5 @@ module.exports = {
 	validateUser: require('./validateUser.js'),
 	chunk: require('./chunk.js'),
 	replace_placeholders: require('./replace_placeholders.js'),
+	calculate_levels: require('./calculate_levels.js'),
 };
