@@ -36,9 +36,9 @@ class GuildDB {
 
 		this.punishment_message = null
 
-		if(data.punishment_embed) {
+		if(data.punishment_message) {
 			try {
-				this.punishment_message = JSON.parse(data.punishment_embed)
+				this.punishment_message = JSON.parse(data.punishment_message)
 			} catch(_) {
 				this.punishment_message = null
 			}
