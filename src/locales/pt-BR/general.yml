@@ -32,12 +32,12 @@ reasonNotInformed:
     label: "📋 Motivo do banimento"
     placeholder: "Sua estadia aqui acabou!"
    
-  confirm: 
-    message: "😬 {author} | Você tem a certeza absoluta que deseja punir {user} pelo motivo selecionado!? Clique no botão correspondente abaixo como sua resposta sobre este caso... 🧐\n\n> _😲 Psiu psiu... Sabia que você pode deixar passar essas mensagens de confirmação e punir usuários rápido e fácil? Utilize o botão de punição rápida para ativar essa função, também visite nossa dashboard e configure totalmente minhas funções para você e para seu servidor em: {link}_"
-    buttons: 
-      cancel: Cancelar
-      confirm: Confirmar
-      quickpunishment: Punição rápida
+confirm: 
+  message: "😬 {author} | Você tem a certeza absoluta que deseja punir {user} pelo motivo selecionado!? Clique no botão correspondente abaixo como sua resposta sobre este caso... 🧐\n\n> _😲 Psiu psiu... Sabia que você pode deixar passar essas mensagens de confirmação e punir usuários rápido e fácil? Utilize o botão de punição rápida para ativar essa função, também visite nossa dashboard e configure totalmente minhas funções para você e para seu servidor em: {link}_"
+  buttons: 
+    cancel: Cancelar
+    confirm: Confirmar
+    quickpunishment: Punição rápida
 
 # Message confirm punishment
 confirmPunishment:
