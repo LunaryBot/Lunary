@@ -37,14 +37,14 @@ module.exports = class BanCommand extends Command {
 
 		if (!user)
 			return await ctx.interaction
-				.reply({
+				.followUp({
 					content: ctx.t('general:invalidUser', {
 						reference: ctx.interaction.options.getUser('user')?.id,
 					}),
 				})
 				.catch(() => {});
 
-		const { highest_position, replace_placeholders, message_modlogs } = this.utils;
+		const { highest_position, replace_placeholders, message_modlogs, calculate_levels } = this.utils;
 
 		const member = ctx.interaction.options.getMember('user');
 		if(member) {
@@ -267,7 +267,7 @@ module.exports = class BanCommand extends Command {
 		async function punishment(activeQuickPunishment) {
 			let notifyDM = true
             try {
-                // if(membro && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
+                // if(member && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
                 //     emoji: ":hammer:",
                 //     guild_name: ctx.guild.name,
                 //     reason: reason
@@ -348,6 +348,75 @@ module.exports = class BanCommand extends Command {
 							],
 						})
 						.catch(() => {});
+				
+				let xp = ctx.UserDB.xp
+				let leveluped = false;
+				// if(member) {
+					let lastPunishmentApplied = logs[ctx.UserDB.lastPunishmentApplied]
+					if(lastPunishmentApplied) lastPunishmentApplied = JSON.parse(Buffer.from(lastPunishmentApplied, 'base64').toString('ascii'))
+					if(lastPunishmentApplied) {
+						if(!user.bot) {
+							if(user.id != ctx.author.id) {
+								if(
+									user.id != lastPunishmentApplied.user 
+									|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != 1)
+									|| ((!isNaN(lastPunishmentApplied.date) 
+									&& user.id == lastPunishmentApplied.user 
+									&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
+								) {
+									if(reason != lastPunishmentApplied.reason && reason != ctx.t("ban:texts.reasonNotInformed")) {
+										xp += generateXP()
+									}
+								}
+							}
+						}
+					} else xp += generateXP()
+				// }
+
+				ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: id, xp: xp, bans: ctx.UserDB.bans + 1})
+
+				function generateXP() {
+					let maxXP = 39
+					if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
+					else {
+						if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
+						if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
+					}
+					
+					if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+
+					const _xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+					console.log(`Max XP: ${maxXP} | XP: ${_xp}`)
+
+					if(ctx.UserDB.level.current.level < calculate_levels(xp + _xp).current.level) leveluped = true;
+					
+					return _xp
+				}
+
+				await ctx.interaction[ctx.interaction.replied ? "editReply" : "followUp"]({
+					content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
+						author_mention: ctx.author.toString(),
+						user_mention: user.toString(),
+						user_tag: user.tag,
+						user_id: user.id,
+						id: id,
+						notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
+					})}`,
+					embeds: [],
+					components: []
+				})
+
+				if(leveluped) {
+					ctx.interaction
+						.followUp({
+							content: ctx.t('general:levelUP', {
+								level: calculate_levels(xp).current.level,
+								user: ctx.author.toString(),
+							}),
+							ephemeral: true,
+						})
+						.catch(() => {});
+				}
 			}
 		}
 	}
