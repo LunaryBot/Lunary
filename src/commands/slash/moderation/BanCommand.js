@@ -4,6 +4,8 @@ const Discord = require('../../../lib');
 const BanInfoSubCommand = require('./BanInfoSubCommand.js');
 const BanSoftSubCommand = require('./BanSoftSubCommand.js');
 const BanRemoveSubCommand = require('./BanRemoveSubCommand.js');
+const Transcript = require('../../../structures/Transcript.js');
+const { dump, load } = require('js-yaml');
 
 module.exports = class BanCommand extends Command {
 	constructor(client) {
@@ -42,7 +44,7 @@ module.exports = class BanCommand extends Command {
 				})
 				.catch(() => {});
 
-		const { highest_position, replace_placeholders } = this.utils;
+		const { highest_position, replace_placeholders, message_modlogs } = this.utils;
 
 		const member = ctx.interaction.options.getMember('user');
 		if(member) {
@@ -285,13 +287,10 @@ module.exports = class BanCommand extends Command {
 			if(ctx.GuildDB.punishment_channel) {
 				const punishment_channel = ctx.guild.channels.cache.get(ctx.GuildDB.punishment_channel)
 				if(punishment_channel.permissionsFor(ctx.client.user.id).has(18432)) {
-					let punishment_message = JSON.stringify(
-						ctx.GuildDB.punishment_message || { content: '<:sigh:885721398788632586> {@user}' 
-					})
-		
-					punishment_message = JSON.parse(
-						replace_placeholders(
-							punishment_message, 
+					let punishment_message = ctx.GuildDB.punishment_message || { content: '<:sigh:885721398788632586> {@user}' }
+					
+					punishment_message = replace_placeholders(
+							dump(punishment_message), 
 							user, 
 							ctx.author, 
 							{
@@ -299,15 +298,56 @@ module.exports = class BanCommand extends Command {
 								duration: Infinity,
 								type: 1
 							}
-					))
+						)
+					
+					punishment_message = load(punishment_message)
 	
 					if(punishment_message.embed) {
 						punishment_message.embeds = [new Discord.MessageEmbed(punishment_message.embed)]
 						delete punishment_message.embed
 					}
 					
-					punishment_channel.send(punishment_message)
+					punishment_channel.send(punishment_message).catch(() => {});
 				}
+
+				const modlogs_channel = ctx.guild.channels.cache.get(ctx.GuildDB.modlogs_channel);
+				if (modlogs_channel && modlogs_channel.permissionsFor(ctx.client.user.id).has(18432))
+					modlogs_channel
+						.send({
+							embeds: [message_modlogs(ctx.author, user, reason, 'adv', ctx.t, id)],
+							components: [
+								new Discord.MessageActionRow()
+								.addComponents([
+									new Discord.MessageButton()
+									.setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
+									.setLabel('Lunary logs(Beta)')
+									.setStyle('LINK')
+								])
+							],
+							files: [
+								new Discord.MessageAttachment(
+									new Transcript(
+										ctx.client,
+										ctx.channel,
+										[
+											...ctx.channel.messages.cache.values(),
+											...[
+												...(ctx.channel.messages.cache.size >= ctx.client.config.messageCacheLimit
+													? new Map()
+													: await ctx.channel.messages.fetch({
+															limit: ctx.client.config.messageCacheLimit,
+													})
+												).values(),
+											]
+												.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+												.slice(ctx.client.config.messageCacheLimit - ctx.channel.messages.cache.size),
+										].slice(0, ctx.client.config.messageCacheLimit),
+									).generate(),
+									`${ctx.channel.name}-transcript.html`,
+								),
+							],
+						})
+						.catch(() => {});
 			}
 		}
 	}

@@ -26,6 +26,9 @@ modlogs:
   duration: Duração
   durationNotDetermined: Não determinado.
 
+#Punishment message
+punishment_message: 
+  
 booleans:
   true: Sim
   false: Não
