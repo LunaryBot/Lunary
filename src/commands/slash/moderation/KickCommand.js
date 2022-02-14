@@ -333,7 +333,7 @@ module.exports = class KickCommand extends Command {
 					if(punishment_message.embed) {
 						punishment_message.embeds = [new Discord.MessageEmbed(punishment_message.embed)]
 						delete punishment_message.embed
-					}
+					},
 					
 					punishment_channel.send(punishment_message).catch(() => {});
 				}
