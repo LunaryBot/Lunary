@@ -40,6 +40,7 @@ import {
 	APIPartialEmoji,
 	APIPartialGuild,
 	APIRole,
+	APIAttachment,
 	APITemplateSerializedSourceGuild,
 	APIUser,
 	GatewayVoiceServerUpdateDispatchData,
@@ -854,6 +855,14 @@ export class CommandInteractionOptionResolver {
 		name: string,
 		required?: boolean
 	): NonNullable<CommandInteractionOption["message"]> | null;
+	public getAttachment(
+		name: string, 
+		required: true
+	): NonNullable<CommandInteractionOption['attachment']>;
+  	public getAttachment(
+		name: string, 
+		required?: boolean
+	): NonNullable<CommandInteractionOption['attachment']> | null;
 }
 
 export type GuildContextMenuInteraction<
