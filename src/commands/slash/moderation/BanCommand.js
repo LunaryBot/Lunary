@@ -42,7 +42,7 @@ module.exports = class BanCommand extends Command {
 				})
 				.catch(() => {});
 
-		const { highest_position } = this.utils;
+		const { highest_position, replace_placeholders } = this.utils;
 
 		const member = ctx.interaction.options.getMember('user');
 		if(member) {
@@ -282,7 +282,33 @@ module.exports = class BanCommand extends Command {
                 id = `${Date.now().toString(36).substring(0, 8)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 12)}`.toLowerCase()
             }
 
-			console.log(id)
+			if(ctx.GuildDB.punishment_channel) {
+				const punishment_channel = ctx.guild.channels.cache.get(ctx.GuildDB.punishment_channel)
+				if(punishment_channel.permissionsFor(ctx.client.user.id).has(18432)) {
+					let punishment_message = JSON.stringify(
+						ctx.GuildDB.punishment_message || { content: '<:sigh:885721398788632586> {@user}' 
+					})
+		
+					punishment_message = JSON.parse(
+						replace_placeholders(
+							punishment_message, 
+							user, 
+							ctx.author, 
+							{
+								reason,
+								duration: Infinity,
+								type: 1
+							}
+					))
+	
+					if(punishment_message.embed) {
+						punishment_message.embeds = [new Discord.MessageEmbed(punishment_message.embed)]
+						delete punishment_message.embed
+					}
+					
+					punishment_channel.send(punishment_message)
+				}
+			}
 		}
 	}
 };

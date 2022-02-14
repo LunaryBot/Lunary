@@ -9,8 +9,8 @@ class GuildDB {
 		 * @type {Collection<Permissions>}
 		 */
 		this.permissions = new Collection();
-		this.chat_modlogs = data.chat_modlogs || null;
-		this.chat_punish = data.chat_punish || null;
+		this.modlogs_channel = data.modlogs_channel || null;
+		this.punishment_channel = data.punishment_channel || null;
 		this.muterole = data.muterole || null;
 		this.configs = new GuildConfigs(data.configs || 0);
 		this.reasons = {
@@ -33,6 +33,16 @@ class GuildDB {
 				this.permissions.set(key, new Permissions(value));
 			});
 		};
+
+		this.punishment_message = null
+
+		if(data.punishment_embed) {
+			try {
+				this.punishment_message = JSON.parse(data.punishment_embed)
+			} catch(_) {
+				this.punishment_message = null
+			}
+		}
 	}
 }
 

@@ -11,4 +11,5 @@ module.exports = {
 	timeString: require('./timeString.js'),
 	validateUser: require('./validateUser.js'),
 	chunk: require('./chunk.js'),
+	replace_placeholders: require('./replace_placeholders.js'),
 };
