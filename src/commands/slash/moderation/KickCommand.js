@@ -44,7 +44,7 @@ module.exports = class KickCommand extends Command {
 
 		const { highest_position, replace_placeholders, message_modlogs, calculate_levels } = this.utils;
 
-		if(!user.manageable) {
+		if(!user.kickable) {
 			return await ctx.interaction
 				.followUp({
 					content: ctx.t('general:lunyMissingPermissionsToPunish'),

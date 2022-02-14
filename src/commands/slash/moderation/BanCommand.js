@@ -45,9 +45,12 @@ module.exports = class BanCommand extends Command {
 
 		const { highest_position, replace_placeholders, message_modlogs, calculate_levels } = this.utils;
 
+		/**
+		 * @type {Discord.GuildMember}
+		 */
 		const member = ctx.interaction.options.getMember('user');
 		if(member) {
-			if(!member.manageable) {
+			if(!member.bannable) {
 				return await ctx.interaction
 					.followUp({
 						content: ctx.t('general:lunyMissingPermissionsToPunish'),
