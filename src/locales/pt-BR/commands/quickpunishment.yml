@@ -1,0 +1,6 @@
+help:
+  name: quickpunishment
+  description: Altera sua preferência de confirmar punições. Ao ativada, você não terá que confirmar as punições para que elas sejam executadas.
+texts:
+  enable: Modulo de punições rapidas ativado.
+  disable: Modulo de punições rapidas desativado.

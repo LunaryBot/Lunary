@@ -2,7 +2,6 @@ const Command = require('../../../structures/Command.js');
 const ContextCommand = require('../../../structures/ContextCommand.js');
 const Discord = require('../../../lib');
 const BanInfoSubCommand = require('./BanInfoSubCommand.js');
-const BanSoftSubCommand = require('./BanSoftSubCommand.js');
 const BanRemoveSubCommand = require('./BanRemoveSubCommand.js');
 const Transcript = require('../../../structures/Transcript.js');
 const { dump, load } = require('js-yaml');
@@ -14,16 +13,16 @@ module.exports = class BanCommand extends Command {
 				name: 'ban',
 				dirname: __dirname,
 				permissions: {
-					// Discord: ['BAN_MEMBERS'],
-					// Bot: ['LUNAR_BAN_MEMBERS'],
-					// me: ['BAN_MEMBERS'],
+					Discord: ['BAN_MEMBERS'],
+					Bot: ['LUNAR_BAN_MEMBERS'],
+					me: ['BAN_MEMBERS'],
 				},
 				dm: false,
 			},
 			client,
 		);
 
-		this.subcommands = [new BanInfoSubCommand(client, this), new BanSoftSubCommand(client, this), new BanRemoveSubCommand(client, this)];
+		this.subcommands = [new BanInfoSubCommand(client, this), new BanRemoveSubCommand(client, this)];
 	}
 
 	/**
@@ -65,7 +64,10 @@ module.exports = class BanCommand extends Command {
 			}
 		}
 
+		
 		let reason = ctx.interaction.options.getString('reason');
+		const attachment = ctx.interaction.options.get('attachment')?.attachment;
+
 		if (!reason) {
 			const hasPermission = ctx.UserDB.permissions.has('LUNAR_NOT_REASON');
 			const reasons = ctx.GuildDB.reasons.ban;
@@ -86,16 +88,16 @@ module.exports = class BanCommand extends Command {
 			const components = new Discord.MessageActionRow()
 				.addComponents(
 					new Discord.MessageButton()
-						.setLabel(ctx.t('ban:texts.reasonNotInformed.components.cancel'))
+						.setLabel(ctx.t('general:reasonNotInformed.components.cancel'))
 						.setStyle('DANGER')
 						.setCustomId('cancel'),
 					new Discord.MessageButton()
-						.setLabel(ctx.t('ban:texts.reasonNotInformed.components.skip'))
+						.setLabel(ctx.t('general:reasonNotInformed.components.skip'))
 						.setStyle('SECONDARY')
 						.setCustomId('skip')
 						.setDisabled(!hasPermission),
 					new Discord.MessageButton()
-						.setLabel(ctx.t('ban:texts.reasonNotInformed.components.addReason'))
+						.setLabel(ctx.t('general:reasonNotInformed.components.addReason'))
 						.setStyle('SUCCESS')
 						.setCustomId('addReason'),
 				);
@@ -103,7 +105,7 @@ module.exports = class BanCommand extends Command {
 			if(reasons.length) {
 				components.addComponents(
 					new Discord.MessageSelectMenu()
-						.setPlaceholder(ctx.t('ban:texts.reasonNotInformed.components.selectReason'))
+						.setPlaceholder(ctx.t('general:reasonNotInformed.components.selectReason'))
 						.setOptions(reasons.map(r => ({
 							label: r.reason,
 							value: r.id,
@@ -115,7 +117,7 @@ module.exports = class BanCommand extends Command {
 			}
 
 			ctx.interaction.followUp({
-				content: ctx.t(`ban:texts.reasonNotInformed.${k}`, {
+				content: ctx.t(`general:reasonNotInformed.${k}`, {
 					author: ctx.author.toString(),
 				}),
 				components: [components]
@@ -150,7 +152,7 @@ module.exports = class BanCommand extends Command {
 					break;
 						
 					case 'skip':
-						reason = ctx.t('ban:texts.reasonNotInformed.defaultReason');
+						reason = ctx.t('general:reasonNotInformed.defaultReason');
 							
 						collector.stop('Skipped');
 						confirm();
@@ -188,17 +190,17 @@ module.exports = class BanCommand extends Command {
 
 		function modalReason() {
 			return new Discord.Modal()
-				.setTitle(ctx.t('ban:texts.reasonNotInformed.modalReason.title'))
+				.setTitle(ctx.t('general:reasonNotInformed.modalReason.title'))
 				.setCustomId(`${ctx.interaction.id}`)
 				.addComponents(
 					new Discord.MessageActionRow()
 						.addComponents(
 							new Discord.TextInputComponent()
-								.setLabel(ctx.t('ban:texts.reasonNotInformed.modalReason.label'))
+								.setLabel(ctx.t('general:reasonNotInformed.modalReason.label'))
 								.setMaxLength(1000)
 								.setMinLength(1)
 								.setStyle('PARAGRAPH')
-								.setPlaceholder(ctx.t('ban:texts.reasonNotInformed.modalReason.placeholder'))
+								.setPlaceholder(ctx.t('general:reasonNotInformed.modalReason.placeholder'))
 								.setCustomId('reason')
 								.setRequired(true),
 						)
@@ -206,10 +208,12 @@ module.exports = class BanCommand extends Command {
 		}
 		
 		async function confirm(action) {
+			if(ctx.UserDB.configs.has("QUICK_PUNISHMENT")) return punishment();
+
 			const components = new Discord.MessageActionRow()
 				.addComponents(
 					new Discord.MessageButton()
-						.setLabel(ctx.t('ban:texts.confirm.buttons.quickpunishment'))
+						.setLabel(ctx.t('general:confirm.buttons.quickpunishment'))
 						.setStyle('SECONDARY')
 						.setCustomId('quickpunishment')
 						.setEmoji('⚡'),
@@ -224,7 +228,7 @@ module.exports = class BanCommand extends Command {
 				)
 			
 			ctx.interaction[action || 'editReply']({
-				content: ctx.t('ban:texts.confirm.message', {
+				content: ctx.t('general:confirm.message', {
 					author: ctx.author.toString(),
 					user: user.toString(),
 					link: ctx.client.config.links.website.dashboard.me,
@@ -246,6 +250,7 @@ module.exports = class BanCommand extends Command {
 			 * @param {Discord.MessageComponentInteraction} i
 			 */
 			async (i) => {
+				i.deferUpdate().catch(() => {});
 				switch(i.component.customId) {
 					case 'cancel_punishment':
 						collector.stop('Canceled');
@@ -265,13 +270,15 @@ module.exports = class BanCommand extends Command {
 		}
 
 		async function punishment(activeQuickPunishment) {
+			if(activeQuickPunishment) ctx.UserDB.configs.add("QUICK_PUNISHMENT")
+			
 			let notifyDM = true
             try {
-                // if(member && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
-                //     emoji: ":hammer:",
-                //     guild_name: ctx.guild.name,
-                //     reason: reason
-                // }))
+                if(member && ctx.interaction.options.getBoolean("notify-dm") != false) await user.send(ctx.t("ban:texts.default_dm_message", {
+                    emoji: ":hammer:",
+                    guild_name: ctx.guild.name,
+                    reason: reason
+                }))
             } catch(_) {
                 notifyDM = false
             }
@@ -283,6 +290,37 @@ module.exports = class BanCommand extends Command {
             while(!id || logs[id]) {
                 id = `${Date.now().toString(36).substring(0, 8)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 6)}-${Math.random().toString(36).substring(2, 12)}`.toLowerCase()
             }
+
+			await ctx.guild.members.ban(
+				user.id, 
+				{
+					reason: ctx.t("general:punishedBy", {
+						author_tag: ctx.author.tag,
+						reason: reason,
+						id: id
+					}).shorten(512),
+					days: Number(ctx.interaction.options.getString("days")) || 0,
+				}
+			)
+
+			const logData = {
+				type: 1,
+				author: ctx.author.id,
+				user: user.id,
+				server: ctx.guild.id,
+				reason: encodeURI(reason),
+				date: Date.now(),
+				id: id,
+			}
+
+			if(attachment) logData.attachment = attachment.url;
+
+			const log = Buffer.from(
+				JSON.stringify(logData),
+				'ascii',
+			).toString('base64');
+
+			ctx.client.LogsDB.ref(id).set(log);
 
 			if(ctx.GuildDB.punishment_channel) {
 				const punishment_channel = ctx.guild.channels.cache.get(ctx.GuildDB.punishment_channel)
@@ -309,114 +347,124 @@ module.exports = class BanCommand extends Command {
 					
 					punishment_channel.send(punishment_message).catch(() => {});
 				}
+			}
 
-				const modlogs_channel = ctx.guild.channels.cache.get(ctx.GuildDB.modlogs_channel);
-				if (modlogs_channel && modlogs_channel.permissionsFor(ctx.client.user.id).has(18432))
-					modlogs_channel
-						.send({
-							embeds: [message_modlogs(ctx.author, user, reason, 'adv', ctx.t, id)],
-							components: [
-								new Discord.MessageActionRow()
-								.addComponents([
-									new Discord.MessageButton()
-									.setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
-									.setLabel('Lunary logs(Beta)')
-									.setStyle('LINK')
-								])
-							],
-							files: [
-								new Discord.MessageAttachment(
-									new Transcript(
-										ctx.client,
-										ctx.channel,
-										[
-											...ctx.channel.messages.cache.values(),
-											...[
-												...(ctx.channel.messages.cache.size >= ctx.client.config.messageCacheLimit
-													? new Map()
-													: await ctx.channel.messages.fetch({
-															limit: ctx.client.config.messageCacheLimit,
-													})
-												).values(),
-											]
-												.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
-												.slice(ctx.client.config.messageCacheLimit - ctx.channel.messages.cache.size),
-										].slice(0, ctx.client.config.messageCacheLimit),
-									).generate(),
-									`${ctx.channel.name}-transcript.html`,
-								),
-							],
-						})
-						.catch(() => {});
-				
-				let xp = ctx.UserDB.xp
-				let leveluped = false;
-				// if(member) {
-					let lastPunishmentApplied = logs[ctx.UserDB.lastPunishmentApplied]
-					if(lastPunishmentApplied) lastPunishmentApplied = JSON.parse(Buffer.from(lastPunishmentApplied, 'base64').toString('ascii'))
-					if(lastPunishmentApplied) {
-						if(!user.bot) {
-							if(user.id != ctx.author.id) {
-								if(
-									user.id != lastPunishmentApplied.user 
-									|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != 1)
-									|| ((!isNaN(lastPunishmentApplied.date) 
-									&& user.id == lastPunishmentApplied.user 
-									&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
-								) {
-									if(reason != lastPunishmentApplied.reason && reason != ctx.t("ban:texts.reasonNotInformed")) {
-										xp += generateXP()
-									}
+			const modlogs_channel = ctx.guild.channels.cache.get(ctx.GuildDB.modlogs_channel);
+			if (modlogs_channel && modlogs_channel.permissionsFor(ctx.client.user.id).has(18432))
+				modlogs_channel
+					.send({
+						embeds: [message_modlogs(ctx.author, user, reason, 'ban', ctx.t, id, Infinity, attachment?.url)],
+						components: [
+							new Discord.MessageActionRow()
+							.addComponents([
+								new Discord.MessageButton()
+								.setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
+								.setLabel('Lunary logs(Beta)')
+								.setStyle('LINK')
+							])
+						],
+						files: [
+							new Discord.MessageAttachment(
+								new Transcript(
+									ctx.client,
+									ctx.channel,
+									[
+										...ctx.channel.messages.cache.values(),
+										...[
+											...(ctx.channel.messages.cache.size >= ctx.client.config.messageCacheLimit
+												? new Map()
+												: await ctx.channel.messages.fetch({
+														limit: ctx.client.config.messageCacheLimit,
+												})
+											).values(),
+										]
+											.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+											.slice(ctx.client.config.messageCacheLimit - ctx.channel.messages.cache.size),
+									].slice(0, ctx.client.config.messageCacheLimit),
+								).generate(),
+								`${ctx.channel.name}-transcript.html`,
+							),
+						],
+					})
+					.catch(() => {});
+			
+			let xp = ctx.UserDB.xp
+			let leveluped = false;
+			if(member) {
+				let lastPunishmentApplied = logs[ctx.UserDB.lastPunishmentAppliedId]
+				if(lastPunishmentApplied) lastPunishmentApplied = JSON.parse(Buffer.from(lastPunishmentApplied, 'base64').toString('ascii'))
+				if(lastPunishmentApplied) {
+					if(!user.bot) {
+						if(user.id != ctx.author.id) {
+							if(
+								user.id != lastPunishmentApplied.user 
+								|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != 1)
+								|| ((!isNaN(lastPunishmentApplied.date) 
+								&& user.id == lastPunishmentApplied.user 
+								&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
+							) {
+								if(reason != lastPunishmentApplied.reason && reason != ctx.t("ban:texts.reasonNotInformed")) {
+									xp += generateXP()
 								}
 							}
 						}
-					} else xp += generateXP()
-				// }
-
-				ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentApplied: id, xp: xp, bans: ctx.UserDB.bans + 1})
-
-				function generateXP() {
-					let maxXP = 39
-					if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
-					else {
-						if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
-						if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
 					}
-					
-					if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason)) maxXP += 18
+				} else xp += generateXP()
+			}
 
-					const _xp = Math.floor(Math.random() * (maxXP - 21)) + 21
-					console.log(`Max XP: ${maxXP} | XP: ${_xp}`)
+			ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentAppliedId: id, xp: xp, bans: ctx.UserDB.bans + 1, configs: ctx.UserDB.configs.bitfield})
 
-					if(ctx.UserDB.level.current.level < calculate_levels(xp + _xp).current.level) leveluped = true;
-					
-					return _xp
+			function generateXP() {
+				let maxXP = 39
+				if(ctx.guild.rulesChannelId && reason.includes(`<#${ctx.guild.rulesChannelId}>`)) maxXP += 21
+				else {
+					if(reason.replace(/<#\d{17,19}>/ig, "").trim().length > 12) maxXP += 6
+					if(/(.*?)<#\d{17,19}>(.*?)/ig.test(reason)) maxXP += 13
 				}
+				
+				if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason) || attachment) maxXP += 18
 
-				await ctx.interaction[ctx.interaction.replied ? "editReply" : "followUp"]({
-					content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
-						author_mention: ctx.author.toString(),
-						user_mention: user.toString(),
-						user_tag: user.tag,
-						user_id: user.id,
-						id: id,
-						notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
-					})}`,
-					embeds: [],
-					components: []
-				})
+				const _xp = Math.floor(Math.random() * (maxXP - 21)) + 21
 
-				if(leveluped) {
-					ctx.interaction
-						.followUp({
-							content: ctx.t('general:levelUP', {
-								level: calculate_levels(xp).current.level,
-								user: ctx.author.toString(),
-							}),
-							ephemeral: true,
-						})
-						.catch(() => {});
-				}
+				if(ctx.UserDB.level.current.level < calculate_levels(xp + _xp).current.level) leveluped = true;
+				
+				return _xp
+			}
+
+			const msg = await ctx.interaction.fetchReply().catch(() => {});
+
+			await ctx.interaction[msg ? "editReply" : "followUp"]({
+				content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
+					author_mention: ctx.author.toString(),
+					user_mention: user.toString(),
+					user_tag: user.tag,
+					user_id: user.id,
+					id: id,
+					notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
+				})}`,
+				embeds: [],
+				components: []
+			})
+
+			if(leveluped) {
+				ctx.interaction
+					.followUp({
+						content: ctx.t('general:levelUP', {
+							level: calculate_levels(xp).current.level,
+							user: ctx.author.toString(),
+						}),
+						ephemeral: true,
+					})
+					.catch(() => {});
+			}
+
+			if(activeQuickPunishment) {
+				ctx.interaction
+					.followUp({
+						content: ctx.t('quickpunishment:texts.enable'),
+						ephemeral: true,
+					})
+					.catch(() => {});
 			}
 		}
 	}

@@ -25,7 +25,7 @@ class UserDB {
 		this.lastDailyTimestamp = this.lastDaily?.getTime?.() || null;
 		
 		this.emblem = data.emblem;
-		this.lastPunishmentApplied = data.lastPunishmentApplied || null;
+		this.lastPunishmentAppliedId = data.lastPunishmentAppliedId || null;
 		this.bans = data.bans || 0;
 		if (perms) this.permissions = perms;
 

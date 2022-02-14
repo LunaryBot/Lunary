@@ -27,7 +27,7 @@ const p = {
 	},
 };
 
-module.exports = function message_modlogs(author, user, reason, type, t, id, time) {
+module.exports = function message_modlogs(author, user, reason, type, t, id, time, attachment) {
 	const embed = new MessageEmbed()
 		.setColor(p[type].cor)
 		.setThumbnail(author.displayAvatarURL({ dynamic: true, format: 'png' }))
@@ -38,7 +38,9 @@ module.exports = function message_modlogs(author, user, reason, type, t, id, tim
 
 	if (id) embed.setFooter(`${type == 'unmute' ? 'Mute' : ''} ID: ` + id);
 
-	if (time) embed.addField(`${global.emojis.get('time').mention} • ${t('general:modlogs.duration')}:`, `> \`${time != '...' ? `${format(time)}` : t('general:modlogs.durationNotDetermined')}\``);
+	if (time && time != Infinity) embed.addField(`${global.emojis.get('time').mention} • ${t('general:modlogs.duration')}:`, `> \`${time != '...' ? `${format(time)}` : t('general:modlogs.durationNotDetermined')}\``);
+
+	if (attachment) embed.setImage(attachment);
 
 	return embed;
 };

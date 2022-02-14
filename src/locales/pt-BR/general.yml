@@ -10,6 +10,35 @@ notNotifyDm: ", mas infelizmente não foi possível notifica-lo via DM."
 levelUP: "<a:wow:900062924285046804> **| {user} Level up!**\n:partying_face: **|** Você upou seu nível de moderação lunático para `Moderador - Nível {level}`!\n:face_with_hand_over_mouth: **|** Continue assim, e também continue me utilizando, irei ficar muito feliz em ajudar. *Quem sabe seu nome pode ficar marcado nos 10 maiores moderadores lunáticos!*"
 timeForSelectionEsgotated: Infelizmente, o tempo para seleção de tempo esgotou.
 guildRequiredPremium: ":star: | Ops! Pelo visto você descobriu uma **função premium** exclusiva, não era para você estar aqui... Tente dar uma olhada no link abaixo para tornar este servidor em um **servidor premium**! <:YaY:833060366014611456>\n\nhttps://canary.lunary.ml/"
+
+
+punishedBy: "Punido por {author_tag} - ID: {id} - Motivo: {reason}"
+  
+reasonNotInformed:
+  defaultReason: Motivo não informado.
+  confirmNormal: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este **formulário** no botão abaixo para poder especificar o motivo de uma forma mais eficiente!
+  confirmWithReasonsSeteds: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este **formulário** no botão abaixo para poder especificar o motivo, ou selecione um dos motivos pré-definidos na minha dashboard!
+  confirmWithPermission: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este formulário no botão abaixo para poder especificar o motivo, ou já que como você e alguém mais **especial** neste servidor, pode apenas pular isto com o botão de "⏩ Pular"! 🤩
+  confirmWithPermissionAndReasonsSeteds: ❌ {author} **|** Oops... Aparentemente este servidor está com a opção de **motivo obrigatório para punições** ativado, então acesse este formulário no botão abaixo para poder especificar o motivo, ou utilize os motivos pré-definidos deste servidor, e já que você e alguém **especial** neste servidor, pode apenas pular isto com o botão de "⏩ Pular"! 🤩
+    
+  components:
+    cancel: Cancelar
+    addReason: Adicionar motivo
+    skip: Pular
+    selectReason: Selecionar motivo
+  # Modal
+  modalReason:
+    title: "🌺 Punishment Request"
+    label: "📋 Motivo do banimento"
+    placeholder: "Sua estadia aqui acabou!"
+   
+  confirm: 
+    message: "😬 {author} | Você tem a certeza absoluta que deseja punir {user} pelo motivo selecionado!? Clique no botão correspondente abaixo como sua resposta sobre este caso... 🧐\n\n> _😲 Psiu psiu... Sabia que você pode deixar passar essas mensagens de confirmação e punir usuários rápido e fácil? Utilize o botão de punição rápida para ativar essa função, também visite nossa dashboard e configure totalmente minhas funções para você e para seu servidor em: {link}_"
+    buttons: 
+      cancel: Cancelar
+      confirm: Confirmar
+      quickpunishment: Punição rápida
+
 # Message confirm punishment
 confirmPunishment:
   title: "Confirme a punição a seguir:"
