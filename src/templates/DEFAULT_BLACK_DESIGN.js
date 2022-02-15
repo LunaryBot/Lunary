@@ -1,8 +1,7 @@
 const { loadImage, createCanvas, CanvasRenderingContext2D, Canvas } = require('canvas');
 const { UserFlags } = require('../lib');
-const ContextCommand = require('../structures/ContextCommand');
 const Template = require('../structures/Template');
-const { UserDB } = require('../structures/UserDB');
+const calculate_levels = require('../utils/calculate_levels')
 const Sydb = require('sydb');
 const profileDB = new Sydb(__dirname + '/../data/profile');
 
@@ -172,8 +171,9 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.stroke();
 
 		ctxCanvas.beginPath();
-		const a = xp / 1000;
-
+		const a = xp / 500;
+		const level = Math.floor(a) || 0;
+		
 		ctxCanvas.arc(60, 460, 35, Math.PI * 1.5, Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 0));
 		ctxCanvas.strokeStyle = '#ffffff';
 		ctxCanvas.stroke();
@@ -182,7 +182,7 @@ module.exports = class DefaultBlackDesign extends Template {
 		ctxCanvas.font = 'bold 25px sans-serif';
 		ctxCanvas.fillStyle = '#ffffff';
 		ctxCanvas.textAlign = 'center';
-		ctxCanvas.fillText(a.toFixed(0) || '0', 60, 460, 35);
+		ctxCanvas.fillText(level, 60, 460, 35);
 
 		ctxCanvas.font = 'bold 20px sans-serif';
 		ctxCanvas.textAlign = 'center';

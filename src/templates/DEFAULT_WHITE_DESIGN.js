@@ -1,8 +1,6 @@
 const { loadImage, createCanvas, CanvasRenderingContext2D, Canvas } = require('canvas');
 const { UserFlags } = require('../lib');
-const ContextCommand = require('../structures/ContextCommand');
 const Template = require('../structures/Template');
-const { UserDB } = require('../structures/UserDB');
 const Sydb = require('sydb');
 const profileDB = new Sydb(__dirname + '/../data/profile');
 
@@ -172,7 +170,8 @@ module.exports = class DefaultWhiteDesign extends Template {
 		ctxCanvas.stroke();
 
 		ctxCanvas.beginPath();
-		const a = xp / 1000;
+		const a = xp / 500;
+		const level = Math.floor(a) || 0;
 
 		ctxCanvas.arc(60, 460, 35, Math.PI * 1.5, Math.PI * 1.5 + (Math.PI * 2 * (a - Math.floor(a)).toFixed(2) || 0));
 		ctxCanvas.strokeStyle = '#ffffff';
@@ -182,7 +181,7 @@ module.exports = class DefaultWhiteDesign extends Template {
 		ctxCanvas.font = 'bold 25px sans-serif';
 		ctxCanvas.fillStyle = '#ffffff';
 		ctxCanvas.textAlign = 'center';
-		ctxCanvas.fillText(a.toFixed(0) || '0', 60, 460, 35);
+		ctxCanvas.fillText(level, 60, 460, 35);
 
 		ctxCanvas.font = 'bold 20px sans-serif';
 		ctxCanvas.textAlign = 'center';
@@ -232,24 +231,24 @@ module.exports = class DefaultWhiteDesign extends Template {
 		ctxCanvas.lineTo(310, 358);
 		ctxCanvas.arcTo(310, 338, 330, 338, 20);
 		ctxCanvas.lineWidth = 1;
-		ctxCanvas.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+		ctxCanvas.strokeStyle = 'rgba(160,32,240, 0.4)';
 		ctxCanvas.stroke();
 
 		// add bio title
 		ctxCanvas.beginPath();
 		ctxCanvas.font = 'bold 20px sans-serif';
-		ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)';
+		ctxCanvas.fillStyle = 'rgba(160,32,240, 0.4)';
 		ctxCanvas.fillText('BIO', 350, 345, 50);
 		// add bio text
 		ctxCanvas.beginPath();
 		ctxCanvas.font = 'bold 23px sans-serif';
-		ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)';
+		ctxCanvas.fillStyle = 'rgba(0,0,0, 0.4)';
 		ctxCanvas.textAlign = 'center';
 		ctxCanvas.fillText(wordWrap(bio.shorten(200), 50), 545, 368, 460);
 		// Emblema
 		if (!emblem) {
 			ctxCanvas.beginPath();
-			ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)';
+			ctxCanvas.fillStyle = 'rgba(160,32,240, 0.4)';
 			ctxCanvas.font = 'bold 25px sans-serif';
 			ctxCanvas.textAlign = 'center';
 			ctxCanvas.fillText('NO', 680, 490, 150);
@@ -289,7 +288,7 @@ module.exports = class DefaultWhiteDesign extends Template {
 
 		ctxCanvas.beginPath();
 		ctxCanvas.font = 'bold 18px sans-serif';
-		ctxCanvas.fillStyle = 'rgba(0, 0, 0, 0.4)';
+		ctxCanvas.fillStyle = 'rgba(160,32,240, 0.4)';
 		ctxCanvas.fillText('BADGES', 370, 456, 80);
 		ctxCanvas.shadowOffsetX = 2;
 		ctxCanvas.shadowOffsetY = 2;
