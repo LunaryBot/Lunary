@@ -12,19 +12,13 @@ help:
     - title: Pune um usuário sem notificar via dm.
       usage: "user user:{@user} notify-dm:{notify-dm}"
 texts:
-  mandatoryReason: É preciso informar um motivo para o silenciamento. `[Opção de motivo obrigatório ativa]`
-  veryBigReason: O motivo deve conter no máximo `400` caracteres.
-  reasonNotInformed: Motivo não informado.
   selectTime: Selecione um tempo para o silenciamento.
   selectTimeMessage: "👉 ⏱️ **|** Selecione o tempo que o usuário ficará mutado:"
   default_dm_message: "{emoji} Você foi silenciado em **{guild_name}**\n**`[MOTIVO]`:** {reason}\n**`[DURAÇÃO]`:** {time}"
   invalidTime: O tempo inserido para o mute é inválido.
   duration: Duração
-  lunyMissingPermissionsToManagerMuterole: Eu não tenho permissão para gerenciar o cargo de mute(`{muterole_name}`).
   userMuted: O usuário já está mutado.
-  createMuterole: Criando o cargo de mute
   durationNotDetermined: Não determinado.
-  punishedBy: "Punido por {author_tag} - ID: {id} - Motivo: {reason}"
   
   # Times
   60seconds: 1 Minuto

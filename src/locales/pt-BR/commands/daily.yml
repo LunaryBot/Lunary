@@ -1,6 +1,6 @@
 help:
   name: daily
-  description:
+  description: Pegue sua recompensa de luas diária.
 texts:
   dailyCooldown: <:sigh:885721398788632586> {author} **|** Ei, na na ni na não, por acaso está tentando pegar a recompensa diária antes do tempo determinado? Não mocinho(a), você terá que esperar {nextDailyDate} para resgatar sua recompensa. 🧐
-  dailyCollect: ":tada: {author} **|** Você coletou a recompensa diária de hoje e com isso ganhou **`{dailyAmount} lua(s)`**. Volte amanhã({nextDailyDate}) para outra recompensa lunática! :crescent_moon: \nE também não se esqueça que você pode resgatar mais luas acessando minha página na **DBL (Discord Bot List)** e votando em mim... <:YaY:833060366014611456>\n\n{voteLink}"
+  dailyCollect: ":tada: {author} **|** Você coletou a recompensa diária de hoje e com isso ganhou **`{dailyAmount} lua(s)`**. Volte amanhã({nextDailyDate}) para outra recompensa lunática! :crescent_moon: \nE também não se esqueça que você pode resgatar mais luas acessando minha página na **DBL (Discord Bot List)** e votando em mim **Ainda em desenvolvimento**... <:YaY:833060366014611456>\n\n{voteLink}"

@@ -1,8 +1,8 @@
 help:
   name: pay
-  description: Pague outra pessoa luas(moedas).
+  description: Pague luas(moedas) para outra pessoa.
   examples: 
-    - "{user} {luasAmount}"
+    - "{@user} {luasAmount}"
 texts:
   userMismatch: "<:sigh:885721398788632586> | Você não pode transferir luas a si mesmo."
   valueMismatch: ":woman_gesturing_no: | Você não pode transferir luas para um valor menor que 1."

@@ -10,6 +10,6 @@ help:
     - title: Remove todas as advertências/avisos de um usuário.
       usage: user:{@user} amount:all
 texts:
-  noWarning: O usuário não possui advertências nesse servidor.
-  deletedWarning: O usuário `{user_tag}` (`{user_id}`) teve `uma` advertência deletada.
-  deletedWarnings: O usuário `{user_tag}` (`{user_id}`) teve `{size}` advertências deletadas.
+  noWarning: <:Per:833078041084166164> | **Oops**, esse usuário não tem advertências/avisos nesse servidor, eu acho que isso é bom... <:cookiee:885324662551232523>
+  deletedWarning: ":white_check_mark: ─ **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) teve `uma` advertência deletada com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+  deletedWarnings: ":white_check_mark: ─ **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) teve `{amount}` advertências deletadas com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"

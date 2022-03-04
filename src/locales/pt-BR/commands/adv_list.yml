@@ -6,7 +6,7 @@ help:
     - title: Exibe as informações de uma advertência de um usuário.
       usage: user:{@user}
 texts:
-  noWarning: O usuário não possui advertências nesse servidor.
+  noWarning: <:Per:833078041084166164> | **Oops**, esse usuário não tem advertências/avisos nesse servidor, eu acho que isso é bom... <:cookiee:885324662551232523>
   reason: Motivo
   unkownUser: Desconhecido
   punishedBy: Punido por
