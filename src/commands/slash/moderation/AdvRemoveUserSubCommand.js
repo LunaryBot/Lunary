@@ -51,7 +51,7 @@ module.exports = class AdvRemoveUserSubCommand extends SubCommand {
 		if (!advs.length)
 			return ctx.interaction
 				.followUp({
-					embeds: [this.sendError(ctx.t('adv_remove_user:texts.noWarning'), ctx.author)],
+					content: ctx.t('adv_remove_user:texts.noWarning'),
 				})
 				.catch(() => {});
 
@@ -62,11 +62,12 @@ module.exports = class AdvRemoveUserSubCommand extends SubCommand {
 
 		await ctx.interaction
 			.followUp({
-				content: `:white_check_mark: ─ ${ctx.t(`adv_remove_user:texts.deletedWarning${deladvs.length > 1 ? 's' : ''}`, {
-					size: deladvs.length,
+				content: ctx.t(`adv_remove_user:texts.deletedWarning${deladvs.length > 1 ? 's' : ''}`, {
+					amount: deladvs.length,
+					author_mention: ctx.author.toString(),
 					user_tag: user.tag,
 					user_id: user.id,
-				})}`,
+				}),
 			})
 			.catch(() => {});
 	}

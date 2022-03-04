@@ -10,7 +10,7 @@ class GuildDB {
 		 */
 		this.permissions = new Collection();
 		this.modlogs_channel = data.modlogs_channel || null;
-		this.punishment_channel = data.punishment_channel || null;
+		this.punishment_channel = data.punishments_channel || data.punishment_channel || null;
 		this.muterole = data.muterole || null;
 		this.configs = new GuildConfigs(data.configs || 0);
 		this.reasons = {
