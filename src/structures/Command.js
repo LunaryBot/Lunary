@@ -58,6 +58,12 @@ class Command {
 		return utils;
 	}
 
+	get group() {
+		const dir = this.dirname.split('\\')
+
+		return dir[dir.length - 1];
+	}
+
 	isDM() {
 		return this.dm == false;
 	}
@@ -177,6 +183,12 @@ class SubCommand {
 
 	get utils() {
 		return utils;
+	}
+
+	get group() {
+		const dir = this.dirname.split('\\')
+
+		return dir[dir.length - 1];
 	}
 
 	isDM() {
