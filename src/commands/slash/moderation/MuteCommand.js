@@ -67,7 +67,7 @@ module.exports = class MuteCommand extends Command {
 		let reason = ctx.interaction.options.getString('reason');
 		const attachment = ctx.interaction.options.get('attachment')?.attachment;
 
-		if (!reason) {
+		if (!reason && ctx.GuildDB.configs.has('MANDATORY_REASON')) {
 			const hasPermission = ctx.UserDB.permissions.has('LUNAR_NOT_REASON');
 			const reasons = ctx.GuildDB.reasons.mute;
 
@@ -185,6 +185,9 @@ module.exports = class MuteCommand extends Command {
 
 				confirm();
 			});
+		} else if(!reason) {
+			reason = ctx.t('general:reasonNotInformed.defaultReason');
+			confirm("followUp");
 		} else confirm("followUp");
 
 		function modalReason() {
@@ -477,7 +480,7 @@ module.exports = class MuteCommand extends Command {
 				content: `:tada: ─ ${ctx.t("general:successfullyPunished", {
 					author_mention: ctx.author.toString(),
 					user_mention: user.toString(),
-					user_tag: user.tag,
+					user_tag: user.user.tag,
 					user_id: user.id,
 					id: id,
 					notifyDM: !notifyDM ? ctx.t("general:notNotifyDm") : "."
