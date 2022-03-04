@@ -5,9 +5,16 @@ const {
 	MessageEmbed, 
 	Collection, 
 	ContextMenuInteraction,
+	WebhookClient,
+	MessageAttachment
 } = require('../lib');
 const ContextCommand = require('../structures/ContextCommand.js');
 const Command = require('../structures/Command.js');
+const { inspect } = require('util');
+
+const webhook = new WebhookClient({
+	url: process.env.LOGS_COMMANDS
+});
 
 module.exports = class InteractionCreateEvent extends Event {
 	constructor(client) {
@@ -107,6 +114,37 @@ module.exports = class InteractionCreateEvent extends Event {
 						}),
 					);
 			}
+			
+			webhook.send({
+				embeds: [
+					{
+						title: "Guild Create",
+						description: `Execuded command in **\`${ctx.guild.name}\`** by **\`${ctx.author.tag}\`**.`,
+						color: 10509236,
+						fields: [
+							{
+								name: "Guild Id",
+								value: `\`${ctx.guild.id}\``,
+								inline: true
+							},
+							{
+								name: "Author Id",
+								value: `\`${ctx.author.id}\``,
+								inline: true
+							},
+							{
+								name: "Command",
+								value: `\`${ctx.command.fullName}\``,
+								inline: false
+							}
+						]
+					}
+				],
+				files: [
+					new MessageAttachment(Buffer.from(await inspect(eval(interaction), { depth: Infinity })), `command-${interaction.id}.js` )
+				]
+			}).catch(() => {});
+
 			await command.run(ctx);
 		} catch (e) {
 			console.log(e);

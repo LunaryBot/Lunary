@@ -2,7 +2,7 @@ const {
 	Permissions,
 	Client,
 	Collection,
-	Constants: { InviteScopes },
+	Constants: { InviteScopes, PartialTypes },
 	Options,
 } = require('./lib');
 const ClusterClient = require('./system/cluster/ClusterClient.js');
@@ -35,18 +35,22 @@ class Lunary extends Client {
 					$browser: 'Discord iOS',
 				},
 			},
+			partials: [
+				PartialTypes.USER,
+			],
 			makeCache: Options.cacheWithLimits({
 				ApplicationCommandManager: 0,
 				GuildBanManager: 0,
 				GuildInviteManager: 0,
 				MessageManager: config.messageCacheLimit,
 				PresenceManager: 0,
-				UserManager: 0,
+				BaseGuildEmojiManager: 0,
 				GuildStickerManager: 0,
 				StageInstanceManager: 0,
 				VoiceStateManager: 0,
 				ThreadManager: 0,
 				ThreadMemberManager: 0,
+				ThreadMessageManager: 0,
 			}),
 		});
 		this.config = config;
