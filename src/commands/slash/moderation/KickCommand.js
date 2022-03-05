@@ -318,7 +318,7 @@ module.exports = class KickCommand extends Command {
 			if(ctx.GuildDB.punishment_channel) {
 				const punishment_channel = ctx.guild.channels.cache.get(ctx.GuildDB.punishment_channel)
 				if(punishment_channel.permissionsFor(ctx.client.user.id).has(18432)) {
-					let punishment_message = ctx.GuildDB.punishment_message || { content: '<:sigh:885721398788632586> {@user}' }
+					let punishment_message = ctx.GuildDB.punishment_message || ctx.t('general:punishment_message')
 					
 					punishment_message = replace_placeholders(
 							dump(punishment_message), 
@@ -326,8 +326,8 @@ module.exports = class KickCommand extends Command {
 							ctx.author, 
 							{
 								reason,
-								duration: Infinity,
-								type: 1
+								duration: ctx.t('general:permanent'),
+								type: ctx.t('kick:texts.punishmentType'),
 							}
 						)
 					
@@ -351,7 +351,7 @@ module.exports = class KickCommand extends Command {
 							new Discord.MessageActionRow()
 							.addComponents([
 								new Discord.MessageButton()
-								.setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guild/${ctx.guild.id}/modlogs?id=${id}/`)
+								.setURL(`${ctx.client.config.links.website.baseURL}/dashboard/guilds/${ctx.guild.id}/modlogs?id=${id}/`)
 								.setLabel('Lunary logs(Beta)')
 								.setStyle('LINK')
 							])

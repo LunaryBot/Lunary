@@ -57,7 +57,31 @@ modlogs:
 
 #Punishment message
 punishment_message: 
-  
+  embed:
+    description: 'Parece que alguém foi punido por não seguir as regras, que feio hein! <:sigh:901577954189004831>'
+    color: 16065893
+    fields:
+      - name: Autor
+        value: |-
+          {author.username}**#{author.discriminator}**
+          (`{author.id}`)
+        inline: true
+      - name: Usuário Punido
+        value: |-
+          {user.username}**#{user.discriminator}**
+          (`{user.id}`)
+        inline: true
+      - name: Motivo
+        value: "```{punishment.reason}```"
+        inline: false
+    title: '`{user.username}#{user.discriminator}`| {punishment.type}'
+    thumbnail:
+      url: '{author.icon}'
+    footer:
+      text: 'Duração: {punishment.duration}'
+
 booleans:
   true: Sim
   false: Não
+
+permanent: Permanente

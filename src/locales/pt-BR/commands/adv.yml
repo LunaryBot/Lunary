@@ -12,4 +12,5 @@ help:
     - title: Pune um usuário sem notificar via dm.
       usage: "user user:{@user} notify-dm:{notify-dm}"
 texts:
+  punishmentType: Advertido
   default_dm_message: "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}"
