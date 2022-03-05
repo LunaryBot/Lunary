@@ -373,7 +373,7 @@ module.exports = class AdvCommand extends Command {
 					if(user.id != ctx.author.id) {
 						if(
 							user.id != lastPunishmentApplied.user 
-							|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != 1)
+							|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != 4)
 							|| ((!isNaN(lastPunishmentApplied.date) 
 							&& user.id == lastPunishmentApplied.user 
 							&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
@@ -386,7 +386,7 @@ module.exports = class AdvCommand extends Command {
 				}
 			} else xp += generateXP()
 
-			ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentAppliedId: id, xp: xp, bans: ctx.UserDB.bans + 1, configs: ctx.UserDB.configs.bitfield})
+			ctx.client.UsersDB.ref(`Users/${ctx.author.id}/`).update({lastPunishmentAppliedId: id, xp: xp, configs: ctx.UserDB.configs.bitfield})
 
 			function generateXP() {
 				let maxXP = 19
@@ -398,7 +398,7 @@ module.exports = class AdvCommand extends Command {
 				
 				if(/https:\/\/(media|cdn)\.discordapp\.net\/attachments\/\d{17,19}\/\d{17,19}\/(.*)\.(jpge?|png|gif|apg|mp4)/ig.test(reason) || attachment) maxXP += 18
 
-				const _xp = Math.floor(Math.random() * (maxXP - 21)) + 21
+				const _xp = Math.floor(Math.random() * (maxXP - 10)) + 13
 
 				if(ctx.UserDB.level.current.level < calculate_levels(xp + _xp).current.level) leveluped = true;
 				

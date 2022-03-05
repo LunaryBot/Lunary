@@ -41,7 +41,7 @@ module.exports = class DailyCommand extends Command {
         
         const luas = (Math.floor(Math.random() * (maxLuas - 700 + 1)) + 700) * (Number(plan.multiple) || 1);
 
-        this.client.UsersDB.ref(`Users/${ctx.author.id}`).set({
+        this.client.UsersDB.ref(`Users/${ctx.author.id}`).update({
             lastDaily: Date.now(),
             luas: (ctx.UserDB.luas || 0) + luas
         });
