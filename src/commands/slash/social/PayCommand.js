@@ -57,7 +57,7 @@ module.exports = class PayCommand extends Command {
             filter: m => {
                 return [ctx.author.id, user.id].includes(m.user.id)
             },
-            time: 10 * 1000 // 1 minute
+            time: 60 * 1000 // 1 minute
         })
         
         collector.on("collect", 
