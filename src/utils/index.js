@@ -13,4 +13,5 @@ module.exports = {
 	chunk: require('./chunk.js'),
 	replace_placeholders: require('./replace_placeholders.js'),
 	calculate_levels: require('./calculate_levels.js'),
+	checkSimilarityStrings: require('./checkSimilarityStrings.js'),
 };
