@@ -1,0 +1,13 @@
+*.env
+*config.json
+.env
+!tsconfig.json
+
+dist/
+
+.dockerignore
+Dockerfile
+
+node_modules/
+package-lock.json
+yarn.lock

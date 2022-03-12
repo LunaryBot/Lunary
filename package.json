@@ -1,0 +1,22 @@
+{
+  "name": "lunar",
+  "version": "4.0 canary",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node .",
+    "build": "tsc",
+    "dev": "tsc && node ."
+  },
+  "author": "JVOPINHO",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "eris": "github:LunaryBot/eris#dev",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^17.0.21",
+    "typescript": "^4.5.5"
+  }
+}
