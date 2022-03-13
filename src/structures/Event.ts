@@ -3,15 +3,18 @@ import LunarClient from "./LunarClient";
 class Event {
     public declare client: LunarClient;
     public event: string;
+    public run?(...args: any[]): void;
 
     constructor(
-        client: LunarClient,
         event: string,
+        client: LunarClient,
     ) {
+        Object.defineProperty(this, 'client', { value: client, enumerable: false });
+        
         this.event = event;
-
-        Object.defineProperty(this, "client", client);
     };
 };
 
 export default Event;
+
+export { LunarClient };

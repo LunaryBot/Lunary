@@ -22,4 +22,4 @@ const client = new LunarClient(
     }
 );
 
-client.connect();
+client.init();

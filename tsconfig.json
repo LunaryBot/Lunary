@@ -6,7 +6,7 @@
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
         "typeRoots": ["./src/@types"],
-        "target": "ES6",
+        "target": "ES2021",
         "module": "commonjs",
     }
 }
