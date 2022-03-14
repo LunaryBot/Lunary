@@ -1,14 +1,16 @@
 help:
   name: ban remove
-  description: Mostra as informações do banimento de um usuário banido no servidor.
+  description: Retira o banimento de um usuário do servidor.
   category: Moderação
   examples:
     - title: Remove o banimento pelo id de um usuário.
       usage: "user:{user-id}"
     - title: Remove o banimento pela tag de um usuário.
       usage: "user:{user-tag}"
+    - title: Remove o banimento com um motivo.
+      usage: "user:{@user} reason:{reason}"
 texts:
   userNotBanned: Não encontrei nenhum usuário referente a `{user}` baniddo no servidor.
-  removeBan: "**Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
+  removeBan: ":white_check_mark: ─  **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
   requestedBy: "Requisitado por: {user_tag} - Motivo: {reason}"
   reasonNotInformed: Não informado.

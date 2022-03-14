@@ -1,0 +1,7 @@
+help:
+  name: aboutme
+  description: Altere seu "Sobre Mim" no meu comando de perfil!.
+  examples:
+    - {aboutme}
+texts:
+  success: ":pen_ballpoint: {author} | Seu \"Sobre Mim\" foi alterado com êxito!"

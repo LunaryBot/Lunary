@@ -14,18 +14,52 @@
       usage: user user:{@user} reason:{reason}
     - title: Pune um usuário sem notificar via dm.
       usage: user user:{@user} notify-dm:{notify-dm}
-- name: adv remove
+- name: adv info
+  description: Exibe as informações de uma advertência/aviso usando id.
+  botUserPermissions:
+    - LUNAR_ADV_MEMBERS
+  userDiscordPermissions:
+    - MANAGE_MESSAGES
+  dm: false
+  examples:
+    - title: Exibe as informações de uma advertência pelo id.
+      usage: id:{id}
+- name: adv list
+  description: Exibe as advertências/avisos de um usuário no servidor.
+  botUserPermissions:
+    - LUNAR_ADV_MEMBERS
+  userDiscordPermissions:
+    - MANAGE_MESSAGES
+  dm: false
+  examples:
+    - title: Exibe as informações de uma advertência de um usuário.
+      usage: user:{@user}
+- name: adv remove id
+  description: Remove uma advertência/aviso do histórico servidor.
+  botUserPermissions:
+    - LUNAR_ADV_MEMBERS
+  userDiscordPermissions:
+    - MANAGE_MESSAGES
+  dm: false
+  examples:
+    - name: Remove uma advertência/aviso usando o id.
+      usage: id:{id}
+- name: adv remove user
   description: Remove as advertências/avisos de um usuário do servidor.
   botUserPermissions:
     - LUNAR_ADV_MEMBERS
   userDiscordPermissions:
     - MANAGE_MESSAGES
   dm: false
-  examples: null
+  examples:
+    - title: Remove a última advertência/aviso de um usuário.
+      usage: user:{@user}
+    - title: Remove um número de advertências/avisos de um usuário.
+      usage: user:{@user} amount:{amount}
+    - title: Remove todas as advertências/avisos de um usuário.
+      usage: user:{@user} amount:all
 - name: ban
   description: Bane um usuário do servidor.
-  lunyDiscordPermissions:
-    - BAN_MEMBERS
   botUserPermissions:
     - LUNAR_BAN_MEMBERS
   userDiscordPermissions:
@@ -42,8 +76,6 @@
       usage: user user:{@user} notify-dm:{notify-dm}
 - name: ban info
   description: Mostra as informações do banimento de um usuário banido no servidor.
-  lunyDiscordPermissions:
-    - BAN_MEMBERS
   botUserPermissions:
     - LUNAR_BAN_MEMBERS
   userDiscordPermissions:
@@ -54,26 +86,62 @@
       usage: user:{user-id}
     - title: Veja as informações de um banimento pela tag do usuário.
       usage: user:{user-tag}
+- name: ban remove
+  description: Retira o banimento de um usuário do servidor.
+  botUserPermissions:
+    - LUNAR_BAN_MEMBERS
+  userDiscordPermissions:
+    - BAN_MEMBERS
+  dm: false
+  examples:
+    - title: Remove o banimento pelo id de um usuário.
+      usage: user:{user-id}
+    - title: Remove o banimento pela tag de um usuário.
+      usage: user:{user-tag}
+- name: ban soft
+  description: >-
+    Bane um usuário do servidor e apaga as mensagens do usuário nos últimos 7
+    dias.
+  botUserPermissions:
+    - LUNAR_BAN_MEMBERS
+  userDiscordPermissions:
+    - BAN_MEMBERS
+  dm: false
+  examples:
+    - title: Pune um usuário usando a menção.
+      usage: soft user:{@user}
+    - title: Pune um usuário usando o id.
+      usage: soft user:{userID}
+    - title: Pune um usuário usando com um motivo.
+      usage: soft user:{@user} reason:{reason}
+    - title: Pune um usuário sem notificar via dm.
+      usage: soft user:{@user} notify-dm:{notify-dm}
+- name: channel info
+  description: ":bug:"
+  dm: false
+  examples: null
 - name: clean
-  description: ':bug:'
-  lunyDiscordPermissions:
-    - MANAGE_MESSAGES
+  description: Limpa uma quantidade de 2 até 500 mensagens no canal.
   userDiscordPermissions:
     - MANAGE_MESSAGES
-  dm: true
-  examples: null
+  dm: false
+  examples:
+    - title: Apaga uma quantidade de mensagens no canal que foi executado o comando.
+      usage: amount:{amountClear}
+    - title: >-
+        Apaga uma quantidade de mensagens filtrando as mensagens de um usuário
+        no canal que foi executado o comando.
+      usage: amount:{amountClear} user:{userID}
 - name: eval
   description: Execute um código JavaScript.
-  dm: true
+  dm: false
   examples: null
 - name: help
   description: Meu comando de ajuda.
-  dm: true
+  dm: false
   examples: null
 - name: kick
   description: Expulsa um usuário do servidor.
-  lunyDiscordPermissions:
-    - KICK_MEMBERS
   botUserPermissions:
     - LUNAR_KICK_MEMBERS
   userDiscordPermissions:
@@ -90,21 +158,16 @@
       usage: user user:{@user} notify-dm:{notify-dm}
 - name: kitsu anime
   description: Veja as informações de um anime em kitsu.io
-  dm: false
   examples:
     - title: Veja as informações de Sword Art Online em Kitsu.
       usage: query:Sword Art Online
 - name: kitsu manga
   description: Veja as informações de um manga em kitsu.io
-  dm: false
   examples:
     - title: Veja as informações de Darling in the FranXX em Kitsu.
       usage: query:Darling in the FranXX
 - name: mute
   description: Silencia um usuário por um período de tempo determinado no servidor.
-  lunyDiscordPermissions:
-    - MANAGE_CHANNELS
-    - MANAGE_ROLES
   botUserPermissions:
     - LUNAR_MUTE_MEMBERS
   userDiscordPermissions:
@@ -124,21 +187,22 @@
         usage: user user:{@user} notify-dm:{notify-dm}
 - name: ping
   description: Veja meu ping.
-  dm: true
+  dm: false
   examples: null
 - name: profile
-  description: ':bug:'
-  dm: true
-  examples: null
+  description: Exibe o perfil do usuário.
+  dm: false
+  examples:
+    - user:{@user}
 - name: user avatar
   description: Veja o avatar de um usuário.
-  dm: false
-  examples: null
+  examples:
+    - user:{@user}
 - name: user banner
   description: Veja o banner de um usuário.
-  dm: false
-  examples: null
+  examples:
+    - user:{@user}
 - name: user info
   description: Veja as informações de um usuário.
-  dm: false
-  examples: null
+  examples:
+    - user:{@user}

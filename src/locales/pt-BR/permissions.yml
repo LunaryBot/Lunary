@@ -1,7 +1,12 @@
+#Lunar Permissions
 LUNAR_BAN_MEMBERS: Banir Membros(Lunar)
 LUNAR_kICK_MEMBERS: Expulsar Membros(Lunar)
 LUNAR_MUTE_MEMBERS: Silenciar Membros(Lunar)
 LUNAR_ADV_MEMBERS: Advertir Membros(Lunar)
+LUNAR_VIEW_HISTORY: Ver Histórico de Moderação(Lunar)
+LUNAR_MANAGE_HISTORY: Gerenciar Histórico de Moderação(Lunar)
+
+# Discord Permissions 
 CREATE_INSTANT_INVITE: Criar um Convite
 KICK_MEMBERS: Expulsar Membros
 BAN_MEMBERS: Banir Membros
@@ -35,11 +40,11 @@ MANAGE_WEBHOOKS: Gerenciar WebHooks
 MANAGE_EMOJIS_AND_STICKERS: Gerenciar Emojis e Figurinhas
 USE_APPLICATION_COMMANDS: Usar Comandos de Aplicativos
 REQUEST_TO_SPEAK: Pedir para Falar
+MANAGE_EVENTS: Gerenciar Eventos
 MANAGE_THREADS: Gerenciar Conversas
-USE_PUBLIC_THREADS: Criar Tópicos Públicos
 CREATE_PUBLIC_THREADS: Criar Tópicos Públicos
-USE_PRIVATE_THREADS: Criar Tópicos Privados
 CREATE_PRIVATE_THREADS: Criar Tópicos Privados
 USE_EXTERNAL_STICKERS: Usar Figurinhas Externas
 SEND_MESSAGES_IN_THREADS: Enviar Mensagens em Tópicos
 START_EMBEDDED_ACTIVITIES: Iniciar Atividades Incorporadas
+MODERATE_MEMBERS: Moderar Membros

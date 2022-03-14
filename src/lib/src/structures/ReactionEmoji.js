@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const Emoji = require('./Emoji');
-const Util = require('../util/Util');
+const Emoji = require("./Emoji");
+const Util = require("../util/Util");
 
 /**
  * Represents a limited emoji set used for both custom and unicode emojis. Custom emojis
@@ -10,22 +10,22 @@ const Util = require('../util/Util');
  * @extends {Emoji}
  */
 class ReactionEmoji extends Emoji {
-  constructor(reaction, emoji) {
-    super(reaction.message.client, emoji);
-    /**
-     * The message reaction this emoji refers to
-     * @type {MessageReaction}
-     */
-    this.reaction = reaction;
-  }
+	constructor(reaction, emoji) {
+		super(reaction.message.client, emoji);
+		/**
+		 * The message reaction this emoji refers to
+		 * @type {MessageReaction}
+		 */
+		this.reaction = reaction;
+	}
 
-  toJSON() {
-    return Util.flatten(this, { identifier: true });
-  }
+	toJSON() {
+		return Util.flatten(this, { identifier: true });
+	}
 
-  valueOf() {
-    return this.id;
-  }
+	valueOf() {
+		return this.id;
+	}
 }
 
 module.exports = ReactionEmoji;

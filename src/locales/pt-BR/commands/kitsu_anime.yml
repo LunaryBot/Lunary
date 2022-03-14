@@ -6,7 +6,7 @@ help:
     - title: Veja as informações de Sword Art Online em Kitsu.
       usage: "query:Sword Art Online"
 texts:
-  chooseAnime: "Selecione alguns do resultados encontrados sobre: \"`{search}`\""
+  chooseAnime: 'Selecione alguns do resultados encontrados sobre: "`{search}`"'
   menuLabel: Escolha o anime
   ID: ID
   volumes: Volumes

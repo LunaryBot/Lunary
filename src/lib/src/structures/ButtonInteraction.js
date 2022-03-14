@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const MessageComponentInteraction = require('./MessageComponentInteraction');
+const MessageComponentInteraction = require("./MessageComponentInteraction");
 
 /**
  * Represents a button interaction.

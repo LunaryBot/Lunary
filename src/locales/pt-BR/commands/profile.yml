@@ -1,0 +1,10 @@
+help:
+  name: profile
+  description: Exibe o perfil do usuário.
+  examples:
+    - ""
+    - user:{@user}
+texts:
+  noEmblem1: SEM
+  noEmblem2: EMBLEMA
+  contentMessage: ":magic_wand: **|** **{user}** perfil"

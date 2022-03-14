@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const BitField = require('./BitField');
+const BitField = require("./BitField");
 
 /**
  * Data structure that makes it easy to interact with a {@link Guild#systemChannelFlags} bitfield.
@@ -41,9 +41,9 @@ class SystemChannelFlags extends BitField {}
  * @see {@link https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags}
  */
 SystemChannelFlags.FLAGS = {
-  SUPPRESS_JOIN_NOTIFICATIONS: 1 << 0,
-  SUPPRESS_PREMIUM_SUBSCRIPTIONS: 1 << 1,
-  SUPPRESS_GUILD_REMINDER_NOTIFICATIONS: 1 << 2,
+	SUPPRESS_JOIN_NOTIFICATIONS: 1 << 0,
+	SUPPRESS_PREMIUM_SUBSCRIPTIONS: 1 << 1,
+	SUPPRESS_GUILD_REMINDER_NOTIFICATIONS: 1 << 2,
 };
 
 module.exports = SystemChannelFlags;

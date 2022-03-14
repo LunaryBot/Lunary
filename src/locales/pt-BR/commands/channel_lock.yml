@@ -1,0 +1,11 @@
+help:
+  name: channel lock
+  description: Bloqueia que usuários enviem mensagem em um canal de texto.
+  category: Gerenciamento
+  examples:
+    - ""
+    - "channel:{channel}"
+texts:
+  channelLocked: <:Per:833078041084166164> | **Mas...** O canal {channel} já está bloqueado...
+  title: ":lock: | Canal trancado"
+  description: "> **O canal {channel} foi trancado!**"

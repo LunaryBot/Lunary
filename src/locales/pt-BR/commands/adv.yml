@@ -12,7 +12,5 @@ help:
     - title: Pune um usuário sem notificar via dm.
       usage: "user user:{@user} notify-dm:{notify-dm}"
 texts:
-  mandatoryReason: É preciso informar um motivo para a advertência. `[Opção de motivo obrigatório ativa]`
-  veryBigReason: O motivo deve conter no máximo `400` caracteres.
-  reasonNotInformed: Motivo não informado.
+  punishmentType: Advertido
   default_dm_message: "{emoji} Você recebeu uma advertência em **{guild_name}**\n**`[MOTIVO]`:** {reason}"

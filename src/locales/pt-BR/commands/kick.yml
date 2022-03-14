@@ -12,8 +12,5 @@ help:
     - title: Pune um usuário sem notificar via dm.
       usage: "user user:{@user} notify-dm:{notify-dm}"
 texts:
-  mandatoryReason: É preciso informar um motivo para a expulsão. `[Opção de motivo obrigatório ativa]`
-  veryBigReason: O motivo deve conter no máximo `400` caracteres.
-  reasonNotInformed: Motivo não informado.
+  punishmentType: Expulso
   default_dm_message: "{emoji} Você foi expulso de **{guild_name}**\n**`[MOTIVO]`:** {reason}"
-  punishedBy: "Punido por {author_tag} - ID: {id} - Motivo: {reason}"

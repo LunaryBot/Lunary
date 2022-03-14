@@ -1,0 +1,15 @@
+help:
+  name: pay
+  description: Pague luas(moedas) para outra pessoa.
+  examples: 
+    - "{@user} {luasAmount}"
+texts:
+  userMismatch: "<:sigh:885721398788632586> | Você não pode transferir luas a si mesmo."
+  valueMismatch: ":woman_gesturing_no: | Você não pode transferir luas para um valor menor que 1."
+  notEnoughLuas: ":woman_gesturing_no: | Você não possui luas suficientes para completar essa transferencia, ainda lhe faltam **`{luasAmount} lua(s)`**."
+  notEnoughLuas2: ":woman_gesturing_no: | {author} parece que você não possui mais as luas suficientes para completar essa transferencia, ainda lhe faltam **`{luasAmount} lua(s)`**."
+  confirm: "{user}, {author} está prestes a transferir **`{luasAmount} lua(s)`** para você.\n> :pound: Para confirmar a transação você e {author} devem utilizar o botão a baixo dentro de **`1 minuto`**."
+  noOneConfirmed: ":alarm_clock: | Tempo para confirmação encerrado.\n> :woman_shrugging: {author} e nem {user} confirmaram a transação."
+  oneConfirmation: ":alarm_clock: | Tempo para confirmação encerrado.\n> :woman_shrugging: {userConfirmaed} confirmou a transação, porém {userNotConfirmed} não confirmou."
+  awaitingConfirmation: ":woman_bowing: | Oskayy {interactionAuthor}, sua confirmação foi registrada, agora basta esperar a confirmação de {user} para prosseguir com a transferencia."
+  transferred: ":money_with_wings: | {author} a transferencia de **`{luasAmount} lua(s)`** para {user} foi efetuada com sucesso."

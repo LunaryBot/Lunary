@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
-module.exports = require('./DJSError');
-module.exports.Messages = require('./Messages');
+module.exports = require("./DJSError");
+module.exports.Messages = require("./Messages");
