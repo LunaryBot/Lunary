@@ -1,23 +1,13 @@
 import * as dotenv from 'dotenv';
-import LunarClient from './structures/LunarClient';
+import ClusterManager from './structures/cluster/ClusterManager';
+import Logger from './utils/Logger';
 
 dotenv.config();
 
-const client = new LunarClient(
-    process.env.DISCORD_TOKEN,
-    {
-        intents: ['guilds', 'guildMembers', 'guildBans', 'guildIntegrations', 'guildWebhooks', 'guildVoiceStates', 'guildMessages', 'guildMessageReactions'],
-        allowedMentions: {
-            everyone: false,
-            roles: false,
-            users: true,
-            repliedUser: true,
-        },
-        restMode: true,
-        rest: {
-            baseURL: '/api/v10'
-        }
-    }
-);
+const manager = new ClusterManager();
 
-client.init();
+manager.on('create', (clusterID: number, shards: number[]) => {
+    Logger.log(`Cluster ${clusterID} spawned  with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { tags: ['Cluster Manager'], date: true });
+});
+
+manager.init();

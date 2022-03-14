@@ -1,6 +1,6 @@
 import { Client, ClientOptions } from 'eris';
 import fs from 'fs';
-import Logger from './Logger';
+import Logger from '../utils/Logger';
 import Event from './Event';
 import Command from './Command';
 
@@ -15,7 +15,6 @@ class LunarClient extends Client {
     public commands: IClientCommands;
     public logger: Logger;
     public config: { prefix: string, owners: string[] };
-
 
     constructor(
         token: string, 
@@ -34,7 +33,7 @@ class LunarClient extends Client {
 
         this.config = {
             prefix: 'canary.',
-            owners: ['452618703792766987']
+            owners: ['452618703792766987', '343778106340802580']
         }
     }
     
@@ -42,7 +41,7 @@ class LunarClient extends Client {
         const regex = /^(.*)Event\.(t|j)s$/;
         let events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
         for (let event of events) {
-            this.logger.log(`Loading event ${event.replace(regex, '$1Event')}`, { tags: ['Client', 'Event Loader'], date: true });
+            this.logger.log(`Loading event ${event.replace(regex, '$1Event')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Event Loader'], date: true });
 
             let { default: base } = require(__dirname + `/../events/${event}`);
             
@@ -53,7 +52,7 @@ class LunarClient extends Client {
             this.on(instance.event, (...args) => instance.run? instance.run(...args) : Logger.log(`Event ${instance.event} has no run function.`, { tags: ['Client', 'Event Loader'], date: true, error: true }));
         };
 
-        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: ['Client', 'Events Loader'], date: true });
+        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Events Loader'], date: true });
 
         return this.events;
     }
@@ -70,7 +69,7 @@ class LunarClient extends Client {
                 let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${pasta}`).filter(file => !fileRegex.test(file) && fileRegex2.test(file));
                 
                 for (let command of commands) {
-                    this.logger.log(`Loading ${type} command ${command.replace(fileRegex2, '$1Command')}`, { tags: ['Client', 'Commands Loader'], date: true });
+                    this.logger.log(`Loading ${type} command ${command.replace(fileRegex2, '$1Command')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true });
                     let { default: base } = require(__dirname + `/../commands/${type}/${pasta}/${command}`);
                     
                     const instance  = new base(this) as Command;

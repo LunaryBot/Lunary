@@ -6,18 +6,18 @@ class EvalCommand extends Command {
     constructor(client: LunarClient) {
         super(client, {
             name: 'eval',
-            aliases: ['ev'],
+            aliases: ['ev', 'e', 'evl'],
             ownerOnly: true,
             dirname: __dirname,
         });
-    }
+    };
 
     async run(context: IContextMessageCommand) {
 		if (!context.args[0]) {
             this.replyMessage(context, {
                 content: 'Você precisa informar o código a ser executado!',
-            })
-        }
+            });
+        };
 
         const Eris = require('eris');
 
@@ -27,12 +27,12 @@ class EvalCommand extends Command {
         if (context.args[0].toLowerCase() == '--async') {
 			evalAsync = true;
 			context.args.shift();
-		}
+		};
 
 		if (context.args[0].toLowerCase() == '--terminal') {
 			evalBash = true;
 			context.args.shift();
-		}
+		};
 
         let conteudo = context.args.join(' ');
 		if (coderegex.test(conteudo)) conteudo = conteudo.replace(coderegex, '$1');
@@ -41,7 +41,7 @@ class EvalCommand extends Command {
         const regext = new RegExp(
             // @ts-ignore
             this.client._token, 'g'
-        )
+        );
 
         let result;
 		try {
@@ -51,14 +51,14 @@ class EvalCommand extends Command {
 
 			if (result instanceof Promise) {
 				result = await result;
-			}
+			};
 
 			if (typeof result !== 'string') result = await require('util').inspect(result, { depth: 0 });
 			let end = Date.now() - start;
 
 		} catch (e) {
             result = `${e}`;
-		}
+		};
 
         await this.replyMessage(context, {
             content: `\`\`\`js\n${result.replace(regext, '🙃').replace(/```/g, '\\`\\`\\`').slice(0, 1990)}\`\`\``,
