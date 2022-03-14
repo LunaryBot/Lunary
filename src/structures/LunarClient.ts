@@ -1,11 +1,21 @@
 import { Client, ClientOptions } from 'eris';
-import Event from './Event';
 import fs from 'fs';
 import Logger from './Logger';
+import Event from './Event';
+import Command from './Command';
+
+interface IClientCommands {
+    slash: Command[],
+    vanilla: Command[],
+    user: Command[],
+}
 
 class LunarClient extends Client {
     public events: Event[];
+    public commands: IClientCommands;
     public logger: Logger;
+    public config: { prefix: string, owners: string[] };
+
 
     constructor(
         token: string, 
@@ -14,12 +24,22 @@ class LunarClient extends Client {
         super(token, options);
 
         this.events = [];
+        this.commands = {
+            slash: [],
+            vanilla: [],
+            user: [],
+        }
 
         this.logger = new Logger();
+
+        this.config = {
+            prefix: 'canary.',
+            owners: ['452618703792766987']
+        }
     }
     
     private async _loadEvents(): Promise<Event[]> {
-        const regex = /^(.*)Event.(t|j)s$/;
+        const regex = /^(.*)Event\.(t|j)s$/;
         let events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
         for (let event of events) {
             this.logger.log(`Loading event ${event.replace(regex, '$1Event')}`, { tags: ['Client', 'Event Loader'], date: true });
@@ -33,13 +53,39 @@ class LunarClient extends Client {
             this.on(instance.event, (...args) => instance.run? instance.run(...args) : Logger.log(`Event ${instance.event} has no run function.`, { tags: ['Client', 'Event Loader'], date: true, error: true }));
         };
 
-        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: ['Client', 'Event Loader'], date: true });
+        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: ['Client', 'Events Loader'], date: true });
 
         return this.events;
     }
 
+    private async _loadCommands(): Promise<IClientCommands> {
+        const fileRegex = /^.*(SubCommand|CommandGroup)\.(j|t)s$/;
+        const fileRegex2 = /^(.*)Command\.(j|t)s$/;
+
+        let types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'vanilla' | 'user'>;
+        
+        for (let type of types) {
+            let pastas = fs.readdirSync(`${__dirname}/../commands/${type}`);
+            for (let pasta of pastas) {
+                let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${pasta}`).filter(file => !fileRegex.test(file) && fileRegex2.test(file));
+                
+                for (let command of commands) {
+                    this.logger.log(`Loading ${type} command ${command.replace(fileRegex2, '$1Command')}`, { tags: ['Client', 'Commands Loader'], date: true });
+                    let { default: base } = require(__dirname + `/../commands/${type}/${pasta}/${command}`);
+                    
+                    const instance  = new base(this) as Command;
+
+                    this.commands[type].push(instance);
+                }
+            }
+        }
+
+        return this.commands;
+    }
+
     public async init(): Promise<void> {
         await this._loadEvents();
+        await this._loadCommands();
         await this.connect();
     }
 }

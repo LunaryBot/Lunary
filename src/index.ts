@@ -6,9 +6,7 @@ dotenv.config();
 const client = new LunarClient(
     process.env.DISCORD_TOKEN,
     {
-        intents: [
-            'guildMessages',
-        ],
+        intents: ['guilds', 'guildMembers', 'guildBans', 'guildIntegrations', 'guildWebhooks', 'guildVoiceStates', 'guildMessages', 'guildMessageReactions'],
         allowedMentions: {
             everyone: false,
             roles: false,
