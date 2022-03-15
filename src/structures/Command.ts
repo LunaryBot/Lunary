@@ -1,6 +1,8 @@
 import LunarClient from './LunarClient';
-import Eris, { Interaction } from 'eris';
+import Eris from 'eris';
 import { TPermissions } from '../utils/Constants'
+
+const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
 interface ICommand {
     name: string;
@@ -79,7 +81,7 @@ interface IContextCommand {
     client: LunarClient;
     command: Command;
     args?: string[];
-    message: Eris.Message;
+    message?: Eris.Message;
     interaction?: Eris.CommandInteraction;
     channel: Eris.TextableChannel;
     user: Eris.User;
@@ -93,8 +95,15 @@ interface IContextMessageCommand {
     interaction?: null;
     channel: Eris.TextableChannel;
     user: Eris.User;
+}
 
-    createMessage(args: Eris.MessageContent): Promise<Eris.Message>;
+interface IContextInteractionCommand {
+    client: LunarClient;
+    command: Command;
+    interaction: Eris.CommandInteraction;
+    options: CommandInteractionOptions;
+    channel: Eris.TextableChannel;
+    user: Eris.User;
 }
 
 class ContextCommand {
@@ -102,8 +111,9 @@ class ContextCommand {
 
     public command: Command;
     public args: string[] | null;
-    public message: Eris.Message | Eris.CommandInteraction;
+    public message: Eris.Message | null;
     public interaction: Eris.CommandInteraction | null;
+    public options?: CommandInteractionOptions | [];
 
     public author: Eris.User;
     public user: Eris.User;
@@ -121,10 +131,25 @@ class ContextCommand {
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
         
         this.command = command;
-        this.args = args || [];
 
-        this.message = message || interaction;
+        this.message = message || null;
         this.interaction = interaction || null;
+        
+        this.args = args || [];
+        this.options = interaction ? new CommandInteractionOptions(interaction?.data?.resolved, ...(interaction?.data?.options || [])) : [];
+
+        if(this.options instanceof CommandInteractionOptions) {
+            if(this.options[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+                this.options._group = this.options[0].name;
+                this.options.setOptions(...(this.options[0].options || []));
+            };
+
+            if(this.options[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND) {
+                this.options._subcommand = this.options[0].name;
+                this.options.setOptions(...(this.options[0].options || []));
+            };
+        };
+
 
         this.user = user;
         this.author = user;
@@ -136,9 +161,56 @@ class ContextCommand {
         this.slash = !!interaction;
         this.prefix = interaction ? '/' : 'a.';
     };
+}
 
-    public createMessage(args: Eris.MessageContent) {
-        return this.client.createMessage(this.channel.id, args);
+interface ICommandInteractionOptionsResolved {
+    users?: Eris.Collection<Eris.User> | undefined;
+    members?: Eris.Collection<Omit<Eris.Member, 'user' | 'mute' | 'deaf'>> | undefined;
+    roles?: Eris.Collection<Eris.Role>;
+    channels?: Eris.Collection<Eris.PartialChannel> | undefined;
+    messages?: Eris.Collection<Eris.Message> | undefined;
+}    
+
+class CommandInteractionOptions extends Array {
+    public _group: string | null;
+    public _subcommand: string | null;
+    public resolved: ICommandInteractionOptionsResolved;
+
+    constructor(resolved: ICommandInteractionOptionsResolved | undefined, ...args: any[]) {
+        super(...args);
+
+        this.resolved = resolved || {};
+        this._group = null;
+        this._subcommand = null;
+    }
+
+    public setOptions(...options: any[]) {
+        this.length = 0;
+        this.push(...options);
+    }
+
+    public get(key: string, { member = false }: { member?: boolean } = {}): any {
+        const option = this.find(option => option.name == key);
+
+        if(!option) return undefined;
+
+        if(option.type == ApplicationCommandOptionTypes.USER) {
+            if(member == true) {
+                return this.resolved.members?.get(option.value);
+            } else {
+                return this.resolved.users?.get(option.value);
+            };
+        }
+
+        if(option.type == ApplicationCommandOptionTypes.ROLE) {
+            return this.resolved.roles?.get(option.value);
+        }
+
+        if(option.type == ApplicationCommandOptionTypes.CHANNEL) {
+            return this.resolved.channels?.get(option.value);
+        }
+
+        return option.value;
     }
 }
 
