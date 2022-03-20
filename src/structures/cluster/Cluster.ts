@@ -19,6 +19,28 @@ class Cluster {
         parentPort?.on('message', this._handleMessage.bind(this));
     }
 
+    public eval(data: { code: string, clusterID?: number | string } | string) {
+        const code = typeof data == 'string' ? data : data.code;
+        this._send({
+            type: 'eval',
+            code,
+            clusterID: typeof  data == 'string' ? undefined : data.clusterID,
+        });
+
+        const promise = new Promise((resolve, reject) => {
+            const listener = (data: any) => {
+                if (data.type === 'eval result' && code === data.code) {
+                    parentPort?.removeListener('message', listener);
+                    resolve(data);
+                };
+            };
+
+            parentPort?.on('message', listener);
+        });
+
+        return promise;
+    }
+
     public _send(data: any) {
         parentPort?.postMessage({...data, clusterRequesterID: this.clusterID});
     }
@@ -40,12 +62,6 @@ class Cluster {
                     result,
                     code,
                 });
-
-                break;
-            };
-
-            case 'eval result': {
-                console.log(data);
 
                 break;
             };
