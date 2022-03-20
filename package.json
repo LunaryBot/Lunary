@@ -1,7 +1,7 @@
 {
   "name": "lunar",
   "version": "4.0 canary",
-  "main": "dist/index.js",
+  "main": "dist/LunarCluster.js",
   "types": "src/@types/index.d.ts",
   "scripts": {
     "start": "node .",

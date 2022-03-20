@@ -14,7 +14,7 @@ class EvalCommand extends Command {
 
     async run(context: IContextMessageCommand) {
 		if (!context.args[0]) {
-            this.replyMessage(context, {
+            return this.replyMessage(context, {
                 content: 'Você precisa informar o código a ser executado!',
             });
         };

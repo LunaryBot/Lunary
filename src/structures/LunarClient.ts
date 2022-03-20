@@ -3,6 +3,7 @@ import fs from 'fs';
 import Logger from '../utils/Logger';
 import Event from './Event';
 import Command from './Command';
+import Cluster from './cluster/Cluster';
 
 interface IClientCommands {
     slash: Command[],
@@ -11,6 +12,7 @@ interface IClientCommands {
 }
 
 class LunarClient extends Client {
+    declare cluster: Cluster;
     public events: Event[];
     public commands: IClientCommands;
     public logger: Logger;

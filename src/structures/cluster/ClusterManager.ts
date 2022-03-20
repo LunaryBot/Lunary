@@ -7,17 +7,25 @@ class ClusterManager extends EventEmitter {
     public clusterAmount: number;
     public shardAmount: number;
     public shardsPerCluster: number;
-    public aliveClusters: number;
-    public clusters: Worker[];
+    public clusters: Map<number, Worker>;
+    public shards_list: number[][];
+    public env;
+
     constructor() {
         super();
 
         this.clusterAmount = Number(process.env.CLUSTER_AMOUNT) || os.cpus().length || 2;
         this.shardAmount = Number(process.env.SHARD_AMOUNT) || 2;
         this.shardsPerCluster = Math.round(Number(process.env.SHARD_AMOUNT) / this.clusterAmount);
-        this.aliveClusters = 0;
+        this.shards_list = this.shardsChunk(this.shardsPerCluster, this.shardAmount);
 
-        this.clusters = [];
+        this.env = {
+            CLUSTER_AMOUNT: this.clusterAmount,
+            SHARD_AMOUNT: this.shardAmount,
+            SHARDS_PER_CLUSTER: this.shardsPerCluster,
+        };
+
+        this.clusters = new Map();
     };
     
     public on(event: 'exit' | 'error' | 'create', listener: (...args: any) => void): this {
@@ -25,23 +33,15 @@ class ClusterManager extends EventEmitter {
     }
 
     public async init(): Promise<void> {
-        const clusters = this.shardsChunk(this.shardsPerCluster, this.shardAmount);
-        const env = {
-            CLUSTER_AMOUNT: this.clusterAmount,
-            SHARD_AMOUNT: this.shardAmount,
-            SHARDS_PER_CLUSTER: this.shardsPerCluster,
-        };
-
         for (let i = 0; i < this.clusterAmount; i++) {
-            const cluster = this.createCluster(i, { ...env, CLUSTER_ID: i, CLUSTER_SHARDS: clusters[i].join(',') });
+            const cluster = this.createCluster(i, { ...this.env, CLUSTER_ID: i, CLUSTER_SHARDS: this.shards_list[i].join(',') }, true);
             
-            this.aliveClusters++;
-            this.clusters.push(cluster);
+            this.clusters.set(i, cluster);
         }
     }
 
-    private createCluster(id: number, env?: any): Worker {
-        const worker = new Worker(path.resolve(__dirname + '/', 'Cluster.js'), {
+    private createCluster(id: number, env?: any, emit?: boolean): Worker {
+        const worker = new Worker(path.resolve(`${__dirname}/../../Lunar.js`), {
             env: env ? { ...process.env, ...env } : {
                 ...process.env,
                 CLUSTER_ID: id,
@@ -51,12 +51,11 @@ class ClusterManager extends EventEmitter {
             }
         });
 
-        this.emit('create', id, env.CLUSTER_SHARDS.split(','));
+        if(emit) this.emit('create', id, env.CLUSTER_SHARDS.split(','));
         worker.on('exit', () => this.onExit(id));
         worker.on('error', (err) => this.onError(id, err));
         worker.on('message', (m) => this.onMessage(m));
     
-        this.aliveClusters++;
         return worker;
     }
 
@@ -65,10 +64,17 @@ class ClusterManager extends EventEmitter {
     }
 
     public onError(id: number, err: Error): void {
-        this.emit('error', id, err);
+        this.emit('error', id, err?.stack || 'Unknown Error');
+
+        this.clusters.get(id)?.terminate();
+        this.clusters.delete(id);
+        
+        this.createCluster(id, { ...this.env, CLUSTER_ID: id, CLUSTER_SHARDS: this.shards_list[id].join(',') });
     }
 
-    public onMessage(m: any): void {}
+    public onMessage(m: any): void {
+        console.log(m)
+    }
 
     private shardsChunk(shardsPerCluster: number, shardsAmount: number): number[][] {
         const arr = [];

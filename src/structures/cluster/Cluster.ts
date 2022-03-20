@@ -1,30 +1,25 @@
+import { parentPort } from 'worker_threads';
 import LunarClient from '../LunarClient';
 
-const shards = process.env.CLUSTER_SHARDS.split(',');
 
-console.log({
-    firstShardID: Number(shards[0]),
-    lastShardID: Number(shards[shards.length - 1])
-})
+class Cluster {
+    declare client: LunarClient;
+    public clusterID: string;
+    public shards: number[];
+    
+    constructor(client: LunarClient) {
+        const shards = process.env.CLUSTER_SHARDS.split(',').map(s => parseInt(s));
 
-const client = new LunarClient(
-    process.env.DISCORD_TOKEN,
-    {
-        intents: ['guilds', 'guildMembers', 'guildBans', 'guildIntegrations', 'guildWebhooks', 'guildVoiceStates', 'guildMessages', 'guildMessageReactions'],
-        allowedMentions: {
-            everyone: false,
-            roles: false,
-            users: true,
-            repliedUser: true,
-        },
-        restMode: true,
-        rest: {
-            baseURL: '/api/v10'
-        },
-        firstShardID: Number(shards[0]),
-        lastShardID: Number(shards[shards.length - 1]),
-        maxShards: Number(process.env.SHARD_AMOUNT),
+        Object.defineProperty(this, 'client', { value: client, enumerable: false });
+        Object.defineProperty(client, 'cluster', { value: this });
+
+        this.clusterID = process.env.CLUSTER_ID;
+        this.shards = shards;
     }
-);
 
-client.init();
+    public _send(data: any) {
+        parentPort?.postMessage(data);
+    }
+}
+
+export default Cluster;

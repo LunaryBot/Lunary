@@ -215,4 +215,9 @@ class CommandInteractionOptions extends Array {
 }
 
 export default Command;
-export { ContextCommand, LunarClient, IContextMessageCommand };
+export { 
+    ContextCommand, 
+    LunarClient, 
+    IContextMessageCommand, 
+    IContextInteractionCommand 
+};
