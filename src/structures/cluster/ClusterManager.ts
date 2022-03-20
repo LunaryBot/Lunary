@@ -28,7 +28,7 @@ class ClusterManager extends EventEmitter {
         this.clusters = new Map();
     };
     
-    public on(event: 'exit' | 'error' | 'create', listener: (...args: any) => void): this {
+    public on(event: 'exit' | 'error' | 'create' | 'message', listener: (...args: any) => void): this {
         return super.on(event, listener);
     }
 
@@ -72,8 +72,53 @@ class ClusterManager extends EventEmitter {
         this.createCluster(id, { ...this.env, CLUSTER_ID: id, CLUSTER_SHARDS: this.shards_list[id].join(',') });
     }
 
-    public onMessage(m: any): void {
-        console.log(m)
+    public async onMessage(data: any): Promise<void> {
+        switch (data.type) {
+            case 'eval': {
+                const { clusterID, clusterRequesterID } = data;
+
+                let results = [];
+                if(clusterID) {
+                    const cluster = this.clusters.get(clusterID);
+
+                    if(cluster) {
+                        results.push(this.eval(data.code, cluster));
+                    };
+                } else {
+                    this.clusters.forEach((cluster) => results.push(this.eval(data.code, cluster)));
+                };
+
+                results = await Promise.all(results);
+
+                this.clusters.get(Number(clusterRequesterID))?.postMessage({
+                    type: 'eval result',
+                    code: data.code,
+                    results,
+                })
+            };
+        }
+    }
+
+    private eval(code: string, cluster: Worker): any {
+        const promise = new Promise((resolve, reject) => {
+            let result;
+            
+            const listener = (message: any) => {
+                if (message.type === 'eval result' && message.code === code) {
+                    cluster.removeListener('message', listener);
+                    result = message.result;
+                    resolve(result);
+                };
+            };
+            
+            cluster.postMessage({
+                type: 'eval',
+                code,
+            })
+            cluster.on('message', listener);
+        });
+
+        return promise;
     }
 
     private shardsChunk(shardsPerCluster: number, shardsAmount: number): number[][] {
