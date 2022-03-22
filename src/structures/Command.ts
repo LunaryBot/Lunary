@@ -1,6 +1,7 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions } from '../utils/Constants'
+import { TPermissions } from '../utils/Constants';
+import Utils from '../utils/Utils';
 
 const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
@@ -55,7 +56,7 @@ class Command {
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     };
 
-    public async run(context: IContextMessageCommand|ContextCommand): Promise<any> {}
+    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
 
     public async replyMessage(
         message: IContextMessageCommand | ContextCommand | Eris.Message, 
@@ -74,6 +75,10 @@ class Command {
                 messageReference: {  messageID: (message as Eris.Message).id } }
             )
         );
+    }
+
+    public get Utils() {
+        return Utils;
     }
 };
 
@@ -95,6 +100,7 @@ interface IContextMessageCommand {
     interaction?: null;
     channel: Eris.TextableChannel;
     user: Eris.User;
+    guild: Eris.Guild;
 }
 
 interface IContextInteractionCommand {
@@ -104,6 +110,7 @@ interface IContextInteractionCommand {
     options: CommandInteractionOptions;
     channel: Eris.TextableChannel;
     user: Eris.User;
+    guild: Eris.Guild;
 }
 
 class ContextCommand {

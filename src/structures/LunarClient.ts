@@ -16,7 +16,7 @@ class LunarClient extends Client {
     public events: Event[];
     public commands: IClientCommands;
     public logger: Logger;
-    public config: { prefix: string, owners: string[] };
+    public config: { prefix: string, owners: string[], clustersName: { [key: string]: string } };
 
     constructor(
         token: string, 
@@ -35,7 +35,11 @@ class LunarClient extends Client {
 
         this.config = {
             prefix: 'canary.',
-            owners: ['452618703792766987', '343778106340802580']
+            owners: ['452618703792766987', '343778106340802580'],
+            clustersName: {
+                '0': 'Apollo 11',
+                '1': 'Saturno V',
+            }
         }
     }
     

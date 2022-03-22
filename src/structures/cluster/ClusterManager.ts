@@ -34,9 +34,7 @@ class ClusterManager extends EventEmitter {
 
     public async init(): Promise<void> {
         for (let i = 0; i < this.clusterAmount; i++) {
-            const cluster = this.createCluster(i, { ...this.env, CLUSTER_ID: i, CLUSTER_SHARDS: this.shards_list[i].join(',') }, true);
-            
-            this.clusters.set(i, cluster);
+            this.createCluster(i, { ...this.env, CLUSTER_ID: i, CLUSTER_SHARDS: this.shards_list[i].join(',') }, true);
         }
     }
 
@@ -50,6 +48,8 @@ class ClusterManager extends EventEmitter {
                 SHARDS_PER_CLUSTER: this.shardsPerCluster,
             }
         });
+
+        this.clusters.set(id, worker);
 
         if(emit) this.emit('create', id, env.CLUSTER_SHARDS.split(','));
         worker.on('exit', () => this.onExit(id));

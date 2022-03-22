@@ -37,6 +37,10 @@ class InteractionCreateEvent extends Event {
             subcommand = (subcommand || command).subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
             if (subcommand) command = subcommand;
         }
+
+        if (command.guildOnly && !interaction.guildID) return;
+        
+        command.run(context as ContextCommand);
     }
 }
 

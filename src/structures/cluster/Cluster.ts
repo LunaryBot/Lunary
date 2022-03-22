@@ -1,6 +1,11 @@
 import { parentPort } from 'worker_threads';
 import LunarClient from '../LunarClient';
 
+interface IEvalResult { 
+    type: 'eval result'; 
+    code: string; 
+    results: any[];
+};
 
 class Cluster {
     declare client: LunarClient;
@@ -19,7 +24,7 @@ class Cluster {
         parentPort?.on('message', this._handleMessage.bind(this));
     }
 
-    public eval(data: { code: string, clusterID?: number | string } | string) {
+    public eval(data: { code: string, clusterID?: number | string } | string): Promise<IEvalResult> {
         const code = typeof data == 'string' ? data : data.code;
         this._send({
             type: 'eval',
@@ -36,7 +41,7 @@ class Cluster {
             };
 
             parentPort?.on('message', listener);
-        });
+        }) as Promise<IEvalResult>;
 
         return promise;
     }
