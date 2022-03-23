@@ -7,9 +7,9 @@ const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
 interface ICommand {
     name: string;
-    dirname: string;
+    dirname?: string;
     aliases?: string[];
-    subcommands?: Command[];
+    subcommands?: Array<CommandGroup|SubCommand>;
     ownerOnly?: boolean;
     permissions?: {
         me: string[];
@@ -23,9 +23,9 @@ interface ICommand {
 class Command {
     public declare client: LunarClient;
     public name: string;
-    public dirname: string;
+    public dirname: string | undefined;
     public aliases: string[];
-    public subcommands: Command[];
+    public subcommands: Array<CommandGroup|SubCommand>;
     public ownerOnly: boolean;
     public permissions: {
         me: string[];
@@ -40,7 +40,7 @@ class Command {
         data: ICommand,
     ) {
         this.name = data.name;
-        this.dirname = data.dirname;
+        this.dirname = data.dirname || undefined;
         this.aliases = data.aliases || [];
         this.subcommands = data.subcommands || [];
         this.ownerOnly = data.ownerOnly || false;
@@ -81,6 +81,68 @@ class Command {
         return Utils;
     }
 };
+
+interface ICommandGroup {
+    name: string;
+    subcommands: SubCommand[];
+    ownerOnly?: boolean;
+    permissions?: {
+        me: string[];
+        bot: string[];
+        discord: TPermissions[];
+    }
+    guildOnly?: boolean;
+    cooldown?: number;
+};
+
+class CommandGroup {
+    constructor() {}
+}
+
+interface ISubCommand {
+    name: string;
+    dirname: string;
+    ownerOnly?: boolean;
+    permissions?: {
+        me: string[];
+        bot: string[];
+        discord: TPermissions[];
+    }
+    guildOnly?: boolean;
+    cooldown?: number;
+}
+
+class SubCommand {
+    public declare client: LunarClient;
+    public name: string;
+    public dirname: string;
+    public ownerOnly: boolean;
+    public permissions: {
+        me: string[];
+        bot: string[];
+        discord: TPermissions[];
+    };
+    public guildOnly: boolean;
+    public cooldown: number;
+
+    constructor(
+        client: LunarClient, data: ISubCommand
+    ) {
+        this.name = data.name;
+        this.dirname = data.dirname;
+        this.ownerOnly = data.ownerOnly || false;
+        this.permissions = data.permissions || {
+            me: [],
+            bot: [],
+            discord: [],
+        };
+
+        this.guildOnly = data.guildOnly || false;
+        this.cooldown = data.cooldown || 0;
+        
+        Object.defineProperty(this, 'client', { value: client, enumerable: false });
+    }
+}
 
 interface IContextCommand {
     client: LunarClient;

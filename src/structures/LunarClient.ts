@@ -88,6 +88,60 @@ class LunarClient extends Client {
         return this.commands;
     }
 
+    private async _loadCommandsv2(): Promise<void> {
+        const fileRegex = /^.*(SubCommand|CommandGroup)\.(j|t)s$/;
+        const fileRegex2 = /^(.*)Command\.(j|t)s$/;
+        
+        let types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'vanilla' | 'user'>;
+
+        const cmds: IClientCommands = {
+            slash: [],
+            vanilla: [],
+            user: [],
+        };
+
+        for (let type of types) {
+            let categeries = fs.readdirSync(`${__dirname}/../commands/${type}`);
+
+            for (let category of categeries) {
+                let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}`)
+
+                for (let command of commands) {
+                    if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
+                        let _command: Command = this.commands[type].find(cmd => cmd.name === command.replace(fileRegex2, '$1')) || new Command(this, { 
+                            name: command.replace(fileRegex2, '$1'), 
+                            dirname: `${__dirname}/../commands/${type}/${category}/${command}`, 
+                        });
+
+                        _command.subcommands = [];
+
+                        let sucommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}`);
+
+                        for (let subcommand of sucommands) {
+                            if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).isDirectory()) {
+
+                            } else {
+                                let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
+
+                                const instance  = new base(this) as Command;
+
+                                cmds[type].push(instance);
+                            }
+                        }
+                    } else {
+                        let { default: base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+                        
+                        const instance  = new base(this) as Command;
+
+                        cmds[type].push(instance);
+                    }
+                }
+            }
+        }
+
+        console.log('a')
+    }
+
     public async init(): Promise<void> {
         await this._loadEvents();
         await this._loadCommands();
