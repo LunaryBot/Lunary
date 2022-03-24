@@ -4,6 +4,7 @@ interface ILoogerOptions {
     tags: string[];
     date: boolean;
     error?: boolean;
+    info?: boolean;
 }
 
 class Logger {
@@ -11,7 +12,9 @@ class Logger {
         return Logger.log;
     }
 
-    public static log(message: string, options: ILoogerOptions = { tags: [], date: true, error: false }) {
+    public static log(message: string, options: ILoogerOptions = { tags: [], date: true, error: false, info: false }) {
+        if(options.info && process.env.SUPER_LOGS != 'true') return; 
+
         const tags = options?.tags?.length > 0 ? chalk.cyan(`[${options.tags?.join('] [')}]`) : '';
         const date = options?.date ? chalk.blue(`[${new Date().toLocaleString()}]`) : '';
 

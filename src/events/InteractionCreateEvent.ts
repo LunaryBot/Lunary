@@ -31,14 +31,13 @@ class InteractionCreateEvent extends Event {
             channel: interaction.channel,
         }) as IContextInteractionCommand;
 
-        if (command && (command as Command).subcommands?.length) {
+        if (context.options._subcommand && command.subcommands?.length) {
             let subcommand;
             let commandgroup;
+            console.log(context.options)
             if (context.options._group) commandgroup = (command as Command).subcommands.find(c => c.name == context.options._group);
-            subcommand = (commandgroup as CommandGroup).subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
+            subcommand = (commandgroup as CommandGroup || command as Command)?.subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
             if (subcommand) {
-                command: SubCommand;
-
                 command = subcommand as SubCommand;
             }
         }

@@ -1,6 +1,6 @@
-import Command, { SubCommand, LunarClient } from "../../../../structures/Command";
+import Command, { SubCommand, LunarClient, IContextInteractionCommand } from "../../../../structures/Command";
 
-class BanUserSubCommand extends SubCommand {
+class AdvUserSubCommand extends SubCommand {
     constructor(client: LunarClient, mainCommand: Command) {
         super(client, {
             name: 'user',
@@ -14,6 +14,12 @@ class BanUserSubCommand extends SubCommand {
             cooldown: 3,
         }, mainCommand);
     }
+
+    public async run(context: IContextInteractionCommand) {
+        context.interaction.createMessage({
+            content: 'a'
+        })
+    }
 }
 
-export default BanUserSubCommand;
+export default AdvUserSubCommand;

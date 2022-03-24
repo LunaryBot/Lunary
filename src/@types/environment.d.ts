@@ -9,6 +9,7 @@ declare global {
             SHARD_AMOUNT: string;
             CLUSTER_ID: string;
             CLUSTER_SHARDS: string;
+            SUPER_LOGS: string;
         }
     }
 }
