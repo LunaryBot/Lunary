@@ -1,6 +1,6 @@
 import Eris from 'eris';
 import Event, { LunarClient } from '../structures/Event';
-import { ContextCommand, IContextInteractionCommand } from '../structures/Command';
+import Command, { CommandGroup, SubCommand, ContextCommand, IContextInteractionCommand } from '../structures/Command';
 
 class InteractionCreateEvent extends Event {
     constructor(client: LunarClient) {
@@ -17,7 +17,7 @@ class InteractionCreateEvent extends Event {
     }
 
     async executeInteractionCommand(interaction: Eris.CommandInteraction) {
-        let command = this.client.commands.slash.find(c => c.name == interaction.data.name);
+        let command: Command | SubCommand = this.client.commands.slash.find(c => c.name == interaction.data.name) as Command;
         
         if(!command) return;
 
@@ -31,11 +31,16 @@ class InteractionCreateEvent extends Event {
             channel: interaction.channel,
         }) as IContextInteractionCommand;
 
-        if (command && command.subcommands?.length) {
+        if (command && (command as Command).subcommands?.length) {
             let subcommand;
-            if (context.options._group) subcommand = command.subcommands.find(c => c.name == context.options._group);
-            subcommand = (subcommand || command).subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
-            if (subcommand) command = subcommand;
+            let commandgroup;
+            if (context.options._group) commandgroup = (command as Command).subcommands.find(c => c.name == context.options._group);
+            subcommand = (commandgroup as CommandGroup).subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
+            if (subcommand) {
+                command: SubCommand;
+
+                command = subcommand as SubCommand;
+            }
         }
 
         if (command.guildOnly && !interaction.guildID) return;

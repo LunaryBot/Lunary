@@ -85,18 +85,24 @@ class Command {
 interface ICommandGroup {
     name: string;
     subcommands: SubCommand[];
-    ownerOnly?: boolean;
-    permissions?: {
-        me: string[];
-        bot: string[];
-        discord: TPermissions[];
-    }
-    guildOnly?: boolean;
-    cooldown?: number;
 };
 
 class CommandGroup {
-    constructor() {}
+    public name: string;
+    public subcommands: SubCommand[];
+    public mainCommand: Command;
+
+    constructor(
+        client: LunarClient, 
+        data: ICommandGroup, 
+        mainCommand: Command,
+    ) {
+        this.name = data.name;
+        this.subcommands = data.subcommands || [];
+        this.mainCommand = mainCommand;
+
+        Object.defineProperty(this, 'client', { value: client, enumerable: false });
+    }
 }
 
 interface ISubCommand {
@@ -124,9 +130,12 @@ class SubCommand {
     };
     public guildOnly: boolean;
     public cooldown: number;
+    public mainCommand: Command|CommandGroup;
 
     constructor(
-        client: LunarClient, data: ISubCommand
+        client: LunarClient, 
+        data: ISubCommand, 
+        mainCommand: Command|CommandGroup,
     ) {
         this.name = data.name;
         this.dirname = data.dirname;
@@ -139,9 +148,12 @@ class SubCommand {
 
         this.guildOnly = data.guildOnly || false;
         this.cooldown = data.cooldown || 0;
+        this.mainCommand = mainCommand;
         
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     }
+
+    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
 }
 
 interface IContextCommand {
@@ -156,7 +168,7 @@ interface IContextCommand {
 
 interface IContextMessageCommand {
     client: LunarClient;
-    command: Command;
+    command: Command|SubCommand;
     args: string[];
     message: Eris.Message;
     interaction?: null;
@@ -167,7 +179,7 @@ interface IContextMessageCommand {
 
 interface IContextInteractionCommand {
     client: LunarClient;
-    command: Command;
+    command: Command|SubCommand;
     interaction: Eris.CommandInteraction;
     options: CommandInteractionOptions;
     channel: Eris.TextableChannel;
@@ -178,7 +190,7 @@ interface IContextInteractionCommand {
 class ContextCommand {
     public declare client: LunarClient;
 
-    public command: Command;
+    public command: Command|SubCommand;
     public args: string[] | null;
     public message: Eris.Message | null;
     public interaction: Eris.CommandInteraction | null;
@@ -285,7 +297,9 @@ class CommandInteractionOptions extends Array {
 
 export default Command;
 export { 
-    ContextCommand, 
+    ContextCommand,
+    CommandGroup,
+    SubCommand, 
     LunarClient, 
     IContextMessageCommand, 
     IContextInteractionCommand 

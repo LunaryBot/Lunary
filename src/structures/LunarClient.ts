@@ -2,7 +2,7 @@ import { Client, ClientOptions } from 'eris';
 import fs from 'fs';
 import Logger from '../utils/Logger';
 import Event from './Event';
-import Command from './Command';
+import Command, { CommandGroup, SubCommand } from './Command';
 import Cluster from './cluster/Cluster';
 
 interface IClientCommands {
@@ -89,7 +89,7 @@ class LunarClient extends Client {
     }
 
     private async _loadCommandsv2(): Promise<void> {
-        const fileRegex = /^.*(SubCommand|CommandGroup)\.(j|t)s$/;
+        const fileRegex = /^(.*)(Command|SubCommand|CommandGroup)(\.(j|t)s)?$/;
         const fileRegex2 = /^(.*)Command\.(j|t)s$/;
         
         let types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'vanilla' | 'user'>;
@@ -104,34 +104,61 @@ class LunarClient extends Client {
             let categeries = fs.readdirSync(`${__dirname}/../commands/${type}`);
 
             for (let category of categeries) {
-                let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}`)
+                let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}`).filter(file => fileRegex.test(file));
 
                 for (let command of commands) {
                     if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
-                        let _command: Command = this.commands[type].find(cmd => cmd.name === command.replace(fileRegex2, '$1')) || new Command(this, { 
-                            name: command.replace(fileRegex2, '$1'), 
+                        let _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || new Command(this, { 
+                            name: splitCommandName(command), 
                             dirname: `${__dirname}/../commands/${type}/${category}/${command}`, 
                         });
 
-                        _command.subcommands = [];
+                        if(!this.commands[type].find(cmd => cmd.name === splitCommandName(command))) {
+                            console.log('Command not found, adding to list');
+                            this.commands[type].push(_command);
+                            console.log(this.commands[type]);
+                        }
 
-                        let sucommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}`);
+                        if(!_command.subcommands?.length) { _command.subcommands = []; }
 
-                        for (let subcommand of sucommands) {
+                        let subcommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}`).filter(file => fileRegex.test(file));;
+
+                        for (let subcommand of subcommands) {
                             if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).isDirectory()) {
+                                let _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || new CommandGroup(this, {
+                                    name: splitCommandName(subcommand),
+                                    subcommands: [],
+                                }, _command);
 
+                                let subsubcommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).filter(file => fileRegex.test(file));;
+
+                                for (let subsubcommand of subsubcommands) {
+                                    let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}/${subsubcommand}`);
+
+                                    this.logger.log(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true });
+
+                                    const instance  = new base(this, _subcommand) as SubCommand;
+
+                                    _subcommand.subcommands.push(instance);
+                                }
+
+                                _command.subcommands.push(_subcommand);
                             } else {
                                 let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
+                                this.logger.log(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true });
+                                const instance  = new base(this) as SubCommand;
 
-                                const instance  = new base(this) as Command;
-
-                                cmds[type].push(instance);
+                                _command.subcommands.push(instance);
                             }
                         }
+
+                        console.log(`${type} command ${command.replace(fileRegex, '$1$2')} loaded`);
                     } else {
-                        let { default: base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+                        let a = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+
+                        this.logger.log(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true });
                         
-                        const instance  = new base(this) as Command;
+                        const instance  = new a.default(this) as Command;
 
                         cmds[type].push(instance);
                     }
@@ -139,12 +166,22 @@ class LunarClient extends Client {
             }
         }
 
-        console.log('a')
+        console.log(cmds);
+
+        this.commands = cmds;
+
+        return;
+
+        function splitCommandName(name: string) {
+            let split = name.replace(fileRegex, '$1').match(/[A-Z][a-z]*/g) as string[];
+
+            return split[split.length - 1].toLowerCase();
+        }
     }
 
     public async init(): Promise<void> {
         await this._loadEvents();
-        await this._loadCommands();
+        await this._loadCommandsv2();
         await this.connect();
     }
 }
