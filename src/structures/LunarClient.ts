@@ -102,7 +102,8 @@ class LunarClient extends Client {
                 for (let command of commands) {
                     if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
                         const client = this;
-                        let _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`new (class ${command.replace(fileRegex, '$1$2')} extends Command_1.default { constructor() { 
+                        const _Command = require(`${__dirname}/Command`);
+                        let _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`new (class ${command.replace(fileRegex, '$1$2')} extends _Command.default { constructor() { 
                                 super(client, { 
                                     name: '${splitCommandName(command)}', 
                                 }) 
@@ -119,10 +120,12 @@ class LunarClient extends Client {
 
                         for (let subcommand of subcommands) {
                             if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).isDirectory()) {
-                                let _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || new CommandGroup(this, {
-                                    name: splitCommandName(subcommand),
-                                    subcommands: [],
-                                }, _command);
+                                let _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || eval(`new (class ${subcommand.replace(fileRegex, '$1$2')} extends _Command.CommandGroup { constructor() { 
+                                    super(client, { 
+                                        name: '${splitCommandName(subcommand)}', 
+                                    }, _command) 
+                                } 
+                            })`)
 
                                 let subsubcommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).filter(file => fileRegex.test(file));;
 
