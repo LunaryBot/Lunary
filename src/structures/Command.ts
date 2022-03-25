@@ -2,6 +2,7 @@ import LunarClient from './LunarClient';
 import Eris from 'eris';
 import { TPermissions } from '../utils/Constants';
 import Utils from '../utils/Utils';
+import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 
 const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
@@ -244,56 +245,7 @@ class ContextCommand {
     };
 }
 
-interface ICommandInteractionOptionsResolved {
-    users?: Eris.Collection<Eris.User> | undefined;
-    members?: Eris.Collection<Omit<Eris.Member, 'user' | 'mute' | 'deaf'>> | undefined;
-    roles?: Eris.Collection<Eris.Role>;
-    channels?: Eris.Collection<Eris.PartialChannel> | undefined;
-    messages?: Eris.Collection<Eris.Message> | undefined;
-}    
 
-class CommandInteractionOptions extends Array {
-    public _group: string | null;
-    public _subcommand: string | null;
-    public resolved: ICommandInteractionOptionsResolved;
-
-    constructor(resolved: ICommandInteractionOptionsResolved | undefined, ...args: any[]) {
-        super(...args);
-
-        this.resolved = resolved || {};
-        this._group = null;
-        this._subcommand = null;
-    }
-
-    public setOptions(...options: any[]) {
-        this.length = 0;
-        this.push(...options);
-    }
-
-    public get(key: string, { member = false }: { member?: boolean } = {}): any {
-        const option = this.find(option => option.name == key);
-
-        if(!option) return undefined;
-
-        if(option.type == ApplicationCommandOptionTypes.USER) {
-            if(member == true) {
-                return this.resolved.members?.get(option.value);
-            } else {
-                return this.resolved.users?.get(option.value);
-            };
-        }
-
-        if(option.type == ApplicationCommandOptionTypes.ROLE) {
-            return this.resolved.roles?.get(option.value);
-        }
-
-        if(option.type == ApplicationCommandOptionTypes.CHANNEL) {
-            return this.resolved.channels?.get(option.value);
-        }
-
-        return option.value;
-    }
-}
 
 export default Command;
 export { 
