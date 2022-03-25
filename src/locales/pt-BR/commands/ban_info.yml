@@ -8,7 +8,7 @@ help:
     - title: Veja as informações de um banimento pela tag do usuário.
       usage: "user:{user-tag}"
 texts:
-  userNotBanned: <:Per:833078041084166164> | **Oops**, eu não encontrei ninguém banido nesse servidor referente a sua busca. Ou você digitou a tag errada, ou o usuário foi desbanido, ou ele foi sugado por um buraco...
+  userNotBanned: <:Per:833078041084166164> | **Oops**, eu não encontrei ninguém banido nesse servidor referente a sua busca. Ou você digitou a tag errada, ou o usuário foi desbanido, ou ele foi sugado por um buraco negro...
   selectUserMessage: <:Per:833078041084166164> | Achei alguns usuários referente à sua busca banidos no servidor <:sigh:901577954189004831>.
   selectUserPlaceholder: Selecione um usuário
 
@@ -16,5 +16,13 @@ texts:
     title: "(:question:) - Informações do banimento"
     userBanned: "Usuário banido:"
     reason: ":clipboard: • Motivo inserido"
+  
+  unbanModal:
+    title: 🌺 Desbanir usuário
+    reasonPlaceholder: Motivo para o unban
+    reasonLabel: Motivo
+  
   removeBan: ":white_check_mark: ─ **Sucesso! |**{author_mention}, o usuário `{user_tag}` (`{user_id}`) foi desbanido do servidor com êxito! Espero que ele não faça mais besteiras. <:sigh:885721398788632586>"
   reasonNotInformed: Motivo não informado.
+  unbanedBy: "Desbanido por {author} - Motivo: {reason}"
+
