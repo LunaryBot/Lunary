@@ -13,7 +13,7 @@ interface ICommand {
     subcommands?: Array<CommandGroup|SubCommand>;
     ownerOnly?: boolean;
     permissions?: {
-        me: string[];
+        me: TPermissions[];
         bot: string[];
         discord: TPermissions[];
     }
@@ -29,7 +29,7 @@ class Command {
     public subcommands: Array<CommandGroup|SubCommand>;
     public ownerOnly: boolean;
     public permissions: {
-        me: string[];
+        me: TPermissions[];
         bot: string[];
         discord: TPermissions[];
     };
@@ -111,7 +111,7 @@ interface ISubCommand {
     dirname: string;
     ownerOnly?: boolean;
     permissions?: {
-        me: string[];
+        me: TPermissions[];
         bot: string[];
         discord: TPermissions[];
     }
@@ -125,10 +125,10 @@ class SubCommand {
     public dirname: string;
     public ownerOnly: boolean;
     public permissions: {
-        me: string[];
+        me: TPermissions[];
         bot: string[];
         discord: TPermissions[];
-    };
+    }
     public guildOnly: boolean;
     public cooldown: number;
     public mainCommand: Command|CommandGroup;
