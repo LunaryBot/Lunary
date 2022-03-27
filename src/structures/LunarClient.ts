@@ -4,6 +4,7 @@ import Logger from '../utils/Logger';
 import Event from './Event';
 import Command, { CommandGroup, SubCommand } from './Command';
 import Cluster from './cluster/Cluster';
+import DatabasesManager from './DatabasesManager'
 
 interface IClientCommands {
     slash: Command[],
@@ -17,7 +18,7 @@ class LunarClient extends Client {
     public commands: IClientCommands;
     public logger: Logger;
     public config: { prefix: string, owners: string[], clustersName: { [key: string]: string } };
-
+    public dbs: DatabasesManager
     constructor(
         token: string, 
         options: ClientOptions
@@ -41,6 +42,8 @@ class LunarClient extends Client {
                 '1': 'Saturno V',
             }
         }
+
+        this.dbs = new DatabasesManager(this);
     }
     
     private async _loadEvents(): Promise<Event[]> {

@@ -16,9 +16,23 @@ class AdvUserSubCommand extends SubCommand {
     }
 
     public async run(context: IContextInteractionCommand) {
-        context.interaction.createMessage({
-            content: 'a'
-        })
+        context.interaction.createModal({
+            title: "Teste",
+            custom_id: 'mymodal',
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            custom_id: 'textinput',
+                            label: 'label',
+                            style: 2,
+                            type: 4,
+                        }
+                    ]
+                }
+            ]
+        });
     }
 }
 
