@@ -79,7 +79,7 @@ class BitField {
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) return bit.map(p => this.resolve(p, data)).reduce((prev, p) => prev | p, defaultBit);
 		if (typeof bit === 'string' && typeof FLAGS[bit] !== 'undefined') return FLAGS[bit];
-		throw new Error('BitField Invalid');
+		throw new Error('BitField Invalid: ' + bit);
 	}
 }
 
