@@ -1,5 +1,7 @@
 import firebase from 'firebase';
+import { User } from 'eris';
 import LunarClient from './LunarClient';
+import UserDB from './UserDB';
 
 const keys = ['apiKey', 'appId', 'authDomain', 'databaseURL', 'measurementId', 'messagingSenderId', 'projectId', 'storageBucket'];
 
@@ -24,6 +26,18 @@ class DatabasesManager {
             app = firebase.initializeApp(DatabasesManager.getData(name), name);
         };
         return app.database();
+    }
+
+    async getUser(user: string|User): Promise<UserDB> {
+        if(typeof user == 'string') {
+            user = this.client.users.get(user) || { id: user } as User;
+        }
+
+        user: User;
+
+        const data = (await this.user.ref(`Users/${user.id}`).once('value')).val() || {};
+
+        return new UserDB(user, data as any, this);
     }
 
     static getData(key: string) {
