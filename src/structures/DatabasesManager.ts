@@ -4,9 +4,10 @@ import LunarClient from './LunarClient';
 const keys = ['apiKey', 'appId', 'authDomain', 'databaseURL', 'measurementId', 'messagingSenderId', 'projectId', 'storageBucket'];
 
 class DatabasesManager {
-    guilds: firebase.database.Database;
-    user: firebase.database.Database;
-    logs: firebase.database.Database;
+    public declare client: LunarClient;
+    public guilds: firebase.database.Database;
+    public user: firebase.database.Database;
+    public logs: firebase.database.Database;
 
     constructor(client: LunarClient) {
         this.guilds = this.initializeDatabase('GuildsDB');
