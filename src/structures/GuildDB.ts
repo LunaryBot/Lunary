@@ -1,9 +1,11 @@
 import DatabasesManager from './DatabasesManager';
+import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, TextableChannel } from 'eris';
 
 interface IGuildDataBase {
     configs?: number;
+    locale?: string;
     modlogs_channel?: string;
     punishment_channel?: string;
     punishment_message?: string;
@@ -17,6 +19,7 @@ class GuildDB {
     public declare dbmanager: DatabasesManager;
     public declare data: IGuildDataBase;
     public configs: Configs;
+    public locale: Locale;
     public modlogsChannel: TextableChannel | null;
     public punishmentChannel: TextableChannel | null;
     public punishmentMessage: Object | null;
@@ -31,6 +34,8 @@ class GuildDB {
         Object.defineProperty(this, 'data', { value: data, enumerable: false });
 
         this.configs = new Configs(data.configs || 0);
+
+        this.locale = ((data.locale ? this.dbmanager.client.locales.find(l => l.name == data.locale) : false) || this.dbmanager.client.locales.find(l => l.name == this.dbmanager.client.config.defaultLocale)) as Locale;
 
         this.modlogsChannel = (data.modlogs_channel ? guild.channels.get(data.modlogs_channel) as TextableChannel : null) ?? null;
         this.punishmentChannel = (data.punishment_channel ? guild.channels.get(data.punishment_channel) as TextableChannel : null) ?? null;

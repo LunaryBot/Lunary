@@ -12,16 +12,17 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@types/firebase": "^3.2.1",
+    "@types/js-yaml": "^4.0.5",
     "@types/moment-duration-format": "^2.2.3",
     "chalk": "^3.0.0",
     "dotenv": "^16.0.0",
     "eris": "github:LunaryBot/eris#dev",
     "firebase": "8.8.1",
+    "js-yaml": "^4.1.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.34",
-    "tslib": "^2.3.1",
-    "yaml-js": "^0.3.1"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

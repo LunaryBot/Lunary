@@ -27,7 +27,7 @@ class InteractionCreateEvent extends Event {
             client: this.client,
             interaction,
             command,
-            user: interaction.user as Eris.User,
+            user: interaction.user || interaction.member?.user as Eris.User,
             channel: interaction.channel,
         }) as IContextInteractionCommand;
 

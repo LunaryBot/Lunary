@@ -3,6 +3,7 @@ import fs from 'fs';
 import Logger from '../utils/Logger';
 import Event from './Event';
 import Command, { CommandGroup, SubCommand } from './Command';
+import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
 
@@ -16,8 +17,9 @@ class LunarClient extends Client {
     declare cluster: Cluster;
     public events: Event[];
     public commands: IClientCommands;
+    public locales: Locale[];
     public logger: Logger;
-    public config: { prefix: string, owners: string[], clustersName: { [key: string]: string } };
+    public config: { prefix: string, owners: string[], clustersName: { [key: string]: string }, defaultLocale: string };
     public dbs: DatabasesManager
     constructor(
         token: string, 
@@ -31,6 +33,7 @@ class LunarClient extends Client {
             vanilla: [],
             user: [],
         }
+        this.locales = [];
 
         this.logger = new Logger();
 
@@ -40,7 +43,8 @@ class LunarClient extends Client {
             clustersName: {
                 '0': 'Apollo 11',
                 '1': 'Saturno V',
-            }
+            },
+            defaultLocale: process.env.DEFAULT_LOCALE || 'en-US',
         }
 
         this.dbs = new DatabasesManager(this);
@@ -66,29 +70,18 @@ class LunarClient extends Client {
         return this.events;
     }
 
-    private async _loadCommands(): Promise<IClientCommands> {
-        const fileRegex = /^.*(SubCommand|CommandGroup)\.(j|t)s$/;
-        const fileRegex2 = /^(.*)Command\.(j|t)s$/;
-
-        let types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'vanilla' | 'user'>;
+    private async _loadLocales(): Promise<Locale[]> {
+        const yaml = require('js-yaml');
+        let locales = fs.readdirSync(process.cwd() + '/locales').filter(file => !/^.*\..*$/.test(file));
         
-        for (let type of types) {
-            let pastas = fs.readdirSync(`${__dirname}/../commands/${type}`);
-            for (let pasta of pastas) {
-                let commands = fs.readdirSync(`${__dirname}/../commands/${type}/${pasta}`).filter(file => !fileRegex.test(file) && fileRegex2.test(file));
-                
-                for (let command of commands) {
-                    this.logger.log(`Loading ${type} command ${command.replace(fileRegex2, '$1Command')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
-                    let { default: base } = require(__dirname + `/../commands/${type}/${pasta}/${command}`);
-                    
-                    const instance  = new base(this) as Command;
-
-                    this.commands[type].push(instance);
-                }
-            }
+        for(let locale of locales) {
+            this.logger.log(`Loading locale ${locale}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Locale Loader'], date: true, info: true });
+            
+            const instance = new Locale(locale);
+            this.locales.push(instance);
         }
 
-        return this.commands;
+        return this.locales;
     }
 
     private async _loadCommandsv2(): Promise<IClientCommands> {
@@ -178,6 +171,7 @@ class LunarClient extends Client {
     public async init(): Promise<void> {
         await this._loadEvents();
         await this._loadCommandsv2();
+        await this._loadLocales();
         await this.connect();
     }
 }

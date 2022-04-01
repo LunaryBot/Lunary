@@ -10,6 +10,7 @@ declare global {
             CLUSTER_ID: string;
             CLUSTER_SHARDS: string;
             SUPER_LOGS: string;
+            DEFAULT_LOCALE: string;
         }
     }
 }

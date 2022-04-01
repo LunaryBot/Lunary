@@ -5,6 +5,7 @@ import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
+import Locale from './Locale';
 
 const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
@@ -215,6 +216,7 @@ class ContextCommand {
     public channel: Eris.TextableChannel;
 
     public declare dbs: IContextCommandDBS;
+    public declare t: (key: string, ...args: any[]) => string;
 
     public dm: boolean;
     public slash: boolean;
@@ -270,6 +272,8 @@ class ContextCommand {
             user: await this.dbs.user,
             guild: await this.dbs.guild,
         }
+
+        Object.defineProperty(this, 't', { value: this.dbs.guild.locale.t });
     }
 }
 
