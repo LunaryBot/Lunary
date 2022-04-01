@@ -1,7 +1,8 @@
 import firebase from 'firebase';
-import { User } from 'eris';
+import { User, Guild } from 'eris';
 import LunarClient from './LunarClient';
 import UserDB from './UserDB';
+import GuildDB from './GuildDB';
 
 const keys = ['apiKey', 'appId', 'authDomain', 'databaseURL', 'measurementId', 'messagingSenderId', 'projectId', 'storageBucket'];
 
@@ -38,6 +39,18 @@ class DatabasesManager {
         const data = (await this.user.ref(`Users/${user.id}`).once('value')).val() || {};
 
         return new UserDB(user, data as any, this);
+    }
+
+    async getGuild(guild: string|Guild): Promise<GuildDB> {
+        if(typeof guild == 'string') {
+            guild = this.client.guilds.get(guild) || { id: guild } as Guild;
+        }
+
+        guild: Guild;
+
+        const data = (await this.guilds.ref(`Servers/${guild.id}`).once('value')).val() || {};
+
+        return new GuildDB(guild, data as any, this);
     }
 
     static getData(key: string) {

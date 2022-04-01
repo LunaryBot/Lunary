@@ -19,7 +19,8 @@ interface IUserDataBase {
 class UserDB {
     public declare user: User;
     public declare dbmanager: DatabasesManager;
-    public configs: number;
+    public declare data: IUserDataBase;
+    public configs: Configs;
     public lastPunishmentAppliedId: string | null;
     public bans: number;
     public luas: number;
@@ -28,17 +29,18 @@ class UserDB {
     public xp: number;
     public aboutme: string;
     public inventory: ProfileInventory;
-    public inventory_using: ProfileInventory;
+    public inventoryUsing: ProfileInventory;
     public premium: boolean;
-    public premium_started: number | null;
-    public premium_duration: number| null;
-    public premium_expire: number| null;
+    public premiumStarted: number | null;
+    public premiumDuration: number| null;
+    public premiumExpire: number| null;
 
     constructor(user: User, data: IUserDataBase = {}, dbmanager: DatabasesManager) {
         Object.defineProperty(this, 'user', { value: user, enumerable: false });
         Object.defineProperty(this, 'dbmanager', { value: dbmanager, enumerable: false });
+        Object.defineProperty(this, 'data', { value: data, enumerable: false });
 
-        this.configs = data.configs || 0;
+        this.configs = new Configs(data.configs || 0);
 
         this.lastPunishmentAppliedId = data.lastPunishmentAppliedId || null;
 		this.bans = data.bans || 0;
@@ -50,14 +52,14 @@ class UserDB {
         this.xp = data.xp || 0;
         this.aboutme = data.aboutme || '';
         this.inventory = new ProfileInventory(data.inventory || ProfileInventory.defaultBit);
-        this.inventory_using = new ProfileInventory(data.inventory_using || ProfileInventory.defaultBit);
+        this.inventoryUsing = new ProfileInventory(data.inventory_using || ProfileInventory.defaultBit);
 
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
 		this.premium = !!(premium_expire > Date.now());
-		this.premium_started = (premium_expire > Date.now() ? data.premium_started : null) || null;
-		this.premium_duration = (premium_expire > Date.now() ? Number(data.premium_duration) : null) || null;
-		this.premium_expire = premium_expire || null;
+		this.premiumStarted = (premium_expire > Date.now() ? data.premium_started : null) || null;
+		this.premiumDuration = (premium_expire > Date.now() ? Number(data.premium_duration) : null) || null;
+		this.premiumExpire = premium_expire || null;
     }
 }
 
