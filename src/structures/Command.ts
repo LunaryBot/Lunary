@@ -3,6 +3,8 @@ import Eris from 'eris';
 import { TPermissions } from '../utils/Constants';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
+import UserDB from './UserDB';
+import GuildDB from './GuildDB';
 
 const { Constants: { ApplicationCommandOptionTypes } } = Eris;
 
@@ -176,6 +178,8 @@ interface IContextMessageCommand {
     channel: Eris.TextableChannel;
     user: Eris.User;
     guild: Eris.Guild;
+    dbs: IContextCommandDBS;
+    loadDBS: () => Promise<void>;
 }
 
 interface IContextInteractionCommand {
@@ -186,6 +190,13 @@ interface IContextInteractionCommand {
     channel: Eris.TextableChannel;
     user: Eris.User;
     guild: Eris.Guild;
+    dbs: IContextCommandDBS;
+    loadDBS: () => Promise<void>;
+}
+
+interface IContextCommandDBS {
+    user: UserDB;
+    guild: GuildDB;
 }
 
 class ContextCommand {
@@ -202,6 +213,8 @@ class ContextCommand {
     public member: Eris.Member | null;
     public guild: Eris.Guild | null;
     public channel: Eris.TextableChannel;
+
+    public declare dbs: IContextCommandDBS;
 
     public dm: boolean;
     public slash: boolean;
@@ -232,17 +245,32 @@ class ContextCommand {
             };
         };
 
+        const guild = (interaction || message)?.member?.guild || null;
 
         this.user = user;
         this.author = user;
         this.member = (interaction || message)?.member || null;
-        this.guild = (interaction || message)?.member?.guild || null;
+        this.guild = guild;
         this.channel = channel;
+
+        this.dbs = {
+            // @ts-ignore
+            user: client.dbs.getUser(user.id),
+            // @ts-ignore
+            guild: (guild ? client.dbs.getGuild(guild) : null) as GuildDB,
+        }
 
         this.dm = (message || interaction)?.channel.type === 1;
         this.slash = !!interaction;
         this.prefix = interaction ? '/' : 'a.';
     };
+
+    public async loadDBS() {
+        this.dbs = {
+            user: await this.dbs.user,
+            guild: await this.dbs.guild,
+        }
+    }
 }
 
 

@@ -34,6 +34,8 @@ class MessageCreateEvent extends Event {
 
         if(command.ownerOnly && !this.client.config.owners.includes(message.author.id)) return;
 
+        await context.loadDBS();
+
         command.run(context);
     }
 }

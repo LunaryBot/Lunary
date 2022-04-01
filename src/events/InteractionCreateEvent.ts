@@ -43,6 +43,8 @@ class InteractionCreateEvent extends Event {
         }
 
         if (command.guildOnly && !interaction.guildID) return;
+
+        await context.loadDBS();
         
         command.run(context as ContextCommand);
     }
