@@ -38,7 +38,8 @@ class BaseCollector extends EventEmitter {
         this.timeout = null;
     }
 
-    public resetTimer({ time, idle }: IOptions) {
+    public resetTimer(options?: IOptions) {
+        const { time, idle } = options || this.options;
         if (this.timeout) {
             this.clearTimeout(this.timeout);
             this.timeout = this.setTimeout(() => this.stop("time"), time || this.options.time || 0);
@@ -50,12 +51,15 @@ class BaseCollector extends EventEmitter {
 
         if(this.timeout) {
             this.clearTimeout(this.timeout);
-            this.timeout = null;
         };
 
         this.ended = true;
         this.emit('end', reason);
         this.removeAllListeners();
+        
+        console.log(this.eventNames());
+        console.log(`[Collector] ${this.constructor.name} ended: ${reason}`);
+        console.log(this.eventNames());
     }
 
     public handleCollect(...args: any[]) {
