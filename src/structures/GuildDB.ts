@@ -2,7 +2,7 @@ import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, Member, TextableChannel } from 'eris';
-import { TLunarPermissions } from '../utils/Constants';
+import { TGuildConfigs, TLunarPermissions } from '../utils/Constants';
 import { v4 } from 'uuid';
 
 interface IGuildDataBase {
@@ -105,12 +105,16 @@ class Configs extends BitField {
             FLAGS: Configs.FLAGS,
             defaultBit: 0,
         })
+
+        this.has = (bit: TGuildConfigs | Array<TGuildConfigs>) => {
+            return super.has.bind(this)(bit)
+        };
     }
 
     static get FLAGS() {
 		return {
             mandatoryReason: 1 << 0,
-        }
+        } as { [key in TGuildConfigs]: number };
 	}
 }
 

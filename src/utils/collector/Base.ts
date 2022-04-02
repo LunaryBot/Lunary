@@ -56,10 +56,6 @@ class BaseCollector extends EventEmitter {
         this.ended = true;
         this.emit('end', reason);
         this.removeAllListeners();
-        
-        console.log(this.eventNames());
-        console.log(`[Collector] ${this.constructor.name} ended: ${reason}`);
-        console.log(this.eventNames());
     }
 
     public handleCollect(...args: any[]) {

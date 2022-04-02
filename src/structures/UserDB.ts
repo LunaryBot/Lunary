@@ -1,6 +1,7 @@
 import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
+import { TUserConfigs } from '../utils/Constants';
 
 interface IUserDataBase {
     xp?: number;
@@ -92,12 +93,16 @@ class Configs extends BitField {
             FLAGS: Configs.FLAGS,
             defaultBit: 0,
         })
+
+        this.has = (bit: TUserConfigs | Array<TUserConfigs>) => {
+            return super.has.bind(this)(bit)
+        };
     }
 
     static get FLAGS() {
 		return {
             quickPunishment: 1 << 0,
-        }
+        } as { [key in TUserConfigs]: number }
 	}
 }
 

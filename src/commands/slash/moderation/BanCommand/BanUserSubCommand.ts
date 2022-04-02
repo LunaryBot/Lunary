@@ -39,12 +39,16 @@ class BanUserSubCommand extends SubCommand {
             }
         }
 
-        let replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any> = context.interaction.createFollowup;
+        let replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any> = context.interaction.createFollowup.bind(context.interaction);
 
         let reason = await (new Promise((resolve, reject) => {
             let r = context.options.get('reason');
+            const reasons = context.dbs.guild.reasons.filter(r => r.type === 1);
 
-            if (r) { resolve(findReasonKey(r) || r) };
+            if (r || !context.dbs.guild.configs.has('mandatoryReason')) { 
+                resolve(findReasonKey(r) || r || context.t('general:reasonNotInformed.defaultReason')); 
+                return;
+            };
 
             const hasPermission = !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason')
 
@@ -74,7 +78,6 @@ class BanUserSubCommand extends SubCommand {
                     ]
                 }
             ] as Eris.ActionRow[];
-            const reasons = context.dbs.guild.reasons.filter(r => r.type === 1);
 
             if(reasons?.length > 0) {
                 components.push({
@@ -119,12 +122,13 @@ class BanUserSubCommand extends SubCommand {
             })
             
             const collector = new InteractionCollector(this.client, {
-                time: 1 * 60 * 1000,
+                time: 1 * 1000 * 60,
                 user: context.user,
                 filter: (interaction: Eris.ComponentInteraction) => interaction.data.custom_id?.startsWith(`${context.interaction.id}-`),
             })
 
-            collector.on('collect', async (interaction: Eris.ComponentInteraction | Eris.ModalSubmitInteraction) => {
+            collector
+                .on('collect', async (interaction: Eris.ComponentInteraction | Eris.ModalSubmitInteraction) => {
                     const id = interaction.data.custom_id.replace(`${context.interaction.id}-`, '')
 
                     switch (id) {
@@ -174,6 +178,8 @@ class BanUserSubCommand extends SubCommand {
                         }
 
                         case 'selectReason': {
+                            collector.stop('reasonAdded');
+                            
                             replyMessageFn = interaction.editParent.bind(interaction);
                             
                             const reason = reasons.find(r => r._id === (interaction.data as Eris.ComponentInteractionSelectMenuData).values[0]);
@@ -184,7 +190,10 @@ class BanUserSubCommand extends SubCommand {
                         }
                         
                         case 'addReasonModal': {
+                            collector.stop('reasonAdded');
+
                             replyMessageFn = interaction.editParent.bind(interaction);
+
                             const reason = (interaction as Eris.ModalSubmitInteraction).data.components[0].components.find(c => c.custom_id === 'reason')?.value as string;
 
                             resolve(findReasonKey(reason) || reason);
@@ -192,7 +201,27 @@ class BanUserSubCommand extends SubCommand {
                             break;
                         }
                     }
-            })
+                })
+                .on('end', async(reason?: string) => {
+                    if(reason == 'timeout') {
+                        components.map(row => row.components.map(c => {
+                            c.disabled = true;
+
+                            if (c.type == 3) {
+                                // @ts-ignore
+                                c.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
+                            }
+
+                            return c;
+                        }));
+                        
+                        context.interaction.editOriginalMessage({
+                            components,
+                        });
+
+                        resolve(false);
+                    }
+                });
 
             function findReasonKey(key: string): string|undefined {
                 return reasons.find(r => r.keys?.includes(key))?.text;
@@ -203,9 +232,15 @@ class BanUserSubCommand extends SubCommand {
             return;
         }
 
-        replyMessageFn({
-            content: String(reason),
-        })
+        const event = new EventEmitter();
+
+        event.on('ready', async() => {
+            replyMessageFn({
+                content: `${reason}`,
+            });
+        });
+
+        event.emit('ready');
     }
 }
 

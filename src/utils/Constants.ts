@@ -58,3 +58,9 @@ export type TLunarPermissions =
     | 'lunarPunishmentOutReason'
     | 'lunarViewHistory'
     | 'lunarManageHistory'
+
+export type TGuildConfigs =
+      'mandatoryReason';
+
+export type TUserConfigs =
+      'quickPunishment';
