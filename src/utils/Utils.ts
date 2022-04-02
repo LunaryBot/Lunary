@@ -39,8 +39,8 @@ class Utils {
 
         const roles = [ ...member1.guild.roles.values() ].sort((a, b) => b.position - a.position);
 
-        member1.roles.sort((a, b) => roles.findIndex(role => role.id == a) - roles.findIndex(role => role.id == b));
-        member2.roles.sort((a, b) => roles.findIndex(role => role.id == a) - roles.findIndex(role => role.id == b));
+        member1.roles.sort((a, b) => roles.findIndex(role => role.id == b) - roles.findIndex(role => role.id == a));
+        member2.roles.sort((a, b) => roles.findIndex(role => role.id == b) - roles.findIndex(role => role.id == a));
 
         return roles.findIndex(role => role.id == member1.roles[0]) > roles.findIndex(role => role.id == member2.roles[0]);
     }

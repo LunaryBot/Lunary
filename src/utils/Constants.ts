@@ -49,3 +49,12 @@ export type TPermissions =
     | 'allText' 
     | 'allVoice' 
     | 'all'
+
+export type TLunarPermissions = 
+      'lunarBanMembers'
+    | 'lunarKickMembers'
+    | 'lunarMuteMembers'
+    | 'lunarAdvMembers'
+    | 'lunarPunishmentOutReason'
+    | 'lunarViewHistory'
+    | 'lunarManageHistory'

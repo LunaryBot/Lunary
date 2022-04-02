@@ -34,7 +34,6 @@ class InteractionCreateEvent extends Event {
         if (context.options._subcommand && command.subcommands?.length) {
             let subcommand;
             let commandgroup;
-            console.log(context.options)
             if (context.options._group) commandgroup = (command as Command).subcommands.find(c => c.name == context.options._group);
             subcommand = (commandgroup as CommandGroup || command as Command)?.subcommands?.find(c => c.name == context.options._subcommand || c.name == context.options._group) || subcommand;
             if (subcommand) {

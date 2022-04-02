@@ -158,6 +158,10 @@ class SubCommand {
     }
 
     public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
+
+    public get Utils() {
+        return Utils;
+    }
 }
 
 interface IContextCommand {
@@ -178,9 +182,11 @@ interface IContextMessageCommand {
     interaction?: null;
     channel: Eris.TextableChannel;
     user: Eris.User;
+    member: Eris.Member;
     guild: Eris.Guild;
     dbs: IContextCommandDBS;
     loadDBS: () => Promise<void>;
+    t: (key: string, ...args: any[]) => string;
 }
 
 interface IContextInteractionCommand {
@@ -190,9 +196,11 @@ interface IContextInteractionCommand {
     options: CommandInteractionOptions;
     channel: Eris.TextableChannel;
     user: Eris.User;
+    member: Eris.Member;
     guild: Eris.Guild;
     dbs: IContextCommandDBS;
     loadDBS: () => Promise<void>;
+    t: (key: string, ...args: any[]) => string;
 }
 
 interface IContextCommandDBS {

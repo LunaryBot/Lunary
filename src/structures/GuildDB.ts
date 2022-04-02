@@ -1,17 +1,30 @@
 import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
-import { Guild, TextableChannel } from 'eris';
+import { Guild, Member, TextableChannel } from 'eris';
+import { TLunarPermissions } from '../utils/Constants';
+import { v4 } from 'uuid';
 
 interface IGuildDataBase {
     configs?: number;
     locale?: string;
     modlogs_channel?: string;
     punishment_channel?: string;
+    permissions?: { [key: string]: number };
     punishment_message?: string;
+    reasons?: IReason[];
     premium_type?: number;
     premium_started?: number;
     premium_duration?: number;
+}
+
+interface IReason {
+    text: string;
+    type: 1 | 2 | 3 | 4;
+    duration?: number;
+    keys?: string[];
+    days?: number;
+    _id: string;
 }
 
 class GuildDB {
@@ -22,7 +35,9 @@ class GuildDB {
     public locale: Locale;
     public modlogsChannel: TextableChannel | null;
     public punishmentChannel: TextableChannel | null;
+    public permissions: Map<string, LunarPermissions>;
     public punishmentMessage: Object | null;
+    public reasons: IReason[];
     public premiumType: number | null;
     public premiumStarted: number | null;
     public premiumDuration: number| null;
@@ -39,7 +54,12 @@ class GuildDB {
 
         this.modlogsChannel = (data.modlogs_channel ? guild.channels.get(data.modlogs_channel) as TextableChannel : null) ?? null;
         this.punishmentChannel = (data.punishment_channel ? guild.channels.get(data.punishment_channel) as TextableChannel : null) ?? null;
-
+        
+        this.permissions = new Map();
+        for (const [key, value] of Object.entries(data.permissions || {})) {
+            this.permissions.set(key, new LunarPermissions(value));
+        }
+        
         this.punishmentMessage = null;
 
 		if(data.punishment_message) {
@@ -49,6 +69,11 @@ class GuildDB {
 				this.punishmentMessage = null;
 			}
 		}
+
+        this.reasons = ([ ...(data.reasons || []) ]).map(reason => {
+            reason._id = v4();
+            return reason;
+        });
 
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
@@ -60,6 +85,17 @@ class GuildDB {
 
     public hasPremium(): boolean {
         return (this.premiumExpire && !!(this.premiumExpire > Date.now())) || false;
+    }
+
+    public getMemberLunarPermissions(member: Member): LunarPermissions {
+        const permissions = new LunarPermissions();
+
+        member.roles.map(role => {
+            const p = this.permissions.get(role);
+            if (p) permissions.add(p);
+        });
+
+        return permissions
     }
 }
 
@@ -78,6 +114,33 @@ class Configs extends BitField {
 	}
 }
 
+class LunarPermissions extends BitField {
+    public has: (bit: TLunarPermissions | Array<TLunarPermissions>) => boolean;
+    
+    constructor(bits?: TBit) {
+        super(bits, {
+            FLAGS: LunarPermissions.FLAGS,
+            defaultBit: 0,
+        })
+
+        this.has = (bit: TLunarPermissions | Array<TLunarPermissions>) => {
+            return super.has.bind(this)(bit)
+        };
+    }
+
+    static get FLAGS() {
+		return {
+            lunarBanMembers: 1 << 0,
+            lunarKickMembers: 1 << 1,
+            lunarMuteMembers: 1 << 2,
+            lunarAdvMembers: 1 << 3,
+            lunarPunishmentOutReason: 1 << 4,
+            lunarViewHistory: 1 << 5,
+            lunarManageHistory: 1 << 6,
+        } as { [key in TLunarPermissions]: number }
+	}
+}
+
 export default GuildDB;
 
-export { Configs };
+export { Configs, LunarPermissions };
