@@ -2,6 +2,8 @@ import LunarClient from "./structures/LunarClient";
 import Cluster from './structures/cluster/Cluster';
 const shards = process.env.CLUSTER_SHARDS.split(',').map(s => parseInt(s));
 
+import './tools/String';
+
 const client = new LunarClient(
     process.env.DISCORD_TOKEN,
     {

@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import ClusterManager from './structures/cluster/ClusterManager';
 import Logger from './utils/Logger';
 
+import './tools/String';
 dotenv.config();
 
 const manager = new ClusterManager();
