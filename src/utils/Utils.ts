@@ -34,15 +34,58 @@ class Utils {
     };
 
     public static highestPosition(member1: Eris.Member, member2: Eris.Member) {
-        if (member1.id == member2.id || member1.guild.ownerID == member1.id) { return true };
-        if(member1.guild.ownerID == member2.id) { return false };
+        if (member1.guild.ownerID == member1.id) { return true };
+        if (member1.id == member2.id || member1.guild.ownerID == member2.id) { return false };
 
-        const roles = [ ...member1.guild.roles.values() ].sort((a, b) => b.position - a.position);
+        const roles = [ ...member1.guild.roles.values() ].sort((a, b) => a.position - b.position);
 
-        member1.roles.sort((a, b) => roles.findIndex(role => role.id == b) - roles.findIndex(role => role.id == a));
-        member2.roles.sort((a, b) => roles.findIndex(role => role.id == b) - roles.findIndex(role => role.id == a));
+        member1.roles.sort((a, b) => roles.findIndex(role => role.id == a) - roles.findIndex(role => role.id == b));
+        member2.roles.sort((a, b) => roles.findIndex(role => role.id == a) - roles.findIndex(role => role.id == b));
 
-        return roles.findIndex(role => role.id == member1.roles[0]) > roles.findIndex(role => role.id == member2.roles[0]);
+        return roles.findIndex(role => role.id == member1.roles[0]) >= roles.findIndex(role => role.id == member2.roles[0]);
+    }
+
+    public static calculateLevels(xp: number, difficulty = 300, startingLvl = 1) {
+        const level = ~~(Math.log2(xp / difficulty)) + startingLvl
+      
+        return { 
+            current: { 
+                level, 
+                xp 
+            }, 
+            next: level + 1,
+        }
+    }
+    
+    public static replacePlaceholders(text: string, user: Eris.User, author: Eris.User, punishment: { type?: string; reason?: string; duration?: string } = {}) {
+        const placeholders = [
+            // User
+            { aliases: ['@user', 'user.mention'], value: user.mention, },
+            { aliases: ['user.tag'], value: `${user.username}#${user.discriminator}`, },
+            { aliases: ['user.username', 'user.name'], value: user.username, },
+            { aliases: ['user.discriminator'], value: user.discriminator, },
+            { aliases: ['user.id'], value: user.id, },
+            { aliases: ['user.avatar', 'user.icon'], value: user.dynamicAvatarURL('png', 1024), },
+            // Author
+            { aliases: ['@author', 'author.mention', '@staff', 'staff.mention'], value: author.mention, },
+            { aliases: ['author.tag', 'staff.tag'], value: `${author.username}#${author.discriminator}`, },
+            { aliases: ['author.username', 'user.name'], value: author.username, },
+            { aliases: ['author.discriminator'], value: author.discriminator, },
+            { aliases: ['author.id', 'staff.id'], value: author.id, },
+            { aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.dynamicAvatarURL('png', 1024), },
+            // Punishment
+            { aliases: ['punishment', 'punishment.type'], value: punishment.type || '', },
+            { aliases: ['punishment.reason'], value: punishment.reason || '', },
+            { aliases: ['punishment.duration'], value: punishment.duration || '', },
+        ];
+    
+        text = text.replace(/\{([^}]+)\}/g, (match: string, placeholder: string): string => {
+            const found = placeholders.find(p => p.aliases.includes(placeholder));
+            if(found) return found.value;
+            return match;
+        });
+    
+        return text;
     }
 }
 

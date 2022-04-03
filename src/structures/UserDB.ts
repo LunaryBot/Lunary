@@ -2,20 +2,26 @@ import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
 import { TUserConfigs } from '../utils/Constants';
+import Utils from '../utils/Utils';
 
 interface IUserDataBase {
-    xp?: number;
-    aboutme?: string;
-    inventory?: number;
-    inventory_using?: number;
-    configs?: number;
-    luas?: number;
-    lastDaily?: number;
-    lastPunishmentAppliedId?: string;
-    bans?: number;
-    premium_started?: number;
-    premium_duration?: number;
+    xp?: number | null;
+    aboutme?: string | null;
+    inventory?: number | null;
+    inventory_using?: number | null;
+    configs?: number | null;
+    luas?: number | null;
+    lastDaily?: number | null;
+    lastPunishmentAppliedId?: string | null;
+    bans?: number | null;
+    premium_started?: number | null;
+    premium_duration?: number | null;
 }
+
+interface ILevel {
+    level: number;
+    xp: number;
+} 
 
 class UserDB {
     public declare user: User;
@@ -28,6 +34,7 @@ class UserDB {
     public lastDaily: Date | null;
     public lastDailyTimestamp: number | null;
     public xp: number;
+    public level: { current: ILevel, next: number };
     public aboutme: string;
     public inventory: ProfileInventory;
     public inventoryUsing: ProfileInventory;
@@ -51,6 +58,7 @@ class UserDB {
 		this.lastDailyTimestamp = this.lastDaily?.getTime?.() || null;
         
         this.xp = data.xp || 0;
+        this.level = Utils.calculateLevels(this.xp);
         this.aboutme = data.aboutme || '';
         this.inventory = new ProfileInventory(data.inventory || ProfileInventory.defaultBit);
         this.inventoryUsing = new ProfileInventory(data.inventory_using || ProfileInventory.defaultBit);
@@ -61,6 +69,26 @@ class UserDB {
 		this.premiumStarted = (premium_expire > Date.now() ? data.premium_started : null) || null;
 		this.premiumDuration = (premium_expire > Date.now() ? Number(data.premium_duration) : null) || null;
 		this.premiumExpire = premium_expire || null;
+    }
+
+    public async save(): Promise<void> {
+        await this.dbmanager.setUser(this.user, this.toJSON());
+    }
+
+    public toJSON(): IUserDataBase {
+        return {
+            configs: this.configs.bitfield,
+            lastPunishmentAppliedId: this.lastPunishmentAppliedId,
+            bans: this.bans,
+            luas: this.luas,
+            lastDaily: this.lastDaily?.getTime?.() || null,
+            xp: this.xp,
+            aboutme: this.aboutme,
+            inventory: this.inventory.bitfield,
+            inventory_using: this.inventoryUsing.bitfield,
+            premium_started: this.premiumStarted,
+            premium_duration: this.premiumDuration,
+        }
     }
 }
 

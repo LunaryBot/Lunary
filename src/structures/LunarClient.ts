@@ -19,7 +19,30 @@ class LunarClient extends Client {
     public commands: IClientCommands;
     public locales: Locale[];
     public logger: Logger;
-    public config: { prefix: string, owners: string[], clustersName: { [key: string]: string }, defaultLocale: string };
+    public config: { 
+        prefix: string, 
+        owners: string[], 
+        clustersName: { [key: string]: string }, 
+        defaultLocale: string,
+        links: {
+            website: {
+                baseURL: string,
+                home: string,
+                invite: string,
+                support: string,
+                commands: string,
+                vote: string,
+                dashboard: {
+                    me: string,
+                    guilds: string
+                },
+                callback: string,
+            };
+            vote: string;
+            support: string;
+        }
+    };
+    public cases: number;
     public dbs: DatabasesManager
     constructor(
         token: string, 
@@ -45,7 +68,26 @@ class LunarClient extends Client {
                 '1': 'Saturno V',
             },
             defaultLocale: process.env.DEFAULT_LOCALE || 'en-US',
+            links: {
+                website: {
+                    baseURL: 'https://lunary.space',
+                    home: 'https://lunary.space/',
+                    invite: 'https://lunary.space/invite',
+                    support: 'https://lunary.space/support',
+                    commands: 'https://lunary.space/commands',
+                    vote: 'https://lunary.space/vote',
+                    dashboard: {
+                        me: 'https://lunary.space/dashboard/@me',
+                        guilds: 'https://lunary.space/dashboard/guilds'
+                    },
+                    callback: 'https://lunary.space/api/auth/callback'
+                },
+                support: 'https://discord.gg/8K6Zry9Crx',
+                vote: 'https://top.gg/bot/777654875441463296/vote'
+            }
         }
+
+        this.cases = 0;
 
         this.dbs = new DatabasesManager(this);
     }

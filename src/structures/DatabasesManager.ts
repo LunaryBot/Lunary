@@ -18,6 +18,15 @@ class DatabasesManager {
         this.user = this.initializeDatabase('UsersDB');
 
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
+
+        this.logs.ref('cases').on('value', (snapshot) => {
+            this.client.cases = snapshot.val() || 0;
+        });
+        this.logs.ref().once('child_changed', (snapshot) => {
+            if(snapshot.key == 'cases') {
+                this.client.cases = snapshot.val() || 0;
+            }
+        });
     }
 
     initializeDatabase(name: string): firebase.database.Database {
@@ -41,6 +50,16 @@ class DatabasesManager {
         return new UserDB(user, data as any, this);
     }
 
+    async setUser(user: string|User, value: any): Promise<void> {
+        if(typeof user == 'string') {
+            user = this.client.users.get(user) || { id: user } as User;
+        }
+
+        user: User;
+
+        await this.user.ref(`Users/${user.id}`).update(value);
+    }
+
     async getGuild(guild: string|Guild): Promise<GuildDB> {
         if(typeof guild == 'string') {
             guild = this.client.guilds.get(guild) || { id: guild } as Guild;
@@ -53,6 +72,16 @@ class DatabasesManager {
         return new GuildDB(guild, data as any, this);
     }
 
+    async getLogs(): Promise<{ [key: string]: string }> {
+        const data = (await this.logs.ref().once('value')).val() || {};
+
+        return data;
+    }
+
+    async setLogs(value: any): Promise<void> {
+        await this.logs.ref().update(value);
+    }
+
     static getData(key: string) {
         return Object.fromEntries(
             Object.entries(process.env)
@@ -60,6 +89,7 @@ class DatabasesManager {
                 .map(([k, v]) => [k.replace(`${key}_`, ''), v])
         );
     }
+
 }
 
 export default DatabasesManager;

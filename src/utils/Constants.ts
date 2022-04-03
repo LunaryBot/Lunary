@@ -64,3 +64,14 @@ export type TGuildConfigs =
 
 export type TUserConfigs =
       'quickPunishment';
+
+export interface ILog {
+      id: string;
+	type: number;
+	reason: string;
+	date: number;
+	time?: number;
+	user: string;
+	author: string;
+	server: string;
+} 

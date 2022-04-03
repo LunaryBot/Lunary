@@ -15,3 +15,5 @@ yarn-error.log
 
 /locales/*
 !/locales/pt-BR
+
+data/commands.json
