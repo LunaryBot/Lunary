@@ -4,6 +4,7 @@ import { EventEmitter } from "events";
 import InteractionCollector from "../../../../utils/collector/Interaction";
 import { ILog } from "../../../../utils/Constants";
 import { dump, load } from "js-yaml";
+import Transcript from "../../../../structures/Transcript";
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
 
@@ -302,9 +303,9 @@ class BanUserSubCommand extends SubCommand {
                 cases: this.client.cases + 1,
             });
 
-            if(context.dbs.guild.punishmentChannel) {
-                const punishmentChannel = context.dbs.guild.punishmentChannel;
-                
+            const { punishmentChannel } = context.dbs.guild;
+
+            if(punishmentChannel) {
                 let punishmentMessage = context.dbs.guild.punishmentMessage || context.t('general:punishment_message');
 
                 punishmentMessage = this.Utils.replacePlaceholders(
@@ -319,11 +320,26 @@ class BanUserSubCommand extends SubCommand {
                 )
 
                 punishmentMessage = load(punishmentMessage as string) as Object;
+                
+                let files: Eris.FileContent[] = [];
 
-                punishmentChannel.createMessage(punishmentMessage).catch(() => {});
+                if(context.dbs.guild.configs.has('sendTranscript')) {
+                    files.push({
+                        name: `${context.channel.name || ''}-transcript.html`,
+                        file: new Transcript(this.client, context.channel, [
+                            ...context.channel.messages.values(),
+                            ...[
+                                ...(context.channel.messages.size >= (this.client.options.messageLimit as number)
+                                    ? new Map()
+                                    : await context.channel.getMessages(this.client.options.messageLimit as number - context.channel.messages.size)
+                                ).values(),
+                            ]
+                        ]).generate()
+                    })
+                }
+
+                punishmentChannel.createMessage(punishmentMessage, files).catch(() => {});
             }
-
-            // !!! Put to send in the modlogs channel when making the transcript structure !!!
 
             let xp = context.dbs.user.xp;
             let leveluped = false;

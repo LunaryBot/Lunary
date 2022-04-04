@@ -60,13 +60,14 @@ export type TLunarPermissions =
     | 'lunarManageHistory'
 
 export type TGuildConfigs =
-      'mandatoryReason';
+      'mandatoryReason'
+    | 'sendTranscript'
 
 export type TUserConfigs =
       'quickPunishment';
 
 export interface ILog {
-      id: string;
+    id: string;
 	type: number;
 	reason: string;
 	date: number;

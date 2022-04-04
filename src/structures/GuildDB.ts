@@ -114,6 +114,7 @@ class Configs extends BitField {
     static get FLAGS() {
 		return {
             mandatoryReason: 1 << 0,
+            sendTranscript: 1 << 1,
         } as { [key in TGuildConfigs]: number };
 	}
 }

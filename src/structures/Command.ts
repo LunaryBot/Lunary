@@ -194,7 +194,7 @@ interface IContextInteractionCommand {
     command: Command|SubCommand;
     interaction: Eris.CommandInteraction;
     options: CommandInteractionOptions;
-    channel: Eris.TextableChannel;
+    channel: Eris.GuildTextableChannel;
     user: Eris.User;
     member: Eris.Member;
     guild: Eris.Guild;
