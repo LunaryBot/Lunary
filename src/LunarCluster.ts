@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import ClusterManager from './structures/cluster/ClusterManager';
+import Server from './structures/server/Server';
 import Logger from './utils/Logger';
 
 import './tools/String';
@@ -19,4 +20,7 @@ manager.on('exit', (clusterID: number) => {
     Logger.log(`Cluster ${clusterID} exited`, { tags: [`Cluster ${clusterID}`], date: true });
 });
 
+const server = new Server(manager);
+
 manager.init();
+server.listen();

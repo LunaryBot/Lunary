@@ -99,7 +99,7 @@ class ClusterManager extends EventEmitter {
         }
     }
 
-    private eval(code: string, cluster: Worker): any {
+    public eval(code: string, cluster: Worker): any {
         const promise = new Promise((resolve, reject) => {
             let result;
             

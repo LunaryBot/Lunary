@@ -57,7 +57,7 @@ class Cluster {
                 let result;
 
                 try {
-                    result = eval(code);
+                    result = await eval(code);
                 } catch (err) {
                     result = err;
                 };
