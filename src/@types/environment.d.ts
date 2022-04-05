@@ -4,6 +4,7 @@ declare global {
             DISCORD_TOKEN: string;
             NODE_ENV: 'development' | 'production';
             PORT?: strnig;
+            AUTH_TOKEN: string;
 
             CLUSTER_AMOUNT: string;
             SHARD_AMOUNT: string;

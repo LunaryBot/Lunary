@@ -18,6 +18,13 @@ class Server {
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+        this.app.use((req, res, next) => {
+            if(req.headers.authorization !== process.env.AUTH_TOKEN) {
+                return res.status(401).json({ message: 'Unauthorized' });
+            }
+
+            next();
+        })
 
         new GuildsRouter(this);
     }
