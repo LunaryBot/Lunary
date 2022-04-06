@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import ClusterManager from '../cluster/ClusterManager';
-import GuildsRouter from './routers/GuildRouter';
+import GuildsRouter from './routers/GuildsRouter';
 
 class Server {
     private app: express.Application;

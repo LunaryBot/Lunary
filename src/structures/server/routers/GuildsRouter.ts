@@ -1,6 +1,6 @@
 import BaseRouter from '../../BaseRouter';
 import { Router } from 'express';
-import Server from '../../server/Server';
+import Server from '../Server';
 
 class GuildsRouter extends BaseRouter {
     constructor(server: Server) {
@@ -14,10 +14,19 @@ class GuildsRouter extends BaseRouter {
             res.send('Guilds');
         });
 
-        this.router.get('/:id', (req, res) => {
+        this.router.get('/:id', async(req, res) => {
             const id = req.params.id;
 
-            const evalResults: any[] = [];
+            const d = await this.getGuild(id);
+
+            const { status, ...data } = d;
+
+            res.status(status).json(data);
+        });
+    }
+
+    private async getGuild(id: string) {
+        const evalResults: any[] = [];
 
             this.clusterManager.clusters.forEach((cluster) => 
                 evalResults.push(
@@ -47,16 +56,15 @@ class GuildsRouter extends BaseRouter {
                 )
             );
 
-            Promise.all(evalResults).then((results) => {
-                const guild = results.find((result) => result !== null);
+            const results = await Promise.all(evalResults);
 
-                if(!guild) {
-                    res.status(404).json({ message: 'Guild not found'});
-                } else {
-                    res.json(guild);
-                }
-            });
-        });
+            const guild = results.find((result) => result !== null);
+
+            if(!guild) {
+                return { status: 498, message: 'Guild not found'};
+            } else {
+                return { status: 200, ...guild };
+            }
     }
 }
 
