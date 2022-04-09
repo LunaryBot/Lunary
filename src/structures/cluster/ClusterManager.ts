@@ -77,18 +77,7 @@ class ClusterManager extends EventEmitter {
             case 'eval': {
                 const { clusterID, clusterRequesterID } = data;
 
-                let results = [];
-                if(clusterID) {
-                    const cluster = this.clusters.get(clusterID);
-
-                    if(cluster) {
-                        results.push(this.eval(data.code, cluster));
-                    };
-                } else {
-                    this.clusters.forEach((cluster) => results.push(this.eval(data.code, cluster)));
-                };
-
-                results = await Promise.all(results);
+                const results = await this.eval(data.code, clusterID);
 
                 this.clusters.get(Number(clusterRequesterID))?.postMessage({
                     type: 'eval result',
@@ -99,7 +88,24 @@ class ClusterManager extends EventEmitter {
         }
     }
 
-    public eval(code: string, cluster: Worker): any {
+    public async eval(code: string, clusterID?: number) {
+        let results = [];
+        if(clusterID) {
+            const cluster = this.clusters.get(clusterID);
+
+            if(cluster) {
+                results.push(this._eval(code, cluster));
+            };
+        } else {
+            this.clusters.forEach((cluster) => results.push(this._eval(code, cluster)));
+        };
+
+        results = await Promise.all(results);
+
+        return results;
+    }
+
+    public _eval(code: string, cluster: Worker): any {
         const promise = new Promise((resolve, reject) => {
             let result;
             
