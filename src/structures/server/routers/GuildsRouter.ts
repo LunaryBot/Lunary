@@ -12,6 +12,7 @@ const guildObjString = `{
 
         delete json.guild;
         delete json.permissionOverwrites;
+        delete json.voiceMembers;
         delete json.messages;
 
         return json;
@@ -57,20 +58,17 @@ class GuildsRouter extends BaseRouter {
 
             if(!guild) { return; }
 
-            const member = guild.members.get('${userID}');
+            const member = guild.members.get('${userID}') ?? await guild.getRESTMember('${userID}').catch(() => null);
 
             if(member) {
-                console.log('member found');
                 const json = member.toJSON();
 
-                json.permissions = Number(member.permissions?.allow) || 0;
-                
-                json.guild = ${guildObjString};
+                delete json.voiceState;
+
+                json.permissions = Number(member.permissions?.allow || 0) || 0;
 
                 return json;
             } else {
-
-                console.log('Member not found');
                 return null;
             };
         })()`);
