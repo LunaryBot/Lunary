@@ -17,7 +17,7 @@ const guildObjString = `{
 
         return json;
     }),
-};`
+}`
 
 class GuildsRouter extends BaseRouter {
     constructor(server: Server) {
@@ -66,15 +66,16 @@ class GuildsRouter extends BaseRouter {
             const member = guild.members.get('${userID}') ?? await guild.getRESTMember('${userID}').catch(() => null);
 
             if(member) {
-                const json = member.toJSON();
+                const memberData = member.toJSON();
 
-                delete json.voiceState;
+                delete memberData.voiceState;
 
-                json.permissions = Number(member.permissions?.allow || 0) || 0;
+                memberData.permissions = Number(member.permissions?.allow || 0) || 0;
 
-                json.guild = ${guildObjString};
-
-                return json;
+                return {
+                    member: memberData,
+                    guild: ${guildObjString},
+                };
             } else {
                 return null;
             };
@@ -84,20 +85,20 @@ class GuildsRouter extends BaseRouter {
             return { status: 498, message: 'Guild not found'};
         }
 
-        const member = results.find((result) => result !== null && result !== undefined);
+        const data = results.find((result) => result !== null && result !== undefined);
         
-        if(!member) {
+        if(!data) {
             return { status: 498, message: 'Member not found'};
         } else {
             if(checkPermissions === true) {
-                const { permissions } = member;
+                const { member } = data;
 
-                if(!((permissions & 8) === 8)) {
+                if(!((member.permissions & 8) === 8)) {
                     return { status: 403, message: 'Missing permissions'};
                 }
             }
 
-            return { status: 200, ...member };
+            return { status: 200, ...data };
         }
     }
 
