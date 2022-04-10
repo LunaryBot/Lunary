@@ -33,8 +33,13 @@ class GuildsRouter extends BaseRouter {
 
         this.router.get('/:guildID', async(req, res) => {
             const guildID = req.params.guildID;
+            const userID = req.headers.requesterid;
 
-            const d = await this.getGuild(guildID);
+            if(!userID) {
+                return res.status(401).json({ message: 'Missing requesterid header'});
+            }
+            
+            const d = await this.getMember(guildID, userID as string, true);
 
             const { status, ...data } = d;
 
@@ -52,7 +57,7 @@ class GuildsRouter extends BaseRouter {
         });
     }
 
-    private async getMember(guildID: string, userID: string) {
+    private async getMember(guildID: string, userID: string, checkPermissions: boolean = true) {
         const results: any[] = await this.clusterManager.eval(`(async() => {
             const guild = this.client.guilds.get('${guildID}');
 
@@ -67,6 +72,8 @@ class GuildsRouter extends BaseRouter {
 
                 json.permissions = Number(member.permissions?.allow || 0) || 0;
 
+                json.guild = ${guildObjString};
+
                 return json;
             } else {
                 return null;
@@ -78,10 +85,18 @@ class GuildsRouter extends BaseRouter {
         }
 
         const member = results.find((result) => result !== null && result !== undefined);
-
+        
         if(!member) {
             return { status: 498, message: 'Member not found'};
         } else {
+            if(checkPermissions === true) {
+                const { permissions } = member;
+
+                if(!((permissions & 8) === 8)) {
+                    return { status: 403, message: 'Missing permissions'};
+                }
+            }
+
             return { status: 200, ...member };
         }
     }
@@ -96,8 +111,6 @@ class GuildsRouter extends BaseRouter {
                 return null;
             };
         })()`);
-
-        // const results = await Promise.all(evalResults);
 
         const guild = results.find((result) => result !== null);
 

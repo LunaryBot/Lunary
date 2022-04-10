@@ -23,6 +23,8 @@ class Server {
                 return res.status(401).json({ message: 'Unauthorized' });
             }
 
+            console.log(`${req.method} ${req.url}`);
+
             next();
         })
 
