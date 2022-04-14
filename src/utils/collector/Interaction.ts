@@ -30,7 +30,6 @@ class InteractionCollector extends BaseCollector {
         client.on("guildDelete", this._handleGuildDeletion);
 
         this.once("end", () => {
-            console.log("end");
             client.removeListener("interactionCreate", handleCollect);
             client.removeListener("messageDelete", this._handleMessageDeletion);
             client.removeListener("channelDelete", this._handleChannelDeletion);
