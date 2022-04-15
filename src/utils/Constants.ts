@@ -68,11 +68,11 @@ export type TUserConfigs =
 
 export interface ILog {
     id: string;
-	type: number;
-	reason: string;
-	date: number;
-	time?: number;
-	user: string;
-	author: string;
-	server: string;
+    type: number;
+    reason: string;
+    date: number;
+    time?: number;
+    user: string;
+    author: string;
+    server: string;
 } 
