@@ -1,6 +1,7 @@
 import Command, { ContextCommand, LunarClient, IContextMessageCommand } from '../../../structures/Command';
 let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require('child_process');
+const CommandInteractionOptions = require('../../../utils/CommandInteractionOptions');
 
 class EvalCommand extends Command {
     constructor(client: LunarClient) {

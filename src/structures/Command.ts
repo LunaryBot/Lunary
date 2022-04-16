@@ -233,19 +233,7 @@ class ContextCommand {
         this.interaction = interaction || null;
         
         this.args = args || [];
-        this.options = interaction ? new CommandInteractionOptions(interaction?.data?.resolved, ...(interaction?.data?.options || [])) : [];
-
-        if(this.options instanceof CommandInteractionOptions) {
-            if(this.options[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
-                this.options._group = this.options[0].name;
-                this.options.setOptions(...(this.options[0].options || []));
-            };
-
-            if(this.options[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND) {
-                this.options._subcommand = this.options[0].name;
-                this.options.setOptions(...(this.options[0].options || []));
-            };
-        };
+        this.options = interaction ? new CommandInteractionOptions(interaction?.data?.resolved, interaction?.data?.options || []) : [];
 
         const guild = (interaction || message)?.member?.guild || null;
 
