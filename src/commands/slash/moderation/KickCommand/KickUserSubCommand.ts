@@ -131,7 +131,7 @@ class KickUserSubCommand extends SubCommand {
             let leveluped = false;
 
             if(!member) {
-				const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 1, logs, 31);
+				const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 2, logs, 31);
 
                 context.dbs.user.xp = _xp;
 
