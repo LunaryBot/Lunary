@@ -11,7 +11,7 @@ class KickUserSubCommand extends SubCommand {
             dirname: __dirname,
             permissions: {
                 me: ['kickMembers'],
-                bot: ['lunaKickMembers'],
+                bot: ['lunarKickMembers'],
                 discord: ['kickMembers'],
             },
             guildOnly: true,

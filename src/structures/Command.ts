@@ -1,6 +1,6 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions } from '../utils/Constants';
+import { TPermissions, TLunarPermissions } from '../utils/Constants';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
@@ -17,7 +17,7 @@ interface ICommand {
     ownerOnly?: boolean;
     permissions?: {
         me: TPermissions[];
-        bot: string[];
+        bot: TLunarPermissions[];
         discord: TPermissions[];
     }
     guildOnly?: boolean;
@@ -32,9 +32,9 @@ class Command {
     public subcommands: Array<CommandGroup|SubCommand>;
     public ownerOnly: boolean;
     public permissions: {
-        me: TPermissions[];
-        bot: string[];
-        discord: TPermissions[];
+        me?: TPermissions[];
+        bot?: TLunarPermissions[];
+        discord?: TPermissions[];
     };
     public guildOnly: boolean;
     public cooldown: number;
@@ -48,11 +48,7 @@ class Command {
         this.aliases = data.aliases || [];
         this.subcommands = data.subcommands || [];
         this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {
-            me: [],
-            bot: [],
-            discord: [],
-        };
+        this.permissions = data.permissions || {};
 
         this.guildOnly = data.guildOnly || false;
         this.cooldown = data.cooldown || 0;
@@ -114,9 +110,9 @@ interface ISubCommand {
     dirname: string;
     ownerOnly?: boolean;
     permissions?: {
-        me: TPermissions[];
-        bot: string[];
-        discord: TPermissions[];
+        me?: TPermissions[];
+        bot?: TLunarPermissions[];
+        discord?: TPermissions[];
     }
     guildOnly?: boolean;
     cooldown?: number;
@@ -128,9 +124,9 @@ class SubCommand {
     public dirname: string;
     public ownerOnly: boolean;
     public permissions: {
-        me: TPermissions[];
-        bot: string[];
-        discord: TPermissions[];
+        me?: TPermissions[];
+        bot?: TLunarPermissions[];
+        discord?: TPermissions[];
     }
     public guildOnly: boolean;
     public cooldown: number;
@@ -144,11 +140,7 @@ class SubCommand {
         this.name = data.name;
         this.dirname = data.dirname;
         this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {
-            me: [],
-            bot: [],
-            discord: [],
-        };
+        this.permissions = data.permissions || {};
 
         this.guildOnly = data.guildOnly || false;
         this.cooldown = data.cooldown || 0;
