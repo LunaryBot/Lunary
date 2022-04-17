@@ -1,4 +1,18 @@
-import Eris, { Member } from "eris";
+import Eris, { Member } from 'eris';
+
+const units = {
+    s: ['s', 'sec', 'secs', 'second', 'seconds', 'segundo', 'segundos'],
+    m: ['m', 'min', 'mins', 'minute', 'minutes', 'minuto', 'minutos'],
+    h: ['h', 'hr', 'hrs', 'hour', 'hours', 'hora', 'horas'],
+    d: ['d', 'day', 'days', 'dias', 'dia'],
+};
+
+const utits_ms = {
+    s: 1 * 1000,
+    m: 1 * 1000 * 60,
+    h: 1 * 1000 * 60 * 60,
+    d: 1 * 1000 * 60 * 60 * 24,
+};
 
 class Utils {
     public static formatSizeUnits(bytes: number | string): string {
@@ -86,6 +100,26 @@ class Utils {
             milliseconds: Math.trunc(milliseconds) % 1000,
         };
     }
+
+    public static timeString(string: string) {
+        let groups = string.match(/[0-9.]+(\s+)?[a-z]+/gi) as string[];
+        if (groups == null) return NaN;
+        
+        let times = groups.map(function (group: string) {
+            const n = group.match(/[0-9.]+/g)?.[0];
+            const l = group.match(/[a-z]+/g)?.[0];
+
+            const unit = Object.keys(units).find(x =>  units[x as 'd' | 'h' | 'm'].includes(l as any));
+
+            if (!unit) return NaN;
+
+            return Number(n) * utits_ms[unit as 'd' | 'h' | 'm'];
+        });
+
+        if (times.filter(x => !x).length) return NaN;
+
+        return times.reduce((a, b) => a + (b as number), 0);
+    } 
 }
 
 export default Utils;
