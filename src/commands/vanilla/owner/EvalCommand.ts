@@ -3,6 +3,14 @@ let coderegex = /^```(?:js)?\s(.+[^\\])```$/is;
 const { exec } = require('child_process');
 const CommandInteractionOptions = require('../../../utils/CommandInteractionOptions');
 
+let commands;
+
+try {
+    commands = require('../../../../data/commands.json');
+} catch (_) {
+    commands = {};
+}
+
 class EvalCommand extends Command {
     constructor(client: LunarClient) {
         super(client, {

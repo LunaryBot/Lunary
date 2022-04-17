@@ -2,7 +2,7 @@ import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, Member, TextableChannel } from 'eris';
-import { TGuildConfigs, TLunarPermissions } from '../utils/Constants';
+import { IReason, TGuildConfigs, TLunarPermissions } from '../utils/Constants';
 import { v4 } from 'uuid';
 
 interface IGuildDataBase {
@@ -16,15 +16,6 @@ interface IGuildDataBase {
     premium_type?: number;
     premium_started?: number;
     premium_duration?: number;
-}
-
-interface IReason {
-    text: string;
-    type: 1 | 2 | 3 | 4;
-    duration?: number;
-    keys?: string[];
-    days?: number;
-    _id: string;
 }
 
 class GuildDB {
@@ -74,6 +65,8 @@ class GuildDB {
             reason._id = v4();
             return reason;
         });
+
+        this.dbmanager.client.reasons.set(this.guild.id, this.reasons);
 
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
