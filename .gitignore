@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Tralhas do node né
 /node_modules
 /package-lock.json
@@ -132,3 +133,24 @@ dist
 /ffmpeg.exe
 /ffprobe.exe
 /ffplay.exe
+=======
+*.env
+*config.json
+.env
+!tsconfig.json
+
+dist/
+
+.dockerignore
+Dockerfile
+
+node_modules/
+package-lock.json
+yarn.lock
+yarn-error.log
+
+/locales/*
+!/locales/pt-BR
+
+data/commands.json
+>>>>>>> fe2898ddf16f35b81f11ff1e6265a4a275489406
