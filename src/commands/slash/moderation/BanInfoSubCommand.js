@@ -22,7 +22,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 			client,
 		);
 
-		Object.defineProperty(this, "autocomplete", { value: new BannedUsersAutoComplete(this, client) });
+		Object.defineProperty(this, 'autocomplete', { value: new BannedUsersAutoComplete(this, client) });
 	}
 
 	/**
@@ -35,6 +35,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 		const bans = await ctx.guild.bans.fetch();
 
 		let ban = bans?.find(({ user }) => [user.tag.toLocaleLowerCase(), user.id].includes(input.toLocaleLowerCase()));
+		const { message_modlogs } = this.utils;
 
 		if (!ban) {
 			const similars = bans?.filter(({ user }) => {
@@ -42,7 +43,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 				return similarity >= min_similarity;
 			});
 
-			if (similars?.size > 1) {
+			if (similars?.size) {
 				const component = new Discord.MessageActionRow()
 					.addComponents(
 						new Discord.MessageSelectMenu()
@@ -53,6 +54,7 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 							.addOptions(
 								similars
 								.sort((a, b) => a.user.tag.localeCompare(b.user.tag))
+								.slice(0, 25)
 								.map(({ user }) => {
 									return {
 										label: user.tag,
@@ -72,7 +74,6 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 				 * @type {Discord.SelectMenuInteraction}
 				 */
 				const response = await msg.awaitMessageComponent({
-					id: 'ban_info_similar',
 					filter: (i) => i.user.id == ctx.author.id,
 				});
 
@@ -86,18 +87,32 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 					}).catch(() => {});
 				}
 				
-				response.update(formatBan(ban)).catch(() => {});
+				const data = formatBan(ban)
+				response.update(data).catch(() => {});
+
+				msg.components = data.components;
+
+				collector.bind(msg.createMessageComponentCollector({
+					filter: (i) => i.user.id == ctx.author.id,
+					time: 1 * 1000 * 60, // 1 minute
+				}))(msg, ban);
 
 				return;
-			} else if(similars?.size === 1) {
-				ban = similars.first();
 			} else {
 				return ctx.interaction.followUp(ctx.t('ban_info:texts.userNotBanned')).catch(() => {});
 			}
 		} 
 		
 		if(!ban) { return; }
-		ctx.interaction.followUp(formatBan(ban)).catch(() => {});
+		const msg = await ctx.interaction.followUp({
+			...formatBan(ban),
+			fetchReply: true,
+		}).catch(() => {});
+
+		collector.bind(msg.createMessageComponentCollector({
+			filter: (i) => i.user.id == ctx.author.id,
+			time: 1 * 1000 * 60, // 1 minute
+		}))(msg, ban);
 
 		/**
 		 * @param {Discord.GuildBan} ban
@@ -130,18 +145,76 @@ module.exports = class BanInfoSubCommand extends SubCommand {
 
 		/**
 		 * @this {Discord.InteractionCollector}
-		 * @param {Discord.MessageActionRow} row
 		 * @param {Discord.Message} message
+		 * @param {Discord.GuildBan} ban
 		 */
-		function collector(row, message) {
+		function collector(message, ban) {
 			this.on('collect', 
 				/**
 				 * @param {Discord.ButtonInteraction} i 
 				 */
 				(i) => {
-					
+					i.presentModal(
+						new Discord.Modal()
+							.setTitle(ctx.t('ban_info:texts.unbanModal.title'))
+							.setCustomId(`${ctx.interaction.id}`)
+							.addComponents(
+								new Discord.MessageActionRow()
+									.addComponents(
+										new Discord.TextInputComponent()
+											.setCustomId('unban_reason')
+											.setPlaceholder(ctx.t('ban_info:texts.unbanModal.reasonPlaceholder'))
+											.setMaxLength(450)
+											.setStyle('PARAGRAPH')
+											.setLabel(ctx.t('ban_info:texts.unbanModal.reasonLabel'))
+									)
+							)
+					)
 				}
 			)
+
+			const modalCollector = new Discord.InteractionCollector(ctx.client, {
+				channel: ctx.channel,
+				time: 1 * 60 * 1000, // 1 minute
+				max: 1,
+				filter: (i) => i.user.id == ctx.author.id && i.customId == ctx.interaction.id,
+			});
+
+			modalCollector.on('collect',
+				/**
+				 * @param {Discord.ModalSubmitInteraction} i
+				 */
+				async(i) => {
+					this.stop();
+					const reason = i.getTextInputValue('unban_reason') || ctx.t('ban_info:texts.reasonNotInformed');
+
+					await ctx.guild.members.unban(ban.user.id, ctx.t('ban_info:texts.unbanedBy', {
+						author: ctx.author.tag,
+						reason,
+					}))
+            
+					if(ctx.GuildDB.configs.has('LOG_UNBAN')) {
+						const modlogs_channel = ctx.guild.channels.cache.get(ctx.GuildDB.modlogs_channel)
+						if(modlogs_channel && modlogs_channel.permissionsFor(ctx.client.user.id).has(18432)) modlogs_channel.send({
+							embeds: [
+								message_modlogs(ctx.author, ban.user, reason, 'unban', ctx.t)
+							]
+						}).catch(() => {})
+					}
+
+					i.reply(ctx.t('ban_info:texts.removeBan', {
+						author_mention: ctx.author.toString(),
+						user_tag: ban.user.tag,
+						user_id: ban.user.id,
+					}));
+				}
+			)
+
+			this.on('end', () => {
+				ctx.interaction.editReply({
+					components: [message.components[0].disableComponents('unban')]
+				})
+			})
 		}
 	}
 };
