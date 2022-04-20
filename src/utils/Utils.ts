@@ -145,6 +145,8 @@ class Utils {
             }
         }
 
+        console.log(d);
+
         return d ? new Date(d) : NaN;
     }
 
