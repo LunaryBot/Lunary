@@ -16,7 +16,7 @@ class CommandInteractionOptions extends Array {
     public resolved: ICommandInteractionOptionsResolved;
     public focused: Eris.InteractionDataOptions | null;
 
-    constructor(resolved: ICommandInteractionOptionsResolved | undefined, ...args: any[]) {
+    constructor(resolved: ICommandInteractionOptionsResolved | undefined, args: any[]) {
         super(...args);
 
         this.resolved = resolved || {};
@@ -25,11 +25,13 @@ class CommandInteractionOptions extends Array {
         this.focused = null;
 
         if(this[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+            console.log(this[0]);
             this._group = this[0].name;
             this.setOptions(...(this[0].options || []));
         };
 
         if(this[0]?.type == ApplicationCommandOptionTypes.SUB_COMMAND) {
+            console.log(this[0]);
             this._subcommand = this[0].name;
             this.setOptions(...(this[0].options || []));
         };

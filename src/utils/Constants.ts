@@ -45,6 +45,7 @@ export type TPermissions =
   | 'useExternalStickers' 
   | 'sendMessagesInThreads' 
   | 'startEmbeddedActivities' 
+  | 'moderateMembers'
   | 'allGuild' 
   | 'allText' 
   | 'allVoice' 

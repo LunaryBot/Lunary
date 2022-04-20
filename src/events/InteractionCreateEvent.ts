@@ -60,7 +60,7 @@ class InteractionCreateEvent extends Event {
 
         if(!interaction.guildID && command.guildOnly) return;
 
-        const options = new CommandInteractionOptions(undefined, ...(interaction.data?.options || []));
+        const options = new CommandInteractionOptions(undefined, (interaction.data?.options || []));
 
         if (options._subcommand && command.subcommands?.length) {
             let subcommand;
