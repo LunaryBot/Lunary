@@ -14,6 +14,9 @@ const utits_ms = {
     d: 1 * 1000 * 60 * 60 * 24,
 };
 
+const dateRegex = /(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.]([0-9]+)/;
+const timeRegex = /(([01]?\d|2[0-3]):([0-5]\d?)(:([0-5]\d))?)(\s+)?(am|pm)?/i;
+
 class Utils {
     public static formatSizeUnits(bytes: number | string): string {
         if (typeof bytes === 'string') {
@@ -119,7 +122,39 @@ class Utils {
         if (times.filter(x => !x).length) return NaN;
 
         return times.reduce((a, b) => a + (b as number), 0);
-    } 
+    }
+
+    public static dateStringToDate(string: string) {
+        let d = '';
+        
+        if(/-|\//g.test(string)) {
+            const match = string.match(dateRegex);
+            
+            if (match != null) {
+                d = `${match[3]}-${match[2]}-${match[1] || new Date().getUTCFullYear()}`;
+            }
+        }
+
+        if(/:/g.test(string)) {
+            const match = string.match(timeRegex);
+
+            if (match != null) {
+                console.log(...match);
+                console.log(Number(match[2] + (match[7] == 'pm' ? 12 : 0)));
+                d = `${d} ${Number(match[2]) + (match[7] == 'pm' && Number(match[2]) ? 12 : 0)}:${match[3]}:${match[5] || '00'}`;
+            }
+        }
+
+        return d ? new Date(d) : NaN;
+    }
+
+    public static getStringTime(string:string) {
+        if(/-|\/|:/g.test(string)) {
+            return this.dateStringToDate(string);
+        } else {
+            return this.timeString(string);
+        }
+    }
 }
 
 export default Utils;
