@@ -375,7 +375,7 @@ class ModUtils {
 
                         context.interaction.createFollowup({
                             content: context.t('quickpunishment:enable', {
-                                user: context.user.mention,
+                                author: context.user.mention,
                             }),
                             flags: Eris.Constants.MessageFlags.EPHEMERAL,
                         });
