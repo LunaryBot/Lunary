@@ -6,6 +6,7 @@ import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
+import { IReason } from '../utils/Constants';
 
 interface IClientCommands {
     slash: Command[],
@@ -18,6 +19,7 @@ class LunarClient extends Client {
     public events: Event[];
     public commands: IClientCommands;
     public locales: Locale[];
+    public reasons: Map<string, IReason[]>
     public logger: Logger;
     public config: { 
         prefix: string, 
@@ -57,6 +59,7 @@ class LunarClient extends Client {
             user: [],
         }
         this.locales = [];
+        this.reasons = new Map<string, IReason[]>();
 
         this.logger = new Logger();
 

@@ -7,7 +7,7 @@ class AdvRemoveByIdSubCommand extends SubCommand {
             dirname: __dirname,
             permissions: {
                 me: ["banMembers"],
-                bot: ["lunaBanMembers"],
+                bot: ["lunarBanMembers"],
                 discord: ["banMembers"],
             },
             guildOnly: true,

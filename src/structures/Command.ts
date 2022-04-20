@@ -77,6 +77,8 @@ class Command {
         );
     }
 
+    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
+
     public get Utils() {
         return Utils;
     }
@@ -150,6 +152,8 @@ class SubCommand {
     }
 
     public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
+
+    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
 
     public get Utils() {
         return Utils;
