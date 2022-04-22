@@ -139,13 +139,9 @@ class Utils {
             const match = string.match(timeRegex);
 
             if (match != null) {
-                console.log(...match);
-                console.log(Number(match[2] + (match[7] == 'pm' ? 12 : 0)));
                 d = `${d} ${Number(match[2]) + (match[7] == 'pm' && Number(match[2]) ? 12 : 0)}:${match[3]}:${match[5] || '00'}`;
             }
         }
-
-        console.log(d);
 
         return d ? new Date(d) : NaN;
     }
