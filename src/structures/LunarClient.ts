@@ -6,7 +6,7 @@ import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
-import { IReason } from '../utils/Constants';
+import { IReason } from '../@types/types';
 
 interface IClientCommands {
     slash: Command[],
