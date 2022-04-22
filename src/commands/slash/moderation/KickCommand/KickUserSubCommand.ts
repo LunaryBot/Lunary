@@ -1,7 +1,7 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../utils/Constants';
+import { ILog } from '../../../../@types/types';
 import ModUtils from '../../../../utils/ModUtils';
 
 class KickUserSubCommand extends SubCommand {
@@ -21,7 +21,6 @@ class KickUserSubCommand extends SubCommand {
 
     public async run(context: IContextInteractionCommand) {
         await context.interaction.acknowledge();
-
         
         const member: Eris.Member = context.options.get('user', { member: true });
         const user = member?.user || context.options.get('user');
@@ -50,6 +49,10 @@ class KickUserSubCommand extends SubCommand {
 
         if (reason === false) {
             return;
+        }
+
+        if(typeof reason == 'object') {
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {

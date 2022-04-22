@@ -5,7 +5,7 @@ import GuildDB from '../structures/GuildDB';
 import LunarClient from '../structures/LunarClient';
 import Transcript from '../structures/Transcript';
 import InteractionCollector from './collector/Interaction';
-import { ILog } from './Constants';
+import { ILog, IReason } from '../@types/types';
 import Utils from './Utils';
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
@@ -102,7 +102,7 @@ class ModUtils {
         let replyMessageFn: TreplyMessageFn = context.interaction.createFollowup.bind(context.interaction);
 
         let reason = await (new Promise((resolve, reject) => {
-            let r = context.options.get('reason');
+            let r: string = context.options.get('reason');
             const reasons = context.dbs.guild.reasons.filter(r => (r.type & punishmentType) === punishmentType);
 
             if (r || !context.dbs.guild.configs.has('mandatoryReason')) { 
@@ -174,7 +174,7 @@ class ModUtils {
 				k = 'confirmWithPermissionAndReasonsSeteds'
 			}
 
-            context.interaction.createFollowup({
+            replyMessageFn({
                 content: context.t(`general:reasonNotInformed.${k}`, {
                     author: context.user.mention,
                 }),
@@ -283,10 +283,10 @@ class ModUtils {
                     }
                 });
 
-            function findReasonKey(key: string): string|undefined {
-                return reasons.find(r => r.keys?.includes(key))?.text;
+            function findReasonKey(key: string): IReason|undefined {
+                return reasons.find(r => r.keys?.includes(key));
             }
-        })) as string | boolean;
+        })) as string | boolean | IReason;
 
         return { reason, replyMessageFn };
     }

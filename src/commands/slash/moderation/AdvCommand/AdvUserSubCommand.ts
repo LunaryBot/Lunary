@@ -1,6 +1,6 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
-import { ILog } from '../../../../utils/Constants';
+import { ILog } from '../../../../@types/types';
 import ModUtils from '../../../../utils/ModUtils';
 
 class AdvUserSubCommand extends SubCommand {
@@ -19,7 +19,6 @@ class AdvUserSubCommand extends SubCommand {
 
     public async run(context: IContextInteractionCommand) {
         await context.interaction.acknowledge();
-
         
         const member: Eris.Member = context.options.get('user', { member: true });
         const user = member?.user || context.options.get('user');
@@ -36,6 +35,10 @@ class AdvUserSubCommand extends SubCommand {
 
         if (reason === false) {
             return;
+        }
+
+        if(typeof reason == 'object') {
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {

@@ -1,7 +1,7 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../utils/Constants';
+import { ILog } from '../../../../@types/types';
 import ModUtils from '../../../../utils/ModUtils';
 
 class BanUserSubCommand extends SubCommand {
@@ -42,8 +42,19 @@ class BanUserSubCommand extends SubCommand {
 
         let { reason, replyMessageFn = context.interaction.createFollowup.bind(context.interaction) } = await ModUtils.punishmentReason.bind(this)(context, 1);
 
+        
         if (reason === false) {
             return;
+        }
+
+        let days = Number(context.options.get('days')) || 0;
+
+        if(typeof reason == 'object') {
+            if(!days) {
+                days = reason.days || 0;
+            };
+            
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {
@@ -76,7 +87,7 @@ class BanUserSubCommand extends SubCommand {
                 notifyDM = false
             };
 
-            await context.guild.banMember(user.id, Number(context.options.get('days')) || 0, context.t('general:punishedBy', {
+            await context.guild.banMember(user.id, days, context.t('general:punishedBy', {
                 author_tag: `${context.user.username}#${context.user.discriminator}`,
                 reason
                 })
