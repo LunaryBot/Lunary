@@ -103,7 +103,7 @@ class ModUtils {
 
         let reason = await (new Promise((resolve, reject) => {
             let r: string = context.options.get('reason');
-            const reasons = context.dbs.guild.reasons.filter(r => (r.type & punishmentType) === punishmentType);
+            const reasons = context.dbs.guild.reasons.filter(r => (r.type & (1 << punishmentType)) === (1 << punishmentType));
 
             if (r || !context.dbs.guild.configs.has('mandatoryReason')) { 
                 resolve(findReasonKey(r) || r || context.t('general:reasonNotInformed.defaultReason')); 
@@ -244,7 +244,7 @@ class ModUtils {
                             
                             const reason = reasons.find(r => r._id === (interaction.data as Eris.ComponentInteractionSelectMenuData).values[0]);
                             
-                            resolve(reason?.text || false);
+                            resolve(reason || false);
                             
                             break;
                         }
