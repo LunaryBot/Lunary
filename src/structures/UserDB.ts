@@ -1,7 +1,7 @@
 import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
-import { TUserConfigs } from '../@types/types';
+import { TUserConfigs, IVoteData } from '../@types/types';
 import Utils from '../utils/Utils';
 
 interface IUserDataBase {
@@ -11,11 +11,12 @@ interface IUserDataBase {
     inventory_using?: number | null;
     configs?: number | null;
     luas?: number | null;
-    lastDaily?: number | null;
-    lastPunishmentAppliedId?: string | null;
+    last_daily?: number | null;
+    last_punishment_applied_id?: string | null;
     bans?: number | null;
     premium_started?: number | null;
     premium_duration?: number | null;
+    votes?: IVoteData[];
 }
 
 interface ILevel {
@@ -50,11 +51,11 @@ class UserDB {
 
         this.configs = new Configs(data.configs || 0);
 
-        this.lastPunishmentAppliedId = data.lastPunishmentAppliedId || null;
+        this.lastPunishmentAppliedId = data.last_punishment_applied_id || null;
 		this.bans = data.bans || 0;
 
         this.luas = data.luas || 0;
-        this.lastDaily = data.lastDaily ? new Date(data.lastDaily) : null;
+        this.lastDaily = data.last_daily ? new Date(data.last_daily) : null;
 		this.lastDailyTimestamp = this.lastDaily?.getTime?.() || null;
         
         this.xp = data.xp || 0;
@@ -76,19 +77,48 @@ class UserDB {
     }
 
     public toJSON(): IUserDataBase {
-        return {
-            configs: this.configs.bitfield,
-            lastPunishmentAppliedId: this.lastPunishmentAppliedId,
-            bans: this.bans,
-            luas: this.luas,
-            lastDaily: this.lastDaily?.getTime?.() || null,
-            xp: this.xp,
-            aboutme: this.aboutme,
-            inventory: this.inventory.bitfield,
-            inventory_using: this.inventoryUsing.bitfield,
-            premium_started: this.premiumStarted,
-            premium_duration: this.premiumDuration,
+        const arr: Array<[string, string | number | boolean | IVoteData[]]|undefined> = (['configs', 'lastDaily', 'lastPunishmentAppliedId', 'bans', 'luas', 'xp', 'aboutme', 'inventory', 'inventoryUsing', 'premiumStarted', 'premiumDuration'])
+            .map((key: string): [string, string | number | boolean]|undefined => {
+                // @ts-ignore
+                const value = this[key];
+                const jsonKey = key.replace(/([A-Z])/, '_$1').toLowerCase();
+                
+                if(value instanceof BitField) {
+                    if(value.bitfield != value.data.defaultBit) {
+                        return [jsonKey, value.bitfield];
+                    }
+                }
+
+                if(value instanceof Date) {
+                    if(value.getTime() != value.getTime()) {
+                        return [jsonKey, value.getTime()];
+                    }
+                }
+                
+                if(typeof value == 'number') {
+                    if(value != 0) {
+                        return [jsonKey, value];
+                    }
+                }
+
+                if(typeof value == 'string') {
+                    if(value != '') {
+                        return [jsonKey, value];
+                    }
+                }
+
+                if(typeof value == 'boolean') {
+                    if(value) {
+                        return [jsonKey, value];
+                    }
+                }
+            });
+
+        if(this.data.votes?.length) {
+            arr.push(['votes', this.data.votes]);
         }
+
+        return Object.fromEntries(arr.filter(v => v != undefined) as Array<[string, string | number | boolean]>);
     }
 }
 
@@ -119,7 +149,7 @@ class Configs extends BitField {
     constructor(bits: TBit) {
         super(bits, {
             FLAGS: Configs.FLAGS,
-            defaultBit: 0,
+            defaultBit: Configs.defaultBit,
         })
 
         this.has = (bit: TUserConfigs | Array<TUserConfigs>) => {
@@ -132,6 +162,10 @@ class Configs extends BitField {
             quickPunishment: 1 << 0,
         } as { [key in TUserConfigs]: number }
 	}
+
+    static get defaultBit(): number {
+        return 0;
+    }
 }
 
 export default UserDB;

@@ -57,7 +57,7 @@ class DatabasesManager {
 
         user: User;
 
-        await this.user.ref(`Users/${user.id}`).update(value);
+        await this.user.ref(`Users/${user.id}`).set(value);
     }
 
     async getGuild(guild: string|Guild): Promise<GuildDB> {
