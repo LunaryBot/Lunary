@@ -118,6 +118,19 @@ class BanUserSubCommand extends SubCommand {
                 cases: this.client.cases + 1,
             });
 
+            await replyMessageFn({
+                content: context.t('general:successfullyPunished', {
+                    author_mention: context.user.mention,
+                    user_mention: user.mention,
+                    user_tag: `${user.username}#${user.discriminator}`,
+                    user_id: user.id,
+                    id: '#' + id,
+                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
+                }),
+                embeds: [],
+				components: [],
+            });
+
             const { punishmentChannel } = context.dbs.guild;
 
             if(punishmentChannel) {
@@ -148,19 +161,6 @@ class BanUserSubCommand extends SubCommand {
             context.dbs.user.bans++;
 
             context.dbs.user.save();
-
-            await replyMessageFn({
-                content: context.t('general:successfullyPunished', {
-                    author_mention: context.user.mention,
-                    user_mention: user.mention,
-                    user_tag: `${user.username}#${user.discriminator}`,
-                    user_id: user.id,
-                    id: '#' + id,
-                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
-                }),
-                embeds: [],
-				components: [],
-            });
 
             if(leveluped) {
                 context.interaction.createFollowup({

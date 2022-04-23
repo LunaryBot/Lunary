@@ -64,7 +64,7 @@ class ClusterManager extends EventEmitter {
     }
 
     public onError(id: number, err: Error): void {
-        this.emit('error', id, err?.stack || 'Unknown Error');
+        this.emit('error', id, err?.stack || err?.message || err?.name || err || 'Unknown Error');
 
         this.clusters.get(id)?.terminate();
         this.clusters.delete(id);

@@ -1,5 +1,5 @@
 import Eris from 'eris';
-import { dump, load } from 'js-yaml';
+import { JsonPlaceholderReplacer } from 'json-placeholder-replacer';
 import { IContextInteractionCommand } from '../structures/Command';
 import GuildDB from '../structures/GuildDB';
 import LunarClient from '../structures/LunarClient';
@@ -36,11 +36,9 @@ class ModUtils {
         let punishmentMessage = db.punishmentMessage || t('general:punishment_message');
 
         punishmentMessage = ModUtils.replacePlaceholders(
-            dump(punishmentMessage),
+            punishmentMessage,
             punishment,
         );
-
-        punishmentMessage = load(punishmentMessage as string) as Object;
                 
         let files: Eris.FileContent[] = [];
 
@@ -65,7 +63,7 @@ class ModUtils {
         }
     }
 
-    public static replacePlaceholders(text: string, punishment: IPunishmentOptions) {
+    public static replacePlaceholders(json: Object, punishment: IPunishmentOptions) {
         const { author, user } = punishment;
 
         const placeholders = [
@@ -89,13 +87,19 @@ class ModUtils {
             { aliases: ['punishment.duration'], value: punishment.duration || 'Infinity', },
         ];
     
-        text = text.replace(/\{([^}]+)\}/g, (match: string, placeholder: string): string => {
-            const found = placeholders.find(p => p.aliases.includes(placeholder));
-            if(found) return found.value;
-            return match;
+        const jsonReplace = new JsonPlaceholderReplacer({
+            begin: '{',
+            end: '}',
         });
-    
-        return text;
+
+        jsonReplace.addVariableMap(placeholders.map(placeholder => {
+            const { aliases, value } = placeholder;
+            const obj = Object.fromEntries(aliases.map(alias => [ alias, value ]));
+
+            return obj;
+        }).reduce((acc, obj) => ({...acc, ...obj}), {}));
+
+        return jsonReplace.replace(json);
     }
 
     public static async punishmentReason(context: IContextInteractionCommand, punishmentType: 1 | 2 | 3 | 4) {
