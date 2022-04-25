@@ -72,7 +72,7 @@ class AdvUserSubCommand extends SubCommand {
             };
 
             const logData = {
-                reason,
+                reason: encodeURIComponent(reason as string),
                 server: context.guild.id,
                 author: context.user.id,
                 type: 4,
