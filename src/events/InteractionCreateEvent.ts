@@ -26,7 +26,7 @@ class InteractionCreateEvent extends Event {
         
         if(!command) return;
 
-        if(!interaction.guildID && command.guildOnly) return;
+        if(!interaction.guildID && command.requirements?.guildOnly) return;
 
         const context = new ContextCommand({
             client: this.client,
@@ -46,11 +46,27 @@ class InteractionCreateEvent extends Event {
             }
         }
 
-        if (command.guildOnly && !interaction.guildID) return;
+        if (command.requirements?.guildOnly && !interaction.guildID) return;
 
         await context.loadDBS();
+
+        if(interaction.guildID) {
+            const ps = command.verifyPermissions(context);
+            if (!ps.member)
+				return interaction.createMessage(
+					context.t('general:userMissingPermissions', {
+						permissions: command.requirements?.permissions?.discord?.map(x => context.t(`permissions:${x}`)).join(', '),
+					}),
+				);
+			if (!ps.me)
+				return interaction.createMessage(
+					context.t('general:lunyMissingPermissions', {
+						permissions: command.requirements?.permissions?.me?.map(x => context.t(`permissions:${x}`)).join(', '),
+					}),
+				);
+        }
         
-        command.run(context as ContextCommand);
+        command.run(context as IContextInteractionCommand);
     }
 
     async executeAutoComplete(interaction: Eris.AutocompleteInteraction) {
@@ -58,7 +74,7 @@ class InteractionCreateEvent extends Event {
         
         if(!command) return;
 
-        if(!interaction.guildID && command.guildOnly) return;
+        if(!interaction.guildID && command.requirements?.guildOnly) return;
 
         const options = new CommandInteractionOptions(undefined, (interaction.data?.options || []));
 
@@ -72,7 +88,7 @@ class InteractionCreateEvent extends Event {
             }
         }
 
-        if (command.guildOnly && !interaction.guildID) return;
+        if (command.requirements?.guildOnly && !interaction.guildID) return;
         
         command.autoComplete(interaction, options);
     }

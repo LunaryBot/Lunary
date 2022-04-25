@@ -1,6 +1,7 @@
 import type { Client } from 'eris'
 import type DatabasesManager from '../structures/DatabasesManager';
 import type Cluster from '../structures/cluster/Cluster';
+import type CommandInteractionOptions from '../utils/CommandInteractionOptions';
 
 export interface IClientCommands {
     slash: Command[],
@@ -8,13 +9,16 @@ export interface IClientCommands {
     user: Command[],
 }
 
-export interface ICommand {
+export interface IBase {
     name: string;
     dirname?: string;
-    aliases?: string[];
-    subcommands?: Array<ICommandGroup|ISubCommand>;
     requirements?: ICommandRequirements | null;
     cooldown?: number;
+}
+
+export interface ICommand extends IBase {
+    aliases?: string[];
+    subcommands?: Array<ICommandGroup|ISubCommand>;
 }
 
 export interface ICommandGroup {
@@ -22,12 +26,7 @@ export interface ICommandGroup {
     subcommands: SubCommand[];
 }
 
-export interface ISubCommand {
-    name: string;
-    dirname: string;
-    requirements?: ICommandRequirements | null;
-    cooldown?: number;
-}
+export interface ISubCommand extends IBase {}
 
 export interface ICommandRequirements {
     permissions?: {

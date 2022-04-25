@@ -1,35 +1,33 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions, TLunarPermissions, ICommand, ICommandGroup, ISubCommand, ICommandRequirements } from '../@types/index.d';
+import { TPermissions, TLunarPermissions, ICommand, ICommandGroup, ISubCommand, ICommandRequirements, IBase } from '../@types/index.d';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
 
-class Command implements ICommand {
+class Base implements IBase {
     public declare client: LunarClient;
     public name: string;
     public dirname: string | undefined;
-    public aliases: string[];
-    public subcommands: Array<ICommandGroup|ISubCommand>;
     public requirements?: ICommandRequirements | null;
     public cooldown: number;
 
     constructor(
         client: LunarClient,
-        data: ICommand,
+        data: IBase,
     ) {
         this.name = data.name;
         this.dirname = data.dirname || undefined;
-        this.aliases = data.aliases || [];
-        this.subcommands = data.subcommands || [];
         this.requirements = data.requirements || null;
         this.cooldown = data.cooldown || 0;
         
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     };
 
-    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
+    public async run(context: IContextMessageCommand|IContextInteractionCommand): Promise<any> {}
+
+    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
 
     public async replyMessage(
         message: IContextMessageCommand | ContextCommand | Eris.Message, 
@@ -50,11 +48,53 @@ class Command implements ICommand {
         );
     }
 
-    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
+
+    
+    public verifyPermissions(context: IContextMessageCommand|IContextInteractionCommand) {
+        var requirements: ICommandRequirements;
+        
+        const data = {
+            me: true,
+            member: true,
+        };
+        
+        const { permissions } = this.requirements || {};
+        if(permissions) {
+            
+            if (permissions.discord) {
+                if (!permissions.discord.every(perm => context.member.permissions.has(perm))) data.member = false;
+            }
+            
+            if (permissions.bot && !data.member) {
+                if (context.dbs.guild.getMemberLunarPermissions(context.member).has(permissions.bot)) data.member = true;
+            }
+        }
+    
+        return data;
+    }
 
     public get Utils() {
         return Utils;
     }
+}
+
+class Command extends Base {
+    public aliases: string[];
+    public subcommands: Array<ICommandGroup|ISubCommand>;
+
+    constructor(
+        client: LunarClient,
+        data: ICommand,
+    ) {
+        super(client, {
+            name: data.name,
+            dirname: data.dirname || undefined,
+            requirements: data.requirements || null,
+            cooldown: data.cooldown || 0,
+        } as IBase);
+        this.aliases = data.aliases || [];
+        this.subcommands = data.subcommands || [];
+    };
 
     public get CommandGroup() {
         return CommandGroup;
@@ -68,49 +108,37 @@ class Command implements ICommand {
 class CommandGroup implements ICommandGroup {
     public name: string;
     public subcommands: SubCommand[];
-    public mainCommand: Command;
+    public parent: Command;
 
     constructor(
         client: LunarClient, 
         data: ICommandGroup, 
-        mainCommand: Command,
+        parent: Command,
     ) {
         this.name = data.name;
         this.subcommands = data.subcommands || [];
-        this.mainCommand = mainCommand;
+        this.parent = parent;
 
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     }
 }
 
-class SubCommand implements ISubCommand {
-    public declare client: LunarClient;
-    public name: string;
-    public dirname: string;
-    public requirements?: ICommandRequirements | null;
-    public cooldown: number;
-    public mainCommand: Command|CommandGroup;
+class SubCommand extends Base {
+    public parent: Command|CommandGroup;
 
     constructor(
         client: LunarClient, 
-        data: ISubCommand, 
-        mainCommand: Command|CommandGroup,
+        data: IBase, 
+        parent: Command|CommandGroup,
     ) {
-        this.name = data.name;
-        this.dirname = data.dirname;
-        this.requirements = data.requirements || null;
-        this.cooldown = data.cooldown || 0;
-        this.mainCommand = mainCommand;
-        
-        Object.defineProperty(this, 'client', { value: client, enumerable: false });
-    }
+        super(client, {
+            name: data.name,
+            dirname: data.dirname || undefined,
+            requirements: data.requirements || null,
+            cooldown: data.cooldown || 0,
+        } as IBase);
 
-    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
-
-    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
-
-    public get Utils() {
-        return Utils;
+        this.parent = parent;
     }
 }
 
