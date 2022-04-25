@@ -2,7 +2,7 @@ import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, Member, TextableChannel } from 'eris';
-import { IReason, TGuildConfigs, TLunarPermissions } from '../@types/types';
+import { IReason, TGuildConfigs, TLunarPermissions } from '../@types/index.d';
 import { v4 } from 'uuid';
 
 interface IGuildDataBase {

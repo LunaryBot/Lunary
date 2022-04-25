@@ -1,7 +1,7 @@
 import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
-import { TUserConfigs, IVoteData } from '../@types/types';
+import { TUserConfigs, IVoteData } from '../@types/index.d';
 import Utils from '../utils/Utils';
 
 interface IUserDataBase {

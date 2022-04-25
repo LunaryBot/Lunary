@@ -6,7 +6,8 @@ import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
-import { IReason } from '../@types/types';
+import { IReason } from '../@types/index.d';
+import { ILunarClient } from '../@types/index.d';
 
 interface IClientCommands {
     slash: Command[],
@@ -14,7 +15,7 @@ interface IClientCommands {
     user: Command[],
 }
 
-class LunarClient extends Client {
+class LunarClient extends Client implements ILunarClient {
     declare cluster: Cluster;
     public events: Event[];
     public commands: IClientCommands;
@@ -46,6 +47,7 @@ class LunarClient extends Client {
     };
     public cases: number;
     public dbs: DatabasesManager
+
     constructor(
         token: string, 
         options: ClientOptions
@@ -219,6 +221,6 @@ class LunarClient extends Client {
         await this._loadLocales();
         await this.connect();
     }
-}
+};
 
 export default LunarClient;

@@ -1,6 +1,6 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
-import { ILog } from '../../../../@types/types';
+import { ILog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class AdvUserSubCommand extends SubCommand {

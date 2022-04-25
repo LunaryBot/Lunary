@@ -1,3 +1,52 @@
+import type { Client } from 'eris'
+import type DatabasesManager from '../structures/DatabasesManager';
+import type Cluster from '../structures/cluster/Cluster';
+
+interface IClientCommands {
+    slash: Command[],
+    vanilla: Command[],
+    user: Command[],
+}
+
+export interface ILunarClient extends Client {
+    get cluster(): Cluster;
+    events: Event[];
+    commands: IClientCommands;
+    locales: Locale[];
+    reasons: Map<string, IReason[]>
+    logger: Logger;
+    config: { 
+        prefix: string, 
+        owners: string[], 
+        clustersName: { [key: string]: string }, 
+        defaultLocale: string,
+        links: {
+            website: {
+                baseURL: string,
+                home: string,
+                invite: string,
+                support: string,
+                commands: string,
+                vote: string,
+                dashboard: {
+                    me: string,
+                    guilds: string
+                },
+                callback: string,
+            };
+            vote: string;
+            support: string;
+        }
+    };
+    cases: number;
+    dbs: DatabasesManager;
+}
+
+export interface IVoteData {
+	platform: string,
+	date: number
+}
+
 export interface ILog {
     id: string;
     type: number;
@@ -16,11 +65,6 @@ export interface IReason {
     keys?: string[];
     days?: number;
     _id: string;
-}
-
-export interface IVoteData {
-	platform: string,
-	date: number
 }
 
 export type TPermissions = 
@@ -87,7 +131,7 @@ export type TLunarPermissions =
 
 export type TGuildConfigs =
     'mandatoryReason'
-  | 'sendTranscript'
+    | 'sendTranscript'
 
 export type TUserConfigs =
     'quickPunishment';

@@ -1,6 +1,6 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions, TLunarPermissions } from '../@types/types';
+import { TPermissions, TLunarPermissions } from '../@types/index.d';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';

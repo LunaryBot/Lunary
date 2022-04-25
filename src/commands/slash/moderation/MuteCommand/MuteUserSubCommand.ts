@@ -1,7 +1,7 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris, { ActionRow } from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../@types/types';
+import { ILog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 import CommandInteractionOptions from '../../../../utils/CommandInteractionOptions';
 import moment from 'moment';

@@ -3,7 +3,7 @@
 .env
 !tsconfig.json
 
-dist/
+build/
 
 .dockerignore
 Dockerfile

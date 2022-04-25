@@ -5,7 +5,7 @@ import GuildDB from '../structures/GuildDB';
 import LunarClient from '../structures/LunarClient';
 import Transcript from '../structures/Transcript';
 import InteractionCollector from './collector/Interaction';
-import { ILog, IReason } from '../@types/types';
+import { ILog, IReason } from '../@types/index.d';
 import Utils from './Utils';
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
