@@ -75,6 +75,8 @@ class DatabasesManager {
     async getLogs(): Promise<{ [key: string]: string }> {
         const data = (await this.logs.ref().once('value')).val() || {};
 
+        delete data.cases;
+
         return data;
     }
 
