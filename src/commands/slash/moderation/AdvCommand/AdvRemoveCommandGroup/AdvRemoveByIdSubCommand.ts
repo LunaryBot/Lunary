@@ -5,12 +5,14 @@ class AdvRemoveByIdSubCommand extends SubCommand {
         super(client, {
             name: 'id',
             dirname: __dirname,
-            permissions: {
-                me: ["banMembers"],
-                bot: ["lunarBanMembers"],
-                discord: ["banMembers"],
+            requirements: {
+                permissions: {
+                    me: ["banMembers"],
+                    bot: ["lunarBanMembers"],
+                    discord: ["banMembers"],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
         }, mainCommand);
     }

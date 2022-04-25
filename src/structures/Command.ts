@@ -1,42 +1,18 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions, TLunarPermissions } from '../@types/index.d';
+import { TPermissions, TLunarPermissions, ICommand, ICommandGroup, ISubCommand, ICommandRequirements } from '../@types/index.d';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
-import Locale from './Locale';
 
-const { Constants: { ApplicationCommandOptionTypes } } = Eris;
-
-interface ICommand {
-    name: string;
-    dirname?: string;
-    aliases?: string[];
-    subcommands?: Array<CommandGroup|SubCommand>;
-    ownerOnly?: boolean;
-    permissions?: {
-        me: TPermissions[];
-        bot: TLunarPermissions[];
-        discord: TPermissions[];
-    }
-    guildOnly?: boolean;
-    cooldown?: number;
-};
-
-class Command {
+class Command implements ICommand {
     public declare client: LunarClient;
     public name: string;
     public dirname: string | undefined;
     public aliases: string[];
-    public subcommands: Array<CommandGroup|SubCommand>;
-    public ownerOnly: boolean;
-    public permissions: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    };
-    public guildOnly: boolean;
+    public subcommands: Array<ICommandGroup|ISubCommand>;
+    public requirements?: ICommandRequirements | null;
     public cooldown: number;
 
     constructor(
@@ -47,10 +23,7 @@ class Command {
         this.dirname = data.dirname || undefined;
         this.aliases = data.aliases || [];
         this.subcommands = data.subcommands || [];
-        this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {};
-
-        this.guildOnly = data.guildOnly || false;
+        this.requirements = data.requirements || null;
         this.cooldown = data.cooldown || 0;
         
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
@@ -82,14 +55,17 @@ class Command {
     public get Utils() {
         return Utils;
     }
+
+    public get CommandGroup() {
+        return CommandGroup;
+    }
+
+    public get SubCommand() {
+        return SubCommand;
+    }
 };
 
-interface ICommandGroup {
-    name: string;
-    subcommands: SubCommand[];
-};
-
-class CommandGroup {
+class CommandGroup implements ICommandGroup {
     public name: string;
     public subcommands: SubCommand[];
     public mainCommand: Command;
@@ -107,30 +83,11 @@ class CommandGroup {
     }
 }
 
-interface ISubCommand {
-    name: string;
-    dirname: string;
-    ownerOnly?: boolean;
-    permissions?: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    }
-    guildOnly?: boolean;
-    cooldown?: number;
-}
-
-class SubCommand {
+class SubCommand implements ISubCommand {
     public declare client: LunarClient;
     public name: string;
     public dirname: string;
-    public ownerOnly: boolean;
-    public permissions: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    }
-    public guildOnly: boolean;
+    public requirements?: ICommandRequirements | null;
     public cooldown: number;
     public mainCommand: Command|CommandGroup;
 
@@ -141,10 +98,7 @@ class SubCommand {
     ) {
         this.name = data.name;
         this.dirname = data.dirname;
-        this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {};
-
-        this.guildOnly = data.guildOnly || false;
+        this.requirements = data.requirements || null;
         this.cooldown = data.cooldown || 0;
         this.mainCommand = mainCommand;
         

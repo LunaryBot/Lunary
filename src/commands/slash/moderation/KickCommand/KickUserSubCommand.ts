@@ -9,12 +9,14 @@ class KickUserSubCommand extends SubCommand {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                me: ['kickMembers'],
-                bot: ['lunarKickMembers'],
-                discord: ['kickMembers'],
+            requirements: {
+                permissions: {
+                    me: ['kickMembers'],
+                    bot: ['lunarKickMembers'],
+                    discord: ['kickMembers'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
         }, mainCommand);
     }

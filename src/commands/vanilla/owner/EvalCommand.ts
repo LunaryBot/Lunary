@@ -16,7 +16,9 @@ class EvalCommand extends Command {
         super(client, {
             name: 'eval',
             aliases: ['ev', 'e', 'evl'],
-            ownerOnly: true,
+            requirements: {
+                ownerOnly: true,
+            },
             dirname: __dirname,
         });
     };

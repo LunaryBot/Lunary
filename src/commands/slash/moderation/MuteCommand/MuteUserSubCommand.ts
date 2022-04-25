@@ -12,12 +12,14 @@ class MuteUserSubCommand extends SubCommand {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                me: ['moderateMembers'],
-                bot: ['lunarMuteMembers'],
-                discord: ['moderateMembers'],
+            requirements: {
+                permissions: {
+                    me: ['moderateMembers'],
+                    bot: ['lunarMuteMembers'],
+                    discord: ['moderateMembers'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
         }, mainCommand);
     }

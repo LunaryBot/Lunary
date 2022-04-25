@@ -14,9 +14,12 @@ class AdvListSubCommand extends SubCommand {
         super(client, {
             name: 'list',
             dirname: __dirname,
-            permissions: {
-                discord: ['viewAuditLog'],
-                bot: ['lunarViewHistory'],
+            requirements: {
+                permissions: {
+                    discord: ['viewAuditLog'],
+                    bot: ['lunarViewHistory'],
+                },
+                guildOnly: true,
             },
         }, mainCommand);
     }

@@ -8,11 +8,13 @@ class AdvUserSubCommand extends SubCommand {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                bot: ['lunarAdvMembers'],
-                discord: ['manageMessages'],
+            requirements: {
+                permissions: {
+                    bot: ['lunarAdvMembers'],
+                    discord: ['manageMessages'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
         }, mainCommand);
     }
