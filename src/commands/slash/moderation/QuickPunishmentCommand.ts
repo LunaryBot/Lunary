@@ -1,4 +1,4 @@
-import Command, { LunarClient, IContextInteractionCommand, ContextCommand, IContextMessageCommand } from '../../../structures/Command';
+import Command, { LunarClient, IContextInteractionCommand } from '../../../structures/Command';
 
 class QuickPunishmentCommand extends Command {
     constructor(client: LunarClient) {
