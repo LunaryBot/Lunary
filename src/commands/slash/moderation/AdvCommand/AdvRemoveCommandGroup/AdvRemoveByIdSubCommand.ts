@@ -4,7 +4,7 @@ import Command, { SubCommand, LunarClient, IContextInteractionCommand } from "..
 import CommandInteractionOptions from "../../../../../utils/CommandInteractionOptions";
 
 class AdvRemoveByIdSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'id',
             dirname: __dirname,
@@ -16,7 +16,7 @@ class AdvRemoveByIdSubCommand extends SubCommand {
                 guildOnly: true,
             },
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {

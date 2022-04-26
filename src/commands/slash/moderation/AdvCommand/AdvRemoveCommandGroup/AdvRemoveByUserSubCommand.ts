@@ -3,7 +3,7 @@ import { ILog } from "../../../../../@types";
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from "../../../../../structures/Command";
 
 class AdvRemoveByUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
@@ -15,7 +15,7 @@ class AdvRemoveByUserSubCommand extends SubCommand {
                 guildOnly: true,
             },
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {

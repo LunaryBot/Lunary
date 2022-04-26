@@ -3,13 +3,13 @@ import { ILog } from '../../../../@types';
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 
 class MuteRemoveCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'remove',
             dirname: __dirname,
             requirements: {},
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {

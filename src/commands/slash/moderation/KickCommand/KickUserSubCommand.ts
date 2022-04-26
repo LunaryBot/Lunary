@@ -5,7 +5,7 @@ import { ILog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class KickUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
@@ -18,7 +18,7 @@ class KickUserSubCommand extends SubCommand {
                 guildOnly: true,
             },
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {

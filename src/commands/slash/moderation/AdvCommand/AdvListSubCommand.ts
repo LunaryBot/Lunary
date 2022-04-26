@@ -10,7 +10,7 @@ interface IAdv extends ILog {
 }
 
 class AdvListSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'list',
             dirname: __dirname,
@@ -21,7 +21,7 @@ class AdvListSubCommand extends SubCommand {
                 },
                 guildOnly: true,
             },
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {

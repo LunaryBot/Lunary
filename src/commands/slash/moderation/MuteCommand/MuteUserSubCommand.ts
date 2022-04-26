@@ -8,7 +8,7 @@ import moment from 'moment';
 import 'moment-timezone';
 
 class MuteUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
@@ -21,7 +21,7 @@ class MuteUserSubCommand extends SubCommand {
                 guildOnly: true,
             },
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {
