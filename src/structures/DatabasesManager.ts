@@ -3,6 +3,7 @@ import { User, Guild } from 'eris';
 import LunarClient from './LunarClient';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
+import { ILog } from '../@types';
 
 const keys = ['apiKey', 'appId', 'authDomain', 'databaseURL', 'measurementId', 'messagingSenderId', 'projectId', 'storageBucket'];
 
@@ -78,6 +79,20 @@ class DatabasesManager {
         delete data.cases;
 
         return data;
+    }
+
+    async getLog(key: string): Promise<ILog> {
+        // @ts-ignore
+        if(!key || key == 'cases') return null;
+        
+        const data = (await this.logs.ref(key).once('value')).val();
+
+        return data ? JSON.parse(Buffer.from(data, 'base64').toString('ascii')) : null;
+    }
+
+    async removeLog(key: string) {
+        if(!key || key == 'cases') return void 0;
+        await this.logs.ref(key).remove();
     }
 
     async setLogs(value: any): Promise<void> {
