@@ -43,7 +43,6 @@ export interface ILunarClient extends Client {
     events: Event[];
     commands: IClientCommands;
     locales: Locale[];
-    reasons: Map<string, IReason[]>
     logger: Logger;
     config: { 
         prefix: string, 

@@ -1,4 +1,5 @@
 import Eris from 'eris';
+import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import LunarCLient from './LunarClient';
 
 interface IAutoCompleteOptions {
@@ -12,7 +13,7 @@ class AutoComplete {
     public options: IAutoCompleteOptions;
     public interval: NodeJS.Timer | null;
 
-    constructor(client: LunarCLient, data: IAutoCompleteOptions = {}) {
+    public constructor(client: LunarCLient, data: IAutoCompleteOptions = {}) {
         this.cache = new Map();
         this.options = { ...data };
 
@@ -31,7 +32,7 @@ class AutoComplete {
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     }
 
-    public async run(interaction: Eris.AutocompleteInteraction): Promise<any> {}
+    public async run(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
 }
 
 export default AutoComplete;

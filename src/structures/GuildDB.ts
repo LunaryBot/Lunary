@@ -66,8 +66,6 @@ class GuildDB {
             return reason;
         });
 
-        this.dbmanager.client.reasons.set(this.guild.id, this.reasons);
-
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
         this.premiumType = (premium_expire > Date.now() ? data.premium_type : null) || null;

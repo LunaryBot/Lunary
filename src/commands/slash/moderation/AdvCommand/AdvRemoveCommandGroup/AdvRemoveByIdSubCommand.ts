@@ -1,4 +1,7 @@
+import { AutocompleteInteraction } from "eris";
+import AdvIdAutoComplete from "../../../../../autocompletes/AdvIdAutoComplete";
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from "../../../../../structures/Command";
+import CommandInteractionOptions from "../../../../../utils/CommandInteractionOptions";
 
 class AdvRemoveByIdSubCommand extends SubCommand {
     constructor(client: LunarClient, mainCommand: Command) {
@@ -21,6 +24,10 @@ class AdvRemoveByIdSubCommand extends SubCommand {
         context.interaction.createMessage({
             content: 'b'
         })
+    }
+
+    public autoComplete(interaction: AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {
+        return this.client.getAutoComplete(AdvIdAutoComplete).run(interaction, options);
     }
 }
 

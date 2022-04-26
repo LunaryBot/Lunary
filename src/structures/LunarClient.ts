@@ -8,6 +8,7 @@ import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
 import { IReason } from '../@types/index.d';
 import { ILunarClient } from '../@types/index.d';
+import AutoComplete from './AutoComplete';
 
 interface IClientCommands {
     slash: Command[],
@@ -20,7 +21,7 @@ class LunarClient extends Client implements ILunarClient {
     public events: Event[];
     public commands: IClientCommands;
     public locales: Locale[];
-    public reasons: Map<string, IReason[]>
+    public autocompletes: AutoComplete[];
     public logger: Logger;
     public config: { 
         prefix: string, 
@@ -61,7 +62,7 @@ class LunarClient extends Client implements ILunarClient {
             user: [],
         }
         this.locales = [];
-        this.reasons = new Map<string, IReason[]>();
+        this.autocompletes = [];
 
         this.logger = new Logger();
 
@@ -95,6 +96,19 @@ class LunarClient extends Client implements ILunarClient {
         this.cases = 0;
 
         this.dbs = new DatabasesManager(this);
+    }
+
+    public getAutoComplete(instanceClass: AutoComplete['constructor']): AutoComplete {
+        const instance = this.autocompletes.find(autocomplete => autocomplete instanceof instanceClass);
+        
+        if(!instance) {
+            // @ts-ignore
+            const instance = new instanceClass(this);
+            this.autocompletes.push(instance);
+            return instance;
+        }
+
+        return instance;
     }
     
     private async _loadEvents(): Promise<Event[]> {
