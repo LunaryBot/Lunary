@@ -9,9 +9,8 @@ class AdvRemoveByUserSubCommand extends SubCommand {
             dirname: __dirname,
             requirements: {
                 permissions: {
-                    me: ["banMembers"],
-                    bot: ["lunarBanMembers"],
-                    discord: ["banMembers"],
+                    bot: ["lunarManageHistory"],
+                    discord: ["manageMessages"],
                 },
                 guildOnly: true,
             },
