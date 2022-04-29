@@ -85,14 +85,14 @@ class DatabasesManager {
         // @ts-ignore
         if(!key || key == 'cases') return null;
         
-        const data = (await this.logs.ref(key).once('value')).val();
+        const data = (await this.logs.ref(key.replace(/#?([A-Z](\d{6}))/i, '').toUpperCase()).once('value')).val();
 
         return data ? JSON.parse(Buffer.from(data, 'base64').toString('ascii')) : null;
     }
 
     async removeLog(key: string) {
         if(!key || key == 'cases') return void 0;
-        await this.logs.ref(key).remove();
+        await this.logs.ref(key.replace(/#?([A-Z](\d{6}))/i, '').toUpperCase()).remove();
     }
 
     async setLogs(value: any): Promise<void> {
