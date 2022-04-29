@@ -84,15 +84,20 @@ class DatabasesManager {
     async getLog(key: string): Promise<ILog> {
         // @ts-ignore
         if(!key || key == 'cases') return null;
+
+        key = key.replace(/#?([A-Z](\d{6}))/i, '$1').toUpperCase();
         
-        const data = (await this.logs.ref(key.replace(/#?([A-Z](\d{6}))/i, '').toUpperCase()).once('value')).val();
+        const data = (await this.logs.ref(key).once('value')).val();
 
         return data ? JSON.parse(Buffer.from(data, 'base64').toString('ascii')) : null;
     }
 
     async removeLog(key: string) {
         if(!key || key == 'cases') return void 0;
-        await this.logs.ref(key.replace(/#?([A-Z](\d{6}))/i, '').toUpperCase()).remove();
+
+        key = key.replace(/#?([A-Z](\d{6}))/i, '$1').toUpperCase();
+
+        await this.logs.ref(key).remove();
     }
 
     async setLogs(value: any): Promise<void> {
