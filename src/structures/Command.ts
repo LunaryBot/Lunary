@@ -50,13 +50,8 @@ class Base implements IBase {
 
 
     
-    public verifyPermissions(context: IContextMessageCommand|IContextInteractionCommand) {
+    public verifyPermissions(context: IContextMessageCommand|IContextInteractionCommand, data = { me: true, member: true, }) {
         var requirements: ICommandRequirements;
-        
-        const data = {
-            me: true,
-            member: true,
-        };
         
         const { permissions } = this.requirements || {};
         if(permissions) {

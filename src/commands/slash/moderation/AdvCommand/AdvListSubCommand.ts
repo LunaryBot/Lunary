@@ -24,6 +24,21 @@ class AdvListSubCommand extends SubCommand {
         }, parent);
     }
 
+    public verifyPermissions(context: IContextInteractionCommand) {
+        const data = {
+            me: true,
+            member: true,
+        };
+
+        const user = context.options.get('user') as Eris.User;
+
+        if(user && user.id !== context.user.id) {
+            return super.verifyPermissions(context, data);
+        }
+
+        return data;
+    }
+
     public async run(context: IContextInteractionCommand) {
         await context.interaction.acknowledge();
 
@@ -46,7 +61,7 @@ class AdvListSubCommand extends SubCommand {
         
         if(!advs?.length) {
             return context.interaction.createFollowup({
-                content: context.t('adv:noWarnings'),
+                content: context.t('adv_list:noWarnings'),
             }).catch(() => {});
         }
 
