@@ -119,7 +119,7 @@ class BanInfoSubCommand extends SubCommand {
         const { reason, user } = ban;
 
         const embed = {
-            color: 16065893,
+            color: this.Utils.Constants.Colors.RED,
             title: context.t('ban_info:embed.title'),
             description: `**- ${context.t('ban_info:embed.userBanned')}**\nㅤ${user.mention} (\`${user.username}#${user.discriminator} - ${user.id}\`)`,
             fields: [
@@ -134,11 +134,101 @@ class BanInfoSubCommand extends SubCommand {
             timestamp: new Date(),
         } as Eris.Embed;
 
+        const components = [
+            {
+                type: 1,
+                components: [
+                    {
+                        type: 2,
+                        custom_id: `${context.interaction.id}-unban`,
+                        label: context.t('ban_info:unban'),
+                        emoji: { id: '884988947271405608' },
+                        style: Eris.Constants.ButtonStyles.DANGER,
+                    }
+                ]
+            }
+        ] as Eris.ActionRow[];
+
         await replyMessageFn({
             embeds: [embed],
-            components: [],
+            components,
             content: '',
         });
+
+        const collector = new InteractionCollector(this.client, {
+            time: 30000,
+            user: context.user,
+            filter: (interaction: Eris.ComponentInteraction) => interaction.data?.custom_id.startsWith(`${context.interaction.id}-`),
+        });
+
+        collector
+            .on('collect', async (interaction: Eris.ComponentInteraction|Eris.ModalSubmitInteraction) => {
+                const id = interaction.data?.custom_id.split('-')[1];
+
+                switch(id) {
+                    case 'unban': {
+                        (interaction as Eris.ComponentInteraction).createModal({
+                            title: context.t('general:reasonNotInformed.modalReason.title'),
+                            custom_id: `${context.interaction.id}-addReasonModal`,
+                            components: [
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 4,
+                                            custom_id: 'reason',
+                                            placeholder: context.t('general:reasonNotInformed.modalReason.placeholder'),
+                                            max_length: 400,
+                                            label: context.t('general:reasonNotInformed.modalReason.label'),
+                                            style: Eris.Constants.TextInputStyles.PARAGRAPH,
+                                            required: !context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason'),
+                                        } as Eris.TextInput
+                                    ]
+                                },
+                            ],
+                        });
+
+                        break;
+                    }
+
+                    case 'addReasonModal': {
+                        await interaction.acknowledge();
+
+                        collector.stop();
+                    
+                        const reason = (interaction as Eris.ModalSubmitInteraction).data.components[0].components.find(c => c.custom_id === 'reason')?.value as string;
+
+                        context.guild.unbanMember(user.id, context.t('general:punishedBy', {
+                            user: `${context.user.username}#${context.user.discriminator}`,
+                            reason: reason || context.t('general:reasonNotInformed.defaultReason'),
+                        }));
+
+                        await interaction
+                            .createFollowup({
+                                content: context.t('ban_info:removeBan', {
+                                    author_mention: context.user.mention,
+                                    user_tag: `${user.username}#${user.discriminator}`,
+                                    user_id: user.id,
+                                }),
+                            })
+
+                        break;
+                    }
+                }
+            })
+            .on('end', () => {
+                components.map(row => row.components.map(c => {
+                    c.disabled = true;
+
+                    return c;
+                }));
+                
+                context.interaction.editOriginalMessage({
+                    components,
+                });
+            })
+
+        return;
     }
 
     public autoComplete(interaction: Eris.AutocompleteInteraction<Eris.TextableChannel>, options: CommandInteractionOptions) {
