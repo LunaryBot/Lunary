@@ -66,7 +66,7 @@ class AdvInfoSubCommand extends SubCommand {
         const author = await (this.client.users.get(adv.author) || this.client.getRESTUser(adv.author));
 
         const embed = {
-            color: 16705372,
+            color: this.Utils.Constants.Colors.YELLOW,
             author: {
                 name: context.t('adv_info:embed.title'),
                 icon_url: 'https://cdn.discordapp.com/emojis/833078041084166164.png?size=128'

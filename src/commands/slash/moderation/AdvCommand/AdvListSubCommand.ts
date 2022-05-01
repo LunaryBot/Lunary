@@ -76,7 +76,7 @@ class AdvListSubCommand extends SubCommand {
                     name: context.t('adv_list:title', { user: `${user.username}#${user.discriminator}` }),
                     icon_url: 'https://media.discordapp.net/attachments/880176654801059860/905286547421659166/emoji.png',
                 },
-                color: 16705372,
+                color: this.Utils.Constants.Colors.YELLOW,
                 thumbnail: {
                     url: user.dynamicAvatarURL('jpg', 2048),
                 },

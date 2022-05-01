@@ -49,23 +49,6 @@ export interface ILunarClient extends Client {
         owners: string[], 
         clustersName: { [key: string]: string }, 
         defaultLocale: string,
-        links: {
-            website: {
-                baseURL: string,
-                home: string,
-                invite: string,
-                support: string,
-                commands: string,
-                vote: string,
-                dashboard: {
-                    me: string,
-                    guilds: string
-                },
-                callback: string,
-            };
-            vote: string;
-            support: string;
-        }
     };
     cases: number;
     dbs: DatabasesManager;

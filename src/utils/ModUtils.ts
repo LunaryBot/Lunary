@@ -7,6 +7,7 @@ import Transcript from '../structures/Transcript';
 import InteractionCollector from './collector/Interaction';
 import { ILog, IReason } from '../@types/index.d';
 import Utils from './Utils';
+import * as Constants from './Constants';
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
 
@@ -155,7 +156,6 @@ class ModUtils {
                             min_values: 1,
                             options: [...reasons.map(r => {
                                 return {
-                                    // @ts-ignore
                                     label: r.text.shorten(100),
                                     value: r._id,
                                 } as Eris.SelectMenuOptions;
@@ -335,7 +335,7 @@ class ModUtils {
             content: context.t('general:confirm.message', {
                 author: context.user.mention,
                 user: user.mention,
-                link: this.client.config.links.website.dashboard.me
+                link: Constants.Links.website.dashboard.me,
             }),
             components,
         });

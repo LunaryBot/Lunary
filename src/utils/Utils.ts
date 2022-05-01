@@ -1,4 +1,5 @@
-import Eris, { Member } from 'eris';
+import Eris from 'eris';
+import * as Constants from './Constants';
 
 const units = {
     s: ['s', 'sec', 'secs', 'second', 'seconds', 'segundo', 'segundos'],
@@ -152,6 +153,10 @@ class Utils {
         } else {
             return this.timeString(string);
         }
+    }
+
+    public static get Constants() {
+        return Constants;
     }
 }
 
