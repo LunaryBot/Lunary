@@ -1,6 +1,6 @@
 export const Colors = { 
     MAIN: 17304, 
-    RED: 16705372,
+    RED: 16065893,
     YELLOW: 16705372,
 };
 
