@@ -71,6 +71,10 @@ class Base implements IBase {
     public get Utils() {
         return Utils;
     }
+
+    public get commandName() {
+        return this.name;
+    }
 }
 
 class Command extends Base {
@@ -116,6 +120,10 @@ class CommandGroup implements ICommandGroup {
 
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     }
+
+    public get commandName() {
+        return `${this.parent.commandName} ${this.name}`;
+    }
 }
 
 class SubCommand extends Base {
@@ -134,6 +142,10 @@ class SubCommand extends Base {
         } as IBase);
 
         this.parent = parent;
+    }
+
+    public get commandName() {
+        return `${this.parent.commandName} ${this.name}`;
     }
 }
 
