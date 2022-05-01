@@ -98,7 +98,6 @@ class LunarClient extends Client implements ILunarClient {
     }
 
     private async _loadLocales(): Promise<Locale[]> {
-        const yaml = require('js-yaml');
         let locales = fs.readdirSync(process.cwd() + '/locales').filter(file => !/^.*\..*$/.test(file));
         
         for(let locale of locales) {
@@ -171,14 +170,12 @@ class LunarClient extends Client implements ILunarClient {
                                 _command.subcommands.push(instance);
                             }
                         }
-
-                        console.log(`${type} command ${command.replace(fileRegex, '$1$2')} loaded`);
                     } else {
-                        let a = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+                        let { default: base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
 
                         this.logger.log(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
                         
-                        const instance  = new a.default(this) as Command;
+                        const instance  = new base(this) as Command;
 
                         this.commands[type].push(instance);
                     }
