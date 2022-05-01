@@ -198,7 +198,7 @@ class BanInfoSubCommand extends SubCommand {
                     
                         const reason = (interaction as Eris.ModalSubmitInteraction).data.components[0].components.find(c => c.custom_id === 'reason')?.value as string;
 
-                        context.guild.unbanMember(user.id, context.t('general:punishedBy', {
+                        await context.guild.unbanMember(user.id, context.t('general:punishedBy', {
                             user: `${context.user.username}#${context.user.discriminator}`,
                             reason: reason || context.t('general:reasonNotInformed.defaultReason'),
                         }).shorten(512));
