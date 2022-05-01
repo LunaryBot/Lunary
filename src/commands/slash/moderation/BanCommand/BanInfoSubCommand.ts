@@ -201,7 +201,7 @@ class BanInfoSubCommand extends SubCommand {
                         context.guild.unbanMember(user.id, context.t('general:punishedBy', {
                             user: `${context.user.username}#${context.user.discriminator}`,
                             reason: reason || context.t('general:reasonNotInformed.defaultReason'),
-                        }));
+                        }).shorten(512));
 
                         await interaction
                             .createFollowup({
