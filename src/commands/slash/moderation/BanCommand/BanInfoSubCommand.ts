@@ -158,7 +158,7 @@ class BanInfoSubCommand extends SubCommand {
         const collector = new InteractionCollector(this.client, {
             time: 30000,
             user: context.user,
-            filter: (interaction: Eris.ComponentInteraction) => interaction.data?.custom_id.startsWith(`${context.interaction.id}-`),
+            filter: (interaction: Eris.ComponentInteraction) => interaction.data?.custom_id?.startsWith(`${context.interaction.id}-`),
         });
 
         collector
