@@ -6,7 +6,6 @@ import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
-import { IReason } from '../@types/index.d';
 import { ILunarClient } from '../@types/index.d';
 import AutoComplete from './AutoComplete';
 
@@ -14,6 +13,32 @@ interface IClientCommands {
     slash: Command[],
     vanilla: Command[],
     user: Command[],
+}
+
+export type Tscope = 
+	'applications.builds.read' 
+	| 'applications.commands'
+	| 'applications.entitlements' 
+	| 'applications.store.update' 
+	| 'bot' 
+	| 'connections' 
+	| 'email' 
+	| 'identify' 
+	| 'guilds' 
+	| 'guilds.join' 
+	| 'gdm.join' 
+	| 'webhook.incoming'
+
+interface IDiscordOAuth2 {
+    clientId?: string;
+    scopes: Tscope[];
+    permissions?: bigint | number;
+    guildId?: string|null;
+    redirect_uri?: string;
+    state?: string|null;
+    response_type?: string;
+    prompt?: string|null;
+    disableGuildSelect?: boolean;
 }
 
 class LunarClient extends Client implements ILunarClient {
@@ -62,6 +87,47 @@ class LunarClient extends Client implements ILunarClient {
         this.cases = 0;
 
         this.dbs = new DatabasesManager(this);
+    }
+
+    generateOAuth2({
+        clientId = this.user.id,
+        scopes,
+        permissions = BigInt(0),
+        guildId = null,
+        redirect_uri = "/",
+        response_type = "code",
+        state = null,
+        disableGuildSelect = false,  
+        prompt = null
+    }: IDiscordOAuth2) {
+        const query = new URLSearchParams({
+            client_id: clientId,
+            scope: scopes.join(" "),
+        });
+    
+        if (permissions) {
+            query.set("permissions", Number(permissions).toString());
+        };
+    
+        if (guildId) {
+            query.set("guild_id", guildId);
+            if(disableGuildSelect) {
+                query.set("disable_guild_select", "true");
+            }
+        };
+    
+        if(redirect_uri) {
+            query.set("redirect_uri", redirect_uri);
+            query.set("response_type", response_type);
+            if(state) {
+                query.set("state", state);
+            };
+            if(prompt) {
+                query.set("prompt", prompt);
+            };
+        };
+    
+        return `https://discord.com/api/oauth2/authorize?${query.toString()}`;
     }
 
     public getAutoComplete(instanceClass: AutoComplete['constructor']): AutoComplete {
@@ -165,7 +231,7 @@ class LunarClient extends Client implements ILunarClient {
                             } else {
                                 let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
                                 this.logger.log(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
-                                const instance  = new base(this) as SubCommand;
+                                const instance  = new base(this, _command) as SubCommand;
 
                                 _command.subcommands.push(instance);
                             }
