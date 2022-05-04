@@ -24,7 +24,7 @@ class InteractionCreateEvent extends Event {
     async executeInteractionCommand(interaction: Eris.CommandInteraction) {
         let command: Command | SubCommand = this.client.commands.slash.find(c => c.name == interaction.data.name) as Command;
         
-        if(!command) return;
+        if(!command) return this.client.logger.log(`Command ${interaction.data.name} not found`, { date: true, tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'InteractionCreate'] });
 
         if(!interaction.guildID && command.requirements?.guildOnly) return;
 
