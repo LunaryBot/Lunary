@@ -1,5 +1,5 @@
 export const Colors = { 
-    MAIN: 17304, 
+    MAIN: 10494192, 
     RED: 16065893,
     YELLOW: 16705372,
 };
@@ -9,8 +9,8 @@ const baseUrl = 'https://lunary.space';
 export const Links = {
     website: {
         baseUrl,
-        HOME: `${baseUrl}/`,
-        INVITE: `${baseUrl}/invite`,
+        home: `${baseUrl}/`,
+        invite: `${baseUrl}/invite`,
         support: `${baseUrl}/support`,
         commands: `${baseUrl}/commands`,
         vote: `${baseUrl}/vote`,
