@@ -81,7 +81,7 @@ class UserDB {
             .map((key: string): [string, string | number | boolean]|undefined => {
                 // @ts-ignore
                 const value = this[key];
-                const jsonKey = key.replace(/([A-Z])/, '_$1').toLowerCase();
+                const jsonKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
                 
                 if(value instanceof BitField) {
                     if(value.bitfield != value.data.defaultBit) {
