@@ -2,6 +2,7 @@ import Eris from 'eris';
 import Event, { LunarClient } from '../structures/Event';
 import Command, { CommandGroup, SubCommand, ContextCommand, IContextInteractionCommand } from '../structures/Command';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
+import quick from 'quick.db';
 
 class InteractionCreateEvent extends Event {
     constructor(client: LunarClient) {
@@ -66,6 +67,7 @@ class InteractionCreateEvent extends Event {
 				);
         }
         
+        quick.add('executedCommands', 1);
         command.run(context as IContextInteractionCommand);
     }
 

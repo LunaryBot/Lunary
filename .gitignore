@@ -17,3 +17,4 @@ yarn-error.log
 !/locales/pt-BR
 
 data/commands.json
+json.sqlite
