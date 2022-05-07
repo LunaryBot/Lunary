@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import ClusterManager from '../cluster/ClusterManager';
 import GuildsRouter from './routers/GuildsRouter';
+import UsersRouter from './routers/UsersRouter';
 
 class Server {
     private app: express.Application;
@@ -29,6 +30,7 @@ class Server {
         })
 
         new GuildsRouter(this);
+        new UsersRouter(this);
     }
 
     public use(path: string, router: express.Router) {
