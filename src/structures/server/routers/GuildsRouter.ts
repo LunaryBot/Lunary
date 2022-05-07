@@ -27,9 +27,17 @@ class GuildsRouter extends BaseRouter {
             path: '/guilds'
         });
 
-        this.router.get('/', (req, res) => {
-            res.send('Guilds');
-        });
+        this.router.post('/', async(req, res) => {
+            const guilds = await this.getGuildsIds();
+            const guildsBody = req.body.guilds;
+
+            const filteredGuilds = guilds.filter((guildID) => {
+                return guildsBody.includes(guildID);
+            });
+
+            res.json(filteredGuilds);
+        })
+
 
         this.router.get('/:guildID', async(req, res) => {
             const guildID = req.params.guildID;
@@ -55,6 +63,12 @@ class GuildsRouter extends BaseRouter {
 
             res.status(status).json(data);
         });
+    }
+
+    private async getGuildsIds(): Promise<string[]> {
+        const results: any[] = await this.clusterManager.eval(`this.client.guilds.map(g => g.id)`);
+
+        return results.flat();
     }
 
     private async getMember(guildID: string, userID: string, checkPermissions: boolean = true) {
