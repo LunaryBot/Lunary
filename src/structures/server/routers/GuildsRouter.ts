@@ -5,7 +5,7 @@ import Server from '../Server';
 const guildObjString = `{
     id: guild.id,
     name: guild.name,
-    icon: guild.iconURL,
+    icon: guild.icon,
     roles: guild.roles.map((role) => role.toJSON()),
     channels: guild.channels.map((channel) => {
         const json = channel.toJSON();
