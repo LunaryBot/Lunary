@@ -301,6 +301,7 @@ class MuteUserSubCommand extends SubCommand {
                 type: 2,
                 date: Date.now(),
                 user: user.id,
+                time: ms instanceof Date ? ms.getTime() - Date.now() : ms,
             } as ILog
 
             const log = Buffer.from(
