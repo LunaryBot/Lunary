@@ -46,7 +46,7 @@ class BitField {
 	}
 
 	serialize() {
-		const serialized: { [key: string]: number } = {};
+		const serialized: { [key: string]: boolean } = {};
 
 		for (const [flag, bit] of Object.entries(BitField.FLAGS)) {
             // @ts-ignore
