@@ -110,12 +110,12 @@ class ModUtils {
             let r: string = context.options.get('reason');
             const reasons = context.dbs.guild.reasons.filter(r => (r.type & (1 << punishmentType)) === (1 << punishmentType));
 
-            if (r || !context.dbs.guild.configs.has('mandatoryReason')) { 
+            const hasPermission = context.dbs.guild.configs.has('mandatoryReason') ? !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason') : true;
+            hasPermission
+            if (r || (!r && context.dbs.user.configs.has('quickPunishment') && hasPermission)) { 
                 resolve(findReasonKey(r) || r || context.t('general:reasonNotInformed.defaultReason')); 
                 return;
             };
-
-            const hasPermission = !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason')
 
             const components = [
                 {
@@ -165,31 +165,35 @@ class ModUtils {
                 });
             }
 
-            let k = 'confirmNormal'
-			if(!hasPermission && reasons.length) {
-				k = 'confirmWithReasonsSeteds'
-			}
+            let k = 'suggestToAddAReason';
+            if(context.dbs.guild.configs.has('mandatoryReason')) {
+                k = 'confirmNormal';
 
-			if(hasPermission && !reasons.length) {
-				k = 'confirmWithPermission'
-			}
-
-			if(hasPermission && reasons.length) {
-				k = 'confirmWithPermissionAndReasonsSeteds'
-			}
+                if(!hasPermission && reasons.length) {
+                    k = 'confirmWithReasonsSeteds'
+                }
+    
+                if(hasPermission && !reasons.length) {
+                    k = 'confirmWithPermission'
+                }
+    
+                if(hasPermission && reasons.length) {
+                    k = 'confirmWithPermissionAndReasonsSeteds'
+                }
+            }
 
             replyMessageFn({
                 content: context.t(`general:reasonNotInformed.${k}`, {
                     author: context.user.mention,
                 }),
                 components,
-            })
+            });
             
             const collector = new InteractionCollector(this.client, {
                 time: 1 * 1000 * 60,
                 user: context.user,
                 filter: (interaction: Eris.ComponentInteraction) => interaction.data.custom_id?.startsWith(`${context.interaction.id}-`),
-            })
+            });
 
             collector
                 .on('collect', async (interaction: Eris.ComponentInteraction | Eris.ModalSubmitInteraction) => {
