@@ -155,10 +155,20 @@ class ModUtils {
                             max_values: 1,
                             min_values: 1,
                             options: [...reasons.map(r => {
-                                return {
+                                const op = {
                                     label: r.text.shorten(100),
                                     value: r._id,
                                 } as Eris.SelectMenuOptions;
+
+                                if(punishmentType === 1 && r.days) {
+                                    op.description = `${context.t(`ban:delete_messages.${r.days}${r.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
+                                }
+
+                                if(punishmentType === 3 && r.duration) {
+                                    op.description = `${context.t('mute:duration')}: ${Utils.durationString(r.duration, context.t)}`.shorten(100);
+                                }
+
+                                return op;
                             })]
                         } as Eris.SelectMenu
                     ]
