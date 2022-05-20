@@ -4,6 +4,8 @@ import { User } from 'eris';
 import { TUserConfigs, IVoteData } from '../@types/index.d';
 import Utils from '../utils/Utils';
 
+type TBits = number | BitField;
+
 interface IUserDataBase {
     xp?: number | null;
     aboutme?: string | null;
@@ -145,16 +147,20 @@ class ProfileInventory extends BitField {
     };
 }
 
+type TConfigsBits = TUserConfigs | TBits | Array<TUserConfigs|TBits>;
 class Configs extends BitField {
+    public declare add: (bit: TConfigsBits) => Configs;
+    public declare has: (bit: TConfigsBits) => boolean;
+    public declare missing: (bit: TConfigsBits) => TUserConfigs[];
+    public declare remove: (bit: TConfigsBits) => Configs;
+    public declare serialize: () => { [key in TUserConfigs]: boolean };
+    public declare toArray: () => TUserConfigs[];
+    
     constructor(bits: TBit) {
         super(bits, {
             FLAGS: Configs.FLAGS,
             defaultBit: Configs.defaultBit,
         })
-
-        this.has = (bit: TUserConfigs | Array<TUserConfigs>) => {
-            return super.has.bind(this)(bit)
-        };
     }
 
     static get FLAGS() {

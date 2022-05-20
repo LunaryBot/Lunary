@@ -5,6 +5,8 @@ import { Guild, Member, TextableChannel } from 'eris';
 import { IReason, TGuildConfigs, TLunarPermissions } from '../@types/index.d';
 import { v4 } from 'uuid';
 
+type TBits = number | BitField;
+
 interface IGuildDataBase {
     configs?: number;
     locale?: string;
@@ -90,16 +92,23 @@ class GuildDB {
     }
 }
 
+type TConfigsBits = TGuildConfigs | TBits | Array<TGuildConfigs|TBits>;
+
 class Configs extends BitField {
+    public declare add: (bit: TConfigsBits) => Configs;
+    public declare has: (bit: TConfigsBits) => boolean;
+    public declare missing: (bit: TConfigsBits) => TGuildConfigs[];
+    public declare remove: (bit: TConfigsBits) => Configs;
+    public declare serialize: () => { [key in TGuildConfigs]: boolean };
+    public declare toArray: () => TGuildConfigs[];
+
     constructor(bits: TBit) {
         super(bits, {
             FLAGS: Configs.FLAGS,
             defaultBit: 0,
         })
 
-        this.has = (bit: TGuildConfigs | Array<TGuildConfigs>) => {
-            return super.has.bind(this)(bit)
-        };
+        this.has = super.has.bind(this);
     }
 
     static get FLAGS() {
@@ -110,8 +119,15 @@ class Configs extends BitField {
 	}
 }
 
+type TLunarPermissionsBits = TLunarPermissions | TBits | Array<TLunarPermissions|TBits>;
+
 class LunarPermissions extends BitField {
-    public has: (bit: TLunarPermissions | Array<TLunarPermissions>) => boolean;
+    public declare add: (bit: TLunarPermissionsBits) => LunarPermissions;
+    public declare has: (bit: TLunarPermissionsBits) => boolean;
+    public declare missing: (bit: TLunarPermissionsBits) => TLunarPermissions[];
+    public declare remove: (bit: TLunarPermissionsBits) => LunarPermissions;
+    public declare serialize: () => { [key in TLunarPermissions]: boolean };
+    public declare toArray: () => TLunarPermissions[];
     
     constructor(bits?: TBit) {
         super(bits, {
@@ -119,9 +135,7 @@ class LunarPermissions extends BitField {
             defaultBit: 0,
         })
 
-        this.has = (bit: TLunarPermissions | Array<TLunarPermissions>) => {
-            return super.has.bind(this)(bit)
-        };
+        this.has = super.has.bind(this);
     }
 
     static get FLAGS() {
