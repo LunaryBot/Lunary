@@ -7,6 +7,7 @@ const guildObjString = `{
     name: guild.name,
     icon: guild.icon,
     roles: guild.roles.map((role) => role.toJSON()),
+    features: guild.features,
     channels: guild.channels.map((channel) => {
         const json = channel.toJSON();
 
@@ -36,8 +37,36 @@ class GuildsRouter extends BaseRouter {
             });
 
             res.json(filteredGuilds);
-        })
+        });
 
+        this.router.get('/cache', async(req, res) => {
+            const guilds = req.body.guilds;
+            
+            const results = await this.clusterManager.eval(`(async() => {
+                const guilds = ${JSON.stringify(guilds)};
+
+                const guildsData = [];
+                
+                guilds.map((guildID) => {
+                    const guild = this.client.guilds.get(guildID);
+
+                    if(guild) {
+                        return guildsData.push({
+                            id: guild.id,
+                            name: guild.name,
+                            icon: guild.icon,
+                            features: guild.features,
+                        });
+                    } else {
+                        return null;
+                    };
+                });
+
+                return guildsData;
+            })()`);
+
+            res.json(results.flat());
+        });
 
         this.router.get('/:guildID', async(req, res) => {
             const guildID = req.params.guildID;
