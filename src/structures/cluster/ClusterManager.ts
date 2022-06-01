@@ -54,7 +54,7 @@ class ClusterManager extends EventEmitter {
         if(emit) this.emit('create', id, env.CLUSTER_SHARDS.split(','));
         worker.on('exit', () => this.onExit(id));
         worker.on('error', (err) => this.onError(id, err));
-        worker.on('message', (m) => this.onMessage(m));
+        worker.on('message', (m) => this.onMessage({ ...m, clusterRequesterID: id }));
     
         return worker;
     }
@@ -73,18 +73,22 @@ class ClusterManager extends EventEmitter {
     }
 
     public async onMessage(data: any): Promise<void> {
-        switch (data.type) {
+        switch (data.op) {
             case 'eval': {
                 const { clusterID, clusterRequesterID } = data;
 
                 const results = await this.eval(data.code, clusterID);
 
                 this.clusters.get(Number(clusterRequesterID))?.postMessage({
-                    type: 'eval result',
+                    op: 'eval result',
                     code: data.code,
                     results,
                 })
             };
+
+            default:
+                this.emit('message', data);
+            break;
         }
     }
 
@@ -110,7 +114,7 @@ class ClusterManager extends EventEmitter {
             let result;
             
             const listener = (message: any) => {
-                if (message.type === 'eval result' && message.code === code) {
+                if (message.op === 'eval result' && message.code === code) {
                     cluster.removeListener('message', listener);
                     result = message.result;
                     resolve(result);
@@ -118,7 +122,7 @@ class ClusterManager extends EventEmitter {
             };
             
             cluster.postMessage({
-                type: 'eval',
+                op: 'eval',
                 code,
             })
             cluster.on('message', listener);

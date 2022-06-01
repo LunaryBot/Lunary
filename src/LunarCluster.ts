@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import ClusterManager from './structures/cluster/ClusterManager';
 import Server from './structures/server/Server';
 import Logger from './utils/Logger';
+import StatcordPlguin from './plugins/StatcordPlugin';
 
 import './tools/String';
 dotenv.config();
@@ -24,3 +25,5 @@ const server = new Server(manager);
 
 manager.init();
 server.listen();
+
+new StatcordPlguin(manager);

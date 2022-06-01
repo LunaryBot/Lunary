@@ -68,6 +68,12 @@ class InteractionCreateEvent extends Event {
         }
         
         quick.add('executedCommands', 1);
+        this.client.cluster._send({
+            op: 'executedCommand',
+            commandName: command.commandName,
+            authorID: context.user.id,
+        });
+        
         command.run(context as IContextInteractionCommand);
     }
 
