@@ -106,6 +106,14 @@ class AdvListSubCommand extends SubCommand {
                         },
                         {
                             type: 2,
+                            custom_id: `pagination`,
+                            style: Eris.Constants.ButtonStyles.SECONDARY,
+                            emoji: { id: '981611440559501383' },
+                            label: `${_index + 1}/${chunks.length}`,
+                            disabled: true,
+                        },
+                        {
+                            type: 2,
                             custom_id: `${context.interaction.id}-next`,
                             style: Eris.Constants.ButtonStyles.SECONDARY,
                             emoji: { id: '905602508037181451' },
@@ -143,7 +151,7 @@ class AdvListSubCommand extends SubCommand {
                     }
 
                     case 'next': {
-                        if (index >= chunk.length) index = 0;
+                        if (index > chunk.length) index = 0;
 						else index++;
 						break;
                     }
