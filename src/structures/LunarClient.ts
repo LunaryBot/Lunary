@@ -13,6 +13,7 @@ interface IClientCommands {
     slash: Command[],
     vanilla: Command[],
     user: Command[],
+    message: Command[],
 }
 
 export type Tscope = 
@@ -68,6 +69,7 @@ class LunarClient extends Client implements ILunarClient {
             slash: [],
             vanilla: [],
             user: [],
+            message: [],
         }
         this.locales = [];
         this.autocompletes = [];

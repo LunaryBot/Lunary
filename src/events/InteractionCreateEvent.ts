@@ -4,6 +4,12 @@ import Command, { CommandGroup, SubCommand, ContextCommand, IContextInteractionC
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import quick from 'quick.db';
 
+const CommandTypes = {
+    1: 'slash',
+    2: 'user',
+    3: 'message'
+}
+
 class InteractionCreateEvent extends Event {
     constructor(client: LunarClient) {
         super('interactionCreate', client);
@@ -23,7 +29,9 @@ class InteractionCreateEvent extends Event {
     }
 
     async executeInteractionCommand(interaction: Eris.CommandInteraction) {
-        let command: Command | SubCommand = this.client.commands.slash.find(c => c.name == interaction.data.name) as Command;
+        const commandType = CommandTypes[interaction.data.type] as 'slash' | 'user' | 'message';
+
+        let command: Command | SubCommand = this.client.commands[commandType].find(c => c.name == interaction.data.name) as Command;
         
         if(!command) return this.client.logger.log(`Command ${interaction.data.name} not found`, { date: true, tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'InteractionCreate'] });
 

@@ -21,7 +21,8 @@ const client = new LunarClient(
         firstShardID: Number(shards[0]),
         lastShardID: Number(shards[shards.length - 1]),
         maxShards: Number(process.env.SHARD_AMOUNT),
-        messageLimit: 20
+        messageLimit: 20,
+        defaultImageFormat: 'png',
     }
 );
 

@@ -228,6 +228,18 @@ class ContextCommand {
         this.args = args || [];
         this.options = interaction ? new CommandInteractionOptions(interaction?.data?.resolved, interaction?.data?.options || []) : [];
 
+        if(this.options instanceof CommandInteractionOptions) {
+            if(interaction?.data?.type == Eris.Constants.ApplicationCommandTypes.USER) {
+                this.options.setOptions(
+                    {
+                        type: Eris.Constants.ApplicationCommandOptionTypes.USER,
+                        name: 'user',
+                        value: interaction?.data?.target_id,
+                    }
+                );
+            }
+        }
+
         const guild = (interaction || message)?.member?.guild || null;
 
         this.user = user;
