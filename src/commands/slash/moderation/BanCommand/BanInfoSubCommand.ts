@@ -129,7 +129,7 @@ class BanInfoSubCommand extends SubCommand {
                 }
             ],
             thumbnail: {
-                url: user.dynamicAvatarURL('png', 2048)
+                url: user.dynamicAvatarURL(undefined, 2048)
             },
             timestamp: new Date(),
         } as Eris.Embed;

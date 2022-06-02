@@ -78,7 +78,7 @@ class AdvListSubCommand extends SubCommand {
                 },
                 color: this.Utils.Constants.Colors.YELLOW,
                 thumbnail: {
-                    url: user.dynamicAvatarURL('jpg', 2048),
+                    url: user.dynamicAvatarURL(undefined, 2048),
                 },
                 fields: [],
                 type: 'rich',

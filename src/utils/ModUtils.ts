@@ -74,14 +74,14 @@ class ModUtils {
             { aliases: ['user.username', 'user.name'], value: user.username, },
             { aliases: ['user.discriminator'], value: user.discriminator, },
             { aliases: ['user.id'], value: user.id, },
-            { aliases: ['user.avatar', 'user.icon'], value: user.dynamicAvatarURL('png', 1024), },
+            { aliases: ['user.avatar', 'user.icon'], value: user.dynamicAvatarURL(undefined, 1024), },
             // Author
             { aliases: ['@author', 'author.mention', '@staff', 'staff.mention'], value: author.mention, },
             { aliases: ['author.tag', 'staff.tag'], value: `${author.username}#${author.discriminator}`, },
             { aliases: ['author.username', 'user.name'], value: author.username, },
             { aliases: ['author.discriminator'], value: author.discriminator, },
             { aliases: ['author.id', 'staff.id'], value: author.id, },
-            { aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.dynamicAvatarURL('png', 1024), },
+            { aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.dynamicAvatarURL(undefined, 1024), },
             // Punishment
             { aliases: ['punishment', 'punishment.type'], value: punishment.type || 'ᕙ(⇀‸↼‶)ᕗ', },
             { aliases: ['punishment.reason'], value: punishment.reason || '\u200b', },

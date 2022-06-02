@@ -103,7 +103,7 @@ class Transcript {
 
     static messageGroupToHTML(group: IGroup) {
 		const author = group.author;
-		let html = `<div class="message-group"><div class="author-avatar-content"><img src="${author.dynamicAvatarURL('jpg', 1024)}" class="author-avatar" /></div><div class="messages"><span class="author-name" title="${author.username}${author.discriminator}" data-user-id="${author.id}">${author.username}${author.bot ? `<span class="bot-tag">BOT</span>` : ''}</span><span class="timestamp">${new Date(group.messages[0].createdAt).toLocaleString()}</span>`;
+		let html = `<div class="message-group"><div class="author-avatar-content"><img src="${author.dynamicAvatarURL(undefined, 1024)}" class="author-avatar" /></div><div class="messages"><span class="author-name" title="${author.username}${author.discriminator}" data-user-id="${author.id}">${author.username}${author.bot ? `<span class="bot-tag">BOT</span>` : ''}</span><span class="timestamp">${new Date(group.messages[0].createdAt).toLocaleString()}</span>`;
 		group.messages.forEach(message => {
 			html += this.messageToHTML(message);
 		});

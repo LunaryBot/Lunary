@@ -16,7 +16,7 @@ class UserAvatarCommand extends Command {
     public async run(context: IContextInteractionCommand): Promise<any> {
         const user: Eris.User = context.options.get('user');
 
-        const avatar = user.dynamicAvatarURL('png').replace(/^(.*)\?.*$/, '$1');
+        const avatar = user.dynamicAvatarURL().replace(/^(.*)\?.*$/, '$1');
 
         const member: Eris.Member = context.options.get('user', { member: true });
         
