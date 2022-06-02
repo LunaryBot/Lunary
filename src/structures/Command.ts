@@ -266,7 +266,7 @@ class ContextCommand {
             guild: await this.dbs.guild,
         }
 
-        Object.defineProperty(this, 't', { value: this.dbs.guild.locale.t });
+        Object.defineProperty(this, 't', { value: this.dbs.guild?.locale?.t || this.client.locales.find(locale => locale.name == process.env.DEFAULT_LOCALE)?.t });
     }
 }
 
