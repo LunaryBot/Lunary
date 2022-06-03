@@ -65,13 +65,21 @@ class Utils {
 
     public static displayColor(member: Eris.Member) {
         const guild = member.guild;
-        const roles = [ ...guild.roles.values() ].filter(role => member.roles.includes(role.id)).sort((a, b) => a.position - b.position);
+        const roles = [ ...guild.roles.values() ].filter(role => member.roles.includes(role.id))
 
         const coloredRoles = roles.filter(role => role.color);
 
         if (!coloredRoles.length) return null;
 
-        return coloredRoles.sort((a, b) => roles.findIndex(role => role.id == a.id) - roles.findIndex(role => role.id == b.id))?.[0]?.color || null;
+        return coloredRoles.reduce((prev, role) => (comparePositionTo(role, prev) > 0 ? role : prev)).color ?? null;
+
+        function comparePositionTo(role1: Eris.Role, role2: Eris.Role) {
+            if (role1.position === role2.position) {
+                return Number(BigInt(role2.id) - BigInt(role1.id));
+            }
+          
+            return role1.position - role2.position;
+        }
     }
 
     public static calculateLevels(xp: number, difficulty = 300, startingLvl = 1) {

@@ -1,4 +1,4 @@
-import Eris, { ActionRow, ActionRowComponents } from 'eris';
+import Eris from 'eris';
 import Command, { LunarClient, IContextInteractionCommand } from '../../../structures/Command';
 import InteractionCollector from '../../../utils/collector/Interaction';
 import { BadgesEmojis, Colors } from '../../../utils/Constants';
@@ -75,7 +75,7 @@ class UserInfoCommand extends Command {
                     }
                 ],
             }
-        ] as ActionRow[];
+        ] as Eris.ActionRow[];
 
         if(member) {
             const guildAvatar = member.avatar ? member.avatarURL?.replace(/^(.*)\.(png|gif)\?.*$/, `$1${member.avatar?.startsWith('a_') ? '.gif' : '.png'}`) + '?size=2048' : undefined;
@@ -169,12 +169,18 @@ class UserInfoCommand extends Command {
 						else return '';
                     })();
 
+                    const roles = member.roles.sort((a, b) => {
+                        const roles = context.guild.roles;
+
+                        return (roles.get(b)?.position as number) - (roles.get(a)?.position as number);
+                    });
+
                     const embed = {
                         color: this.Utils.displayColor(member),
                         fields: [
                             {
-                                name: `<:Tools:853645102575910963> ${context.t('user_info:memberRoles', { size: member.roles.length })}`,
-                                value: `> ${(member.roles.slice(0, 40).map(roleID => `<@&${roleID}>`).join(', ') || context.t('user_info:memberNoRoles')) + (member.roles.length > 40 ? ` ${context.t('user_info:andMoreRoles', { size: member.roles.length - 40 })}` : '')}`,
+                                name: `<:Tools:853645102575910963> ${context.t('user_info:memberRoles', { size: roles.length })}`,
+                                value: `> ${(roles.slice(0, 40).map(roleID => `<@&${roleID}>`).join(', ') || context.t('user_info:memberNoRoles')) + (roles.length > 40 ? ` ${context.t('user_info:andMoreRoles', { size: roles.length - 40 })}` : '')}`,
                             },
                             {
                                 name: `:closed_lock_with_key: ${context.t('user_info:memberPermissions', { rankPermissions })}`,
