@@ -2,31 +2,7 @@ import type { Client } from 'eris'
 import type DatabasesManager from '../structures/DatabasesManager';
 import type Cluster from '../structures/cluster/Cluster';
 import type CommandInteractionOptions from '../utils/CommandInteractionOptions';
-
-export interface IClientCommands {
-    slash: Command[],
-    vanilla: Command[],
-    user: Command[],
-}
-
-export interface IBase {
-    name: string;
-    dirname?: string;
-    requirements?: ICommandRequirements | null;
-    cooldown?: number;
-}
-
-export interface ICommand extends IBase {
-    aliases?: string[];
-    subcommands?: Array<ICommandGroup|ISubCommand>;
-}
-
-export interface ICommandGroup {
-    name: string;
-    subcommands: SubCommand[];
-}
-
-export interface ISubCommand extends IBase {}
+import type Command from '../structures/Command';
 
 export interface ICommandRequirements {
     permissions?: {
@@ -36,22 +12,6 @@ export interface ICommandRequirements {
     },
     guildOnly?: boolean;
     ownerOnly?: boolean;
-}
-
-export interface ILunarClient extends Client {
-    get cluster(): Cluster;
-    events: Event[];
-    commands: IClientCommands;
-    locales: Locale[];
-    logger: Logger;
-    config: { 
-        prefix: string, 
-        owners: string[], 
-        clustersName: { [key: string]: string }, 
-        defaultLocale: string,
-    };
-    cases: number;
-    dbs: DatabasesManager;
 }
 
 export interface IVoteData {

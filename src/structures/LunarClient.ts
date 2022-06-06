@@ -6,7 +6,6 @@ import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
 import Cluster from './cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
-import { ILunarClient } from '../@types/index.d';
 import AutoComplete from './AutoComplete';
 
 interface IClientCommands {
@@ -42,7 +41,7 @@ interface IDiscordOAuth2 {
     disableGuildSelect?: boolean;
 }
 
-class LunarClient extends Client implements ILunarClient {
+class LunarClient extends Client {
     declare cluster: Cluster;
     public events: Event[];
     public commands: IClientCommands;

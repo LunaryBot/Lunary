@@ -1,12 +1,19 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions, TLunarPermissions, ICommand, ICommandGroup, ISubCommand, ICommandRequirements, IBase } from '../@types/index.d';
+import { ICommandRequirements } from '../@types/index.d';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
 
-class Base implements IBase {
+interface IBase {
+    name: string;
+    dirname?: string;
+    requirements?: ICommandRequirements | null;
+    cooldown?: number;
+}
+
+class Base {
     public declare client: LunarClient;
     public name: string;
     public dirname: string | undefined;
@@ -79,18 +86,25 @@ class Base implements IBase {
 
 class Command extends Base {
     public aliases: string[];
-    public subcommands: Array<ICommandGroup|ISubCommand>;
+    public subcommands: Array<CommandGroup|SubCommand>;
 
     constructor(
         client: LunarClient,
-        data: ICommand,
+        data: {
+            name: string;
+            dirname?: string;
+            requirements?: ICommandRequirements | null;
+            cooldown?: number;
+            aliases?: string[];
+            subcommands?: Array<CommandGroup|SubCommand>;
+        },
     ) {
         super(client, {
             name: data.name,
             dirname: data.dirname || undefined,
             requirements: data.requirements || null,
             cooldown: data.cooldown || 0,
-        } as IBase);
+        });
         this.aliases = data.aliases || [];
         this.subcommands = data.subcommands || [];
     };
@@ -104,14 +118,14 @@ class Command extends Base {
     }
 };
 
-class CommandGroup implements ICommandGroup {
+class CommandGroup {
     public name: string;
     public subcommands: SubCommand[];
     public parent: Command;
 
     constructor(
         client: LunarClient, 
-        data: ICommandGroup, 
+        data: CommandGroup, 
         parent: Command,
     ) {
         this.name = data.name;
@@ -139,7 +153,7 @@ class SubCommand extends Base {
             dirname: data.dirname || undefined,
             requirements: data.requirements || null,
             cooldown: data.cooldown || 0,
-        } as IBase);
+        });
 
         this.parent = parent;
     }
