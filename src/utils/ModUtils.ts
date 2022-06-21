@@ -111,8 +111,7 @@ class ModUtils {
             const reasons = context.dbs.guild.reasons.filter(r => (r.type & (1 << punishmentType)) === (1 << punishmentType));
 
             const hasPermission = context.dbs.guild.configs.has('mandatoryReason') ? !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason') : true;
-            hasPermission
-            if (r || (!r && context.dbs.user.configs.has('quickPunishment') && hasPermission)) { 
+            if (r || (!r && hasPermission)) { 
                 resolve(findReasonKey(r) || r || context.t('general:reasonNotInformed.defaultReason')); 
                 return;
             };
@@ -175,21 +174,18 @@ class ModUtils {
                 });
             }
 
-            let k = 'suggestToAddAReason';
-            if(context.dbs.guild.configs.has('mandatoryReason')) {
-                k = 'confirmNormal';
+            let k = 'confirmNormal';
 
-                if(!hasPermission && reasons.length) {
-                    k = 'confirmWithReasonsSeteds'
-                }
-    
-                if(hasPermission && !reasons.length) {
-                    k = 'confirmWithPermission'
-                }
-    
-                if(hasPermission && reasons.length) {
-                    k = 'confirmWithPermissionAndReasonsSeteds'
-                }
+            if(!hasPermission && reasons.length) {
+                k = 'confirmWithReasonsSeteds'
+            }
+
+            if(hasPermission && !reasons.length) {
+                k = 'confirmWithPermission'
+            }
+
+            if(hasPermission && reasons.length) {
+                k = 'confirmWithPermissionAndReasonsSeteds'
             }
 
             replyMessageFn({

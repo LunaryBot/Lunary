@@ -93,7 +93,6 @@ class BanUserSubCommand extends SubCommand {
                 author_tag: `${context.user.username}#${context.user.discriminator}`,
                 reason
                 })
-                // @ts-ignore
                 .shorten(512)
             )
 
