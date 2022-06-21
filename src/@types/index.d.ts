@@ -1,14 +1,15 @@
-import type { Client } from 'eris'
+import type { Client, Constants } from 'eris'
 import type DatabasesManager from '../structures/DatabasesManager';
 import type Cluster from '../structures/cluster/Cluster';
 import type CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import type Command from '../structures/Command';
+import type { LunarPermissions } from '../utils/Constants';
 
 export interface ICommandRequirements {
     permissions?: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
+        me?: Array<keyof typeof Constants.Permissions>;
+        bot?: Array<keyof typeof LunarPermissions>;
+        discord?: Array<keyof typeof Constants.Permissions>;
     },
     guildOnly?: boolean;
     ownerOnly?: boolean;
@@ -38,72 +39,3 @@ export interface IReason {
     days?: number;
     _id: string;
 }
-
-export type TPermissions = 
-    'createInstantInvite' 
-    | 'kickMembers' 
-    | 'banMembers' 
-    | 'administrator' 
-    | 'manageChannels' 
-    | 'manageGuild' 
-    | 'addReactions' 
-    | 'viewAuditLog' 
-    | 'viewAuditLogs' 
-    | 'voicePrioritySpeaker' 
-    | 'voiceStream' 
-    | 'stream' 
-    | 'viewChannel' 
-    | 'readMessages' 
-    | 'sendMessages' 
-    | 'sendTTSMessages' 
-    | 'manageMessages' 
-    | 'embedLinks' 
-    | 'attachFiles' 
-    | 'readMessageHistory' 
-    | 'mentionEveryone' 
-    | 'useExternalEmojis' 
-    | 'externalEmojis' 
-    | 'viewGuildInsights' 
-    | 'voiceConnect' 
-    | 'voiceSpeak' 
-    | 'voiceMuteMembers' 
-    | 'voiceDeafenMembers' 
-    | 'voiceMoveMembers' 
-    | 'voiceUseVAD' 
-    | 'changeNickname' 
-    | 'manageNicknames' 
-    | 'manageRoles' 
-    | 'manageWebhooks' 
-    | 'manageEmojisAndStickers' 
-    | 'manageEmojis' 
-    | 'useApplicationCommands' 
-    | 'useSlashCommands' 
-    | 'voiceRequestToSpeak' 
-    | 'manageEvents' 
-    | 'manageThreads' 
-    | 'createPublicThreads' 
-    | 'createPrivateThreads' 
-    | 'useExternalStickers' 
-    | 'sendMessagesInThreads' 
-    | 'startEmbeddedActivities' 
-    | 'moderateMembers'
-    | 'allGuild' 
-    | 'allText' 
-    | 'allVoice' 
-    | 'all'
-
-export type TLunarPermissions = 
-    'lunarBanMembers'
-    | 'lunarKickMembers'
-    | 'lunarMuteMembers'
-    | 'lunarAdvMembers'
-    | 'lunarPunishmentOutReason'
-    | 'lunarViewHistory'
-    | 'lunarManageHistory'
-
-export type TGuildConfigs =
-    'mandatoryReason'
-    | 'sendTranscript'
-
-export type TUserConfigs =
-    'quickPunishment';

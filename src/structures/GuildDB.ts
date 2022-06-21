@@ -2,10 +2,11 @@ import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, Member, TextableChannel } from 'eris';
-import { IReason, TGuildConfigs, TLunarPermissions } from '../@types/index.d';
+import { IReason, TGuildConfigs } from '../@types/index.d';
+import * as Constants from '../utils/Constants';
 import { v4 } from 'uuid';
 
-type TBits = number | BitField;
+type TBits = bigint | BitField;
 
 interface IGuildDataBase {
     configs?: number;
@@ -41,7 +42,7 @@ class GuildDB {
         Object.defineProperty(this, 'dbmanager', { value: dbmanager, enumerable: false });
         Object.defineProperty(this, 'data', { value: data, enumerable: false });
 
-        this.configs = new Configs(data.configs || 0);
+        this.configs = new Configs(BigInt(data.configs || 0));
 
         this.locale = ((data.locale ? this.dbmanager.client.locales.find(l => l.name == data.locale) : false) || this.dbmanager.client.locales.find(l => l.name == this.dbmanager.client.config.defaultLocale)) as Locale;
 
@@ -50,7 +51,7 @@ class GuildDB {
         
         this.permissions = new Map();
         for (const [key, value] of Object.entries(data.permissions || {})) {
-            this.permissions.set(key, new LunarPermissions(value));
+            this.permissions.set(key, new LunarPermissions(BigInt(value)));
         }
         
         this.punishmentMessage = null;
@@ -105,19 +106,18 @@ class Configs extends BitField {
     constructor(bits: TBit) {
         super(bits, {
             FLAGS: Configs.FLAGS,
-            defaultBit: 0,
+            defaultBit: 0n,
         })
 
         this.has = super.has.bind(this);
     }
 
     static get FLAGS() {
-		return {
-            mandatoryReason: 1 << 0,
-            sendTranscript: 1 << 1,
-        } as { [key in TGuildConfigs]: number };
+		return Constants.GuildConfigs;
 	}
 }
+
+type TLunarPermissions = keyof typeof Constants.LunarPermissions;
 
 type TLunarPermissionsBits = TLunarPermissions | TBits | Array<TLunarPermissions|TBits>;
 
@@ -132,22 +132,14 @@ class LunarPermissions extends BitField {
     constructor(bits?: TBit) {
         super(bits, {
             FLAGS: LunarPermissions.FLAGS,
-            defaultBit: 0,
+            defaultBit: 0n,
         })
 
         this.has = super.has.bind(this);
     }
 
     static get FLAGS() {
-		return {
-            lunarBanMembers: 1 << 0,
-            lunarKickMembers: 1 << 1,
-            lunarMuteMembers: 1 << 2,
-            lunarAdvMembers: 1 << 3,
-            lunarPunishmentOutReason: 1 << 4,
-            lunarViewHistory: 1 << 5,
-            lunarManageHistory: 1 << 6,
-        } as { [key in TLunarPermissions]: number }
+		return Constants.LunarPermissions;
 	}
 }
 

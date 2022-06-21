@@ -1,10 +1,11 @@
 import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
-import { TUserConfigs, IVoteData } from '../@types/index.d';
+import { IVoteData } from '../@types/index.d';
 import Utils from '../utils/Utils';
+import * as Constants from '../utils/Constants';
 
-type TBits = number | BitField;
+type TBits = bigint | BitField;
 
 interface IUserDataBase {
     xp?: number | null;
@@ -51,7 +52,7 @@ class UserDB {
         Object.defineProperty(this, 'dbmanager', { value: dbmanager, enumerable: false });
         Object.defineProperty(this, 'data', { value: data, enumerable: false });
 
-        this.configs = new Configs(data.configs || 0);
+        this.configs = new Configs(BigInt(data.configs || 0));
 
         this.lastPunishmentAppliedId = data.last_punishment_applied_id || null;
 		this.bans = data.bans || 0;
@@ -63,8 +64,8 @@ class UserDB {
         this.xp = data.xp || 0;
         this.level = Utils.calculateLevels(this.xp);
         this.aboutme = data.aboutme || '';
-        this.inventory = new ProfileInventory(data.inventory || ProfileInventory.defaultBit);
-        this.inventoryUsing = new ProfileInventory(data.inventory_using || ProfileInventory.defaultBit);
+        this.inventory = new ProfileInventory(BigInt(data.inventory || ProfileInventory.defaultBit));
+        this.inventoryUsing = new ProfileInventory(BigInt(data.inventory_using || ProfileInventory.defaultBit));
 
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
@@ -87,7 +88,7 @@ class UserDB {
                 
                 if(value instanceof BitField) {
                     if(value.bitfield != value.data.defaultBit) {
-                        return [jsonKey, value.bitfield];
+                        return [jsonKey, Number(value.bitfield)];
                     }
                 }
 
@@ -138,16 +139,19 @@ class ProfileInventory extends BitField {
 
     static get FLAGS() {
 		return {
-            default: 1 << 0,
+            default: 1n << 0n,
         }
 	}
 
-    static get defaultBit(): number {
+    static get defaultBit(): bigint {
         return this.FLAGS['default'];
     };
 }
 
+type TUserConfigs = keyof typeof Constants.UserConfigs;
+
 type TConfigsBits = TUserConfigs | TBits | Array<TUserConfigs|TBits>;
+
 class Configs extends BitField {
     public declare add: (bit: TConfigsBits) => Configs;
     public declare has: (bit: TConfigsBits) => boolean;
@@ -164,13 +168,11 @@ class Configs extends BitField {
     }
 
     static get FLAGS() {
-		return {
-            quickPunishment: 1 << 0,
-        } as { [key in TUserConfigs]: number }
+		return Constants.UserConfigs;
 	}
 
-    static get defaultBit(): number {
-        return 0;
+    static get defaultBit(): bigint {
+        return 0n;
     }
 }
 
