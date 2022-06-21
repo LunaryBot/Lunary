@@ -1,5 +1,5 @@
 import { Member } from 'eris';
-import { ILog } from '../../../../@types';
+import { IPunishmentLog } from '../../../../@types';
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 
 class MuteRemoveCommand extends SubCommand {

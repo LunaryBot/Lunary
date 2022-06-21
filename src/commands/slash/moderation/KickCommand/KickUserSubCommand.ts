@@ -1,7 +1,7 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../@types/index.d';
+import { IPunishmentLog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class KickUserSubCommand extends SubCommand {
@@ -95,26 +95,22 @@ class KickUserSubCommand extends SubCommand {
                 .shorten(512)
             )
 
-            const logData = {
-                reason: encodeURIComponent(reason as string),
-                server: context.guild.id,
+            const punishmentLog = {
+                guild: context.guild.id,
                 author: context.user.id,
-                type: 2,
-                date: Date.now(),
+                type: 4,
+                timestamp: Date.now(),
                 user: user.id,
-            } as ILog
+            } as IPunishmentLog;
 
-            const log = Buffer.from(
-				JSON.stringify(logData),
-				'ascii',
-			).toString('base64');
+            if (typeof reason == 'string') punishmentLog.reason = reason;
 
             let logs = await this.client.dbs.getLogs();
 
             const id = await ModUtils.generatePunishmentID.bind(this)(logs);
 
             this.client.dbs.setLogs({
-                [id]: log,
+                [id]: punishmentLog,
                 cases: this.client.cases + 1,
             });
 
@@ -137,7 +133,7 @@ class KickUserSubCommand extends SubCommand {
                 const { content, files } = await ModUtils.punishmentMessage.bind(this)({
                     author: context.user,
                     user,
-                    reason: reason as string,
+                    reason: reason as string || context.t('general:reasonNotInformed.defaultReason'),
                     duration: context.t('general:permanent'),
                     type: context.t('kick:punishmentType'),
                 }, context.t, context.dbs.guild, context.channel);

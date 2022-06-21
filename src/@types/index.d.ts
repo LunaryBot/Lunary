@@ -20,15 +20,15 @@ export interface IVoteData {
 	date: number
 }
 
-export interface ILog {
+export interface IPunishmentLog {
     id: string;
-    type: number;
-    reason: string;
-    date: number;
-    time?: number;
-    user: string;
-    author: string;
-    server: string;
+    timestamp: number;
+	user: string;
+	guild: string;
+	reason?: string;
+	type: 1 | 2 | 3 | 4;
+	duration?: number;
+	author: string;
 } 
   
 export interface IReason {

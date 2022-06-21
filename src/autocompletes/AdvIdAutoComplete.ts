@@ -27,12 +27,11 @@ class AdvIdAutoComplete extends AutoComplete {
 
         const logs = await this.client.dbs.getLogs();
 		const advs: string[] = Object.entries(logs || {})
-		    .map(function ([k, v], i) {
-				const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'));
-				return {...data, id: k};
+		    .map(function ([id, log], i) {
+				return {...log, id};
 			})
-			.filter(x => x.server == guildID && x.type == 4)
-			?.sort((a, b) => b.date - a.date)
+			.filter(x => x.guild == guildID && x.type == 4)
+			?.sort((a, b) => b.timestamp - a.timestamp)
 			.map(x => x.id)
 			.filter(x => x);
 

@@ -5,7 +5,7 @@ import GuildDB from '../structures/GuildDB';
 import LunarClient from '../structures/LunarClient';
 import Transcript from '../structures/Transcript';
 import InteractionCollector from './collector/Interaction';
-import { ILog, IReason } from '../@types/index.d';
+import { IPunishmentLog, IReason } from '../@types/index.d';
 import Utils from './Utils';
 import * as Constants from './Constants';
 
@@ -17,7 +17,7 @@ type TreplyMessageFn = (content: Eris.InteractionEditContent, ...args: any[]) =>
 class ModUtils {
     static client: LunarClient;
 
-    public static async generatePunishmentID(logs: { [key: string]: string }): Promise<string> {
+    public static async generatePunishmentID(logs: { [key: string]: IPunishmentLog }): Promise<string> {
         let id: string = '';
              
         while(!id || logs[id]) {
@@ -286,7 +286,6 @@ class ModUtils {
                             c.disabled = true;
 
                             if (c.type == 3) {
-                                // @ts-ignore
                                 c.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
                             }
 
@@ -304,7 +303,7 @@ class ModUtils {
             function findReasonKey(key: string): IReason|undefined {
                 return reasons.find(r => r.keys?.includes(key));
             }
-        })) as string | boolean | IReason;
+        })) as string | boolean | IReason | undefined;
 
         return { reason, replyMessageFn };
     }
@@ -417,17 +416,11 @@ class ModUtils {
             });
     }
 
-    public static generatePunishmentXP(context: IContextInteractionCommand, user: Eris.User, reason: string, punishmentType: 1 | 2 | 3 | 4, logs: { [key: string]: string }, maxXP: number) {
+    public static generatePunishmentXP(context: IContextInteractionCommand, user: Eris.User, reason: string, punishmentType: 1 | 2 | 3 | 4, logs: { [key: string]: IPunishmentLog }, maxXP: number) {
         let xp = context.dbs.user.xp;
         let leveluped = false;
 
-        let lastPunishmentApplied: string|ILog = logs[context.dbs.user.lastPunishmentAppliedId || ''];
-		try {
-            if(lastPunishmentApplied) lastPunishmentApplied = JSON.parse(Buffer.from(lastPunishmentApplied, 'base64').toString('ascii')) as ILog;
-        } catch(_) {
-            // @ts-ignore
-            lastPunishmentApplied = undefined;
-        }
+        let lastPunishmentApplied: IPunishmentLog = logs[context.dbs.user.lastPunishmentAppliedId || ''];
 
         const generateXP = () => {
             reason = reason.toString();
@@ -454,9 +447,9 @@ class ModUtils {
 					if(
 						user.id != lastPunishmentApplied.user 
 						|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != punishmentType)
-						|| ((!isNaN(lastPunishmentApplied.date) 
+						|| ((!isNaN(lastPunishmentApplied.timestamp) 
 						&& user.id == lastPunishmentApplied.user 
-						&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
+						&& (Date.now() - lastPunishmentApplied.timestamp) > 13 * 1000 * 60))
 					) {
 						if(reason != lastPunishmentApplied.reason && reason != context.t('general:reasonNotInformed.defaultReason')) {
 							xp += generateXP()

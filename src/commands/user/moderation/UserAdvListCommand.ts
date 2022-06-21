@@ -2,10 +2,10 @@ import Eris from 'eris';
 import Command, { LunarClient, IContextInteractionCommand } from '../../../structures/Command';
 import InteractionCollector from '../../../utils/collector/Interaction';
 import { Colors } from '../../../utils/Constants';
-import { ILog } from '../../../@types';
+import { IPunishmentLog } from '../../../@types';
 import chunk from '../../../utils/Chunk';
 
-interface IAdv extends ILog {
+interface IAdv extends IPunishmentLog {
     type: 4;
     index: number;
 }
@@ -45,17 +45,16 @@ class UserAvatarCommand extends Command {
 
         const user: Eris.User = context.options.get('user') || context.user;
 
-        const logs: ILog[] = Object.entries(await this.client.dbs.getLogs() || {})
-			.map(function ([k, v], i) {
-				const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'));
-				data.id = k;
-				return data;
+        const logs: IPunishmentLog[] = Object.entries(await this.client.dbs.getLogs() || {})
+			.map(function ([id, log], i) {
+				log.id = id;
+				return log;
 			})
-			.filter(x => x.server == context.guild.id);
+			.filter(x => x.guild == context.guild.id);
 
         const advs = logs
 			.filter(x => x.user == user.id && x.type == 4)
-			?.sort((a, b) => b.date - a.date)
+			?.sort((a, b) => b.timestamp - a.timestamp)
 			.map((data, i) => {
 				return {...data, index: i};
 			});
@@ -90,7 +89,7 @@ class UserAvatarCommand extends Command {
 
                 embed.fields?.push({
                     name: `\`[ ${adv.index + 1} ]\`: ${adv.id}`,
-                    value: `**- ${context.t('adv_list:reason')}:** \`\`\`${decodeURI(adv.reason)}\`\`\`\n- **${context.t('adv_list:punishedBy')}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.date + 3600000) / 1000.0)}>`,
+                    value: `**- ${context.t('adv_list:reason')}:** \`\`\`${adv.reason || context.t('general:reasonNotInformed.defaultReason')}\`\`\`\n- **${context.t('adv_list:punishedBy')}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n- <t:${Math.floor((adv.timestamp + 3600000) / 1000.0)}>`,
                 })
             }
 

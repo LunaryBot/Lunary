@@ -26,7 +26,7 @@ class AdvEditSubCommand extends SubCommand {
 
         const adv = await this.client.dbs.getLog(caseID);
 
-        if(!adv || adv.server !== context.guild.id || adv.type !== 4) {
+        if(!adv || adv.guild !== context.guild.id || adv.type !== 4) {
             return context.interaction.createFollowup({
                 content: context.t('adv_info:warningNotFound', {
                     id: caseID.replace(/`/g, ''),
@@ -36,12 +36,10 @@ class AdvEditSubCommand extends SubCommand {
 
         const reason = context.options.get('newreason') as string;
 
-        adv.reason = encodeURI(findReasonKey(reason)?.text || reason);
-
-		const newAdv = Buffer.from(JSON.stringify(adv)).toString('base64');
+        adv.reason = findReasonKey(reason)?.text || reason;
 
         await this.client.dbs.setLogs({
-            [caseID]: newAdv,
+            [caseID]: adv,
         });
 
         return context.interaction.createFollowup({
@@ -49,7 +47,7 @@ class AdvEditSubCommand extends SubCommand {
                 author: context.user.mention,
                 id: caseID.replace(/`/g, ''),
             }),
-        })
+        });
 
         function findReasonKey(key: string): IReason|undefined {
             return context.dbs.guild.reasons.filter(reason => (reason.type & (1 << 4)) == 1 << 4).find(r => r.keys?.includes(key));

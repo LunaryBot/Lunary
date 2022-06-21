@@ -1,6 +1,6 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
-import { ILog } from '../../../../@types/index.d';
+import { IPunishmentLog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class AdvUserSubCommand extends SubCommand {
@@ -73,26 +73,22 @@ class AdvUserSubCommand extends SubCommand {
                 notifyDM = false
             };
 
-            const logData = {
-                reason: encodeURIComponent(reason as string),
-                server: context.guild.id,
+            const punishmentLog = {
+                guild: context.guild.id,
                 author: context.user.id,
                 type: 4,
-                date: Date.now(),
+                timestamp: Date.now(),
                 user: user.id,
-            } as ILog
+            } as IPunishmentLog;
 
-            const log = Buffer.from(
-				JSON.stringify(logData),
-				'ascii',
-			).toString('base64');
+            if (typeof reason == 'string') punishmentLog.reason = reason;
 
             let logs = await this.client.dbs.getLogs();
 
             const id = await ModUtils.generatePunishmentID.bind(this)(logs);
 
             this.client.dbs.setLogs({
-                [id]: log,
+                [id]: punishmentLog,
                 cases: this.client.cases + 1,
             });
 
@@ -115,7 +111,7 @@ class AdvUserSubCommand extends SubCommand {
                 const { content, files } = await ModUtils.punishmentMessage.bind(this)({
                     author: context.user,
                     user,
-                    reason: reason as string,
+                    reason: reason as string || context.t('general:reasonNotInformed.defaultReason'),
                     duration: context.t('general:permanent'),
                     type: context.t('adv:punishmentType'),
                 }, context.t, context.dbs.guild, context.channel);
@@ -126,19 +122,16 @@ class AdvUserSubCommand extends SubCommand {
             let xp = context.dbs.user.xp;
             let leveluped = false;
 
-            if(!member) {
-				const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 4, logs, 21);
+            const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 4, logs, 21);
 
-                context.dbs.user.xp = _xp;
+            context.dbs.user.xp = _xp;
 
-                leveluped = _leveluped;
-                xp = _xp;
-			}
+            leveluped = _leveluped;
+            xp = _xp;
 
             context.dbs.user.lastPunishmentAppliedId = id;
 
             context.dbs.user.save();
-
 
             if(leveluped) {
                 context.interaction.createFollowup({

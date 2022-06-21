@@ -27,7 +27,7 @@ class AdvInfoSubCommand extends SubCommand {
 
         const adv = await this.client.dbs.getLog(caseID);
 
-        if(!adv || adv.server !== context.guild.id || adv.type !== 4) {
+        if(!adv || adv.guild !== context.guild.id || adv.type !== 4) {
             return context.interaction.createFollowup({
                 content: context.t('adv_info:warningNotFound', {
                     id: caseID.replace(/`/g, ''),
@@ -78,7 +78,7 @@ class AdvInfoSubCommand extends SubCommand {
                 },
                 {
                     name: context.t('adv_info:embed.reason'),
-                    value: `\`\`\`${decodeURI(adv.reason)}\`\`\`\n- **${context.t('adv_info:punishedBy')}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n—  <t:${Math.floor((adv.date + 3600000) / 1000.0)}>`
+                    value: `\`\`\`${adv.reason || context.t('general:reasonNotInformed.defaultReason')}\`\`\`\n- **${context.t('adv_info:punishedBy')}:** ${author.username}**#${author.discriminator}**(\`${adv.author}\`)\n—  <t:${Math.floor((adv.timestamp + 3600000) / 1000.0)}>`
                 },
                 {
                     name: context.t('adv_info:embed.caseID'),
@@ -170,12 +170,10 @@ class AdvInfoSubCommand extends SubCommand {
                     
                     const reason = (interaction as Eris.ModalSubmitInteraction).data.components[0].components.find(c => c.custom_id === 'reason')?.value as string;
 
-                    adv.reason = encodeURI(findReasonKey(reason)?.text || reason);
-
-		            const newAdv = Buffer.from(JSON.stringify(adv)).toString('base64');
+                    adv.reason = findReasonKey(reason)?.text || reason
 
                     await this.client.dbs.setLogs({
-                        [caseID]: newAdv,
+                        [caseID]: adv,
                     });
 
                     await interaction

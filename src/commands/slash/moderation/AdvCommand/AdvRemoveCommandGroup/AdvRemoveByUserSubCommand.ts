@@ -1,5 +1,5 @@
 import { User } from "eris";
-import { ILog } from "../../../../../@types";
+import { IPunishmentLog } from "../../../../../@types";
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from "../../../../../structures/Command";
 
 class AdvRemoveByUserSubCommand extends SubCommand {
@@ -26,15 +26,14 @@ class AdvRemoveByUserSubCommand extends SubCommand {
         
         const amount = context.options.get('amount') as string;
         
-        let logs: ILog[] = Object.entries(await this.client.dbs.getLogs() || {})
-            .map(function ([k, v], i) {
-                const data = JSON.parse(Buffer.from(v, 'base64').toString('ascii'));
-                data.id = k;
-                return data;
+        let logs: IPunishmentLog[] = Object.entries(await this.client.dbs.getLogs() || {})
+            .map(function ([id, log], i) {
+                log.id = id;
+                return log;
             })
-            .filter(x => x.server == context.guild.id);
+            .filter(x => x.guild == context.guild.id);
         
-        const advs = logs.filter(x => x.user == user.id && x.type == 4)?.sort((a, b) => b.date - a.date);
+        const advs = logs.filter(x => x.user == user.id && x.type == 4)?.sort((a, b) => b.timestamp - a.timestamp);
 
         if (!advs.length)
             return context.interaction
