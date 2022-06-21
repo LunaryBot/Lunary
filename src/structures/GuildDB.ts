@@ -2,7 +2,7 @@ import DatabasesManager from './DatabasesManager';
 import Locale from './Locale';
 import BitField, { TBit } from '../utils/BitField';
 import { Guild, Member, TextableChannel } from 'eris';
-import { IReason, TGuildConfigs } from '../@types/index.d';
+import { IReason } from '../@types/index.d';
 import * as Constants from '../utils/Constants';
 import { v4 } from 'uuid';
 
@@ -92,6 +92,8 @@ class GuildDB {
         return permissions
     }
 }
+
+type TGuildConfigs = keyof typeof Constants.GuildConfigs;
 
 type TConfigsBits = TGuildConfigs | TBits | Array<TGuildConfigs|TBits>;
 
