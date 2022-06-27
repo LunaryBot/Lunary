@@ -1,3 +1,5 @@
+import Apollo from "../structures/server/Apollo";
+
 export {};
 
 declare global {
@@ -8,4 +10,6 @@ declare global {
         toTitleCase(): string;
         checkSimilarityStrings(string: string): number;
     }
+
+    var apollo: Apollo;
 }

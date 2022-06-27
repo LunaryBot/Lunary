@@ -20,6 +20,9 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
 		"moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
     },
     "exclude": [
         "build",
