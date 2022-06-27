@@ -1,4 +1,4 @@
-import BaseRouter from '../../BaseRouter';
+import BaseRouter from '../../structures/BaseRouter';
 import { Router } from 'express';
 import Server from '../Server';
 

@@ -1,5 +1,5 @@
 import { parentPort } from 'worker_threads';
-import LunarClient from '../LunarClient';
+import LunarClient from '../structures/LunarClient';
 
 interface IEvalResult { 
     type: 'eval result'; 

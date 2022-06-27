@@ -1,17 +1,19 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import ClusterManager from './structures/cluster/ClusterManager';
-import Server from './structures/server/Server';
+import ClusterManager from './cluster/ClusterManager';
+import Server from './server/Server';
 import Logger from './utils/Logger';
 import StatcordPlguin from './plugins/StatcordPlugin';
 import { buildSchema } from 'type-graphql';
 
 import './tools/String';
-import Apollo from './structures/server/Apollo';
+import Apollo from './server/Apollo';
 import path from 'path';
 
-import PingResolver from './structures/server/resolvers/PingResolver';
+import PingResolver from './server/resolvers/PingResolver';
+import UsersResolver from './server/resolvers/UsersResolver';
+import GuildsResolver from './server/resolvers/GuildsResolver';
 
 const manager = new ClusterManager();
 
@@ -38,6 +40,8 @@ async function main() {
     const schema = await buildSchema({
         resolvers: [
             PingResolver,
+            UsersResolver,
+            GuildsResolver,
         ],
         emitSchemaFile: path.resolve(process.cwd(), 'schema.graphql'),
     });
