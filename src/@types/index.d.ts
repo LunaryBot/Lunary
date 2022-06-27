@@ -1,6 +1,6 @@
 import type { Client, Constants } from 'eris'
 import type DatabasesManager from '../structures/DatabasesManager';
-import type Cluster from '../structures/cluster/Cluster';
+import type Cluster from '../cluster/Cluster';
 import type CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import type Command from '../structures/Command';
 import type { LunarPermissions } from '../utils/Constants';

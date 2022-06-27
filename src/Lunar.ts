@@ -1,5 +1,5 @@
 import LunarClient from "./structures/LunarClient";
-import Cluster from './structures/cluster/Cluster';
+import Cluster from './cluster/Cluster';
 const shards = process.env.CLUSTER_SHARDS.split(',').map(s => parseInt(s));
 
 import './tools/String';

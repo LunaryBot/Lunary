@@ -4,7 +4,7 @@ import Logger from '../utils/Logger';
 import Event from './Event';
 import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
-import Cluster from './cluster/Cluster';
+import Cluster from '../cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
 import AutoComplete from './AutoComplete';
 

@@ -1,4 +1,4 @@
-import ClusterManager from '../structures/cluster/ClusterManager';
+import ClusterManager from '../cluster/ClusterManager';
 import { Client } from '@lunarybot/statcord';
 import Logger from '../utils/Logger';
 

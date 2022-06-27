@@ -1,4 +1,4 @@
-import Apollo from "../structures/server/Apollo";
+import Apollo from "../server/Apollo";
 
 export {};
 

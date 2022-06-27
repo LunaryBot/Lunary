@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import Server from './server/Server';
-import ClusterManager from './cluster/ClusterManager';
+import Server from '../server/Server';
+import ClusterManager from '../cluster/ClusterManager';
 
 class BaseRouter {
     public server: Server;
