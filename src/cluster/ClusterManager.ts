@@ -39,7 +39,7 @@ class ClusterManager extends EventEmitter {
     }
 
     private createCluster(id: number, env?: any, emit?: boolean): Worker {
-        const worker = new Worker(path.resolve(`${__dirname}/../../Lunar.js`), {
+        const worker = new Worker(path.resolve(`${__dirname}/../Lunar.js`), {
             env: env ? { ...process.env, ...env } : {
                 ...process.env,
                 CLUSTER_ID: id,
