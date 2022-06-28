@@ -1,6 +1,6 @@
 import { Client, ClientOptions } from 'eris';
 import fs from 'fs';
-import Logger from '../utils/Logger';
+import '../utils/Logger';
 import Event from './Event';
 import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
@@ -47,7 +47,6 @@ class LunarClient extends Client {
     public commands: IClientCommands;
     public locales: Locale[];
     public autocompletes: AutoComplete[];
-    public logger: Logger;
     public config: { 
         prefix: string, 
         owners: string[], 
@@ -72,8 +71,6 @@ class LunarClient extends Client {
         }
         this.locales = [];
         this.autocompletes = [];
-
-        this.logger = new Logger();
 
         this.config = {
             prefix: 'canary.',
@@ -148,7 +145,7 @@ class LunarClient extends Client {
         const regex = /^(.*)Event\.(t|j)s$/;
         let events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
         for (let event of events) {
-            this.logger.log(`Loading event ${event.replace(regex, '$1Event')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Event Loader'], date: true });
+            logger.info(`Loading event ${event.replace(regex, '$1Event')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader` });
 
             let { default: base } = require(__dirname + `/../events/${event}`);
             
@@ -156,10 +153,10 @@ class LunarClient extends Client {
 
             this.events.push(instance);
 
-            this.on(instance.event, (...args) => instance.run? instance.run(...args) : Logger.log(`Event ${instance.event} has no run function.`, { tags: ['Client', 'Event Loader'], date: true, error: true }));
+            this.on(instance.event, (...args) => instance.run? instance.run(...args) : logger.warn(`Event ${instance.event} has no run function.`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader`, error: true }));
         };
 
-        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Events Loader'], date: true });
+        logger.info(`Loaded ${this.events.length} events of ${events.length}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader` });
 
         return this.events;
     }
@@ -168,7 +165,7 @@ class LunarClient extends Client {
         let locales = fs.readdirSync(process.cwd() + '/locales').filter(file => !/^.*\..*$/.test(file));
         
         for(let locale of locales) {
-            this.logger.log(`Loading locale ${locale}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Locale Loader'], date: true, info: true });
+            logger.info(`Loading locale ${locale}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Locale Loader` });
             
             const instance = new Locale(locale);
             this.locales.push(instance);
@@ -221,7 +218,7 @@ class LunarClient extends Client {
                                 for (let subsubcommand of subsubcommands) {
                                     let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}/${subsubcommand}`);
 
-                                    this.logger.log(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
+                                    logger.info(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
 
                                     const instance  = new base(this, _subcommand) as SubCommand;
 
@@ -231,7 +228,7 @@ class LunarClient extends Client {
                                 _command.subcommands.push(_subcommand);
                             } else {
                                 let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
-                                this.logger.log(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
+                                logger.info(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
                                 const instance  = new base(this, _command) as SubCommand;
 
                                 _command.subcommands.push(instance);
@@ -240,7 +237,7 @@ class LunarClient extends Client {
                     } else {
                         let { default: base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
 
-                        this.logger.log(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
+                        logger.info(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
                         
                         const instance  = new base(this) as Command;
 

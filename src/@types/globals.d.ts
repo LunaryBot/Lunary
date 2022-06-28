@@ -1,10 +1,13 @@
-import Apollo from "../server/Apollo";
+import { Logger } from 'winston';
+import Apollo from '../server/Apollo';
+
+interface MyLogger extends Logger {
+    readonly graphql: LeveledLogMethod;
+}
 
 export {};
 
 declare global {
-    var test = "test";
-
     interface String {
         shorten(length: number): string;
         toTitleCase(): string;
@@ -12,4 +15,5 @@ declare global {
     }
 
     var apollo: Apollo;
+    var logger: MyLogger;
 }

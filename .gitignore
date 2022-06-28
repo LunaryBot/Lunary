@@ -18,3 +18,5 @@ yarn-error.log
 
 data/commands.json
 json.sqlite
+
+logs/*

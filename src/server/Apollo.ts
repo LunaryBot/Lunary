@@ -26,7 +26,7 @@ class Apollo extends ApolloServer {
                 return res.status(401).json({ message: 'Unauthorized' });
             }
 
-            console.log(`${req.method} ${req.url}`);
+            logger.http(`Request at ${req.url} ( ${req.method} )`, { label: 'Http Server' })
 
             next();
         });
@@ -40,15 +40,15 @@ class Apollo extends ApolloServer {
 
     public async init(port?: number | undefined) {
         this.httpServer.listen(port, () => {
-            console.log(`🪐 Http Server is running on port ${process.env.PORT} (http://localhost:${process.env.PORT})`);
+            logger.info(`Http Server is running on port ${process.env.PORT} (http://localhost:${process.env.PORT})`, { label: 'Http Server' });
         })
 
         await this.start();
 
         this.applyMiddleware({ app: this.app, path: '/' });
-
-        console.log(`🚀 Apollo GraphQL Server ready at http://localhost:${process.env.PORT}${this.graphqlPath}`)
-
+        
+        logger.graphql(`Apollo GraphQL Server ready at http://localhost:${process.env.PORT}${this.graphqlPath}`, { label: 'Apollo Server' });
+        
         return this;
     }
 }

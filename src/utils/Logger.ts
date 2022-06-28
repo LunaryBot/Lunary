@@ -1,25 +1,52 @@
+import winston, { Logger, LeveledLogMethod } from 'winston';
 import chalk from 'chalk';
 
-interface ILoogerOptions {
-    tags: string[];
-    date: boolean;
-    error?: boolean;
-    info?: boolean;
-}
+const { printf, combine, timestamp, colorize } = winston.format; 
 
-class Logger {
-    public get log() {
-        return Logger.log;
+const config = {
+    levels: {
+        error: 0,
+        warn: 1,
+        info: 2,
+        http: 3,
+        debug: 5,
+        graphql: 6,
+    },
+    colors: {
+        error: 'red',
+        warn: 'yellowBG',
+        info: 'green',
+        http: 'blue',
+        debug: 'yellow',
+        graphql: 'magenta',
     }
-
-    public static log(message: string, options: ILoogerOptions = { tags: [], date: true, error: false, info: false }) {
-        if(options.info == true && process.env.SUPER_LOGS != 'true') return; 
-
-        const tags = options?.tags?.length > 0 ? chalk.cyan(`[${options.tags?.join('] [')}]`) : '';
-        const date = options?.date ? chalk.blue(`[${new Date().toLocaleString()}]`) : '';
-
-        console.log(`${tags} ${date} ${chalk[options?.error ? 'red' : 'magenta'](message)}`);
-    };
 }
 
-export default Logger;
+interface MyLogger extends Logger {
+    readonly graphql: LeveledLogMethod;
+}
+
+const myFormat = printf(({ level, message, label, timestamp = new Date().toISOString() }) => {
+    return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}`;
+})
+
+winston.addColors(config.colors);
+
+// @ts-ignore
+const logger: MyLogger = winston.createLogger({
+    format: combine(
+        colorize({ level: true }),
+        winston.format.simple(),
+        timestamp(),
+        myFormat,
+    ),
+    levels: config.levels,
+    level: 'graphql',
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'logs/combined.log' }),
+    ],
+    exitOnError: false,
+});
+
+global.logger = logger;

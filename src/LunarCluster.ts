@@ -2,8 +2,7 @@ import 'dotenv/config';
 import 'reflect-metadata';
 
 import ClusterManager from './cluster/ClusterManager';
-import Server from './server/Server';
-import Logger from './utils/Logger';
+import './utils/Logger';
 import StatcordPlguin from './plugins/StatcordPlugin';
 import { buildSchema } from 'type-graphql';
 
@@ -18,21 +17,18 @@ import GuildsResolver from './server/resolvers/GuildsResolver';
 const manager = new ClusterManager();
 
 manager.on('create', (clusterID: number, shards: number[]) => {
-    Logger.log(`Cluster ${clusterID} spawned  with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { tags: ['Cluster Manager'], date: true });
+    logger.info(`Cluster ${clusterID} spawned  with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { label: `Cluster Manager` });
 });
 
 manager.on('error', (clusterID: number, err: string) => {
-    Logger.log(`${err}`, { tags: [`Cluster ${clusterID}`], date: true });
+    logger.error(`${err}`, { label: `Cluster ${clusterID}` });
 });
 
 manager.on('exit', (clusterID: number) => {
-    Logger.log(`Cluster ${clusterID} exited`, { tags: [`Cluster ${clusterID}`], date: true });
+    logger.error(`Cluster ${clusterID} exited`, { label: `Cluster ${clusterID}` });
 });
 
-// const server = new Server(manager);
-
 manager.init();
-// server.listen();
 
 new StatcordPlguin(manager);
 

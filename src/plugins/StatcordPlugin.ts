@@ -1,6 +1,5 @@
 import ClusterManager from '../cluster/ClusterManager';
 import { Client } from '@lunarybot/statcord';
-import Logger from '../utils/Logger';
 
 class StatcordPlguin {
     private declare manager: ClusterManager;
@@ -17,7 +16,7 @@ class StatcordPlguin {
         });
 
         this.client.on('postStats', (data) => {
-            Logger.log(`Posted stats to Statcord\n${Object.entries(data).map(([k, v]) => `${k}: ${v}`).join(' | ')}`, { tags: ['Statcord Plugin'], date: true });
+            logger.info(`Posted stats to Statcord\n${Object.entries(data).map(([k, v]) => `${k}: ${v}`).join(' | ')}`, { label: 'Statcord Plugin' });
         });
     }
 
@@ -30,7 +29,7 @@ class StatcordPlguin {
                 usersCount: 1,
             });
         } catch (err) {
-            Logger.log(`Failed to post stats to Statcord: ${err}`, { tags: ['Statcord Plugin'], date: true, error: true });
+            logger.error(`Failed to post stats to Statcord: ${err}`, { label: 'Statcord Plugin' });
         }
     }
 

@@ -33,7 +33,7 @@ class InteractionCreateEvent extends Event {
 
         let command: Command | SubCommand = this.client.commands[commandType].find(c => c.name == interaction.data.name) as Command;
         
-        if(!command) return this.client.logger.log(`Command ${interaction.data.name} not found`, { date: true, tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'InteractionCreate'] });
+        if(!command) return logger.warn(`Command ${interaction.data.name} not found`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, InteractionCreate` });
 
         if(!interaction.guildID && command.requirements?.guildOnly) return;
 
