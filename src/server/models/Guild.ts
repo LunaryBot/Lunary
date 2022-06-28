@@ -14,7 +14,7 @@ class Guild {
     @Field()
     name: string;
 
-    @Field()
+    @Field({ nullable: true })
     icon: string;
 
     @Field({ defaultValue: false })
@@ -23,15 +23,6 @@ class Guild {
 
     @Field(_type => [String])
     features: string[];
-
-    @Field()
-    owner: boolean;
-
-    @Field()
-    permissions: number;
-
-    @Field()
-    permissions_new: string;
 
     @Field(() => [Channel], { defaultValue: [] })
     @UseMiddleware(DefaultValue([]))

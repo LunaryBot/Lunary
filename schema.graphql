@@ -24,12 +24,9 @@ type Guild {
   access: Boolean
   channels: [Channel!]
   features: [String!]!
-  icon: String!
+  icon: String
   id: ID!
   name: String!
-  owner: Boolean!
-  permissions: Float!
-  permissions_new: String!
   roles: [Role!]
 }
 

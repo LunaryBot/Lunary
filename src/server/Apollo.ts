@@ -3,6 +3,8 @@ import http from 'http';
 import ClusterManager from '../cluster/ClusterManager';
 import { ApolloServer, Config, ExpressContext } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import GuildsRouter from './routers/GuildsRouter';
+import UsersRouter from './routers/UsersRouter';
 
 class Apollo extends ApolloServer {
     private app: express.Application;
@@ -32,6 +34,9 @@ class Apollo extends ApolloServer {
         });
 
         this.plugins = [ApolloServerPluginDrainHttpServer({ httpServer: this.httpServer })];
+
+        new GuildsRouter(this);
+        new UsersRouter(this);
     }
 
     public use(path: string, router: express.Router) {

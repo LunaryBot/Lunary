@@ -37,8 +37,6 @@ class UsersResolver {
     
                     for(const userID of users) {
                         const user = await this.client.getRESTUser(userID);
-    
-                        console.log('Force', userID, user?.username);
         
                         if(user) {
                             usersData.push(user.toJSON());

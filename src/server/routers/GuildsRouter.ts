@@ -1,6 +1,6 @@
 import BaseRouter from '../../structures/BaseRouter';
 import { Router } from 'express';
-import Server from '../Server';
+import Apollo from '../Apollo';
 
 const guildObjString = `{
     id: guild.id,
@@ -21,9 +21,9 @@ const guildObjString = `{
 }`
 
 class GuildsRouter extends BaseRouter {
-    constructor(server: Server) {
+    constructor(server: Apollo) {
         super({
-            server: server,
+            server,
             router: Router(),
             path: '/guilds'
         });
