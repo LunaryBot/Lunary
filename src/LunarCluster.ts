@@ -13,6 +13,7 @@ import path from 'path';
 import PingResolver from './server/resolvers/PingResolver';
 import UsersResolver from './server/resolvers/UsersResolver';
 import GuildsResolver from './server/resolvers/GuildsResolver';
+import ApiError from './server/utils/ApiError';
 
 const manager = new ClusterManager();
 
@@ -45,7 +46,7 @@ async function main() {
     const apollo = new Apollo(manager, {
         schema,
         csrfPrevention: true,
-        formatError: ({ message = 'Internal Server Error'}) => ({ message }),
+        formatError: ({ message = 'Internal Server Error', status = 500 }: ApiError) => ({ message, status }),
     });
 
     global.apollo = apollo;
