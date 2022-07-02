@@ -30,7 +30,18 @@ type Guild {
   roles: [Role!]
 }
 
+type Member {
+  communicationDisabledUntil: Float
+  createdAt: Float!
+  id: ID!
+  nick: String
+  permissions: Float!
+  premiumSince: Float
+  roles: [String!]!
+}
+
 type Query {
+  GuildMember(guild: String!, user: String!): Member!
   GuildsCache(guilds: [String!]!): [Guild!]!
   Ping: String!
   UsersCache(users: [String!]!): [User!]!
