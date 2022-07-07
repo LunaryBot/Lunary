@@ -9,8 +9,10 @@ class Kitsu {
 
     public static async searchAnime(query: string, offset: number = 0): Promise<Array<KitsuAnimeData>> {
         const response = await this.api.get(`/anime?filter[text]=${query}&page%5Boffset%5D=${offset.toString() ? offset : '0'}`);
+        
+        const { data } = JSON.parse(response.data);
 
-        return response.data;
+        return data;
     }
 }
 
