@@ -1,4 +1,5 @@
 import Eris from 'eris';
+import { KitsuAnimeData } from '../../../../@types/Kitsu';
 
 import Command, { SubCommand, IContextInteractionCommand, LunarClient, CommandGroup } from '../../../../structures/Command';
 
@@ -55,7 +56,7 @@ class KitsuAnimeSubCommand extends SubCommand {
             interaction.editParent(createEmbed(results[Number((interaction.data as Eris.ComponentInteractionSelectMenuData).values[0])]));
         });
 
-		function createEmbed(data: any) {
+		function createEmbed(data: { attributes: KitsuAnimeData, id: string }) {
 			const embed = {
                 color: 16338999,
                 author: {
@@ -69,7 +70,6 @@ class KitsuAnimeSubCommand extends SubCommand {
                     url: data.attributes.posterImage.original,
                 },
                 description: `> :bookmark: **| ${context.t('kitsu_anime:ID')}:** \`${data.id}\`
-                > :books: **| ${context.t('kitsu_anime:volumes')}:** \`${data.attributes.volumeCount ? data.attributes.volumeCount : context.t('kitsu_anime:notFound')}\`
                 > <:VideoPlayer:854889422927560754> **| ${context.t('kitsu_anime:episodes')}:** \`${data.attributes.episodeCount ? data.attributes.episodeCount : context.t('kitsu_anime:notFound')}\`
                 > :alarm_clock: **| ${context.t('kitsu_anime:episodeMinutes')}:** \`${
                             data.attributes.episodeLength
