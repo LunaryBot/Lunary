@@ -20,7 +20,7 @@ class KitsuAnimeSubCommand extends SubCommand {
 
 		const results = (await Kitsu.searchAnime(search))?.slice(0, 25) as Array<any>;
 
-		if (results.length == 1)
+		if(results.length == 1)
 			return context.interaction
 				.createFollowup(createEmbed(results[0]));
 
@@ -96,7 +96,7 @@ class KitsuAnimeSubCommand extends SubCommand {
 			return {
 				content: '',
 				embeds: [embed],
-				components: undefined,
+				components: [] as Array<Eris.ActionRow>,
 			};
 		}
     }
