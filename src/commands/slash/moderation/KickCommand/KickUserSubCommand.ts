@@ -1,27 +1,28 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../utils/Constants';
+import { IPunishmentLog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class KickUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                me: ['kickMembers'],
-                bot: ['lunarKickMembers'],
-                discord: ['kickMembers'],
+            requirements: {
+                permissions: {
+                    me: ['kickMembers'],
+                    bot: ['lunarKickMembers'],
+                    discord: ['kickMembers'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {
         await context.interaction.acknowledge();
-
         
         const member: Eris.Member = context.options.get('user', { member: true });
         const user = member?.user || context.options.get('user');
@@ -50,6 +51,10 @@ class KickUserSubCommand extends SubCommand {
 
         if (reason === false) {
             return;
+        }
+
+        if(typeof reason == 'object') {
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {
@@ -90,27 +95,36 @@ class KickUserSubCommand extends SubCommand {
                 .shorten(512)
             )
 
-            const logData = {
-                reason,
-                server: context.guild.id,
+            const punishmentLog = {
+                guild: context.guild.id,
                 author: context.user.id,
-                type: 2,
-                date: Date.now(),
+                type: 4,
+                timestamp: Date.now(),
                 user: user.id,
-            } as ILog
+            } as IPunishmentLog;
 
-            const log = Buffer.from(
-				JSON.stringify(logData),
-				'ascii',
-			).toString('base64');
+            if (typeof reason == 'string') punishmentLog.reason = reason;
 
             let logs = await this.client.dbs.getLogs();
 
             const id = await ModUtils.generatePunishmentID.bind(this)(logs);
 
             this.client.dbs.setLogs({
-                [id]: log,
+                [id]: punishmentLog,
                 cases: this.client.cases + 1,
+            });
+
+            await replyMessageFn({
+                content: context.t('general:successfullyPunished', {
+                    author_mention: context.user.mention,
+                    user_mention: user.mention,
+                    user_tag: `${user.username}#${user.discriminator}`,
+                    user_id: user.id,
+                    id: '#' + id,
+                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
+                }),
+                embeds: [],
+				components: [],
             });
 
             const { punishmentChannel } = context.dbs.guild;
@@ -119,7 +133,7 @@ class KickUserSubCommand extends SubCommand {
                 const { content, files } = await ModUtils.punishmentMessage.bind(this)({
                     author: context.user,
                     user,
-                    reason: reason as string,
+                    reason: reason as string || context.t('general:reasonNotInformed.defaultReason'),
                     duration: context.t('general:permanent'),
                     type: context.t('kick:punishmentType'),
                 }, context.t, context.dbs.guild, context.channel);
@@ -142,19 +156,6 @@ class KickUserSubCommand extends SubCommand {
             context.dbs.user.lastPunishmentAppliedId = id;
 
             context.dbs.user.save();
-
-            await replyMessageFn({
-                content: context.t('general:successfullyPunished', {
-                    author_mention: context.user.mention,
-                    user_mention: user.mention,
-                    user_tag: `${user.username}#${user.discriminator}`,
-                    user_id: user.id,
-                    id: '#' + id,
-                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
-                }),
-                embeds: [],
-				components: [],
-            });
 
             if(leveluped) {
                 context.interaction.createFollowup({

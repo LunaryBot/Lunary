@@ -1,12 +1,13 @@
-import BaseRouter from '../../BaseRouter';
+import BaseRouter from '../../structures/BaseRouter';
 import { Router } from 'express';
-import Server from '../Server';
+import Apollo from '../Apollo';
 
 const guildObjString = `{
     id: guild.id,
     name: guild.name,
-    icon: guild.iconURL,
+    icon: guild.icon,
     roles: guild.roles.map((role) => role.toJSON()),
+    features: guild.features,
     channels: guild.channels.map((channel) => {
         const json = channel.toJSON();
 
@@ -20,15 +21,51 @@ const guildObjString = `{
 }`
 
 class GuildsRouter extends BaseRouter {
-    constructor(server: Server) {
+    constructor(server: Apollo) {
         super({
-            server: server,
+            server,
             router: Router(),
             path: '/guilds'
         });
 
-        this.router.get('/', (req, res) => {
-            res.send('Guilds');
+        this.router.post('/', async(req, res) => {
+            const guilds = await this.getGuildsIds();
+            const guildsBody = req.body.guilds;
+
+            const filteredGuilds = guilds.filter((guildID) => {
+                return guildsBody.includes(guildID);
+            });
+
+            res.json(filteredGuilds);
+        });
+
+        this.router.get('/cache', async(req, res) => {
+            const guilds = req.body.guilds;
+            
+            const results = await this.clusterManager.eval(`(async() => {
+                const guilds = ${JSON.stringify(guilds)};
+
+                const guildsData = [];
+                
+                guilds.map((guildID) => {
+                    const guild = this.client.guilds.get(guildID);
+
+                    if(guild) {
+                        return guildsData.push({
+                            id: guild.id,
+                            name: guild.name,
+                            icon: guild.icon,
+                            features: guild.features,
+                        });
+                    } else {
+                        return null;
+                    };
+                });
+
+                return guildsData;
+            })()`);
+
+            res.json(results.flat());
         });
 
         this.router.get('/:guildID', async(req, res) => {
@@ -55,6 +92,12 @@ class GuildsRouter extends BaseRouter {
 
             res.status(status).json(data);
         });
+    }
+
+    private async getGuildsIds(): Promise<string[]> {
+        const results: any[] = await this.clusterManager.eval(`this.client.guilds.map(g => g.id)`);
+
+        return results.flat();
     }
 
     private async getMember(guildID: string, userID: string, checkPermissions: boolean = true) {

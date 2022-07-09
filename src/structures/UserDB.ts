@@ -1,8 +1,11 @@
 import DatabasesManager from './DatabasesManager';
 import BitField, { TBit } from '../utils/BitField';
 import { User } from 'eris';
-import { TUserConfigs } from '../utils/Constants';
+import { IVoteData } from '../@types/index.d';
 import Utils from '../utils/Utils';
+import * as Constants from '../utils/Constants';
+
+type TBits = bigint | BitField;
 
 interface IUserDataBase {
     xp?: number | null;
@@ -11,11 +14,12 @@ interface IUserDataBase {
     inventory_using?: number | null;
     configs?: number | null;
     luas?: number | null;
-    lastDaily?: number | null;
-    lastPunishmentAppliedId?: string | null;
+    last_daily?: number | null;
+    last_punishment_applied_id?: string | null;
     bans?: number | null;
     premium_started?: number | null;
     premium_duration?: number | null;
+    votes?: IVoteData[];
 }
 
 interface ILevel {
@@ -48,20 +52,20 @@ class UserDB {
         Object.defineProperty(this, 'dbmanager', { value: dbmanager, enumerable: false });
         Object.defineProperty(this, 'data', { value: data, enumerable: false });
 
-        this.configs = new Configs(data.configs || 0);
+        this.configs = new Configs(BigInt(data.configs || 0));
 
-        this.lastPunishmentAppliedId = data.lastPunishmentAppliedId || null;
+        this.lastPunishmentAppliedId = data.last_punishment_applied_id || null;
 		this.bans = data.bans || 0;
 
         this.luas = data.luas || 0;
-        this.lastDaily = data.lastDaily ? new Date(data.lastDaily) : null;
+        this.lastDaily = data.last_daily ? new Date(data.last_daily) : null;
 		this.lastDailyTimestamp = this.lastDaily?.getTime?.() || null;
         
         this.xp = data.xp || 0;
         this.level = Utils.calculateLevels(this.xp);
         this.aboutme = data.aboutme || '';
-        this.inventory = new ProfileInventory(data.inventory || ProfileInventory.defaultBit);
-        this.inventoryUsing = new ProfileInventory(data.inventory_using || ProfileInventory.defaultBit);
+        this.inventory = new ProfileInventory(BigInt(data.inventory || ProfileInventory.defaultBit));
+        this.inventoryUsing = new ProfileInventory(BigInt(data.inventory_using || ProfileInventory.defaultBit));
 
         const premium_expire = data.premium_duration && data.premium_started ? data.premium_started + Number(data.premium_duration) : 0;
 
@@ -76,19 +80,48 @@ class UserDB {
     }
 
     public toJSON(): IUserDataBase {
-        return {
-            configs: this.configs.bitfield,
-            lastPunishmentAppliedId: this.lastPunishmentAppliedId,
-            bans: this.bans,
-            luas: this.luas,
-            lastDaily: this.lastDaily?.getTime?.() || null,
-            xp: this.xp,
-            aboutme: this.aboutme,
-            inventory: this.inventory.bitfield,
-            inventory_using: this.inventoryUsing.bitfield,
-            premium_started: this.premiumStarted,
-            premium_duration: this.premiumDuration,
+        const arr: Array<[string, string | number | boolean | IVoteData[]]|undefined> = (['configs', 'lastDaily', 'lastPunishmentAppliedId', 'bans', 'luas', 'xp', 'aboutme', 'inventory', 'inventoryUsing', 'premiumStarted', 'premiumDuration'])
+            .map((key: string): [string, string | number | boolean]|undefined => {
+                // @ts-ignore
+                const value = this[key];
+                const jsonKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+                
+                if(value instanceof BitField) {
+                    if(value.bitfield != value.data.defaultBit) {
+                        return [jsonKey, Number(value.bitfield)];
+                    }
+                }
+
+                if(value instanceof Date) {
+                    if(value.getTime() != value.getTime()) {
+                        return [jsonKey, value.getTime()];
+                    }
+                }
+                
+                if(typeof value == 'number') {
+                    if(value != 0) {
+                        return [jsonKey, value];
+                    }
+                }
+
+                if(typeof value == 'string') {
+                    if(value != '') {
+                        return [jsonKey, value];
+                    }
+                }
+
+                if(typeof value == 'boolean') {
+                    if(value) {
+                        return [jsonKey, value];
+                    }
+                }
+            });
+
+        if(this.data.votes?.length) {
+            arr.push(['votes', this.data.votes]);
         }
+
+        return Object.fromEntries(arr.filter(v => v != undefined) as Array<[string, string | number | boolean]>);
     }
 }
 
@@ -106,32 +139,41 @@ class ProfileInventory extends BitField {
 
     static get FLAGS() {
 		return {
-            default: 1 << 0,
+            default: 1n << 0n,
         }
 	}
 
-    static get defaultBit(): number {
+    static get defaultBit(): bigint {
         return this.FLAGS['default'];
     };
 }
 
+type TUserConfigs = keyof typeof Constants.UserConfigs;
+
+type TConfigsBits = TUserConfigs | TBits | Array<TUserConfigs|TBits>;
+
 class Configs extends BitField {
+    public declare add: (bit: TConfigsBits) => Configs;
+    public declare has: (bit: TConfigsBits) => boolean;
+    public declare missing: (bit: TConfigsBits) => TUserConfigs[];
+    public declare remove: (bit: TConfigsBits) => Configs;
+    public declare serialize: () => { [key in TUserConfigs]: boolean };
+    public declare toArray: () => TUserConfigs[];
+    
     constructor(bits: TBit) {
         super(bits, {
             FLAGS: Configs.FLAGS,
-            defaultBit: 0,
+            defaultBit: Configs.defaultBit,
         })
-
-        this.has = (bit: TUserConfigs | Array<TUserConfigs>) => {
-            return super.has.bind(this)(bit)
-        };
     }
 
     static get FLAGS() {
-		return {
-            quickPunishment: 1 << 0,
-        } as { [key in TUserConfigs]: number }
+		return Constants.UserConfigs;
 	}
+
+    static get defaultBit(): bigint {
+        return 0n;
+    }
 }
 
 export default UserDB;

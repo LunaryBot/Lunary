@@ -1,26 +1,57 @@
-import dotenv from 'dotenv';
-import ClusterManager from './structures/cluster/ClusterManager';
-import Server from './structures/server/Server';
-import Logger from './utils/Logger';
+import 'dotenv/config';
+import 'reflect-metadata';
+
+import ClusterManager from './cluster/ClusterManager';
+import './utils/Logger';
+import StatcordPlguin from './plugins/StatcordPlugin';
+import { buildSchema } from 'type-graphql';
 
 import './tools/String';
-dotenv.config();
+import Apollo from './server/Apollo';
+import path from 'path';
+
+import PingResolver from './server/resolvers/PingResolver';
+import UsersResolver from './server/resolvers/UsersResolver';
+import GuildsResolver from './server/resolvers/GuildsResolver';
+import ApiError from './server/utils/ApiError';
 
 const manager = new ClusterManager();
 
 manager.on('create', (clusterID: number, shards: number[]) => {
-    Logger.log(`Cluster ${clusterID} spawned  with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { tags: ['Cluster Manager'], date: true });
+    logger.info(`Cluster ${clusterID} spawned  with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { label: `Cluster Manager` });
 });
 
 manager.on('error', (clusterID: number, err: string) => {
-    Logger.log(`${err}`, { tags: [`Cluster ${clusterID}`], date: true });
+    logger.error(`${err}`, { label: `Cluster ${clusterID}` });
 });
 
 manager.on('exit', (clusterID: number) => {
-    Logger.log(`Cluster ${clusterID} exited`, { tags: [`Cluster ${clusterID}`], date: true });
+    logger.error(`Cluster ${clusterID} exited`, { label: `Cluster ${clusterID}` });
 });
 
-const server = new Server(manager);
-
 manager.init();
-server.listen();
+
+new StatcordPlguin(manager);
+
+async function main() {
+    const schema = await buildSchema({
+        resolvers: [
+            PingResolver,
+            UsersResolver,
+            GuildsResolver,
+        ],
+        emitSchemaFile: path.resolve(process.cwd(), 'schema.graphql'),
+    });
+
+    const apollo = new Apollo(manager, {
+        schema,
+        csrfPrevention: true,
+        formatError: ({ message = 'Internal Server Error', status = 500 }: ApiError) => ({ message, status }),
+    });
+
+    global.apollo = apollo;
+
+    apollo.init(Number(process.env.PORT));
+}
+
+main();

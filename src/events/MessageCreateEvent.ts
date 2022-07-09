@@ -1,6 +1,6 @@
 import Eris from 'eris';
 import Event, { LunarClient } from '../structures/Event';
-import { ContextCommand } from '../structures/Command';
+import { ContextCommand, IContextMessageCommand } from '../structures/Command';
 
 class MessageCreateEvent extends Event {
     constructor(client: LunarClient) {
@@ -28,15 +28,15 @@ class MessageCreateEvent extends Event {
             message,
             user: message.author,
             channel: message.channel,
-        });
+        }) as IContextMessageCommand;
 
-        if(command.guildOnly && !message.guildID) return;
+        if(command.requirements?.guildOnly && !message.guildID) return;
 
-        if(command.ownerOnly && !this.client.config.owners.includes(message.author.id)) return;
+        if(command.requirements?.guildOnly && !this.client.config.owners.includes(message.author.id)) return;
 
         await context.loadDBS();
 
-        command.run(context);
+        command.run(context as IContextMessageCommand);
     }
 }
 

@@ -1,25 +1,26 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
-import { ILog } from '../../../../utils/Constants';
+import { IPunishmentLog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class AdvUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                bot: ['lunarAdvMembers'],
-                discord: ['manageMessages'],
+            requirements: {
+                permissions: {
+                    bot: ['lunarAdvMembers'],
+                    discord: ['manageMessages'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {
         await context.interaction.acknowledge();
-
         
         const member: Eris.Member = context.options.get('user', { member: true });
         const user = member?.user || context.options.get('user');
@@ -36,6 +37,10 @@ class AdvUserSubCommand extends SubCommand {
 
         if (reason === false) {
             return;
+        }
+
+        if(typeof reason == 'object') {
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {
@@ -68,58 +73,24 @@ class AdvUserSubCommand extends SubCommand {
                 notifyDM = false
             };
 
-            const logData = {
-                reason,
-                server: context.guild.id,
+            const punishmentLog = {
+                guild: context.guild.id,
                 author: context.user.id,
                 type: 4,
-                date: Date.now(),
+                timestamp: Date.now(),
                 user: user.id,
-            } as ILog
+            } as IPunishmentLog;
 
-            const log = Buffer.from(
-				JSON.stringify(logData),
-				'ascii',
-			).toString('base64');
+            if (typeof reason == 'string') punishmentLog.reason = reason;
 
             let logs = await this.client.dbs.getLogs();
 
             const id = await ModUtils.generatePunishmentID.bind(this)(logs);
 
             this.client.dbs.setLogs({
-                [id]: log,
+                [id]: punishmentLog,
                 cases: this.client.cases + 1,
             });
-
-            const { punishmentChannel } = context.dbs.guild;
-
-            if(punishmentChannel) {
-                const { content, files } = await ModUtils.punishmentMessage.bind(this)({
-                    author: context.user,
-                    user,
-                    reason: reason as string,
-                    duration: context.t('general:permanent'),
-                    type: context.t('adv:punishmentType'),
-                }, context.t, context.dbs.guild, context.channel);
-
-                punishmentChannel.createMessage(content, files).catch(() => {});
-            }
-
-            let xp = context.dbs.user.xp;
-            let leveluped = false;
-
-            if(!member) {
-				const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 4, logs, 21);
-
-                context.dbs.user.xp = _xp;
-
-                leveluped = _leveluped;
-                xp = _xp;
-			}
-
-            context.dbs.user.lastPunishmentAppliedId = id;
-
-            context.dbs.user.save();
 
             await replyMessageFn({
                 content: context.t('general:successfullyPunished', {
@@ -131,8 +102,36 @@ class AdvUserSubCommand extends SubCommand {
                     notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
                 }),
                 embeds: [],
-				components: [],
+                components: [],
             });
+            
+            const { punishmentChannel } = context.dbs.guild;
+
+            if(punishmentChannel) {
+                const { content, files } = await ModUtils.punishmentMessage.bind(this)({
+                    author: context.user,
+                    user,
+                    reason: reason as string || context.t('general:reasonNotInformed.defaultReason'),
+                    duration: context.t('general:permanent'),
+                    type: context.t('adv:punishmentType'),
+                }, context.t, context.dbs.guild, context.channel);
+
+                punishmentChannel.createMessage(content, files).catch(() => {});
+            }
+
+            let xp = context.dbs.user.xp;
+            let leveluped = false;
+
+            const { xp: _xp, leveluped: _leveluped } = ModUtils.generatePunishmentXP.bind(this)(context, user, reason as string, 4, logs, 21);
+
+            context.dbs.user.xp = _xp;
+
+            leveluped = _leveluped;
+            xp = _xp;
+
+            context.dbs.user.lastPunishmentAppliedId = id;
+
+            context.dbs.user.save();
 
             if(leveluped) {
                 context.interaction.createFollowup({

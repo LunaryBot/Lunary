@@ -1,5 +1,5 @@
 import { parentPort } from 'worker_threads';
-import LunarClient from '../LunarClient';
+import LunarClient from '../structures/LunarClient';
 
 interface IEvalResult { 
     type: 'eval result'; 
@@ -27,14 +27,14 @@ class Cluster {
     public eval(data: { code: string, clusterID?: number | string } | string): Promise<IEvalResult> {
         const code = typeof data == 'string' ? data : data.code;
         this._send({
-            type: 'eval',
+            op: 'eval',
             code,
             clusterID: typeof  data == 'string' ? undefined : data.clusterID,
         });
 
         const promise = new Promise((resolve, reject) => {
             const listener = (data: any) => {
-                if (data.type === 'eval result' && code === data.code) {
+                if (data.op === 'eval result' && code === data.code) {
                     parentPort?.removeListener('message', listener);
                     resolve(data);
                 };
@@ -51,7 +51,7 @@ class Cluster {
     }
 
     private async _handleMessage(data: any) {
-        switch (data.type) {
+        switch (data.op) {
             case 'eval': {
                 const { code } = data;
                 let result;
@@ -63,7 +63,7 @@ class Cluster {
                 };
 
                 this._send({
-                    type: 'eval result',
+                    op: 'eval result',
                     result,
                     code,
                 });

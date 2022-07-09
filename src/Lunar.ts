@@ -1,5 +1,5 @@
 import LunarClient from "./structures/LunarClient";
-import Cluster from './structures/cluster/Cluster';
+import Cluster from './cluster/Cluster';
 const shards = process.env.CLUSTER_SHARDS.split(',').map(s => parseInt(s));
 
 import './tools/String';
@@ -21,7 +21,8 @@ const client = new LunarClient(
         firstShardID: Number(shards[0]),
         lastShardID: Number(shards[shards.length - 1]),
         maxShards: Number(process.env.SHARD_AMOUNT),
-        messageLimit: 20
+        messageLimit: 20,
+        defaultImageFormat: 'png',
     }
 );
 

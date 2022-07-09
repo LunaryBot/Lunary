@@ -1,4 +1,5 @@
-import Eris, { Member } from 'eris';
+import Eris from 'eris';
+import * as Constants from './Constants';
 
 const units = {
     s: ['s', 'sec', 'secs', 'second', 'seconds', 'segundo', 'segundos'],
@@ -60,6 +61,25 @@ class Utils {
         member2.roles.sort((a, b) => roles.findIndex(role => role.id == a) - roles.findIndex(role => role.id == b));
 
         return roles.findIndex(role => role.id == member1.roles[0]) >= roles.findIndex(role => role.id == member2.roles[0]);
+    }
+
+    public static displayColor(member: Eris.Member) {
+        const guild = member.guild;
+        const roles = [ ...guild.roles.values() ].filter(role => member.roles.includes(role.id))
+
+        const coloredRoles = roles.filter(role => role.color);
+
+        if (!coloredRoles.length) return null;
+
+        return coloredRoles.reduce((prev, role) => (comparePositionTo(role, prev) > 0 ? role : prev)).color ?? null;
+
+        function comparePositionTo(role1: Eris.Role, role2: Eris.Role) {
+            if (role1.position === role2.position) {
+                return Number(BigInt(role2.id) - BigInt(role1.id));
+            }
+          
+            return role1.position - role2.position;
+        }
     }
 
     public static calculateLevels(xp: number, difficulty = 300, startingLvl = 1) {
@@ -139,13 +159,9 @@ class Utils {
             const match = string.match(timeRegex);
 
             if (match != null) {
-                console.log(...match);
-                console.log(Number(match[2] + (match[7] == 'pm' ? 12 : 0)));
                 d = `${d} ${Number(match[2]) + (match[7] == 'pm' && Number(match[2]) ? 12 : 0)}:${match[3]}:${match[5] || '00'}`;
             }
         }
-
-        console.log(d);
 
         return d ? new Date(d) : NaN;
     }
@@ -156,6 +172,10 @@ class Utils {
         } else {
             return this.timeString(string);
         }
+    }
+
+    public static get Constants() {
+        return Constants;
     }
 }
 

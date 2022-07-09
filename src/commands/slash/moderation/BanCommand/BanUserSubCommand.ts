@@ -1,22 +1,24 @@
 import Command, { SubCommand, LunarClient, IContextInteractionCommand } from '../../../../structures/Command';
 import Eris from 'eris';
 import InteractionCollector from '../../../../utils/collector/Interaction';
-import { ILog } from '../../../../utils/Constants';
+import { IPunishmentLog } from '../../../../@types/index.d';
 import ModUtils from '../../../../utils/ModUtils';
 
 class BanUserSubCommand extends SubCommand {
-    constructor(client: LunarClient, mainCommand: Command) {
+    constructor(client: LunarClient, parent: Command) {
         super(client, {
             name: 'user',
             dirname: __dirname,
-            permissions: {
-                me: ['banMembers'],
-                bot: ['lunarBanMembers'],
-                discord: ['banMembers'],
+            requirements: {
+                permissions: {
+                    me: ['banMembers'],
+                    bot: ['lunarBanMembers'],
+                    discord: ['banMembers'],
+                },
+                guildOnly: true,
             },
-            guildOnly: true,
             cooldown: 3,
-        }, mainCommand);
+        }, parent);
     }
 
     public async run(context: IContextInteractionCommand) {
@@ -42,8 +44,19 @@ class BanUserSubCommand extends SubCommand {
 
         let { reason, replyMessageFn = context.interaction.createFollowup.bind(context.interaction) } = await ModUtils.punishmentReason.bind(this)(context, 1);
 
+        
         if (reason === false) {
             return;
+        }
+
+        let days = Number(context.options.get('days')) || 0;
+
+        if(typeof reason == 'object') {
+            if(!days) {
+                days = reason.days || 0;
+            };
+            
+            reason = reason.text;
         }
 
         const ready = async(replyMessageFn: (content: Eris.InteractionEditContent, ...args: any[]) => Promise<any>) => {
@@ -76,35 +89,43 @@ class BanUserSubCommand extends SubCommand {
                 notifyDM = false
             };
 
-            await context.guild.banMember(user.id, Number(context.options.get('days')) || 0, context.t('general:punishedBy', {
+            await context.guild.banMember(user.id, days, context.t('general:punishedBy', {
                 author_tag: `${context.user.username}#${context.user.discriminator}`,
                 reason
                 })
-                // @ts-ignore
                 .shorten(512)
             )
 
-            const logData = {
-                reason,
-                server: context.guild.id,
+            const punishmentLog = {
+                guild: context.guild.id,
                 author: context.user.id,
-                type: 1,
-                date: Date.now(),
+                type: 4,
+                timestamp: Date.now(),
                 user: user.id,
-            } as ILog
+            } as IPunishmentLog;
 
-            const log = Buffer.from(
-				JSON.stringify(logData),
-				'ascii',
-			).toString('base64');
+            if (typeof reason == 'string') punishmentLog.reason = reason;
 
             let logs = await this.client.dbs.getLogs();
 
             const id = await ModUtils.generatePunishmentID.bind(this)(logs);
 
             this.client.dbs.setLogs({
-                [id]: log,
+                [id]: punishmentLog,
                 cases: this.client.cases + 1,
+            });
+
+            await replyMessageFn({
+                content: context.t('general:successfullyPunished', {
+                    author_mention: context.user.mention,
+                    user_mention: user.mention,
+                    user_tag: `${user.username}#${user.discriminator}`,
+                    user_id: user.id,
+                    id: '#' + id,
+                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
+                }),
+                embeds: [],
+				components: [],
             });
 
             const { punishmentChannel } = context.dbs.guild;
@@ -113,7 +134,7 @@ class BanUserSubCommand extends SubCommand {
                 const { content, files } = await ModUtils.punishmentMessage.bind(this)({
                     author: context.user,
                     user,
-                    reason: reason as string,
+                    reason: reason as string || context.t('general:reasonNotInformed.defaultReason'),
                     duration: context.t('general:permanent'),
                     type: context.t('ban:punishmentType'),
                 }, context.t, context.dbs.guild, context.channel);
@@ -137,19 +158,6 @@ class BanUserSubCommand extends SubCommand {
             context.dbs.user.bans++;
 
             context.dbs.user.save();
-
-            await replyMessageFn({
-                content: context.t('general:successfullyPunished', {
-                    author_mention: context.user.mention,
-                    user_mention: user.mention,
-                    user_tag: `${user.username}#${user.discriminator}`,
-                    user_id: user.id,
-                    id: '#' + id,
-                    notifyDM: !notifyDM ? context.t('general:notNotifyDm') : '.'
-                }),
-                embeds: [],
-				components: [],
-            });
 
             if(leveluped) {
                 context.interaction.createFollowup({

@@ -1,15 +1,15 @@
 import { Router } from 'express';
-import Server from './server/Server';
-import ClusterManager from './cluster/ClusterManager';
+import ClusterManager from '../cluster/ClusterManager';
+import Apollo from '../server/Apollo';
 
 class BaseRouter {
-    public server: Server;
+    public server: Apollo;
     public router: Router;
     public path: string;
 
     public clusterManager: ClusterManager;
     
-    constructor(data: { server: Server; router: Router; path: string }) {
+    constructor(data: { server: Apollo; router: Router; path: string }) {
         this.server = data.server;
         this.router = data.router;
         this.path = data.path;

@@ -1,12 +1,13 @@
 import Eris from 'eris';
-import { dump, load } from 'js-yaml';
+import { JsonPlaceholderReplacer } from 'json-placeholder-replacer';
 import { IContextInteractionCommand } from '../structures/Command';
 import GuildDB from '../structures/GuildDB';
 import LunarClient from '../structures/LunarClient';
 import Transcript from '../structures/Transcript';
 import InteractionCollector from './collector/Interaction';
-import { ILog } from './Constants';
+import { IPunishmentLog, IReason } from '../@types/index.d';
 import Utils from './Utils';
+import * as Constants from './Constants';
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
 
@@ -16,7 +17,7 @@ type TreplyMessageFn = (content: Eris.InteractionEditContent, ...args: any[]) =>
 class ModUtils {
     static client: LunarClient;
 
-    public static async generatePunishmentID(logs: { [key: string]: string }): Promise<string> {
+    public static async generatePunishmentID(logs: { [key: string]: IPunishmentLog }): Promise<string> {
         let id: string = '';
              
         while(!id || logs[id]) {
@@ -36,11 +37,9 @@ class ModUtils {
         let punishmentMessage = db.punishmentMessage || t('general:punishment_message');
 
         punishmentMessage = ModUtils.replacePlaceholders(
-            dump(punishmentMessage),
+            punishmentMessage,
             punishment,
         );
-
-        punishmentMessage = load(punishmentMessage as string) as Object;
                 
         let files: Eris.FileContent[] = [];
 
@@ -65,7 +64,7 @@ class ModUtils {
         }
     }
 
-    public static replacePlaceholders(text: string, punishment: IPunishmentOptions) {
+    public static replacePlaceholders(json: Object, punishment: IPunishmentOptions) {
         const { author, user } = punishment;
 
         const placeholders = [
@@ -75,42 +74,47 @@ class ModUtils {
             { aliases: ['user.username', 'user.name'], value: user.username, },
             { aliases: ['user.discriminator'], value: user.discriminator, },
             { aliases: ['user.id'], value: user.id, },
-            { aliases: ['user.avatar', 'user.icon'], value: user.dynamicAvatarURL('png', 1024), },
+            { aliases: ['user.avatar', 'user.icon'], value: user.dynamicAvatarURL(undefined, 1024), },
             // Author
             { aliases: ['@author', 'author.mention', '@staff', 'staff.mention'], value: author.mention, },
             { aliases: ['author.tag', 'staff.tag'], value: `${author.username}#${author.discriminator}`, },
             { aliases: ['author.username', 'user.name'], value: author.username, },
             { aliases: ['author.discriminator'], value: author.discriminator, },
             { aliases: ['author.id', 'staff.id'], value: author.id, },
-            { aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.dynamicAvatarURL('png', 1024), },
+            { aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.dynamicAvatarURL(undefined, 1024), },
             // Punishment
             { aliases: ['punishment', 'punishment.type'], value: punishment.type || 'ᕙ(⇀‸↼‶)ᕗ', },
             { aliases: ['punishment.reason'], value: punishment.reason || '\u200b', },
             { aliases: ['punishment.duration'], value: punishment.duration || 'Infinity', },
         ];
     
-        text = text.replace(/\{([^}]+)\}/g, (match: string, placeholder: string): string => {
-            const found = placeholders.find(p => p.aliases.includes(placeholder));
-            if(found) return found.value;
-            return match;
+        const jsonReplace = new JsonPlaceholderReplacer({
+            begin: '{',
+            end: '}',
         });
-    
-        return text;
+
+        jsonReplace.addVariableMap(placeholders.map(placeholder => {
+            const { aliases, value } = placeholder;
+            const obj = Object.fromEntries(aliases.map(alias => [ alias, value ]));
+
+            return obj;
+        }).reduce((acc, obj) => ({...acc, ...obj}), {}));
+
+        return jsonReplace.replace(json);
     }
 
     public static async punishmentReason(context: IContextInteractionCommand, punishmentType: 1 | 2 | 3 | 4) {
         let replyMessageFn: TreplyMessageFn = context.interaction.createFollowup.bind(context.interaction);
 
         let reason = await (new Promise((resolve, reject) => {
-            let r = context.options.get('reason');
-            const reasons = context.dbs.guild.reasons.filter(r => (r.type & punishmentType) === punishmentType);
+            let r: string = context.options.get('reason');
+            const reasons = context.dbs.guild.reasons.filter(r => (r.type & (1 << punishmentType)) === (1 << punishmentType));
 
-            if (r || !context.dbs.guild.configs.has('mandatoryReason')) { 
+            const hasPermission = context.dbs.guild.configs.has('mandatoryReason') ? !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason') : true;
+            if (r || (!r && hasPermission)) { 
                 resolve(findReasonKey(r) || r || context.t('general:reasonNotInformed.defaultReason')); 
                 return;
             };
-
-            const hasPermission = !!context.dbs.guild.getMemberLunarPermissions(context.member).has('lunarPunishmentOutReason')
 
             const components = [
                 {
@@ -150,42 +154,52 @@ class ModUtils {
                             max_values: 1,
                             min_values: 1,
                             options: [...reasons.map(r => {
-                                return {
-                                    // @ts-ignore
+                                const op = {
                                     label: r.text.shorten(100),
                                     value: r._id,
                                 } as Eris.SelectMenuOptions;
+
+                                if(punishmentType === 1 && r.days) {
+                                    op.description = `${context.t(`ban:delete_messages.${r.days}${r.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
+                                }
+
+                                if(punishmentType === 3 && r.duration) {
+                                    op.description = `${context.t('mute:duration')}: ${Utils.durationString(r.duration, context.t)}`.shorten(100);
+                                }
+
+                                return op;
                             })]
                         } as Eris.SelectMenu
                     ]
                 });
             }
 
-            let k = 'confirmNormal'
-			if(!hasPermission && reasons.length) {
-				k = 'confirmWithReasonsSeteds'
-			}
+            let k = 'confirmNormal';
 
-			if(hasPermission && !reasons.length) {
-				k = 'confirmWithPermission'
-			}
+            if(!hasPermission && reasons.length) {
+                k = 'confirmWithReasonsSeteds'
+            }
 
-			if(hasPermission && reasons.length) {
-				k = 'confirmWithPermissionAndReasonsSeteds'
-			}
+            if(hasPermission && !reasons.length) {
+                k = 'confirmWithPermission'
+            }
 
-            context.interaction.createFollowup({
+            if(hasPermission && reasons.length) {
+                k = 'confirmWithPermissionAndReasonsSeteds'
+            }
+
+            replyMessageFn({
                 content: context.t(`general:reasonNotInformed.${k}`, {
                     author: context.user.mention,
                 }),
                 components,
-            })
+            });
             
             const collector = new InteractionCollector(this.client, {
                 time: 1 * 1000 * 60,
                 user: context.user,
                 filter: (interaction: Eris.ComponentInteraction) => interaction.data.custom_id?.startsWith(`${context.interaction.id}-`),
-            })
+            });
 
             collector
                 .on('collect', async (interaction: Eris.ComponentInteraction | Eris.ModalSubmitInteraction) => {
@@ -244,7 +258,7 @@ class ModUtils {
                             
                             const reason = reasons.find(r => r._id === (interaction.data as Eris.ComponentInteractionSelectMenuData).values[0]);
                             
-                            resolve(reason?.text || false);
+                            resolve(reason || false);
                             
                             break;
                         }
@@ -268,7 +282,6 @@ class ModUtils {
                             c.disabled = true;
 
                             if (c.type == 3) {
-                                // @ts-ignore
                                 c.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
                             }
 
@@ -283,10 +296,10 @@ class ModUtils {
                     }
                 });
 
-            function findReasonKey(key: string): string|undefined {
-                return reasons.find(r => r.keys?.includes(key))?.text;
+            function findReasonKey(key: string): IReason|undefined {
+                return reasons.find(r => r.keys?.includes(key));
             }
-        })) as string | boolean;
+        })) as string | boolean | IReason | undefined;
 
         return { reason, replyMessageFn };
     }
@@ -331,7 +344,7 @@ class ModUtils {
             content: context.t('general:confirm.message', {
                 author: context.user.mention,
                 user: user.mention,
-                link: this.client.config.links.website.dashboard.me
+                link: Constants.Links.website.dashboard.me,
             }),
             components,
         });
@@ -375,7 +388,7 @@ class ModUtils {
 
                         context.interaction.createFollowup({
                             content: context.t('quickpunishment:enable', {
-                                user: context.user.mention,
+                                author: context.user.mention,
                             }),
                             flags: Eris.Constants.MessageFlags.EPHEMERAL,
                         });
@@ -399,17 +412,11 @@ class ModUtils {
             });
     }
 
-    public static generatePunishmentXP(context: IContextInteractionCommand, user: Eris.User, reason: string, punishmentType: 1 | 2 | 3 | 4, logs: { [key: string]: string }, maxXP: number) {
+    public static generatePunishmentXP(context: IContextInteractionCommand, user: Eris.User, reason: string, punishmentType: 1 | 2 | 3 | 4, logs: { [key: string]: IPunishmentLog }, maxXP: number) {
         let xp = context.dbs.user.xp;
         let leveluped = false;
 
-        let lastPunishmentApplied: string|ILog = logs[context.dbs.user.lastPunishmentAppliedId || ''];
-		try {
-            if(lastPunishmentApplied) lastPunishmentApplied = JSON.parse(Buffer.from(lastPunishmentApplied, 'base64').toString('ascii')) as ILog;
-        } catch(_) {
-            // @ts-ignore
-            lastPunishmentApplied = undefined;
-        }
+        let lastPunishmentApplied: IPunishmentLog = logs[context.dbs.user.lastPunishmentAppliedId || ''];
 
         const generateXP = () => {
             reason = reason.toString();
@@ -436,9 +443,9 @@ class ModUtils {
 					if(
 						user.id != lastPunishmentApplied.user 
 						|| (user.id == lastPunishmentApplied.user && lastPunishmentApplied.type != punishmentType)
-						|| ((!isNaN(lastPunishmentApplied.date) 
+						|| ((!isNaN(lastPunishmentApplied.timestamp) 
 						&& user.id == lastPunishmentApplied.user 
-						&& (Date.now() - lastPunishmentApplied.date) > 13 * 1000 * 60))
+						&& (Date.now() - lastPunishmentApplied.timestamp) > 13 * 1000 * 60))
 					) {
 						if(reason != lastPunishmentApplied.reason && reason != context.t('general:reasonNotInformed.defaultReason')) {
 							xp += generateXP()

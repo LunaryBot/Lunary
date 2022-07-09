@@ -1,17 +1,44 @@
 import { Client, ClientOptions } from 'eris';
 import fs from 'fs';
-import Logger from '../utils/Logger';
+import '../utils/Logger';
 import Event from './Event';
 import Command, { CommandGroup, SubCommand } from './Command';
 import Locale from './Locale';
-import Cluster from './cluster/Cluster';
+import Cluster from '../cluster/Cluster';
 import DatabasesManager from './DatabasesManager'
-import { IReason } from '../utils/Constants';
+import AutoComplete from './AutoComplete';
 
 interface IClientCommands {
     slash: Command[],
     vanilla: Command[],
     user: Command[],
+    message: Command[],
+}
+
+export type Tscope = 
+	'applications.builds.read' 
+	| 'applications.commands'
+	| 'applications.entitlements' 
+	| 'applications.store.update' 
+	| 'bot' 
+	| 'connections' 
+	| 'email' 
+	| 'identify' 
+	| 'guilds' 
+	| 'guilds.join' 
+	| 'gdm.join' 
+	| 'webhook.incoming'
+
+interface IDiscordOAuth2 {
+    clientId?: string;
+    scopes: Tscope[];
+    permissions?: bigint | number;
+    guildId?: string|null;
+    redirect_uri?: string;
+    state?: string|null;
+    response_type?: string;
+    prompt?: string|null;
+    disableGuildSelect?: boolean;
 }
 
 class LunarClient extends Client {
@@ -19,33 +46,16 @@ class LunarClient extends Client {
     public events: Event[];
     public commands: IClientCommands;
     public locales: Locale[];
-    public reasons: Map<string, IReason[]>
-    public logger: Logger;
+    public autocompletes: AutoComplete[];
     public config: { 
         prefix: string, 
         owners: string[], 
         clustersName: { [key: string]: string }, 
         defaultLocale: string,
-        links: {
-            website: {
-                baseURL: string,
-                home: string,
-                invite: string,
-                support: string,
-                commands: string,
-                vote: string,
-                dashboard: {
-                    me: string,
-                    guilds: string
-                },
-                callback: string,
-            };
-            vote: string;
-            support: string;
-        }
     };
     public cases: number;
     public dbs: DatabasesManager
+
     constructor(
         token: string, 
         options: ClientOptions
@@ -57,11 +67,10 @@ class LunarClient extends Client {
             slash: [],
             vanilla: [],
             user: [],
+            message: [],
         }
         this.locales = [];
-        this.reasons = new Map<string, IReason[]>();
-
-        this.logger = new Logger();
+        this.autocompletes = [];
 
         this.config = {
             prefix: 'canary.',
@@ -71,35 +80,72 @@ class LunarClient extends Client {
                 '1': 'Saturno V',
             },
             defaultLocale: process.env.DEFAULT_LOCALE || 'en-US',
-            links: {
-                website: {
-                    baseURL: 'https://lunary.space',
-                    home: 'https://lunary.space/',
-                    invite: 'https://lunary.space/invite',
-                    support: 'https://lunary.space/support',
-                    commands: 'https://lunary.space/commands',
-                    vote: 'https://lunary.space/vote',
-                    dashboard: {
-                        me: 'https://lunary.space/dashboard/@me',
-                        guilds: 'https://lunary.space/dashboard/guilds'
-                    },
-                    callback: 'https://lunary.space/api/auth/callback'
-                },
-                support: 'https://discord.gg/8K6Zry9Crx',
-                vote: 'https://top.gg/bot/777654875441463296/vote'
-            }
         }
 
         this.cases = 0;
 
         this.dbs = new DatabasesManager(this);
     }
+
+    generateOAuth2({
+        clientId = this.user.id,
+        scopes,
+        permissions = BigInt(0),
+        guildId = null,
+        redirect_uri = "/",
+        response_type = "code",
+        state = null,
+        disableGuildSelect = false,  
+        prompt = null
+    }: IDiscordOAuth2) {
+        const query = new URLSearchParams({
+            client_id: clientId,
+            scope: scopes.join(" "),
+        });
+    
+        if (permissions) {
+            query.set("permissions", Number(permissions).toString());
+        };
+    
+        if (guildId) {
+            query.set("guild_id", guildId);
+            if(disableGuildSelect) {
+                query.set("disable_guild_select", "true");
+            }
+        };
+    
+        if(redirect_uri) {
+            query.set("redirect_uri", redirect_uri);
+            query.set("response_type", response_type);
+            if(state) {
+                query.set("state", state);
+            };
+            if(prompt) {
+                query.set("prompt", prompt);
+            };
+        };
+    
+        return `https://discord.com/api/oauth2/authorize?${query.toString()}`;
+    }
+
+    public getAutoComplete(instanceClass: AutoComplete['constructor']): AutoComplete {
+        const instance = this.autocompletes.find(autocomplete => autocomplete instanceof instanceClass);
+        
+        if(!instance) {
+            // @ts-ignore
+            const instance = new instanceClass(this);
+            this.autocompletes.push(instance);
+            return instance;
+        }
+
+        return instance;
+    }
     
     private async _loadEvents(): Promise<Event[]> {
         const regex = /^(.*)Event\.(t|j)s$/;
         let events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
         for (let event of events) {
-            this.logger.log(`Loading event ${event.replace(regex, '$1Event')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Event Loader'], date: true });
+            logger.info(`Loading event ${event.replace(regex, '$1Event')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader` });
 
             let { default: base } = require(__dirname + `/../events/${event}`);
             
@@ -107,20 +153,19 @@ class LunarClient extends Client {
 
             this.events.push(instance);
 
-            this.on(instance.event, (...args) => instance.run? instance.run(...args) : Logger.log(`Event ${instance.event} has no run function.`, { tags: ['Client', 'Event Loader'], date: true, error: true }));
+            this.on(instance.event, (...args) => instance.run? instance.run(...args) : logger.warn(`Event ${instance.event} has no run function.`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader`, error: true }));
         };
 
-        this.logger.log(`Loaded ${this.events.length} events of ${events.length}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Events Loader'], date: true });
+        logger.info(`Loaded ${this.events.length} events of ${events.length}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Event Loader` });
 
         return this.events;
     }
 
     private async _loadLocales(): Promise<Locale[]> {
-        const yaml = require('js-yaml');
         let locales = fs.readdirSync(process.cwd() + '/locales').filter(file => !/^.*\..*$/.test(file));
         
         for(let locale of locales) {
-            this.logger.log(`Loading locale ${locale}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Locale Loader'], date: true, info: true });
+            logger.info(`Loading locale ${locale}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Locale Loader` });
             
             const instance = new Locale(locale);
             this.locales.push(instance);
@@ -173,7 +218,7 @@ class LunarClient extends Client {
                                 for (let subsubcommand of subsubcommands) {
                                     let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}/${subsubcommand}`);
 
-                                    this.logger.log(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
+                                    logger.info(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
 
                                     const instance  = new base(this, _subcommand) as SubCommand;
 
@@ -183,20 +228,18 @@ class LunarClient extends Client {
                                 _command.subcommands.push(_subcommand);
                             } else {
                                 let { default: base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
-                                this.logger.log(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
-                                const instance  = new base(this) as SubCommand;
+                                logger.info(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+                                const instance  = new base(this, _command) as SubCommand;
 
                                 _command.subcommands.push(instance);
                             }
                         }
-
-                        console.log(`${type} command ${command.replace(fileRegex, '$1$2')} loaded`);
                     } else {
-                        let a = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+                        let { default: base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
 
-                        this.logger.log(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { tags: [`Cluster ${process.env.CLUSTER_ID}`, 'Client', 'Commands Loader'], date: true, info: true });
+                        logger.info(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
                         
-                        const instance  = new a.default(this) as Command;
+                        const instance  = new base(this) as Command;
 
                         this.commands[type].push(instance);
                     }
@@ -219,6 +262,6 @@ class LunarClient extends Client {
         await this._loadLocales();
         await this.connect();
     }
-}
+};
 
 export default LunarClient;

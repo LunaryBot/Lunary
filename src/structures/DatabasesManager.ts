@@ -3,6 +3,7 @@ import { User, Guild } from 'eris';
 import LunarClient from './LunarClient';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
+import { IPunishmentLog } from '../@types';
 
 const keys = ['apiKey', 'appId', 'authDomain', 'databaseURL', 'measurementId', 'messagingSenderId', 'projectId', 'storageBucket'];
 
@@ -57,7 +58,7 @@ class DatabasesManager {
 
         user: User;
 
-        await this.user.ref(`Users/${user.id}`).update(value);
+        await this.user.ref(`Users/${user.id}`).set(value);
     }
 
     async getGuild(guild: string|Guild): Promise<GuildDB> {
@@ -72,10 +73,31 @@ class DatabasesManager {
         return new GuildDB(guild, data as any, this);
     }
 
-    async getLogs(): Promise<{ [key: string]: string }> {
+    async getLogs(): Promise<{ [key: string]: IPunishmentLog }> {
         const data = (await this.logs.ref().once('value')).val() || {};
 
+        delete data.cases;
+
         return data;
+    }
+
+    async getLog(key: string): Promise<IPunishmentLog> {
+        // @ts-ignore
+        if(!key || key == 'cases') return null;
+
+        key = key.replace(/#?([A-Z](\d{6}))/i, '$1').toUpperCase();
+        
+        const data = (await this.logs.ref(key).once('value')).val();
+
+        return data || null;
+    }
+
+    async removeLog(key: string) {
+        if(!key || key == 'cases') return void 0;
+
+        key = key.replace(/#?([A-Z](\d{6}))/i, '$1').toUpperCase();
+
+        await this.logs.ref(key).remove();
     }
 
     async setLogs(value: any): Promise<void> {

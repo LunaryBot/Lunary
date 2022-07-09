@@ -3,7 +3,7 @@
 .env
 !tsconfig.json
 
-dist/
+build/
 
 .dockerignore
 Dockerfile
@@ -17,3 +17,6 @@ yarn-error.log
 !/locales/pt-BR
 
 data/commands.json
+json.sqlite
+
+logs/*

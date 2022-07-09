@@ -1,62 +1,40 @@
 import LunarClient from './LunarClient';
 import Eris from 'eris';
-import { TPermissions, TLunarPermissions } from '../utils/Constants';
+import { ICommandRequirements } from '../@types/index.d';
 import Utils from '../utils/Utils';
 import CommandInteractionOptions from '../utils/CommandInteractionOptions';
 import UserDB from './UserDB';
 import GuildDB from './GuildDB';
-import Locale from './Locale';
 
-const { Constants: { ApplicationCommandOptionTypes } } = Eris;
-
-interface ICommand {
+interface IBase {
     name: string;
     dirname?: string;
-    aliases?: string[];
-    subcommands?: Array<CommandGroup|SubCommand>;
-    ownerOnly?: boolean;
-    permissions?: {
-        me: TPermissions[];
-        bot: TLunarPermissions[];
-        discord: TPermissions[];
-    }
-    guildOnly?: boolean;
+    requirements?: ICommandRequirements | null;
     cooldown?: number;
-};
+}
 
-class Command {
+class Base {
     public declare client: LunarClient;
     public name: string;
     public dirname: string | undefined;
-    public aliases: string[];
-    public subcommands: Array<CommandGroup|SubCommand>;
-    public ownerOnly: boolean;
-    public permissions: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    };
-    public guildOnly: boolean;
+    public requirements?: ICommandRequirements | null;
     public cooldown: number;
 
     constructor(
         client: LunarClient,
-        data: ICommand,
+        data: IBase,
     ) {
         this.name = data.name;
         this.dirname = data.dirname || undefined;
-        this.aliases = data.aliases || [];
-        this.subcommands = data.subcommands || [];
-        this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {};
-
-        this.guildOnly = data.guildOnly || false;
+        this.requirements = data.requirements || null;
         this.cooldown = data.cooldown || 0;
         
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     };
 
-    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
+    public async run(context: IContextMessageCommand|IContextInteractionCommand): Promise<any> {}
+
+    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
 
     public async replyMessage(
         message: IContextMessageCommand | ContextCommand | Eris.Message, 
@@ -77,86 +55,111 @@ class Command {
         );
     }
 
-    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
+
+    
+    public verifyPermissions(context: IContextMessageCommand|IContextInteractionCommand, data = { me: true, member: true, }) {
+        var requirements: ICommandRequirements;
+        
+        const { permissions } = this.requirements || {};
+        if(permissions) {
+            
+            if (permissions.discord) {
+                if (!permissions.discord.every(perm => context.member.permissions.has(perm))) data.member = false;
+            }
+            
+            if (permissions.bot && !data.member) {
+                if (context.dbs.guild.getMemberLunarPermissions(context.member).has(permissions.bot)) data.member = true;
+            }
+        }
+    
+        return data;
+    }
 
     public get Utils() {
         return Utils;
     }
-};
 
-interface ICommandGroup {
-    name: string;
-    subcommands: SubCommand[];
+    public get commandName() {
+        return this.name;
+    }
+}
+
+class Command extends Base {
+    public aliases: string[];
+    public subcommands: Array<CommandGroup|SubCommand>;
+
+    constructor(
+        client: LunarClient,
+        data: {
+            name: string;
+            dirname?: string;
+            requirements?: ICommandRequirements | null;
+            cooldown?: number;
+            aliases?: string[];
+            subcommands?: Array<CommandGroup|SubCommand>;
+        },
+    ) {
+        super(client, {
+            name: data.name,
+            dirname: data.dirname || undefined,
+            requirements: data.requirements || null,
+            cooldown: data.cooldown || 0,
+        });
+        this.aliases = data.aliases || [];
+        this.subcommands = data.subcommands || [];
+    };
+
+    public get CommandGroup() {
+        return CommandGroup;
+    }
+
+    public get SubCommand() {
+        return SubCommand;
+    }
 };
 
 class CommandGroup {
     public name: string;
     public subcommands: SubCommand[];
-    public mainCommand: Command;
+    public parent: Command;
 
     constructor(
         client: LunarClient, 
-        data: ICommandGroup, 
-        mainCommand: Command,
+        data: CommandGroup, 
+        parent: Command,
     ) {
         this.name = data.name;
         this.subcommands = data.subcommands || [];
-        this.mainCommand = mainCommand;
+        this.parent = parent;
 
         Object.defineProperty(this, 'client', { value: client, enumerable: false });
     }
+
+    public get commandName() {
+        return `${this.parent.commandName} ${this.name}`;
+    }
 }
 
-interface ISubCommand {
-    name: string;
-    dirname: string;
-    ownerOnly?: boolean;
-    permissions?: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    }
-    guildOnly?: boolean;
-    cooldown?: number;
-}
-
-class SubCommand {
-    public declare client: LunarClient;
-    public name: string;
-    public dirname: string;
-    public ownerOnly: boolean;
-    public permissions: {
-        me?: TPermissions[];
-        bot?: TLunarPermissions[];
-        discord?: TPermissions[];
-    }
-    public guildOnly: boolean;
-    public cooldown: number;
-    public mainCommand: Command|CommandGroup;
+class SubCommand extends Base {
+    public parent: Command|CommandGroup;
 
     constructor(
         client: LunarClient, 
-        data: ISubCommand, 
-        mainCommand: Command|CommandGroup,
+        data: IBase, 
+        parent: Command|CommandGroup,
     ) {
-        this.name = data.name;
-        this.dirname = data.dirname;
-        this.ownerOnly = data.ownerOnly || false;
-        this.permissions = data.permissions || {};
+        super(client, {
+            name: data.name,
+            dirname: data.dirname || undefined,
+            requirements: data.requirements || null,
+            cooldown: data.cooldown || 0,
+        });
 
-        this.guildOnly = data.guildOnly || false;
-        this.cooldown = data.cooldown || 0;
-        this.mainCommand = mainCommand;
-        
-        Object.defineProperty(this, 'client', { value: client, enumerable: false });
+        this.parent = parent;
     }
 
-    public async run(context: IContextMessageCommand|IContextInteractionCommand|ContextCommand): Promise<any> {}
-
-    public async autoComplete(interaction: Eris.AutocompleteInteraction, options: CommandInteractionOptions): Promise<any> {}
-
-    public get Utils() {
-        return Utils;
+    public get commandName() {
+        return `${this.parent.commandName} ${this.name}`;
     }
 }
 
@@ -239,6 +242,18 @@ class ContextCommand {
         this.args = args || [];
         this.options = interaction ? new CommandInteractionOptions(interaction?.data?.resolved, interaction?.data?.options || []) : [];
 
+        if(this.options instanceof CommandInteractionOptions) {
+            if(interaction?.data?.type == Eris.Constants.ApplicationCommandTypes.USER) {
+                this.options.setOptions(
+                    {
+                        type: Eris.Constants.ApplicationCommandOptionTypes.USER,
+                        name: 'user',
+                        value: interaction?.data?.target_id,
+                    }
+                );
+            }
+        }
+
         const guild = (interaction || message)?.member?.guild || null;
 
         this.user = user;
@@ -265,7 +280,7 @@ class ContextCommand {
             guild: await this.dbs.guild,
         }
 
-        Object.defineProperty(this, 't', { value: this.dbs.guild.locale.t });
+        Object.defineProperty(this, 't', { value: this.dbs.guild?.locale?.t || this.client.locales.find(locale => locale.name == process.env.DEFAULT_LOCALE)?.t });
     }
 }
 

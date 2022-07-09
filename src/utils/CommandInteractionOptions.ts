@@ -16,7 +16,7 @@ class CommandInteractionOptions extends Array {
     public resolved: ICommandInteractionOptionsResolved;
     public focused: Eris.InteractionDataOptions | null;
 
-    constructor(resolved: ICommandInteractionOptionsResolved | undefined, ...args: any[]) {
+    constructor(resolved: ICommandInteractionOptionsResolved | undefined, args: any[]) {
         super(...args);
 
         this.resolved = resolved || {};
