@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "4.0 canary",
-  "main": "build/LunarCluster.js",
+  "main": "build/index.js",
   "scripts": {
     "start": "node .",
     "build": "tsc",

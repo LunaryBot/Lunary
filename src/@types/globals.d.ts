@@ -13,7 +13,6 @@ declare global {
         toTitleCase(): string;
         checkSimilarityStrings(string: string): number;
     }
-
-    var apollo: Apollo;
+    
     var logger: MyLogger;
 }
