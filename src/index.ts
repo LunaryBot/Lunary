@@ -4,6 +4,12 @@ import './tools/Logger'
 import express from 'express';
 import http from 'http';
 
+import Client from './structures/Client';
+
+new Client(process.env.DISCORD_CLIENT_TOKEN);
+
+
+
 const app = express();
 const httpServer = http.createServer(app);
 
