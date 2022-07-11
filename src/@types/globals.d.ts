@@ -1,10 +1,6 @@
 import { Logger } from 'winston';
 import Apollo from '../server/Apollo';
 
-interface MyLogger extends Logger {
-    readonly graphql: LeveledLogMethod;
-}
-
 export {};
 
 declare global {
@@ -14,5 +10,5 @@ declare global {
         checkSimilarityStrings(string: string): number;
     }
     
-    var logger: MyLogger;
+    var logger: Logger;
 }
