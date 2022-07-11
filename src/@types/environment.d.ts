@@ -4,6 +4,7 @@ declare global {
             // Discord Client
             DISCORD_CLIENT_TOKEN: string;
             DISCORD_CLIENT_ID: string;
+            DISCORD_PUBLIC_KEY: string;
 
             NODE_ENV: 'development' | 'production';
             PORT?: strnig;
@@ -16,4 +17,4 @@ declare global {
     }
 }
   
-export {}
+export {};
