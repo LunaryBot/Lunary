@@ -22,7 +22,15 @@
 		"moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        "baseUrl": "./src",
+        "paths": {
+            "@LunaryClient": ["./structures/LunaryClient"],
+            "@structures/*": ["./structures/*"],
+            "@utils/*": ["./utils/*"],
+            "@decorators": ["./utils/Decorators"],
+            "types/discord": ["./@types/discord"],
+        },
     },
     "exclude": [
         "build",
