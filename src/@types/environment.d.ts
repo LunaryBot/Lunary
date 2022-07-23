@@ -2,17 +2,18 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             // Discord Client
-            DISCORD_CLIENT_TOKEN: string;
-            DISCORD_CLIENT_ID: string;
-            DISCORD_PUBLIC_KEY: string;
+            readonly DISCORD_CLIENT_TOKEN: string;
+            readonly DISCORD_CLIENT_ID: string;
+            readonly DISCORD_PUBLIC_KEY: string;
 
-            NODE_ENV: 'development' | 'production';
-            PORT?: strnig;
-            AUTH_TOKEN: string;
+            // Redis
+            readonly REDIS_URL: string;
+
+            readonly NODE_ENV: 'development' | 'production';
+            readonly PORT?: strnig;
 
             // Configs
-            DEFAULT_LOCALE: string;
-            
+            readonly DEFAULT_LOCALE: string;
         }
     }
 }

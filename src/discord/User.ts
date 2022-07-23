@@ -1,51 +1,57 @@
-import { APIUser, UserFlags } from 'discord-api-types/v10';
+import { Routes, UserFlags } from 'types/discord';
 
-class User {
-    public id: string;
-    public username: string;
-    public discriminator: string;
-    public avatar: string | null;
-    public bot: boolean | undefined;
-    public system: boolean | undefined;
-    public mfaEnabled: boolean | undefined;
-    public banner: string | null | undefined;
-    public accentColor: number | null | undefined;
-    public locale: string | undefined;
-    public verified: boolean | undefined;
-    public email: string | null | undefined;
-    public flags: UserFlags | undefined;
-    public premiumType: 0 | 1 | 2 | undefined;
-    public publicFlags: UserFlags | undefined;
+import Structure from './Base';
+import { RequiresToken } from '@decorators';
 
-    constructor(data: APIUser) {
-        this.id = data.id;
+import type { APIDMChannel, APIUser, Snowflake } from 'types/discord';
 
-        this.username = data.username;
+class User extends Structure {
+	public readonly id: Snowflake;
 
-        this.discriminator = data.discriminator;
+	public readonly username: string;
 
-        this.avatar = data.avatar;
+	public readonly discriminator: string;
 
-        this.bot = data.bot;
+	public readonly avatar?: string;
 
-        this.mfaEnabled = data.mfa_enabled;
+	public readonly system: boolean = false;
 
-        this.banner = data.banner;
+	public readonly bot: boolean = false;
 
-        this.accentColor = data.accent_color;
+	public readonly publicFlags: number | null;
 
-        this.locale = data.locale;
+	public channel?: APIDMChannel;
 
-        this.verified = data.verified;
+	public constructor(client: LunaryClient, data: APIUser) {
+		super(client);
 
-        this.email = data.email;
+		this.id = data.id as Snowflake;
 
-        this.flags = data.flags;
+		this.username = data.username;
 
-        this.premiumType = data.premium_type;
+		this.discriminator = data.discriminator;
 
-        this.publicFlags = data.public_flags;
-    }
+		this.avatar = data.avatar ?? undefined;
+
+		this.system = data.system ?? false;
+
+		this.bot = data.bot ?? false;
+
+		this.publicFlags = data.public_flags ?? null;
+	}
+
+	@RequiresToken
+  	private async getDMChannel() {
+  		const data = (await this.client.rest.post(Routes.userChannels(), {
+  			body: { recipient_id: this.id },
+  		})) as APIDMChannel;
+
+  		return data;
+  	}
+
+	public toString() {
+  		return `<@${this.id}>`;
+	}
 }
 
-export default User;
+export { User, UserFlags as Flags, UserFlags };

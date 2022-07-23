@@ -19,7 +19,7 @@ const config = {
 		http: 'blue',
 		debug: 'yellow',
 		graphql: 'magenta',
-	}
+	},
 };
 
 winston.addColors(config.colors);
@@ -35,7 +35,7 @@ const logger = winston.createLogger({
 				timestamp(),
 				printf(({ level, message, label, timestamp = new Date().toISOString() }) => {
 					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}`;
-				}),
+				})
 			), 
 		}),
 		new winston.transports.File({ 
@@ -45,8 +45,8 @@ const logger = winston.createLogger({
 				timestamp(),
 				printf(({ level, message, label, timestamp = new Date().toISOString() }) => {
 					return `${timestamp} ${level} --- ${label ? `[${label}]` : ''} ${message}`;
-				}),
-		    )
+				})
+		    ),
 		}),
 	],
 	exitOnError: false,
@@ -54,4 +54,5 @@ const logger = winston.createLogger({
 
 logger.child = () => logger;
 
+// @ts-ignore
 global.logger = logger;

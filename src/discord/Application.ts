@@ -1,11 +1,12 @@
 import { RESTGetAPIOAuth2CurrentApplicationResult } from 'discord-api-types/v10';
 
-import Team from './Team';
-import User from './User';
+import Structure from './Base';
+import { Team } from './Team';
+import { User } from './User';
 
-import { TScope } from '../@types/discord.d';
+import { OAuth2Scopes } from 'types/discord';
 
-class Application {
+class Application extends Structure {
 	public id: string;
 	public name: string;
 	public icon: string | null;
@@ -24,11 +25,13 @@ class Application {
 	public flags?: number;
 	public tags?: [string, (string | undefined)?, (string | undefined)?, (string | undefined)?, (string | undefined)?] | undefined;
 	public installParams?: {
-        scopes: Array<TScope>;
+        scopes: Array<OAuth2Scopes>;
         permissions: string;
     };
 
-	constructor(data: RESTGetAPIOAuth2CurrentApplicationResult) {
+	constructor(client: LunaryClient, data: RESTGetAPIOAuth2CurrentApplicationResult) {
+		super(client);
+
 		this.id = data.id;
 
 		this.name = data.name;
@@ -47,7 +50,7 @@ class Application {
 
 		this.privacyPolicyUrl = data.privacy_policy_url;
 
-		this.owner = data.owner ? new User(data.owner) : undefined as any;
+		// this.owner = data.owner ? new User(data.owner) : undefined as any;
 
 		Object.defineProperty(this, 'verifyKey', {
 			enumerable: false,
@@ -55,7 +58,7 @@ class Application {
 			value: data.verify_key,
 		});
 
-		this.team = data.team ? new Team(data.team) : undefined as any;
+		this.team = data.team ? new Team(this.client, data.team) : undefined as any;
 
 		this.guildId = data.guild_id;
 
@@ -72,4 +75,4 @@ class Application {
 	}
 }
 
-export default Application;
+export { Application };

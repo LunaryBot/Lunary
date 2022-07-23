@@ -2,10 +2,10 @@ import { existsSync, readFileSync } from 'fs';
 import yaml from 'js-yaml';
 
 class Locale {
-    public name: string;
-    public dirname: string;
+	public name: string;
+	public dirname: string;
 
-    public t: (ref: string, variables: Object) => string;
+	public t: (ref: string, variables: Object) => string;
 
 	constructor(name: string, dirname: string = `${process.cwd()}/locales`) {
 		this.name = name;
@@ -24,14 +24,14 @@ class Locale {
 
 			const data = yaml.load(readFileSync(path, 'utf8'));
 
-            const array = String(split.slice(1).join(':')).split('.').filter(x => x);
+			const array = String(split.slice(1).join(':')).split('.').filter(x => x);
 
-			let val = typeof data == 'object' && !Array.isArray(data) ? array.reduce((a: any, b: string) => (typeof a != "undefined" ? a : {})[b], data) : data;
+			let val = typeof data == 'object' && !Array.isArray(data) ? array.reduce((a: any, b: string) => (typeof a != 'undefined' ? a : {})[b], data) : data;
 
 			let output = val ?? ':bug:';
 
 			if (val)
-                Object.entries(variables || {}).map(([key, value]) => {
+				Object.entries(variables || {}).map(([key, value]) => {
 					let regex = new RegExp(`{${key}}`, 'g');
 
 					output = output.replace(regex, value);

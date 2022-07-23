@@ -1,5 +1,7 @@
+import { FastifyReply } from 'fastify';
 import { Logger } from 'winston';
-import Apollo from '../server/Apollo';
+
+import Client from '../structures/LunaryClient';
 
 export {};
 
@@ -10,5 +12,7 @@ declare global {
         checkSimilarityStrings(string: string): number;
     }
     
-    var logger: Logger;
+    const logger: Logger;
+    type LunaryClient = Client;
+    type RequestResponse = FastifyReply;
 }
