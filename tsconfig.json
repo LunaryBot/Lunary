@@ -26,6 +26,7 @@
         "baseUrl": "./src",
         "paths": {
             "@LunaryClient": ["./structures/LunaryClient"],
+            "@EventListener": ["./structures/EventListener"],
             "@structures/*": ["./structures/*"],
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
