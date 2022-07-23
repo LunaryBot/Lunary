@@ -30,6 +30,7 @@
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
             "types/discord": ["./@types/discord"],
+            "@discord": ["./discord/"]
         },
     },
     "exclude": [
