@@ -26,7 +26,7 @@ class Webhook extends Structure {
 		super(client);
 		this.id = data.id as Snowflake;
 		this.token = token;
-		this.url = `/webhooks/${this.id}/${this.token}`;
+		this.url = `/webhooks/${this.client.application.id}/${this.token}`;
     
 		this.type = data.type;
 		this.applicationId = (data.application_id as Snowflake) || undefined;
@@ -43,7 +43,10 @@ class Webhook extends Structure {
 	}
 
 	public async execute(body: JSONExecuteWebhook) {
+		console.log(body);
 		const data = await this.client.rest.post(this.url, { body });
+
+		console.log(data);
 
 		return data as APIMessage;
 	}
@@ -65,7 +68,7 @@ class Webhook extends Structure {
 	}
 
 	public webhookMessage(id: string) {
-		return Routes.webhookMessage(this.id, this.token, id);
+		return Routes.webhookMessage(this.client.application.id, this.token, id);
 	}
 }
 

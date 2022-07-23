@@ -13,20 +13,21 @@ type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
 
 class CommandInteraction extends Interaction {
 	protected webhook: InteractionWebhook;
-	rawData: APIApplicationCommandInteraction;
+	raw: APIApplicationCommandInteraction;
 
 	locale: string;
 	commandId: string;
 	commandName: string;
 	commandType: ApplicationCommandType;
 
+	responseReplied = false;
 	replied = false;
 	ephemeral?: boolean;
 
 	constructor(client: LunaryClient, data: APIApplicationCommandInteraction, res: RequestResponse) {
 		super(client, data, res);
 
-		this.rawData = data;
+		this.raw = data;
 		this.locale = data.locale;
 		this.commandId = data.data.id;
 		this.commandName = data.data.name;
@@ -46,7 +47,7 @@ class CommandInteraction extends Interaction {
 		});
 
 		this.acknowledged = true;
-		this.replied = true;
+		this.responseReplied = true;
 
 		this.ephemeral = ephemeral ?? false;
 	}
@@ -62,23 +63,25 @@ class CommandInteraction extends Interaction {
 	}
 
 	async createMessage(content: string | MessageEditWebhook) {
+		if(this.replied) throw new Error('Cannot create message after responding');
+        
 		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
 
-		if(!this.acknowledged && !this.replied) {
-			this.replied = true;
-            
-			return await this.res.send({
-				type: InteractionResponseType.ChannelMessageWithSource,
-				data: {
-					...message,
-					flags: message.ephemeral ?? this.ephemeral ? MessageFlags.Ephemeral : 0, 
-				},
-			});
-		} else if(this.acknowledged && !this.replied) {
+		if(this.acknowledged) {
 			this.replied = true;
 
-			return await this.webhook.execute(message);
+			return await this.editOriginalMessage(message);
 		}
+
+		this.replied = true;
+            
+		return await this.res.send({
+			type: InteractionResponseType.ChannelMessageWithSource,
+			data: {
+				...message,
+				flags: message.ephemeral ?? this.ephemeral ? MessageFlags.Ephemeral : 0, 
+			},
+		});
 	}
 
 	async deleteMessage(id: string) {

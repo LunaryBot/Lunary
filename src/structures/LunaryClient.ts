@@ -8,6 +8,7 @@ import Redis from 'ioredis';
 import { CommandInteraction } from '../discord';
 
 import { Application, User } from '../discord';
+import axios from 'axios';
 
 class Client extends EventEmitter {
 	private readonly _token: string;
@@ -40,7 +41,7 @@ class Client extends EventEmitter {
 			global: true,
 		});
 
-		this.fastify.post('/', (req, res) => {
+		this.fastify.post('/', async(req, res) => {
 			const { headers: { ['x-signature-ed25519']: signature, ['x-signature-timestamp']: timestamp }, body: raw } = req as { headers: { [key: string]: string }, body: any };
 
 			// console.log(raw);
@@ -65,7 +66,9 @@ class Client extends EventEmitter {
 				const interaction = new CommandInteraction(this, raw, res);
 
 				if(interaction.commandName === 'ping') {
-					interaction.createMessage('Pong!');
+					await interaction.acknowledge();
+
+					await interaction.createMessage('Pong!');
 				}
 			}
 		});
