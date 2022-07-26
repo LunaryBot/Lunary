@@ -1,5 +1,6 @@
 import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
+import { Message } from '../Message';
 
 import { ComponentType, Routes, InteractionResponseType, MessageFlags } from 'types/discord';
 
@@ -19,7 +20,8 @@ class ComponentInteraction extends Interaction {
 
 	locale: string;
 	customId: string;
-	componentType: InteractionResponseType;
+	componentType: ComponentType;
+	values?: string[];
 
 	responseReplied = false;
 	replied = false;
@@ -27,5 +29,98 @@ class ComponentInteraction extends Interaction {
 
 	constructor(client: LunaryClient, data: APIComponentInteraction, res: RequestResponse) {
 		super(client, data, res);
+
+		this.raw = data;
+		this.locale = data.locale;
+		this.customId = data.data.custom_id;
+		this.componentType = data.data.component_type;
+
+		this.message = new Message(this.client, data.message);
+
+		if(data.data.component_type === ComponentType.SelectMenu) {
+			this.values = data.data.values;
+		}
+
+		this.webhook = new InteractionWebhook(this.client, this);
+	}
+
+	async acknowledge(ephemeral?: boolean) {
+		if(this.replied || this.acknowledged) return;
+
+		await this.res.send({
+			type: InteractionResponseType.DeferredChannelMessageWithSource,
+			data: {
+				flags: ephemeral ? MessageFlags.Ephemeral : 0, 
+			},
+		});
+
+		this.acknowledged = true;
+		this.responseReplied = true;
+
+		this.ephemeral = ephemeral ?? false;
+	}
+
+	async createFollowUp(content: string | MessageEditWebhook) {
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+
+		delete message.ephemeral;
+
+		if(!this.replied) throw new Error('Cannot follow up before responding');
+
+		return await this.webhook.execute(message);
+	}
+
+	async createMessage(content: string | MessageEditWebhook) {
+		if(this.replied) throw new Error('Cannot create message after responding');
+        
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+
+		if(this.acknowledged) {
+			this.replied = true;
+
+			return await this.editOriginalMessage(message);
+		}
+
+		this.replied = true;
+            
+		return await this.res.send({
+			type: InteractionResponseType.ChannelMessageWithSource,
+			data: {
+				...message,
+				flags: message.ephemeral ?? this.ephemeral ? MessageFlags.Ephemeral : 0, 
+			},
+		});
+	}
+
+	async deleteMessage(id: string) {
+		return await this.webhook.deleteMessage(id);
+	}
+
+	async deleteOriginal() {
+		if(!this.replied) throw new Error('No original message sent');
+
+		if(this.ephemeral) throw new Error('Can\'t delete ephemeral message');
+
+		return await this.webhook.deleteOriginalMessage();
+	}
+
+	async editMessage(id: string, content: string | RESTEditWebhook) {
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+
+		return await this.webhook.editMessage(id, message);
+	}
+
+	async editOriginalMessage(content: string | RESTEditWebhook) {
+		if(!this.replied || !this.acknowledged) throw new Error('Interaction not deferred or replied');
+
+		if(this.replied && this.ephemeral) throw new Error('Cannot edit ephemeral message');
+
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+
+		if(!this.replied && this.acknowledged) this.replied = true;
+
+		return await this.webhook.editOriginalMessage(message);
 	}
 }
+
+export { ComponentInteraction };
