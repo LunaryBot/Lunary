@@ -21,7 +21,7 @@ class ComponentInteraction extends Interaction {
 	locale: string;
 	customId: string;
 	componentType: ComponentType;
-	values?: string[];
+	values?: Array<string>;
 
 	responseReplied = false;
 	replied = false;
@@ -123,4 +123,16 @@ class ComponentInteraction extends Interaction {
 	}
 }
 
-export { ComponentInteraction };
+class SelectMenuInteraction extends Interaction {
+	raw: APIMessageComponentSelectMenuInteraction;
+	componentType: ComponentType.SelectMenu;
+	values: Array<string>;
+}
+
+class ButtonInteraction extends Interaction {
+	raw: APIMessageComponentButtonInteraction;
+	componentType: ComponentType.Button;
+	values: undefined;
+}
+
+export { ComponentInteraction, SelectMenuInteraction, ButtonInteraction };

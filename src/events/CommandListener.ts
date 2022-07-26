@@ -19,10 +19,25 @@ class CommandListener extends EventListener {
 						type: 1,
 						components: [
 							{
-								type: ComponentType.Button,
-								custom_id: 'click_me',
-								style: ButtonStyle.Primary,
-								label: 'Click Me!',
+								type: ComponentType.SelectMenu,
+								custom_id: 'select_me',
+								placeholder: 'Select Me!',
+								options: [
+									{
+										label: 'Option 1',
+										value: 'option_1',
+									},
+									{
+										label: 'Option 2',
+										value: 'option_2',
+									},
+									{
+										label: 'Option 3',
+										value: 'option_3',
+									},
+								],
+								max_values: 1,
+								min_values: 1,
 							},
 						],
 					},
