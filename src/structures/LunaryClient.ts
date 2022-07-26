@@ -6,7 +6,7 @@ import { REST } from '@discordjs/rest';
 import Redis from 'ioredis';
 import fs from 'fs';
 
-import { CommandInteraction, Application, User } from '@discord';
+import { CommandInteraction, Application, User, ComponentInteraction } from '@discord';
 
 import EventListener from '@EventListener';
 
@@ -61,6 +61,12 @@ class Client extends EventEmitter {
 				const interaction = new CommandInteraction(this, raw, res);
 
 				this.emit('commandInteraction', interaction);
+			}
+
+			if(raw.type == 3) {
+				const interaction = new ComponentInteraction(this, raw, res);
+
+				this.emit('componentInteraction', interaction);
 			}
 		});
 	}

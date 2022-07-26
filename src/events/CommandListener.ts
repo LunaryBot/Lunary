@@ -1,7 +1,7 @@
 import EventListener from '@EventListener';
 
 import { CommandInteraction, User } from '@discord';
-import { CDNRoutes, ImageFormat } from 'types/discord';
+import { ButtonStyle, CDNRoutes, ComponentType, ImageFormat } from 'types/discord';
 
 class CommandListener extends EventListener {
 	constructor(client: LunaryClient) {
@@ -12,7 +12,22 @@ class CommandListener extends EventListener {
 		if(interaction.commandName === 'ping') {
 			await interaction.acknowledge();
 
-			await interaction.createMessage('Pong!');
+			await interaction.createMessage({
+				content: 'Pong!',
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: ComponentType.Button,
+								custom_id: 'click_me',
+								style: ButtonStyle.Primary,
+								label: 'Click Me!',
+							},
+						],
+					},
+				],
+			});
 		}
 
 		if(interaction.commandName === 'User Avatar') {
