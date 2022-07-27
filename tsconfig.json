@@ -27,10 +27,12 @@
         "paths": {
             "@LunaryClient": ["./structures/LunaryClient"],
             "@EventListener": ["./structures/EventListener"],
+            "@Command": ["./structures/Command"],
             "@structures/*": ["./structures/*"],
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
-            "types/discord": ["./@types/discord"],
+            "types/*": ["./@types/*"],
+            "@discord/types": ["./@types/discord"],
             "@discord": ["./discord/"]
         },
     },
