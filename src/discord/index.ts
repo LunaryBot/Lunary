@@ -3,6 +3,7 @@ export * from './Channels';
 export * from './Guilds';
 export * from './Interations';
 export * from './Member';
+export * from './Message';
 export * from './Permissions';
 export * from './Role';
 export * from './Team';

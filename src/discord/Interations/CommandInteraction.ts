@@ -1,7 +1,15 @@
 import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
+import { User } from '../User';
+import { Member } from '../Member';
+import { Role } from '../Role';
+import { GuildNewsChannel, GuildTextChannel } from '../Channels';
+import { Message } from '../Message';
+import { AbstractGuild, Guild } from '../Guilds';
 
-import { ApplicationCommandType, Routes, InteractionResponseType, MessageFlags } from 'types/discord';
+import Collection from '@utils/Collection';
+
+import { APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionDataResolved, APIUserApplicationCommandInteractionDataResolved, ApplicationCommandType, InteractionResponseType, MessageFlags, Snowflake } from 'types/discord';
 
 import type {
 	APIApplicationCommandInteraction,
@@ -10,6 +18,14 @@ import type {
 } from 'types/discord';
 
 type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
+
+interface Resolved {
+    users?: Collection<User>;
+    members?: Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>;
+    roles?: Collection<Role>;
+    channels?: Collection<GuildTextChannel>;
+    messages?: Collection<Message>;
+}
 
 class CommandInteraction extends Interaction {
 	protected webhook: InteractionWebhook;
@@ -20,9 +36,13 @@ class CommandInteraction extends Interaction {
 	commandName: string;
 	commandType: ApplicationCommandType;
 
+	resolved?: Resolved;
+
 	responseReplied = false;
 	replied = false;
 	ephemeral?: boolean;
+
+	guild?: Guild;
 
 	constructor(client: LunaryClient, data: APIApplicationCommandInteraction, res: RequestResponse) {
 		super(client, data, res);
@@ -33,7 +53,43 @@ class CommandInteraction extends Interaction {
 		this.commandName = data.data.name;
 		this.commandType = data.data.type;
 
+		if(this.guildId) this.guild = new Guild(client, { id: this.guildId as Snowflake } as any);
+
 		this.webhook = new InteractionWebhook(this.client, this);
+
+		const { resolved } = this.raw.data;
+
+		if(resolved) {
+			this.resolved = {};
+			
+			const { users, members, roles, channels, messages } = resolved as APIChatInputApplicationCommandInteractionDataResolved & APIUserApplicationCommandInteractionDataResolved & APIMessageApplicationCommandInteractionDataResolved;
+			
+			if(users) {
+				this.resolved.users = new Collection<User>(Object.values(users).map(user => ([user.id, new User(this.client, user)])));
+			}
+
+			if(members) {
+				const { users } = this.resolved;
+
+				this.resolved.members = new Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>(Object.entries(members).map(([userId, member]) => {
+					const user = users?.get(userId) as User;
+
+					return ([user.id, new Member(this.client, this.guild as Guild, user.id, user as User, member)]);
+				}));
+			}
+
+			if(roles) {
+				this.resolved.roles = new Collection<Role>(Object.values(roles).map(role => ([role.id, new Role(this.client, this.guild as Guild, role)])));
+			}
+
+			if(channels) {
+				this.resolved.channels = new Collection<GuildTextChannel>(Object.values(channels).map(channel => ([channel.id, new GuildTextChannel(this.client, channel as any, this.guild)])));
+			}
+
+			if(messages) {
+				this.resolved.messages = new Collection<Message>(Object.values(messages).map(message => ([message.id, new Message(this.client, message)])));
+			}
+		}
 	}
 
 	async acknowledge(ephemeral?: boolean) {
@@ -53,7 +109,7 @@ class CommandInteraction extends Interaction {
 	}
 
 	async createFollowUp(content: string | MessageEditWebhook) {
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		delete message.ephemeral;
 
@@ -65,22 +121,19 @@ class CommandInteraction extends Interaction {
 	async createMessage(content: string | MessageEditWebhook) {
 		if(this.replied) throw new Error('Cannot create message after responding');
         
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		if(this.acknowledged) {
 			this.replied = true;
 
-			return await this.editOriginalMessage(message);
+			return await this.createFollowUp(message);
 		}
 
 		this.replied = true;
             
 		return await this.res.send({
 			type: InteractionResponseType.ChannelMessageWithSource,
-			data: {
-				...message,
-				flags: message.ephemeral ?? this.ephemeral ? MessageFlags.Ephemeral : 0, 
-			},
+			data: message,
 		});
 	}
 
@@ -88,7 +141,7 @@ class CommandInteraction extends Interaction {
 		return await this.webhook.deleteMessage(id);
 	}
 
-	async deleteOriginal() {
+	async deleteOriginalMessage() {
 		if(!this.replied) throw new Error('No original message sent');
 
 		if(this.ephemeral) throw new Error('Can\'t delete ephemeral message');
@@ -97,7 +150,7 @@ class CommandInteraction extends Interaction {
 	}
 
 	async editMessage(id: string, content: string | RESTEditWebhook) {
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		return await this.webhook.editMessage(id, message);
 	}
@@ -107,11 +160,20 @@ class CommandInteraction extends Interaction {
 
 		if(this.replied && this.ephemeral) throw new Error('Cannot edit ephemeral message');
 
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		if(!this.replied && this.acknowledged) this.replied = true;
 
 		return await this.webhook.editOriginalMessage(message);
+	}
+
+	private makeMessageContent(content: string | MessageEditWebhook): MessageEditWebhook {
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+	
+		return {
+			...message,
+			flags: message.ephemeral ?? false ? MessageFlags.Ephemeral : 0, 
+		};
 	}
 }
 

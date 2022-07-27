@@ -43,10 +43,7 @@ class Webhook extends Structure {
 	}
 
 	public async execute(body: JSONExecuteWebhook) {
-		console.log(body);
 		const data = await this.client.rest.post(this.url, { body });
-
-		console.log(data);
 
 		return data as APIMessage;
 	}
