@@ -9,8 +9,15 @@ import fs from 'fs';
 import { CommandInteraction, Application, User, ComponentInteraction } from '@discord';
 
 import EventListener from '@EventListener';
+import { Command,CommandGroup, SubCommand } from '@Command';
 
 import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from 'types/discord';
+
+interface IClientCommands {
+    slash: Command[],
+    user: Command[],
+    message: Command[],
+}
 
 class Client extends EventEmitter {
 	private readonly _token: string;
@@ -23,6 +30,11 @@ class Client extends EventEmitter {
 	public readonly application: Application = null as any;
 
 	public events: Array<EventListener> = [];
+	public commands: IClientCommands = {
+		slash: [],
+		user: [],
+		message: [],
+	};
 
 	constructor(token: string) {
 		super();
@@ -93,8 +105,91 @@ class Client extends EventEmitter {
 		return this.events;
 	}
 
+	private async _loadCommands(): Promise<IClientCommands> {
+		const fileRegex = /^(.*)(Command|SubCommand|CommandGroup)(\.(j|t)s)?$/;
+        
+		const types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'user' | 'message'>;
+
+		for(const type of types) {
+			const categeries = fs.readdirSync(`${__dirname}/../commands/${type}`);
+
+			for(const category of categeries) {
+				const commands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}`).filter(file => fileRegex.test(file));
+
+				for(const command of commands) {
+					if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
+						const client = this;
+						const _Command = require(`${__dirname}/Command`);
+						const _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`new (class ${command.replace(fileRegex, '$1$2')} extends _Command.default { constructor() { 
+                                super(client, { 
+                                    name: '${splitCommandName(command)}', 
+                                }) 
+                            } 
+                        })`);
+
+						if(!this.commands[type].find(cmd => cmd.name === splitCommandName(command))) {
+							this.commands[type].push(_command);
+						}
+
+						if(!_command.subcommands?.length) { _command.subcommands = []; }
+
+						const subcommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}`).filter(file => fileRegex.test(file));;
+
+						for(const subcommand of subcommands) {
+							if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).isDirectory()) {
+								const _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || eval(`new (class ${subcommand.replace(fileRegex, '$1$2')} extends _Command.CommandGroup { constructor() { 
+                                    super(client, { 
+                                        name: '${splitCommandName(subcommand)}', 
+                                    }, _command) 
+                                } 
+                            })`);
+
+								const subsubcommands = fs.readdirSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).filter(file => fileRegex.test(file));;
+
+								for(const subsubcommand of subsubcommands) {
+									const { default: Base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}/${subsubcommand}`);
+
+									logger.info(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+
+									const instance  = new Base(this, _subcommand) as SubCommand;
+
+									_subcommand.subcommands.push(instance);
+								}
+
+								_command.subcommands.push(_subcommand);
+							} else {
+								const { default: Base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
+								logger.info(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+								const instance  = new Base(this, _command) as SubCommand;
+
+								_command.subcommands.push(instance);
+							}
+						}
+					} else {
+						const { default: Base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
+
+						logger.info(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+                        
+						const instance  = new Base(this) as Command;
+
+						this.commands[type].push(instance);
+					}
+				}
+			}
+		}
+
+		return this.commands;
+
+		function splitCommandName(name: string) {
+			const split = name.replace(fileRegex, '$1').match(/[A-Z][a-z]*/g) as string[];
+
+			return split[split.length - 1].toLowerCase();
+		}
+	}
+
 	async init() {
 		await this._loadListeners();
+		await this._loadCommands();
 
 		const user = await this.rest.get(Routes.user(), { auth: true }).then(data => new User(this, data as APIUser));
 		

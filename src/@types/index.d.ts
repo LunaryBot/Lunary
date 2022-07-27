@@ -1,18 +1,21 @@
-import type { Client, Constants } from 'eris'
-import type DatabasesManager from '../structures/DatabasesManager';
-import type Cluster from '../cluster/Cluster';
-import type CommandInteractionOptions from '../utils/CommandInteractionOptions';
-import type Command from '../structures/Command';
+import { Permissions } from '@discord';
 import type { LunarPermissions } from '../utils/Constants';
 
 export interface ICommandRequirements {
     permissions?: {
-        me?: Array<keyof typeof Constants.Permissions>;
+        me?: Array<keyof typeof Permissions.Flags>;
         bot?: Array<keyof typeof LunarPermissions>;
-        discord?: Array<keyof typeof Constants.Permissions>;
+        discord?: Array<keyof typeof Permissions.Flags>;
     },
     guildOnly?: boolean;
     ownerOnly?: boolean;
+}
+
+export interface ICommandBase {
+    name: string;
+    dirname?: string;
+    requirements?: ICommandRequirements | null;
+    cooldown?: number;
 }
 
 export interface IVoteData {
@@ -35,7 +38,7 @@ export interface IReason {
     text: string;
     type: 1 | 2 | 3 | 4;
     duration?: number;
-    keys?: string[];
+    keys?: Array<string>;
     days?: number;
     _id: string;
 }

@@ -44,7 +44,7 @@ export const Links = {
 	vote: 'https://top.gg/bot/777654875441463296/vote',
 };
 
-export const LunarPermissions = {
+export const LunaryPermissions = {
 	lunarBanMembers: 1n << 0n,
 	lunarKickMembers: 1n << 1n,
 	lunarMuteMembers: 1n << 2n,
