@@ -1,7 +1,14 @@
 import EventListener from '@EventListener';
 
-import { CommandInteraction, User } from '@discord';
-import { ButtonStyle, CDNRoutes, ComponentType, ImageFormat } from 'types/discord';
+import { CommandInteraction } from '@discord';
+
+import { Command, CommandGroup, SubCommand, ContextCommand } from '@Command';
+
+const CommandTypes = {
+	1: 'slash',
+	2: 'user',
+	3: 'message',
+};
 
 class CommandListener extends EventListener {
 	constructor(client: LunaryClient) {
@@ -9,49 +16,27 @@ class CommandListener extends EventListener {
 	}
     
 	async on(interaction: CommandInteraction) {
-		if(interaction.commandName === 'ping') {
-			await interaction.acknowledge();
+		const commandType = CommandTypes[interaction.commandType] as 'slash' | 'user' | 'message';
 
-			await interaction.createMessage({
-				content: 'Pong!',
-				components: [
-					{
-						type: 1,
-						components: [
-							{
-								type: ComponentType.SelectMenu,
-								custom_id: 'select_me',
-								placeholder: 'Select Me!',
-								options: [
-									{
-										label: 'Option 1',
-										value: 'option_1',
-									},
-									{
-										label: 'Option 2',
-										value: 'option_2',
-									},
-									{
-										label: 'Option 3',
-										value: 'option_3',
-									},
-								],
-								max_values: 1,
-								min_values: 1,
-							},
-						],
-					},
-				],
-			});
+		let command: Command | SubCommand = this.client.commands[commandType].find(c => c.name == interaction.commandName) as Command;
+
+		if(!command) return logger.warn(`Command ${interaction.commandName} not found`, { label: 'Lunary, CommandListener' });
+
+		if(interaction.isInDM() && command.requirements?.guildOnly) return;
+
+		const context = new ContextCommand(this.client, interaction, command);
+
+		if(context.options._subcommand && command.subcommands.length) {
+			const group: CommandGroup | Command = context.options._group && (command as Command).subcommands.find(c => c.name == context.options._group) as CommandGroup || command as Command;
+			
+			const subcommand: SubCommand = group.subcommands.find(c => c.name == context.options._subcommand || c.name == context.options._group) as SubCommand;
+
+			if(subcommand) {
+				command = subcommand as SubCommand;
+			}
 		}
 
-		if(interaction.commandName === 'User Avatar') {
-			await interaction.acknowledge();
-
-			const { id, avatar } = interaction.user as User;
-
-			await interaction.createMessage(`https://cdn.discordapp.com${CDNRoutes.userAvatar(id, avatar as string, ImageFormat.PNG)}`);
-		}
+		await command.run(context);
 	}
 }
 
