@@ -1,5 +1,5 @@
 import { ICommandRequirements, ICommandBase } from '../../@types';
-import type { ContextCommand } from './ContextCommand';
+import type { ContextCommand } from '@Contexts';
 
 class Base {
 	public declare client: LunaryClient;

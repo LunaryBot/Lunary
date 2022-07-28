@@ -2,8 +2,7 @@ import { APIChatInputApplicationCommandInteractionData, APIChatInputApplicationC
 
 import type { ChannelType } from '@discord/types';
 import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
-import type { Command } from './Command';
-import type { SubCommand } from './SubCommand';
+import type { Command, SubCommand } from '@Command';
 
 import CommandInteractionOptions from '@utils/CommandInteractionOptions';
 

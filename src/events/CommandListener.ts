@@ -2,7 +2,8 @@ import EventListener from '@EventListener';
 
 import { CommandInteraction } from '@discord';
 
-import { Command, CommandGroup, SubCommand, ContextCommand } from '@Command';
+import { Command, CommandGroup, SubCommand } from '@Command';
+import { ContextCommand } from '@Contexts';
 
 const CommandTypes = {
 	1: 'slash',
