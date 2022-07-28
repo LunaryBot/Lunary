@@ -4,7 +4,7 @@ import { User } from '../User';
 import { AbstractGuild } from '../Guilds';
 import { InteractionWebhook } from './InteractionWebhook';
 
-import { APIInteraction, APIInteractionResponse, Snowflake, InteractionType, APIUser } from 'types/discord';
+import { APIInteraction, APIInteractionResponse, Snowflake, InteractionType, APIUser } from '@discord/types';
   
 class Interaction extends Structure {
 	public readonly id: string;

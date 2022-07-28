@@ -1,6 +1,6 @@
-import { APIChatInputApplicationCommandInteractionData, APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionData, APIUserApplicationCommandInteractionData, ApplicationCommandOptionType, ApplicationCommandType } from 'types/discord';
+import { APIChatInputApplicationCommandInteractionData, APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionData, APIUserApplicationCommandInteractionData, ApplicationCommandOptionType, ApplicationCommandType } from '@discord/types';
 
-import type { ChannelType } from 'types/discord';
+import type { ChannelType } from '@discord/types';
 import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 import type { Command } from './Command';
 import type { SubCommand } from './SubCommand';

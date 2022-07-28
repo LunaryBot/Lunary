@@ -6,7 +6,7 @@ import type {
 	APITextBasedChannel,
 	Snowflake,
 	TextChannelType,
-} from 'types/discord';
+} from '@discord/types';
 
 class TextBasedChannel<ChannelType extends TextChannelType> extends Channel<ChannelType> {
 	public lastMessageId?: Snowflake;

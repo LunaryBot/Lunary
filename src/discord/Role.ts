@@ -2,7 +2,7 @@ import Structure from './Base';
 import type { AbstractGuild } from './Guilds';
 import { Permissions } from './Permissions';
 
-import type { APIRole, Snowflake } from 'types/discord';
+import type { APIRole, Snowflake } from '@discord/types';
 
 interface RoleTags {
   isPremiumSubscriberRole: boolean;

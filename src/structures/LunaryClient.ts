@@ -11,7 +11,7 @@ import { CommandInteraction, Application, User, ComponentInteraction } from '@di
 import EventListener from '@EventListener';
 import { Command,CommandGroup, SubCommand } from '@Command';
 
-import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from 'types/discord';
+import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 
 interface IClientCommands {
     slash: Command[],

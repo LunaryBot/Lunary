@@ -1,6 +1,6 @@
-import { ApplicationCommandOptionType } from 'types/discord';
+import { ApplicationCommandOptionType } from '@discord/types';
 
-import type { APIApplicationCommandInteractionDataStringOption, APIApplicationCommandInteractionDataNumberOption } from 'types/discord';
+import type { APIApplicationCommandInteractionDataStringOption, APIApplicationCommandInteractionDataNumberOption } from '@discord/types';
 import type { GuildTextChannel, Member, Role, User, Message } from '@discord';
 
 import Collection from './Collection';

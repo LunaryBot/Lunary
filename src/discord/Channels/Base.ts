@@ -1,7 +1,7 @@
 import Structure from '../Base';
 import type { MixChannel } from './Utils';
 
-import { ChannelType } from 'types/discord';
+import { ChannelType } from '@discord/types';
 import type {
 	DMChannel,
 	GroupDMChannel,

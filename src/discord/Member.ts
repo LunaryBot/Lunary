@@ -1,4 +1,4 @@
-import { APIFullOrInteractionGuildMember, Routes, Snowflake } from 'types/discord';
+import { APIFullOrInteractionGuildMember, Routes, Snowflake } from '@discord/types';
 
 import Structure from './Base';
 import { AbstractGuild } from './Guilds';

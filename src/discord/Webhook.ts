@@ -9,7 +9,7 @@ import {
 	WebhookType,
 	APIInteractionWebhook,
 	Routes,
-} from 'types/discord';
+} from '@discord/types';
 
 class Webhook extends Structure {
 	protected readonly token: string;

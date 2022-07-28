@@ -9,13 +9,13 @@ import { AbstractGuild, Guild } from '../Guilds';
 
 import Collection from '@utils/Collection';
 
-import { APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionDataResolved, APIUserApplicationCommandInteractionDataResolved, ApplicationCommandType, InteractionResponseType, MessageFlags, Snowflake } from 'types/discord';
+import { APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionDataResolved, APIUserApplicationCommandInteractionDataResolved, ApplicationCommandType, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
 
 import type {
 	APIApplicationCommandInteraction,
 	ApplicationCommandInteractionResponse,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
-} from 'types/discord';
+} from '@discord/types';
 
 type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
 

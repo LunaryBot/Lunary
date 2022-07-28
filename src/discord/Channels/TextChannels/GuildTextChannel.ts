@@ -2,7 +2,7 @@ import { TextBasedChannel } from './Base';
 
 import type { GuildChannel, MixChannel } from '../Utils';
 
-import type { APIGuildTextChannel, ChannelType } from 'types/discord';
+import type { APIGuildTextChannel, ChannelType } from '@discord/types';
 import type { Guild } from '../../Guilds';
 
 export type GuildTextChannelType =

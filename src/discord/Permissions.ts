@@ -1,4 +1,4 @@
-import type { Snowflake } from 'types/discord';
+import type { Snowflake } from '@discord/types';
 
 import BitField from '@utils/BitField';
 

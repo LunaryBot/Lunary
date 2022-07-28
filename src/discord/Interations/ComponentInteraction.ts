@@ -2,13 +2,13 @@ import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
 import { Message } from '../Message';
 
-import { ComponentType, Routes, InteractionResponseType, MessageFlags } from 'types/discord';
+import { ComponentType, Routes, InteractionResponseType, MessageFlags } from '@discord/types';
 
 import type {
 	APIMessageComponentSelectMenuInteraction,
 	APIMessageComponentButtonInteraction,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
-} from 'types/discord';
+} from '@discord/types';
 
 type APIComponentInteraction = APIMessageComponentSelectMenuInteraction|APIMessageComponentButtonInteraction;
 

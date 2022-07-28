@@ -3,7 +3,7 @@ import { Webhook } from '../Webhook';
 import {
 	APIMessage,
 	RESTPatchAPIWebhookWithTokenMessageJSONBody as JSONEditWebhook,
-} from 'types/discord';
+} from '@discord/types';
 
 class InteractionWebhook extends Webhook {
 	constructor(client: LunaryClient, interaction: Interaction) {

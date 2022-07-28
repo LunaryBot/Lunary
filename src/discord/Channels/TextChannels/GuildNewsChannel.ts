@@ -1,6 +1,6 @@
 import { GuildTextChannel } from './GuildTextChannel';
 
-import type { ChannelType } from 'types/discord';
+import type { ChannelType } from '@discord/types';
 
 class GuildNewsChannel extends GuildTextChannel<ChannelType.GuildNews> {}
 

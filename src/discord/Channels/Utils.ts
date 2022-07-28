@@ -5,7 +5,7 @@ import {
 	APIChannelBase,
 	APIInteractionDataResolvedChannel,
 	ChannelType,
-} from 'types/discord';
+} from '@discord/types';
   
 export type MixChannel<T extends ChannelType, X> = (APIChannelBase<T> | APIInteractionDataResolvedChannel) & X;
 

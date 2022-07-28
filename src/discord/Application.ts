@@ -4,7 +4,7 @@ import Structure from './Base';
 import { Team } from './Team';
 import { User } from './User';
 
-import { OAuth2Scopes } from 'types/discord';
+import { OAuth2Scopes } from '@discord/types';
 
 class Application extends Structure {
 	public id: string;
