@@ -1,4 +1,6 @@
-import { Command, ContextCommand } from '@Command';
+import { Command } from '@Command';
+
+import { ContextCommand } from '@Contexts';
 
 class PingCommand extends Command {
 	constructor(client: LunaryClient) {

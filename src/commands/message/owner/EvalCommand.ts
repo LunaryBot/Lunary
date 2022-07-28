@@ -1,7 +1,9 @@
 import { inspect } from 'util';
 import { exec } from 'child_process';
 
-import { Command, ContextCommand } from '@Command';
+import { Command } from '@Command';
+
+import { ContextCommand } from '@Contexts';
 
 import { Message } from '@discord';
 

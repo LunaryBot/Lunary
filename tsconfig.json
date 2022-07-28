@@ -28,6 +28,7 @@
             "@LunaryClient": ["./structures/LunaryClient"],
             "@EventListener": ["./structures/EventListener"],
             "@Command": ["./structures/Command"],
+            "@Contexts": ["./structures/Contexts"],
             "@structures/*": ["./structures/*"],
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
