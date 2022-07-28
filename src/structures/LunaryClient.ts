@@ -11,6 +11,8 @@ import { CommandInteraction, Application, User, ComponentInteraction } from '@di
 import EventListener from '@EventListener';
 import { Command,CommandGroup, SubCommand } from '@Command';
 
+import Prisma from './Prisma';
+
 import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 
 interface IClientCommands {
@@ -24,6 +26,7 @@ class Client extends EventEmitter {
 	
 	public readonly fastify = fastify();
 	public readonly redis = new Redis(process.env.REDIS_URL);
+	public readonly prisma = new Prisma(this);
 	public readonly rest: REST;
 
 	public readonly user: User = null as any;
@@ -100,7 +103,7 @@ class Client extends EventEmitter {
 			instance.listen.bind(instance)();
 		};
 
-		logger.info(`Loaded ${eventsName.length} events of ${events.length} files`, { label: `Cluster ${process.env.CLUSTER_ID ?? 0}, Lunary, Events`, details: `> ${eventsName.join(' | ')}` });
+		logger.info(`Loaded ${eventsName.length} events of ${events.length} files`, { label: 'Lunary, Events', details: `> ${eventsName.join(' | ')}` });
 
 		return this.events;
 	}
@@ -149,7 +152,7 @@ class Client extends EventEmitter {
 								for(const subsubcommand of subsubcommands) {
 									const { default: Base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}/${subsubcommand}`);
 
-									logger.info(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+									logger.info(`Loading ${type} command ${subsubcommand.replace(fileRegex, '$1$2')} for command group ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: 'Client, Commands Loader' });
 
 									const instance  = new Base(this, _subcommand) as SubCommand;
 
@@ -159,7 +162,7 @@ class Client extends EventEmitter {
 								_command.subcommands.push(_subcommand);
 							} else {
 								const { default: Base } = require(__dirname + `/../commands/${type}/${category}/${command}/${subcommand}`);
-								logger.info(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+								logger.info(`Loading ${type} command ${subcommand.replace(fileRegex, '$1$2')} on command ${command.replace(fileRegex, '$1$2')}`, { label: 'Client, Commands Loader' });
 								const instance  = new Base(this, _command) as SubCommand;
 
 								_command.subcommands.push(instance);
@@ -168,7 +171,7 @@ class Client extends EventEmitter {
 					} else {
 						const { default: Base } = require(`${__dirname}/../commands/${type}/${category}/${command}`);
 
-						logger.info(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` });
+						logger.info(`Loading ${type} command ${command.replace(fileRegex, '$1$2')}`, { label: 'Client, Commands Loader' });
                         
 						const instance  = new Base(this) as Command;
 
@@ -226,6 +229,10 @@ class Client extends EventEmitter {
 		}, (error, address) => {
 			if(error) logger.error(error.message, { label: ['Http Server'] });
 			else logger.info(`Http Server is running on port ${process.env.PORT} (${address})`, { label: 'Http Server' });
+		});
+
+		this.prisma.$connect().then(() => {
+			logger.info('Connected to database', { label: 'Prisma' });
 		});
 
 		return this;

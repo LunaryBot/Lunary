@@ -20,3 +20,5 @@ data/commands.json
 json.sqlite
 
 logs/*
+
+prisma/migrations/

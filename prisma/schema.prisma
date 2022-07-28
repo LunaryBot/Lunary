@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                         String @id
+  aboutme                    String?
+  features                   Int?
+  luas                       Int?
+  xp                         Int?
+  last_punishment_applied_id String?
+  last_daily                 String?
+
+  @@map("USERS")
+}
+
+model Guild {
+  id                  String @id
+  modlogs_channel     String?
+  punishments_channel String?
+  features            Int?
+  permissions         GuildPermissions[]
+
+  @@map("GUILDS")
+}
+
+model GuildPermissions {
+  id          String @id
+  type        GuildPermissionType
+  guild_id    String
+  permissions Int
+
+  guild Guild? @relation(fields: [guild_id], references: [id])
+
+  @@map("GUILD_PERMISSIONS")
+}
+
+enum GuildPermissionType {
+  MEMBER
+  ROLE
+}
