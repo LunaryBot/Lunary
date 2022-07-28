@@ -1,8 +1,9 @@
 import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
 import { Message } from '../Message';
+import { Guild } from '../Guilds';
 
-import { ComponentType, Routes, InteractionResponseType, MessageFlags } from '@discord/types';
+import { ComponentType, Routes, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
 
 import type {
 	APIMessageComponentSelectMenuInteraction,
@@ -27,6 +28,8 @@ class ComponentInteraction extends Interaction {
 	replied = false;
 	ephemeral?: boolean;
 
+	guild?: Guild;
+
 	constructor(client: LunaryClient, data: APIComponentInteraction, res: RequestResponse) {
 		super(client, data, res);
 
@@ -42,6 +45,8 @@ class ComponentInteraction extends Interaction {
 		}
 
 		this.webhook = new InteractionWebhook(this.client, this);
+
+		if(this.guildId) this.guild = new Guild(client, { id: this.guildId as Snowflake } as any);
 	}
 
 	async acknowledge(ephemeral?: boolean) {
@@ -96,7 +101,7 @@ class ComponentInteraction extends Interaction {
 		return await this.webhook.deleteMessage(id);
 	}
 
-	async deleteOriginal() {
+	async deleteOriginalMessage() {
 		if(!this.replied) throw new Error('No original message sent');
 
 		if(this.ephemeral) throw new Error('Can\'t delete ephemeral message');
