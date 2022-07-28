@@ -23,8 +23,6 @@ class EvalCommand extends Command {
 
 		const [_, flags, code] = [...(content.match(blockcode.test(content) ? blockcode : coderegex) || [null, null, content])];
 
-		console.log([_, flags, code]);
-
 		const options = { prompt: false, depth: 0, async: false, ephemeral: false };
 
 		if(flags) {
@@ -57,8 +55,6 @@ class EvalCommand extends Command {
 				}
 			});
 		}
-
-		console.log(options);
 
 		await context.acknowledge(options.ephemeral);
 
