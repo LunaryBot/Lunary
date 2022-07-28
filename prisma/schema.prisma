@@ -33,12 +33,12 @@ model Guild {
 }
 
 model GuildPermissions {
-  id          String @id
+  id          String                @id
   type        GuildPermissionType
   guild_id    String
   permissions Int
 
-  guild Guild? @relation(fields: [guild_id], references: [id])
+  guild       Guild?                @relation(fields: [guild_id], references: [id])
 
   @@map("GUILD_PERMISSIONS")
 }
