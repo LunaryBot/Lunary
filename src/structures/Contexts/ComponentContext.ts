@@ -1,4 +1,4 @@
-import {  } from '@discord/types';
+import { ComponentType } from '@discord/types';
 
 import type { ChannelType } from '@discord/types';
 import type { ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
@@ -29,12 +29,12 @@ class ComponentContext {
 
 		const guild = interaction.guild;
 
+		this.user = interaction.user as User;
+
 		if(guild) {
 			this.member = interaction.member;
 			this.guild = guild;
 		}
-
-		this.user = interaction.user as User;
 
 		this.dm = interaction.isInDM();
 	};
@@ -58,6 +58,30 @@ class ComponentContext {
 	get deleteOriginalMessage() {
 		return this.interaction.deleteOriginalMessage.bind(this.interaction);
 	}
+
+	get componentType() {
+		return this.interaction.componentType;
+	}
+
+	get values() {
+		return this.interaction.values;
+	}
 }
 
-export { ComponentContext };
+class ButtonClickContext extends ComponentContext {
+	get componentType(): ComponentType.Button {
+		return super.componentType as ComponentType.Button;
+	};
+}
+
+class SelectMenuContext extends ComponentContext {
+	get componentType(): ComponentType.SelectMenu {
+		return super.componentType as ComponentType.SelectMenu;
+	};
+
+	get values() {
+		return super.values as Array<string>;
+	}
+}
+
+export { ComponentContext, ButtonClickContext, SelectMenuContext };

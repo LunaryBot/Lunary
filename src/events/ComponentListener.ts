@@ -1,6 +1,8 @@
 import EventListener from '@EventListener';
+import { ComponentContext } from '@Contexts';
 
-import { ComponentInteraction, SelectMenuInteraction, ButtonInteraction } from '@discord';
+import type { ComponentInteraction } from '@discord';
+import type { ButtonClickContext } from '@Contexts';
 
 class ComponentListener extends EventListener {
 	constructor(client: LunaryClient) {
@@ -9,20 +11,12 @@ class ComponentListener extends EventListener {
     
 	async on(interaction: ComponentInteraction) {
 		if(interaction.customId === 'click_me') {
-			await interaction.acknowledge();
+			const context = new ComponentContext(this.client, interaction) as ButtonClickContext;
+			
+			await context.acknowledge();
 
-			await interaction.createMessage({
+			await context.createMessage({
 				content: 'You clicked me!',
-			});
-		}
-
-		if(interaction.customId === 'select_me') {
-			await interaction.acknowledge();
-
-			const { values } = interaction as SelectMenuInteraction;
-
-			await interaction.createMessage({
-				content: `You selected ${values.join(', ')}`,
 			});
 		}
 	}
