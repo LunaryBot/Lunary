@@ -1,41 +1,32 @@
-import { APIChatInputApplicationCommandInteractionData, APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionData, APIUserApplicationCommandInteractionData, ApplicationCommandOptionType, ApplicationCommandType } from '@discord/types';
+import { 
+	ApplicationCommandOptionType, 
+	ApplicationCommandType, 
+} from '@discord/types';
 
-import type { ChannelType } from '@discord/types';
+import Base from './Base';
+
+import type { 
+	APIChatInputApplicationCommandInteractionData, 
+	APIMessageApplicationCommandInteractionData,
+	APIUserApplicationCommandInteractionData,
+	ChannelType, 
+} from '@discord/types';
 import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 import type { Command, SubCommand } from '@Command';
 
 import CommandInteractionOptions from '@utils/CommandInteractionOptions';
 
-class ContextCommand {
-	public declare client: LunaryClient;
-
+class ContextCommand extends Base {
 	public command: Command|SubCommand;
-	public args: string[] | null;
 	public interaction: CommandInteraction;
 	public options: CommandInteractionOptions;
 
-	public author: User;
-	public user: User;
-	public member?: Member;
-	public guild?: Guild;
-	public channel: TextBasedChannel<ChannelType.GuildText|ChannelType.GuildNews>;
-
-	public declare t: (key: string, ...args: any[]) => string;
-
-	public dm: boolean;
-	public slash: boolean;
 	public prefix: string;
 
 	constructor(client: LunaryClient, interaction: CommandInteraction, command: Command|SubCommand) {
-		Object.defineProperty(this, 'client', {
-			value: client,
-			enumerable: false,
-			writable: false,
-		});
+		super(client, interaction);
         
 		this.command = command;
-
-		this.interaction = interaction || null;
         
 		this.options = new CommandInteractionOptions(interaction?.resolved, (interaction.raw.data as APIChatInputApplicationCommandInteractionData)?.options || []);
 
@@ -59,39 +50,8 @@ class ContextCommand {
 			);
 		}
 
-		const guild = interaction.guild;
-
-		if(guild) {
-			this.member = interaction.member;
-			this.guild = guild;
-		}
-
-		this.user = interaction.user as User;
-
-		this.dm = interaction.isInDM();
-
 		this.prefix = interaction.commandType === ApplicationCommandType.ChatInput ? '/' : '';
 	};
-
-	get createMessage() {
-		return this.interaction.createMessage.bind(this.interaction);
-	}
-
-	get createFollowup() {
-		return this.interaction.createFollowUp.bind(this.interaction);
-	}
-
-	get acknowledge() {
-		return this.interaction.acknowledge.bind(this.interaction);
-	}
-
-	get editOriginalMessage() {
-		return this.interaction.editOriginalMessage.bind(this.interaction);
-	}
-
-	get deleteOriginalMessage() {
-		return this.interaction.deleteOriginalMessage.bind(this.interaction);
-	}
 }
 
 export { ContextCommand };
