@@ -1,4 +1,4 @@
-import winston, { Logger, LeveledLogMethod } from 'winston';
+import winston from 'winston';
 import chalk from 'chalk';
 
 const { printf, combine, timestamp, colorize } = winston.format; 
@@ -54,5 +54,6 @@ const logger = winston.createLogger({
 
 logger.child = () => logger;
 
-// @ts-ignore
-global.logger = logger;
+Object.defineProperty(global, 'logger', {
+	value: logger,
+});
