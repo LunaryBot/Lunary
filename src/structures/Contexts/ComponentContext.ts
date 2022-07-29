@@ -1,7 +1,6 @@
 import { ComponentType } from '@discord/types';
 
 import Base from './Base';
-import type { ChannelType } from '@discord/types';
 import type { ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 
 class ComponentContext extends Base {
@@ -10,7 +9,6 @@ class ComponentContext extends Base {
 	get editParent() {
 		return this.interaction.editParent.bind(this.interaction);
 	}
-
 
 	get componentType() {
 		return this.interaction.componentType;
