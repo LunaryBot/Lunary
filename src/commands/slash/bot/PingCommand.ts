@@ -1,6 +1,7 @@
+import { ButtonStyle, ComponentType } from '@discord/types';
 import { Command } from '@Command';
 
-import { ContextCommand } from '@Contexts';
+import type { ContextCommand } from '@Contexts';
 
 class PingCommand extends Command {
 	constructor(client: LunaryClient) {
@@ -10,7 +11,22 @@ class PingCommand extends Command {
 	}
 
 	async run(context: ContextCommand) {
-		context.createMessage('Pong!');
+		context.createMessage({
+			content: 'Pong!',
+			components: [
+				{
+					type: ComponentType.ActionRow,
+					components: [
+						{
+							type: ComponentType.Button,
+							custom_id: 'click_me',
+							style: ButtonStyle.Primary,
+							label: 'Click Me!',
+						},
+					],
+				},
+			],
+		});
 	}
 }
 

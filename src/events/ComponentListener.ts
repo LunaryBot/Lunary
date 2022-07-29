@@ -12,10 +12,8 @@ class ComponentListener extends EventListener {
 	async on(interaction: ComponentInteraction) {
 		if(interaction.customId === 'click_me') {
 			const context = new ComponentContext(this.client, interaction) as ButtonClickContext;
-			
-			await context.acknowledge();
 
-			await context.createMessage({
+			await context.interaction.editParent({
 				content: 'You clicked me!',
 			});
 		}

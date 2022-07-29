@@ -66,7 +66,7 @@ class ComponentInteraction extends Interaction {
 	}
 
 	async createFollowUp(content: string | MessageEditWebhook) {
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		delete message.ephemeral;
 
@@ -78,7 +78,7 @@ class ComponentInteraction extends Interaction {
 	async createMessage(content: string | MessageEditWebhook) {
 		if(this.replied) throw new Error('Cannot create message after responding');
         
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		if(this.acknowledged) {
 			this.replied = true;
@@ -110,7 +110,7 @@ class ComponentInteraction extends Interaction {
 	}
 
 	async editMessage(id: string, content: string | RESTEditWebhook) {
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		return await this.webhook.editMessage(id, message);
 	}
@@ -120,11 +120,31 @@ class ComponentInteraction extends Interaction {
 
 		if(this.replied && this.ephemeral) throw new Error('Cannot edit ephemeral message');
 
-		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		if(!this.replied && this.acknowledged) this.replied = true;
 
 		return await this.webhook.editOriginalMessage(message);
+	}
+
+	async editParent(content: string | RESTEditWebhook) {
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+
+		return await this.res.send({
+			type: InteractionResponseType.UpdateMessage,
+			data: {
+				...message,
+			},
+		}); 
+	}
+
+	private makeMessageContent(content: string | MessageEditWebhook): MessageEditWebhook {
+		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
+	
+		return {
+			...message,
+			flags: message.ephemeral ?? false ? MessageFlags.Ephemeral : 0, 
+		};
 	}
 }
 
