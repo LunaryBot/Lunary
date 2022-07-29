@@ -39,25 +39,30 @@ class ComponentContext {
 		this.dm = interaction.isInDM();
 	};
 
-	get createMessage() {
-		return this.interaction.createMessage.bind(this.interaction);
+	get acknowledge() {
+		return this.interaction.acknowledge.bind(this.interaction);
 	}
 
 	get createFollowup() {
 		return this.interaction.createFollowUp.bind(this.interaction);
 	}
+	
+	get createMessage() {
+		return this.interaction.createMessage.bind(this.interaction);
+	}
 
-	get acknowledge() {
-		return this.interaction.acknowledge.bind(this.interaction);
+	get deleteOriginalMessage() {
+		return this.interaction.deleteOriginalMessage.bind(this.interaction);
 	}
 
 	get editOriginalMessage() {
 		return this.interaction.editOriginalMessage.bind(this.interaction);
 	}
 
-	get deleteOriginalMessage() {
-		return this.interaction.deleteOriginalMessage.bind(this.interaction);
+	get editParent() {
+		return this.interaction.editParent.bind(this.interaction);
 	}
+
 
 	get componentType() {
 		return this.interaction.componentType;

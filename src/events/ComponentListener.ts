@@ -13,7 +13,7 @@ class ComponentListener extends EventListener {
 		if(interaction.customId === 'click_me') {
 			const context = new ComponentContext(this.client, interaction) as ButtonClickContext;
 
-			await context.interaction.editParent({
+			await context.editParent({
 				content: 'You clicked me!',
 			});
 		}
