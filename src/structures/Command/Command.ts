@@ -1,6 +1,6 @@
 import Base from './Base';
 
-import type { ICommandBase } from '../../@types';
+import type { CommandBase } from '../../@types';
 import type { SubCommand } from './SubCommand';
 import type { CommandGroup } from './CommandGroup';
 
@@ -10,7 +10,7 @@ class Command extends Base {
 
 	constructor(
 		client: LunaryClient,
-		data: ICommandBase & { aliases?: Array<string>, subcommands?: Array<any> }
+		data: CommandBase & { aliases?: Array<string>, subcommands?: Array<any> }
 	) {
 		super(client, {
 			name: data.name,

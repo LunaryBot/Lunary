@@ -5,7 +5,7 @@ import type { GuildTextChannel, Member, Role, User, Message } from '@discord';
 
 import Collection from './Collection';
 
-interface ICommandInteractionOptionsResolved {
+interface CommandInteractionOptionsResolved {
     users?: Collection<User>;
     members?: Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>;
     roles?: Collection<Role>;
@@ -16,10 +16,10 @@ interface ICommandInteractionOptionsResolved {
 class CommandInteractionOptions extends Array {
 	public _group: string | null;
 	public _subcommand: string | null;
-	public resolved: ICommandInteractionOptionsResolved;
+	public resolved: CommandInteractionOptionsResolved;
 	public focused: APIApplicationCommandInteractionDataNumberOption | APIApplicationCommandInteractionDataStringOption | null;
 
-	constructor(resolved: ICommandInteractionOptionsResolved | undefined, args: any[]) {
+	constructor(resolved: CommandInteractionOptionsResolved | undefined, args: any[]) {
 		super(...args);
 
 		this.resolved = resolved || {};

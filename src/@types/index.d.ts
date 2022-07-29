@@ -1,7 +1,7 @@
 import { Permissions } from '@discord';
 import type { LunarPermissions } from '../utils/Constants';
 
-export interface ICommandRequirements {
+export interface CommandRequirements {
     permissions?: {
         me?: Array<keyof typeof Permissions.Flags>;
         bot?: Array<keyof typeof LunarPermissions>;
@@ -11,19 +11,19 @@ export interface ICommandRequirements {
     ownerOnly?: boolean;
 }
 
-export interface ICommandBase {
+export interface CommandBase {
     name: string;
     dirname?: string;
     requirements?: ICommandRequirements | null;
     cooldown?: number;
 }
 
-export interface IVoteData {
+export interface VoteData {
 	platform: string,
 	date: number
 }
 
-export interface IPunishmentLog {
+export interface Punishment {
     id: string;
     timestamp: number;
 	user: string;
@@ -31,10 +31,10 @@ export interface IPunishmentLog {
 	reason?: string;
 	type: 1 | 2 | 3 | 4;
 	duration?: number;
-	author: string;
-} 
+	author_id: string;
+}
   
-export interface IReason {
+export interface Reason {
     text: string;
     type: 1 | 2 | 3 | 4;
     duration?: number;

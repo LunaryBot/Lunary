@@ -15,7 +15,7 @@ import Prisma from './Prisma';
 
 import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 
-interface IClientCommands {
+interface ClientCommands {
     slash: Command[],
     user: Command[],
     message: Command[],
@@ -33,7 +33,7 @@ class Client extends EventEmitter {
 	public readonly application: Application = null as any;
 
 	public events: Array<EventListener> = [];
-	public commands: IClientCommands = {
+	public commands: ClientCommands = {
 		slash: [],
 		user: [],
 		message: [],
@@ -108,7 +108,7 @@ class Client extends EventEmitter {
 		return this.events;
 	}
 
-	private async _loadCommands(): Promise<IClientCommands> {
+	private async _loadCommands(): Promise<ClientCommands> {
 		const fileRegex = /^(.*)(Command|SubCommand|CommandGroup)(\.(j|t)s)?$/;
         
 		const types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'user' | 'message'>;

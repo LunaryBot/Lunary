@@ -3,14 +3,14 @@ import Base from './Base';
 import type { Command } from './Command';
 import type { CommandGroup } from './CommandGroup';
 
-import type { ICommandBase } from '../../@types';
+import type { CommandBase } from '../../@types';
 
 class SubCommand extends Base {
 	public parent: Command|CommandGroup;
 
 	constructor(
 		client: LunaryClient, 
-		data: ICommandBase,
+		data: CommandBase,
 		parent: Command|CommandGroup
 	) {
 		super(client, {

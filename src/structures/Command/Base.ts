@@ -1,4 +1,4 @@
-import { ICommandRequirements, ICommandBase } from '../../@types';
+import { CommandRequirements, CommandBase } from '../../@types';
 import type { ContextCommand } from '@Contexts';
 
 class Base {
@@ -6,12 +6,12 @@ class Base {
     
 	public name: string;
 	public dirname?: string | undefined;
-	public requirements?: ICommandRequirements | null;
+	public requirements?: CommandRequirements | null;
 	public cooldown: number;
 
 	constructor(
 		client: LunaryClient,
-		data: ICommandBase
+		data: CommandBase
 	) {
 		this.name = data.name;
 		this.dirname = data.dirname || undefined;
