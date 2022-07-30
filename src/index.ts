@@ -3,6 +3,10 @@ import './tools/Logger';
 
 import Client from '@LunaryClient';
 
-const client = new Client(process.env.DISCORD_CLIENT_TOKEN);
+async function main() {
+	const client = new Client(process.env.DISCORD_CLIENT_TOKEN);
 
-client.init();
+	await client.init();
+}
+
+main();

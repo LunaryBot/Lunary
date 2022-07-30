@@ -25,20 +25,35 @@ export interface VoteData {
 
 export interface Punishment {
     id: string;
-    timestamp: number;
-	user: string;
-	guild: string;
-	reason?: string;
-	type: 1 | 2 | 3 | 4;
-	duration?: number;
+	user_id: string;
 	author_id: string;
+	guild_id: string;
+    created_at: Date;
+	reason?: string;
+	type: PunishmentTypes;
+	duration?: number;
 }
+
+export interface PunishmentMute extends Punishment {
+    duration: number;
+}
+
+export enum PunishmentType {
+    Ban = 'BAN',
+    Kick = 'KICK',
+    Mute = 'MUTE',
+    Warn = 'ADV',
+    Adv = 'ADV',
+}
+
+type PunishmentTypes = 'BAN' | 'KICK' | 'MUTE' | 'ADV';
   
 export interface Reason {
+    id: string;
     text: string;
-    type: 1 | 2 | 3 | 4;
+    type: number;
+    guild_id: string;
     duration?: number;
     keys?: Array<string>;
     days?: number;
-    _id: string;
 }

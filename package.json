@@ -6,7 +6,8 @@
     "start": "TS_NODE_BASEURL=./build node -r tsconfig-paths/register .",
     "lint": "eslint --fix .",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format"
   },
   "author": "JVOPINHO",
   "license": "AGPL-3.0",

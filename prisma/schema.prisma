@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Guild {
-  id                  String @id @unique
+  id                  String             @id @unique
   modlogs_channel     String?
   punishments_channel String?
   features            Int?
   permissions         GuildPermissions[]
+  reasons             Reason[]
 
   @@map("GUILDS")
 }
@@ -37,7 +38,7 @@ enum GuildPermissionType {
 }
 
 model Punishment {
-  id         String           @id @unique
+  id         String         @id @unique
   guild_id   String
   user_id    String
   author_id  String
@@ -46,9 +47,9 @@ model Punishment {
   duration   Int?
   reason     String?
   reason_id  String?
-  deleted    Boolean?          @default(false)
+  deleted    Boolean?       @default(false)
   revoker_id String?
-  
+
   @@map("PUNISHMENTS")
 }
 
@@ -59,8 +60,22 @@ enum PunishmentType {
   ADV
 }
 
+model Reason {
+  id       String   @id @unique @default(cuid())
+  text     String
+  guild_id String
+  type     Int
+  keys     String[] @default([])
+  duration Int?
+  days     Int?
+
+  guild    Guild?   @relation(fields: [guild_id], references: [id])
+
+  @@map("REASONS")
+}
+
 model User {
-  id                         String @id @unique
+  id                         String  @id @unique
   aboutme                    String?
   features                   Int?
   luas                       Int?
