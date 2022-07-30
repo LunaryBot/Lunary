@@ -14,7 +14,7 @@ model Guild {
   id                  String             @id @unique
   modlogs_channel     String?
   punishments_channel String?
-  features            Int?
+  features            BigInt?
   permissions         GuildPermissions[]
   reasons             Reason[]
 
@@ -25,7 +25,7 @@ model GuildPermissions {
   id          String                @id @unique
   type        GuildPermissionType
   guild_id    String
-  permissions Int
+  permissions BigInt
 
   guild       Guild?                @relation(fields: [guild_id], references: [id])
 
@@ -64,7 +64,7 @@ model Reason {
   id       String   @id @unique @default(cuid())
   text     String
   guild_id String
-  type     Int
+  type     BigInt
   keys     String[] @default([])
   duration Int?
   days     Int?
@@ -77,7 +77,7 @@ model Reason {
 model User {
   id                         String  @id @unique
   aboutme                    String?
-  features                   Int?
+  features                   BigInt?
   luas                       Int?
   xp                         Int?
   last_punishment_applied_id String?
