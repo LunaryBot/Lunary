@@ -7,9 +7,9 @@ import { ContextCommand } from '@Contexts';
 
 import { Message } from '@discord';
 
-const coderegex = /^(--.[^\s]+)*?\s(.*)$/is;
+const coderegex = /^(--.[^\s]+\s?)*?(.*)$/is;
 
-const blockcode = /^(--.+)*?```(?:js)?(.+[^\\])```$/is;
+const blockcode = /^(--.+\s?)*?```(?:js)?(.+[^\\])```$/is;
 
 class EvalCommand extends Command {
 	constructor(client: LunaryClient) {
@@ -31,7 +31,7 @@ class EvalCommand extends Command {
 			flagsArray.forEach(flag => {
 				const [key, value] = flag.split(':');
 
-				switch (key) {
+				switch (key.trim()) {
 					case 'prompt': {
 						options.prompt = true;
 						break;
