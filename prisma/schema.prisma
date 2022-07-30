@@ -10,20 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                         String @id
-  aboutme                    String?
-  features                   Int?
-  luas                       Int?
-  xp                         Int?
-  last_punishment_applied_id String?
-  last_daily                 String?
-
-  @@map("USERS")
-}
-
 model Guild {
-  id                  String @id
+  id                  String @id @unique
   modlogs_channel     String?
   punishments_channel String?
   features            Int?
@@ -33,7 +21,7 @@ model Guild {
 }
 
 model GuildPermissions {
-  id          String                @id
+  id          String                @id @unique
   type        GuildPermissionType
   guild_id    String
   permissions Int
@@ -44,6 +32,41 @@ model GuildPermissions {
 }
 
 enum GuildPermissionType {
-  MEMBER
   ROLE
+  MEMBER
+}
+
+model Punishment {
+  id         String           @id @unique
+  guild_id   String
+  user_id    String
+  author_id  String
+  type       PunishmentType
+  created_at DateTime
+  duration   Int?
+  reason     String?
+  reason_id  String?
+  deleted    Boolean?          @default(false)
+  revoker_id String?
+  
+  @@map("PUNISHMENTS")
+}
+
+enum PunishmentType {
+  BAN
+  MUTE
+  KICK
+  ADV
+}
+
+model User {
+  id                         String @id @unique
+  aboutme                    String?
+  features                   Int?
+  luas                       Int?
+  xp                         Int?
+  last_punishment_applied_id String?
+  last_daily                 String?
+
+  @@map("USERS")
 }
