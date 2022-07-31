@@ -19,7 +19,7 @@ export const Colors = {
 	YELLOW: 16705372,
 };
 
-export const GuildConfigs = {
+export const GuildFeatures = {
 	mandatoryReason: 1n << 0n,
 	sendTranscript: 1n << 1n,
 };
@@ -52,8 +52,4 @@ export const LunaryPermissions = {
 	lunarPunishmentOutReason: 1n << 4n,
 	lunarViewHistory: 1n << 5n,
 	lunarManageHistory: 1n << 6n,
-};
-
-export const UserConfigs = {
-	quickPunishment: 1n << 0n,
 };
