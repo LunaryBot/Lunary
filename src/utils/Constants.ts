@@ -24,6 +24,16 @@ export const GuildFeatures = {
 	sendTranscript: 1n << 1n,
 };
 
+export const GuildPermissions = {
+	lunarBanMembers: 1n << 0n,
+	lunarKickMembers: 1n << 1n,
+	lunarMuteMembers: 1n << 2n,
+	lunarAdvMembers: 1n << 3n,
+	lunarPunishmentOutReason: 1n << 4n,
+	lunarViewHistory: 1n << 5n,
+	lunarManageHistory: 1n << 6n,
+};
+
 const baseUrl = 'https://lunary.space';
 
 export const Links = {
@@ -42,14 +52,4 @@ export const Links = {
 	},
 	support: 'https://discord.gg/8K6Zry9Crx',
 	vote: 'https://top.gg/bot/777654875441463296/vote',
-};
-
-export const LunaryPermissions = {
-	lunarBanMembers: 1n << 0n,
-	lunarKickMembers: 1n << 1n,
-	lunarMuteMembers: 1n << 2n,
-	lunarAdvMembers: 1n << 3n,
-	lunarPunishmentOutReason: 1n << 4n,
-	lunarViewHistory: 1n << 5n,
-	lunarManageHistory: 1n << 6n,
 };
