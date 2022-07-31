@@ -29,6 +29,7 @@
             "@EventListener": ["./structures/EventListener"],
             "@Command": ["./structures/Command"],
             "@Contexts": ["./structures/Contexts"],
+            "@Database": ["./structures/Database"],
             "@structures/*": ["./structures/*"],
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
