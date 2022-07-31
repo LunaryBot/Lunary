@@ -11,12 +11,11 @@ datasource db {
 }
 
 model Guild {
-  id                  String             @id @unique
+  id                  String              @id @unique
   modlogs_channel     String?
   punishments_channel String?
   features            BigInt?
   permissions         GuildPermissions[]
-  reasons             Reason[]
 
   @@map("GUILDS")
 }
@@ -68,8 +67,6 @@ model Reason {
   keys     String[] @default([])
   duration Int?
   days     Int?
-
-  guild    Guild?   @relation(fields: [guild_id], references: [id])
 
   @@map("REASONS")
 }
