@@ -1,6 +1,9 @@
 import GuildFeatures from '@utils/GuildFeatures';
+import GuildPermissions from '@utils/GuildPermissions';
+import { AbstractGuild } from '@discord';
 
 import type { Guild } from '@discord';
+import type { Snowflake } from '@discord/types';
 import type * as Prisma from '@prisma/client';
 
 class GuildDatabase {
@@ -13,10 +16,12 @@ class GuildDatabase {
 	public punishmentsChannelId: string;
 
 	public reasons: Prisma.Reason[];
+	public permissions: GuildPermissions[];
 
-	constructor(client: LunaryClient, guild: Guild, data?: Partial<Prisma.Guild>, options?: { 
+	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
-		fetchPermissions?: boolean 
+		fetchPermissions?: boolean,
+		data?: Partial<Prisma.Guild>,
 	}) {
 		Object.defineProperty(this, 'client', {
 			value: client,
@@ -25,19 +30,23 @@ class GuildDatabase {
 		});
 
 		Object.defineProperty(this, 'guild', {
-			value: guild,
+			value: typeof guild === 'string' ? new AbstractGuild(client, guild) : guild,
 			writable: false,
 			enumerable: false,
 		});
 
-		if(data) {
-			this._patch(data);
+		if(options?.data) {
+			this._patch(options.data);
 		} else {
 			this.fetch();
 		}
 
 		if(options?.fetchPermissions) {
 			this.fetchPermissions();
+		}
+
+		if(options?.fetchReasons) {
+			this.fetchReasons();
 		}
 	}
 
@@ -67,14 +76,16 @@ class GuildDatabase {
 		return this._patch(data || {});
 	}
 
-	public async fetchPermissions(): Promise<Prisma.GuildPermissions[]> {
+	public async fetchPermissions(): Promise<GuildPermissions[]> {
 		const data = await this.guild.client.prisma.guildPermissions.findMany({
 			where: {
 				guild_id: this.guild.id,
 			},
 		});
 
-		return data;
+		this.permissions = data.map(permission => new GuildPermissions(permission));
+
+		return this.permissions;
 	}
 
 	public async fetchReasons(): Promise<Prisma.Reason[]> {
@@ -86,7 +97,7 @@ class GuildDatabase {
 
 		this.reasons = data;
 
-		return data;
+		return this.reasons;
 	}
 
 	public async save() {
