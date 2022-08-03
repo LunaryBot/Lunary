@@ -1,4 +1,4 @@
-import type { CommandBase } from '../../@types';
+import type { CommandBase } from '@types';
 import Base from './Base';
 import type { CommandGroup } from './CommandGroup';
 import type { SubCommand } from './SubCommand';

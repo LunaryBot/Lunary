@@ -1,4 +1,4 @@
-import axios, { Axios } from 'axios';
+import { Axios } from 'axios';
 
 import { KitsuAnimeData, KitsuMangaData } from '../@types/Kitsu';
 
