@@ -33,7 +33,7 @@
             "@structures/*": ["./structures/*"],
             "@utils/*": ["./utils/*"],
             "@decorators": ["./utils/Decorators"],
-            "types/*": ["./@types/*"],
+            "@types/*": ["./@types/*"],
             "@discord/types": ["./@types/discord"],
             "@discord": ["./discord/"]
         },

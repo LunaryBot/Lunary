@@ -10,6 +10,7 @@ module.exports = {
 	},
 	plugins: [
 		'@typescript-eslint',
+		'eslint-plugin-import-helpers',
 	],
 	rules: {
 		indent: [
@@ -90,6 +91,21 @@ module.exports = {
 		  	},
 		],
 		'object-curly-spacing': [ 'warn', 'always' ],
+		'import-helpers/order-imports': [
+			'warn',
+			{
+				newlinesBetween: 'always',
+				groups: [
+					'module',
+					'/^@(Command|Contexts|Database|EventListener)/',
+					'/^@structures/',
+					'/^@discord/',
+					'/^@(utils|decorators)/',
+					'/^@(types)/',
+				],
+				alphabetize: { order: 'asc', ignoreCase: true },
+			},
+		],
 	},
 	ignorePatterns: ['build'],
 };
