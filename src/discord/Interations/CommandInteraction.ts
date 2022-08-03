@@ -16,8 +16,6 @@ import { User } from '../User';
 import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
 
-
-
 type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
 
 interface Resolved {
