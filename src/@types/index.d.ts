@@ -1,12 +1,18 @@
 import { Permissions } from '@discord';
-import type { LunarPermissions } from '../utils/Constants';
+import type { GuildPermissions } from '../utils/Constants';
 
 export interface CommandRequirements {
     permissions?: {
         me?: Array<keyof typeof Permissions.Flags>;
-        bot?: Array<keyof typeof LunarPermissions>;
+        bot?: Array<keyof typeof GuildPermissions>;
         discord?: Array<keyof typeof Permissions.Flags>;
     },
+    database?: {
+        user?: boolean;
+        guild?: boolean;
+        permissions?: boolean;
+        reasons?: boolean;
+    }
     guildOnly?: boolean;
     ownerOnly?: boolean;
 }
@@ -14,7 +20,7 @@ export interface CommandRequirements {
 export interface CommandBase {
     name: string;
     dirname?: string;
-    requirements?: ICommandRequirements | null;
+    requirements?: CommandRequirements | null;
     cooldown?: number;
 }
 
