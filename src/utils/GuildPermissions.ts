@@ -1,6 +1,7 @@
+import * as Prisma from '@prisma/client';
+
 import BitField from './BitField';
 import * as Constants from './Constants';
-import * as Prisma from '@prisma/client';
 
 type GuildPermission = keyof typeof Constants.GuildPermissions;
 

@@ -1,13 +1,14 @@
-import Structure from '../Base';
-import type { MixChannel } from './Utils';
-
 import { ChannelType } from '@discord/types';
+
+import Structure from '../Base';
 import type {
 	DMChannel,
 	GroupDMChannel,
 	GuildNewsChannel,
 	GuildTextChannel,
 } from './TextChannels';
+import type { MixChannel } from './Utils';
+
 
 type ChannelData<T extends ChannelType> = MixChannel<T, { [key: string]: any }>;
 

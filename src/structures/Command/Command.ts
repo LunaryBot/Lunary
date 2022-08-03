@@ -1,8 +1,7 @@
-import Base from './Base';
-
 import type { CommandBase } from '../../@types';
-import type { SubCommand } from './SubCommand';
+import Base from './Base';
 import type { CommandGroup } from './CommandGroup';
+import type { SubCommand } from './SubCommand';
 
 class Command extends Base {
 	public aliases: Array<string>;

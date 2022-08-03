@@ -1,5 +1,3 @@
-import Structure from './Base';
-
 import {
 	APIMessage,
 	APIWebhook,
@@ -10,6 +8,9 @@ import {
 	APIInteractionWebhook,
 	Routes,
 } from '@discord/types';
+
+import Structure from './Base';
+
 
 class Webhook extends Structure {
 	protected readonly token: string;

@@ -1,11 +1,11 @@
-import { inspect } from 'util';
 import { exec } from 'child_process';
+import { inspect } from 'util';
 
 import { Command } from '@Command';
-
 import { ContextCommand } from '@Contexts';
 
 import { Message } from '@discord';
+
 
 const coderegex = /^(--.[^\s]+\s?)*?(.*)$/is;
 

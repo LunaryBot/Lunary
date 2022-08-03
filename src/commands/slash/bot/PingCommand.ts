@@ -1,7 +1,7 @@
-import { ButtonStyle, ComponentType } from '@discord/types';
 import { Command } from '@Command';
-
 import type { ContextCommand } from '@Contexts';
+
+import { ButtonStyle, ComponentType } from '@discord/types';
 
 class PingCommand extends Command {
 	constructor(client: LunaryClient) {

@@ -1,10 +1,11 @@
 import { APIFullOrInteractionGuildMember, Routes, Snowflake } from '@discord/types';
 
+import { RequiresToken } from '@decorators';
+
 import Structure from './Base';
 import { AbstractGuild } from './Guilds';
 import { User } from './User';
 
-import { RequiresToken } from '@decorators';
 
 class Member extends Structure {
 	public readonly id: Snowflake;

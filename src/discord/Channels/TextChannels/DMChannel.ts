@@ -1,9 +1,10 @@
-import { TextBasedChannel } from './Base';
-import { User } from '../../User';
-
-import type { MixChannel } from '../Utils';
-
 import type { APIDMChannel, ChannelType } from '@discord/types';
+
+import { User } from '../../User';
+import type { MixChannel } from '../Utils';
+import { TextBasedChannel } from './Base';
+
+
 
 class DMChannel extends TextBasedChannel<ChannelType.DM> {
 	public readonly recipients?: Array<User>;

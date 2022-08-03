@@ -1,25 +1,30 @@
 import EventEmitter from 'events';
 import fastify from 'fastify';
 import fastifyBodyRaw from 'fastify-raw-body';
-import tweetnacl from 'tweetnacl';
-import { REST } from '@discordjs/rest';
-import Redis from 'ioredis';
 import fs from 'fs';
+import Redis from 'ioredis';
+import tweetnacl from 'tweetnacl';
+
+import { Command, CommandGroup, SubCommand } from '@Command';
+import EventListener from '@EventListener';
 
 import { CommandInteraction, Application, User, ComponentInteraction } from '@discord';
+import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
+import { REST } from '@discordjs/rest';
 
-import EventListener from '@EventListener';
-import { Command,CommandGroup, SubCommand } from '@Command';
+
 
 import Prisma from './Prisma';
 
-import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 
 interface ClientCommands {
     slash: Command[],
     user: Command[],
     message: Command[],
 }
+
+const _Command = Command;
+const _CommandGroup = CommandGroup;
 
 class Client extends EventEmitter {
 	private readonly _token: string;
@@ -122,8 +127,8 @@ class Client extends EventEmitter {
 				for(const command of commands) {
 					if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
 						const client = this;
-						const _Command = require(`${__dirname}/Command`);
-						const _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`new (class ${command.replace(fileRegex, '$1$2')} extends _Command.default { constructor() { 
+						const _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`
+						new (class ${command.replace(fileRegex, '$1$2')} extends _Command { constructor() { 
                                 super(client, { 
                                     name: '${splitCommandName(command)}', 
                                 }) 
@@ -140,7 +145,8 @@ class Client extends EventEmitter {
 
 						for(const subcommand of subcommands) {
 							if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}/${subcommand}`).isDirectory()) {
-								const _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || eval(`new (class ${subcommand.replace(fileRegex, '$1$2')} extends _Command.CommandGroup { constructor() { 
+								const _subcommand: CommandGroup = _command.subcommands.find(cmd => cmd.name === splitCommandName(subcommand)) as CommandGroup || eval(`
+								new (class ${subcommand.replace(fileRegex, '$1$2')} extends _CommandGroup { constructor() { 
                                     super(client, { 
                                         name: '${splitCommandName(subcommand)}', 
                                     }, _command) 

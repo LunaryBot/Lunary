@@ -9,4 +9,8 @@ async function main() {
 	await client.init();
 }
 
+process.on('uncaughtExceptionMonitor', (err) => {
+	logger.error(err.message, { label: 'Process', details: err.stack });
+});
+
 main();

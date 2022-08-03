@@ -1,18 +1,19 @@
 import { Permissions } from '@discord';
+
 import type { GuildPermissions } from '../utils/Constants';
 
 export interface CommandRequirements {
     permissions?: {
         me?: Array<keyof typeof Permissions.Flags>;
-        bot?: Array<keyof typeof GuildPermissions>;
+        lunary?: Array<keyof typeof GuildPermissions>;
         discord?: Array<keyof typeof Permissions.Flags>;
-    },
+    };
     database?: {
         user?: boolean;
         guild?: boolean;
         permissions?: boolean;
         reasons?: boolean;
-    }
+    };
     guildOnly?: boolean;
     ownerOnly?: boolean;
 }

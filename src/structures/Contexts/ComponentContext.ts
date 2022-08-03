@@ -1,7 +1,7 @@
+import type { ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 import { ComponentType } from '@discord/types';
 
 import Base from './Base';
-import type { ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 
 class ComponentContext extends Base {
 	public interaction: ComponentInteraction;

@@ -1,10 +1,13 @@
-import GuildFeatures from '@utils/GuildFeatures';
-import GuildPermissions from '@utils/GuildPermissions';
-import { AbstractGuild } from '@discord';
+import type * as Prisma from '@prisma/client';
 
+import { AbstractGuild } from '@discord';
 import type { Guild } from '@discord';
 import type { Snowflake } from '@discord/types';
-import type * as Prisma from '@prisma/client';
+
+import GuildFeatures from '@utils/GuildFeatures';
+import GuildPermissions from '@utils/GuildPermissions';
+
+
 
 class GuildDatabase {
 	public readonly client: LunaryClient;
@@ -21,7 +24,7 @@ class GuildDatabase {
 	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
 		fetchPermissions?: boolean,
-		data?: Partial<Prisma.Guild>,
+		data?: Partial<Prisma.Guild> & { reasons?: Prisma.Reason[], permissions?: Prisma.GuildPermissions[] },
 	}) {
 		Object.defineProperty(this, 'client', {
 			value: client,
@@ -37,20 +40,10 @@ class GuildDatabase {
 
 		if(options?.data) {
 			this._patch(options.data);
-		} else {
-			this.fetch();
-		}
-
-		if(options?.fetchPermissions) {
-			this.fetchPermissions();
-		}
-
-		if(options?.fetchReasons) {
-			this.fetchReasons();
 		}
 	}
 
-	private _patch(data: Partial<Prisma.Guild>): this {
+	private _patch(data: Partial<Prisma.Guild> & { reasons?: Prisma.Reason[], permissions?: Prisma.GuildPermissions[] }): this {
 		if(data.features) {
 			this.features = new GuildFeatures(data.features);
 		}
@@ -63,15 +56,37 @@ class GuildDatabase {
 			this.punishmentsChannelId = data.punishments_channel;
 		}
 
+		if(data.permissions) {
+			this.permissions = data.permissions.map(permission => new GuildPermissions(permission));
+		}
+
+		if(data.reasons) {
+			this.reasons = data.reasons;
+		}
+
 		return this;
 	}
 
-	public async fetch() {
-		const data = await this.guild.client.prisma.guild.findUnique({
+	public async fetch({ fetchPermissions = false, fetchReasons = false } = {}): Promise<this> {
+		const query: any = {
 			where: {
 				id: this.guild.id,
 			},
-		});
+		};
+
+		if(fetchPermissions || fetchReasons) {
+			query.include = {};
+		}
+
+		if(fetchPermissions) {
+			query.include.permissions = true;
+		}
+
+		if(fetchReasons) {
+			query.include.reasons = true;
+		}
+
+		const data = await this.guild.client.prisma.guild.findUnique(query);
 
 		return this._patch(data || {});
 	}

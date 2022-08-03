@@ -1,10 +1,11 @@
 import { RESTGetAPIOAuth2CurrentApplicationResult } from 'discord-api-types/v10';
 
+import { OAuth2Scopes } from '@discord/types';
+
 import Structure from './Base';
 import { Team } from './Team';
 import { User } from './User';
 
-import { OAuth2Scopes } from '@discord/types';
 
 class Application extends Structure {
 	public id: string;

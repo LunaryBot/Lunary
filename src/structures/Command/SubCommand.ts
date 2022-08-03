@@ -1,9 +1,8 @@
+import type { CommandBase } from '../../@types';
 import Base from './Base';
-
 import type { Command } from './Command';
 import type { CommandGroup } from './CommandGroup';
 
-import type { CommandBase } from '../../@types';
 
 class SubCommand extends Base {
 	public parent: Command|CommandGroup;

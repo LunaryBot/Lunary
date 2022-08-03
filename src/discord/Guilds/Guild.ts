@@ -1,7 +1,8 @@
+import type { APIGuild, GuildFeature, Snowflake } from '@discord/types';
+
 import { Role } from '../Role';
 import { AbstractGuild } from './AbstractGuild';
 
-import type { APIGuild, GuildFeature, Snowflake } from '@discord/types';
 
 class Guild extends AbstractGuild {
 	public readonly name: string;

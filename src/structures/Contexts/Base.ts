@@ -1,7 +1,6 @@
-import { ComponentType } from '@discord/types';
-
-import type { ChannelType } from '@discord/types';
 import type { CommandInteraction, ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
+import { ComponentType } from '@discord/types';
+import type { ChannelType } from '@discord/types';
 
 class Base {
 	public declare client: LunaryClient;

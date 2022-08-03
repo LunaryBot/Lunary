@@ -1,21 +1,22 @@
-import { Interaction } from './Base';
-import { InteractionWebhook } from './InteractionWebhook';
-import { User } from '../User';
-import { Member } from '../Member';
-import { Role } from '../Role';
-import { GuildNewsChannel, GuildTextChannel } from '../Channels';
-import { Message } from '../Message';
-import { AbstractGuild, Guild } from '../Guilds';
-
-import Collection from '@utils/Collection';
-
 import { APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionDataResolved, APIUserApplicationCommandInteractionDataResolved, ApplicationCommandType, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
-
 import type {
 	APIApplicationCommandInteraction,
 	ApplicationCommandInteractionResponse,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
 } from '@discord/types';
+
+import Collection from '@utils/Collection';
+
+import { GuildNewsChannel, GuildTextChannel } from '../Channels';
+import { AbstractGuild, Guild } from '../Guilds';
+import { Member } from '../Member';
+import { Message } from '../Message';
+import { Role } from '../Role';
+import { User } from '../User';
+import { Interaction } from './Base';
+import { InteractionWebhook } from './InteractionWebhook';
+
+
 
 type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
 

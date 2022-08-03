@@ -1,9 +1,10 @@
 import { Routes, UserFlags } from '@discord/types';
+import type { APIDMChannel, APIUser, Snowflake } from '@discord/types';
 
-import Structure from './Base';
 import { RequiresToken } from '@decorators';
 
-import type { APIDMChannel, APIUser, Snowflake } from '@discord/types';
+import Structure from './Base';
+
 
 class User extends Structure {
 	public readonly id: Snowflake;

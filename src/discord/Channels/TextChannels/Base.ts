@@ -1,12 +1,12 @@
-import { Channel } from '../Base';
-
-import type { MixChannel } from '../Utils';
-
 import type {
 	APITextBasedChannel,
 	Snowflake,
 	TextChannelType,
 } from '@discord/types';
+
+import { Channel } from '../Base';
+import type { MixChannel } from '../Utils';
+
 
 class TextBasedChannel<ChannelType extends TextChannelType> extends Channel<ChannelType> {
 	public lastMessageId?: Snowflake;

@@ -1,7 +1,8 @@
+import type { APIMessage, MessageType } from '@discord/types';
+
 import Structure from './Base';
 import { User } from './User';
 
-import type { APIMessage, MessageType } from '@discord/types';
 
 class Message extends Structure {
 	id: string;

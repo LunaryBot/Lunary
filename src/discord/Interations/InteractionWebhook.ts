@@ -1,9 +1,10 @@
-import type { Interaction } from './Base';
-import { Webhook } from '../Webhook';
 import {
 	APIMessage,
 	RESTPatchAPIWebhookWithTokenMessageJSONBody as JSONEditWebhook,
 } from '@discord/types';
+
+import { Webhook } from '../Webhook';
+import type { Interaction } from './Base';
 
 class InteractionWebhook extends Webhook {
 	constructor(client: LunaryClient, interaction: Interaction) {

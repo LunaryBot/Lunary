@@ -1,15 +1,15 @@
-import { Interaction } from './Base';
-import { InteractionWebhook } from './InteractionWebhook';
-import { Message } from '../Message';
-import { Guild } from '../Guilds';
-
 import { ComponentType, Routes, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
-
 import type {
 	APIMessageComponentSelectMenuInteraction,
 	APIMessageComponentButtonInteraction,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
 } from '@discord/types';
+
+import { Guild } from '../Guilds';
+import { Message } from '../Message';
+import { Interaction } from './Base';
+import { InteractionWebhook } from './InteractionWebhook';
+
 
 type APIComponentInteraction = APIMessageComponentSelectMenuInteraction|APIMessageComponentButtonInteraction;
 

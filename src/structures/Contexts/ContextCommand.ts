@@ -1,20 +1,20 @@
+import type { Command, SubCommand } from '@Command';
+
+import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
 import { 
 	ApplicationCommandOptionType, 
 	ApplicationCommandType, 
 } from '@discord/types';
-
-import Base from './Base';
-
 import type { 
 	APIChatInputApplicationCommandInteractionData, 
 	APIMessageApplicationCommandInteractionData,
 	APIUserApplicationCommandInteractionData,
 	ChannelType, 
 } from '@discord/types';
-import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
-import type { Command, SubCommand } from '@Command';
 
 import CommandInteractionOptions from '@utils/CommandInteractionOptions';
+
+import Base from './Base';
 
 class ContextCommand extends Base {
 	public command: Command|SubCommand;

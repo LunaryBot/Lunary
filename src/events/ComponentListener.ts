@@ -1,8 +1,9 @@
-import EventListener from '@EventListener';
 import { ComponentContext } from '@Contexts';
+import type { ButtonClickContext } from '@Contexts';
+import EventListener from '@EventListener';
 
 import type { ComponentInteraction } from '@discord';
-import type { ButtonClickContext } from '@Contexts';
+
 
 class ComponentListener extends EventListener {
 	constructor(client: LunaryClient) {
