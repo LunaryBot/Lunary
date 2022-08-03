@@ -10,6 +10,7 @@ declare global {
         shorten(length: number): string;
         toTitleCase(): string;
         checkSimilarityStrings(string: string): number;
+        removeAccents(): string;
     }
     
     const logger: Logger;

@@ -1,14 +1,3 @@
-String.prototype.shorten = function (length: number): string {
-	if(this.length <= length) {
-		return this.toString();
-	}
-	return this.substring(0, length - 3) + '...';
-};
-
-String.prototype.toTitleCase = function (): string {
-	return this.replace(/\w\S*/g, function (string) { return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase(); });
-};
-
 String.prototype.checkSimilarityStrings = function (string: string): number {
 	if(this.toString() === string) return 1.0;
   
@@ -49,4 +38,19 @@ String.prototype.checkSimilarityStrings = function (string: string): number {
 	t/=2;
   
 	return ((matches / len1) + (matches / len2) + ((matches - t) / matches)) / 3.0;
+};
+
+String.prototype.removeAccents = function () {
+	return this.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+};
+
+String.prototype.shorten = function (length: number): string {
+	if(this.length <= length) {
+		return this.toString();
+	}
+	return this.substring(0, length - 3) + '...';
+};
+
+String.prototype.toTitleCase = function (): string {
+	return this.replace(/\w\S*/g, function (string) { return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase(); });
 };
