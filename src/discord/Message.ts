@@ -9,6 +9,7 @@ class Message extends Structure {
 	content: string;
 	type: MessageType;
 	author: User;
+	channelId: string;
   
 	constructor(client: LunaryClient, data: APIMessage) {
 		super(client);
@@ -20,6 +21,8 @@ class Message extends Structure {
 		this.type = data.type;
 
 		this.author = new User(client, data.author);
+
+		this.channelId = data.channel_id;
 	}
 }
 
