@@ -42,7 +42,7 @@ class User extends Structure {
 	}
 
 	@RequiresToken
-  	private async getDMChannel() {
+  	public async getDMChannel() {
   		const data = (await this.client.rest.post(Routes.userChannels(), {
   			body: { recipient_id: this.id },
   		})) as APIDMChannel;
