@@ -18,6 +18,8 @@ class TextChannel extends Channel {
 	}
 
 	public _patch(raw: APITextChannel) {
+		super._patch(raw);
+		
 		if(raw.default_auto_archive_duration !== undefined) {
 			this.defaultAutoArchiveDuration = raw.default_auto_archive_duration;
 		}
@@ -36,6 +38,8 @@ class TextChannel extends Channel {
 		if(raw.topic !== undefined) {
 			this.topic = raw.topic;
 		}
+
+		return this;
 	}
 
     @RequiresToken

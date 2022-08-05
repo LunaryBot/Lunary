@@ -22,6 +22,8 @@ class Channel extends Structure {
 		if(raw.name !== undefined) {
 			this.name = raw.name;
 		}
+
+		return this;
 	}
 
 	public static from(client: LunaryClient, raw: APIChannel) {
