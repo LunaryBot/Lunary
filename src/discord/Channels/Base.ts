@@ -7,14 +7,21 @@ class Channel extends Structure {
 
 	public readonly type: ChannelType;
 
-	public readonly name?: string | null;
+	public name?: string | null;
 
 	public constructor(client: LunaryClient, raw: APIChannel) {
 		super(client);
 
 		this.id = raw.id;
 		this.type = raw.type;
-		this.name = raw.name;
+
+		this._patch(raw);
+	}
+
+	public _patch(raw: APIChannel) {
+		if(raw.name !== undefined) {
+			this.name = raw.name;
+		}
 	}
 
 	public static from(client: LunaryClient, raw: APIChannel) {
