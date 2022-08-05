@@ -14,9 +14,7 @@ class TextChannel extends Channel {
 	constructor(client: LunaryClient, raw: APITextChannel) {
 		super(client, raw);
 
-		this.lastMessageId = raw.last_message_id || null;
-		this.rateLimitPerUser = raw.rate_limit_per_user == null ? null : raw.rate_limit_per_user;
-		this.lastPinTimestamp = raw.last_pin_timestamp ? Date.parse(raw.last_pin_timestamp) : null;
+		this._patch(raw);
 	}
 
 	public _patch(raw: APITextChannel) {
