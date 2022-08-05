@@ -25,9 +25,7 @@ function buildRoute(options: { methods: { [name: string]: (...args: any[]) => an
 					if(options) {
 						params.push(options);
 					}
-					
-					console.log(...params);
-					
+
 					return methods[name](...params);
 				};
 			}

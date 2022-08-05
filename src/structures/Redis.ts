@@ -1,5 +1,7 @@
 import RedisInstance from 'ioredis';
 
+import buildRoute from '@utils/BuildRoute';
+
 class Redis extends RedisInstance {
 	public _client: LunaryClient;
 
@@ -10,6 +12,18 @@ class Redis extends RedisInstance {
 			value: client,
 			enumerable: false,
 			writable: false,
+		});
+	}
+
+	public get cache() {
+		return buildRoute({
+			methods: {
+				get: this.get.bind(this),
+				set: this.set.bind(this),
+				del: this.del.bind(this),
+			},
+			join: ':',
+			baseRoute: [],
 		});
 	}
 }
