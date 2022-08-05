@@ -1,4 +1,4 @@
-import { APIGuildChannel as APIGuildChannelBase, ChannelType, Routes, RESTPatchAPIChannelJSONBody, RESTPatchAPIGuildChannelPositionsJSONBody } from '@discord/types';
+import { APIGuildChannel as APIGuildChannelBase, ChannelType, Routes, RESTPatchAPIChannelJSONBody } from '@discord/types';
 
 import { RequiresToken } from '@decorators';
 
@@ -10,8 +10,14 @@ class GuildChannel extends Channel {
 	public position: number;
 	public parentId: string | null;
 
+	public guildId: string;
+
 	constructor(client: LunaryClient, raw: APIGuildChannel) {
 		super(client, raw as any);
+
+		if(raw.guild_id !== undefined) {
+			this.guildId = raw.guild_id;
+		}
 	}
 
     // @ts-ignore
