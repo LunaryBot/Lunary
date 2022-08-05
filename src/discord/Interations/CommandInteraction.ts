@@ -7,7 +7,7 @@ import type {
 
 import Collection from '@utils/Collection';
 
-import { GuildNewsChannel, GuildTextChannel } from '../Channels';
+import { Channel } from '../Channels';
 import { AbstractGuild, Guild } from '../Guilds';
 import { Member } from '../Member';
 import { Message } from '../Message';
@@ -22,7 +22,7 @@ interface Resolved {
     users?: Collection<User>;
     members?: Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>;
     roles?: Collection<Role>;
-    channels?: Collection<GuildTextChannel>;
+    channels?: Collection<Channel>;
     messages?: Collection<Message>;
 }
 
@@ -82,7 +82,7 @@ class CommandInteraction extends Interaction {
 			}
 
 			if(channels) {
-				this.resolved.channels = new Collection<GuildTextChannel>(Object.values(channels).map(channel => ([channel.id, new GuildTextChannel(this.client, channel as any, this.guild)])));
+				this.resolved.channels = new Collection<Channel>(Object.values(channels).map(channel => ([channel.id, Channel.from(this.client, channel as any)])));
 			}
 
 			if(messages) {

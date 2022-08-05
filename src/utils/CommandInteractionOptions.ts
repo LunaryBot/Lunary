@@ -1,4 +1,4 @@
-import type { GuildTextChannel, Member, Role, User, Message } from '@discord';
+import type { Channel, Member, Role, User, Message } from '@discord';
 import { ApplicationCommandOptionType } from '@discord/types';
 import type { APIApplicationCommandInteractionDataStringOption, APIApplicationCommandInteractionDataNumberOption } from '@discord/types';
 
@@ -8,7 +8,7 @@ interface CommandInteractionOptionsResolved {
     users?: Collection<User>;
     members?: Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>;
     roles?: Collection<Role>;
-    channels?: Collection<GuildTextChannel>;
+    channels?: Collection<Channel>;
     messages?: Collection<Message>;
 }
 

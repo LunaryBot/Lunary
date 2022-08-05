@@ -1,4 +1,4 @@
-import type { CommandInteraction, ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
+import type { CommandInteraction, ComponentInteraction, Guild, Member, TextChannel, User } from '@discord';
 import { ComponentType } from '@discord/types';
 import type { ChannelType } from '@discord/types';
 
@@ -11,7 +11,7 @@ class Base {
 	public user: User;
 	public member?: Member;
 	public guild?: Guild;
-	public channel: TextBasedChannel<ChannelType.GuildText|ChannelType.GuildNews>;
+	public channel: TextChannel;
 
 	public declare t: (key: string, ...args: any[]) => string;
 

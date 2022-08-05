@@ -1,4 +1,4 @@
-import type { ComponentInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
+import type { ComponentInteraction } from '@discord';
 import { ComponentType } from '@discord/types';
 
 import Base from './Base';

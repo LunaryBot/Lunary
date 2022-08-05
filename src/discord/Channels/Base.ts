@@ -1,53 +1,35 @@
-import { ChannelType } from '@discord/types';
+import { APIChannel, ChannelType } from '@discord/types';
 
 import Structure from '../Base';
-import type {
-	DMChannel,
-	GroupDMChannel,
-	GuildNewsChannel,
-	GuildTextChannel,
-} from './TextChannels';
-import type { MixChannel } from './Utils';
 
-
-type ChannelData<T extends ChannelType> = MixChannel<T, { [key: string]: any }>;
-
-export class Channel<T extends ChannelType = ChannelType> extends Structure {
+class Channel extends Structure {
 	public readonly id: string;
 
 	public readonly type: ChannelType;
 
-	public readonly name?: string;
+	public readonly name?: string | null;
 
-	public constructor(client: LunaryClient, data: ChannelData<T>) {
+	public constructor(client: LunaryClient, raw: APIChannel) {
 		super(client);
 
-		this.id = data.id;
-		this.type = data.type;
-		this.name = data.name;
+		this.id = raw.id;
+		this.type = raw.type;
+		this.name = raw.name;
 	}
 
-	public isGuildTextChannel(): this is GuildTextChannel {
-		return this.type === ChannelType.GuildText;
-	}
+	public static from(client: LunaryClient, raw: APIChannel) {
+		switch (raw.type) {
+			case ChannelType.GuildText:
+				return new TextChannel(client, raw);
+			
+			default:
+				logger.warn(`Unsupported channel type: ${raw.type}`, { label: 'Discord', details: JSON.stringify(raw, null, 4) });
 
-	public isDMChannel(): this is DMChannel {
-		return this.type === ChannelType.DM;
-	}
-
-	// public isGuildVoiceChannel(): this is GuildVoiceChannel {
-	// 	return this.type === ChannelType.GuildVoice;
-	// }
-
-	public isGroupDMChannel(): this is GroupDMChannel {
-		return this.type === ChannelType.GroupDM;
-	}
-
-	public isGuildNewsChannel(): this is GuildNewsChannel {
-		return this.type === ChannelType.GuildNews;
-	}
-
-	public toString() {
-		return `<#${this.id}>`;
+				return new Channel(client, raw);
+		}
 	}
 }
+
+const { TextChannel } = require('./TextChannel');
+
+export { Channel };

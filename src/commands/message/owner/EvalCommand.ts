@@ -4,12 +4,13 @@ import { inspect } from 'util';
 import { Command } from '@Command';
 import { ContextCommand } from '@Contexts';
 
-import { Message } from '@discord';
-
+import { Message } from '@discord'; // eslint-disable-line
 
 const coderegex = /^(--.[^\s]+\s?)*?(.*)$/is;
 
 const blockcode = /^(--.+\s?)*?```(?:js)?(.+[^\\])```$/is;
+
+const Discord = require('@discord');
 
 class EvalCommand extends Command {
 	constructor(client: LunaryClient) {

@@ -1,2 +1,2 @@
 export * from './Base';
-export * from './TextChannels';
+export * from './TextChannel';

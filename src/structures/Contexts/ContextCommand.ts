@@ -1,6 +1,6 @@
 import type { Command, SubCommand } from '@Command';
 
-import type { CommandInteraction, Guild, Member, TextBasedChannel, User } from '@discord';
+import type { CommandInteraction } from '@discord';
 import { 
 	ApplicationCommandOptionType, 
 	ApplicationCommandType, 
