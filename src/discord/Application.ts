@@ -35,44 +35,79 @@ class Application extends Structure {
 
 		this.id = data.id;
 
-		this.name = data.name;
-
-		this.icon = data.icon;
-
-		this.description = data.description;
-
-		this.rpcOrigin = data.rpc_origins;
-
-		this.botPublic = data.bot_public;
-
-		this.botRequireCodeGrant = data.bot_require_code_grant;
-
-		this.termsOfServiceUrl = data.terms_of_service_url;
-
-		this.privacyPolicyUrl = data.privacy_policy_url;
-
-		// this.owner = data.owner ? new User(data.owner) : undefined as any;
-
 		Object.defineProperty(this, 'verifyKey', {
 			enumerable: false,
 			writable: false,
 			value: data.verify_key,
 		});
 
-		this.team = data.team ? new Team(this.client, data.team) : undefined as any;
+		this._patch(data);
+	}
 
-		this.guildId = data.guild_id;
+	public _patch(data: RESTGetAPIOAuth2CurrentApplicationResult) {
+		this.name = data.name;
 
-		this.slug = data.slug;
+		if(data.icon) {
+			this.icon = data.icon;
+		}
 
-		this.coverImage = data.cover_image;
+		if(data.description) {
+			this.description = data.description;
+		}
+
+		if(data.rpc_origins) {
+			this.rpcOrigin = data.rpc_origins;
+		}
+
+		if(data.bot_public !== undefined) {
+			this.botPublic = data.bot_public;
+		}
+
+		if(data.bot_require_code_grant !== undefined) {
+			this.botRequireCodeGrant = data.bot_require_code_grant;
+		}
+
+		if(data.terms_of_service_url) {
+			this.termsOfServiceUrl = data.terms_of_service_url;
+		}
+
+		if(data.privacy_policy_url) {
+			this.privacyPolicyUrl = data.privacy_policy_url;
+		}
+
+		if(data.owner) {
+			this.owner = new User(this.client, data.owner);
+		}
+
+		if(data.team) {
+			this.team = new Team(this.client, data.team);
+		}
+
+		if(data.guild_id) {
+			this.guildId = data.guild_id;
+		}
+
+		if(data.slug) {
+			this.slug = data.slug;
+		}
+
+		if(data.cover_image) {
+			this.coverImage = data.cover_image;
+		}
 
 		// @ts-ignore
-		this.flags = data.flags;
+		if(data.flags) {
+			// @ts-ignore
+			this.flags = data.flags;
+		}
 
-		this.tags = data.tags;
+		if(data.tags) {
+			this.tags = data.tags;
+		}
 
-		this.installParams = data.install_params as any;
+		if(data.install_params) {
+			this.installParams = data.install_params as any;
+		}
 	}
 }
 
