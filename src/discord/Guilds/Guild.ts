@@ -5,36 +5,69 @@ import { Role } from '../Role';
 import { AbstractGuild } from './AbstractGuild';
 
 class Guild extends AbstractGuild {
-	public readonly name: string;
+	public name: string;
 
-	public readonly description?: string;
+	public description?: string;
 
-	public readonly features: ReadonlyArray<GuildFeature>;
+	public features: Array<GuildFeature>;
 
-	public readonly roles: ReadonlyArray<Role>;
+	public roles: Array<Role>;
 
-	public readonly channels: ReadonlyArray<Channel>;
+	public channels: Channel[];
 
-	public readonly icon?: string;
+	public icon?: string;
 
-	public readonly splash?: string;
+	public splash?: string;
 
-	public readonly discoverySplash?: string;
+	public discoverySplash?: string;
+
+	public ownerId: string;
 
 	public constructor(client: LunaryClient, data: APIGuild & { channels?: Array<APIChannel> }) {
 		super(client, data.id as Snowflake);
 
-		this.name = data.name;
-		this.description = data.description ?? undefined;
-		this.features = data.features;
-		this.icon = data.icon ?? data.icon_hash ?? undefined;
+		this._patch(data);
+	}
 
-		this.roles = (data.roles ?? [])
-			.map((role) => new Role(this.client, this, role))
-			.sort((a, b) => a.position - b.position);
+	public _patch(data: APIGuild & { channels?: Array<APIChannel> }) {
+		if(data.name) {
+			this.name = data.name;
+		}
 
-		this.channels = (data.channels ?? [])
-			.map((channel) => Channel.from(this.client, channel)) as ReadonlyArray<Channel>;
+		if(data.description) {
+			this.description = data.description;
+		}
+
+		if(data.icon) {
+			this.icon = data.icon;
+		}
+
+		if(data.splash) {
+			this.splash = data.splash;
+		}
+
+		if(data.discovery_splash) {
+			this.discoverySplash = data.discovery_splash;
+		}
+
+		if(data.features) {
+			this.features = data.features;
+		}
+
+		if(data.roles) {
+			this.roles = data.roles.map((role) => new Role(this.client, this, role)).sort((a, b) => a.position - b.position);
+		}
+
+		if(data.channels) {
+			// @ts-ignore
+			this.channels = data.channels.map((channel) => Channel.from(this.client, channel)) as ReadonlyArray<Channel>;
+		}
+
+		if(data.owner_id) {
+			this.ownerId = data.owner_id;
+		}
+		
+		return this;
 	}
 
 	public static fromAbstract(guild: AbstractGuild, data: APIGuild) {
