@@ -12,25 +12,25 @@ class Member extends Structure {
   
 	public readonly guild: AbstractGuild;
   
-	public readonly user: User;
+	public user: User;
   
-	public readonly nick?: string;
+	public nick?: string;
   
-	public readonly avatar?: string;
+	public avatar?: string;
 
-	public readonly roles: ReadonlyArray<Snowflake>;
+	public roles: ReadonlyArray<Snowflake>;
   
-	public readonly pending: boolean = false;
+	public pending: boolean = false;
   
-	public readonly joinedAt: Date;
+	public joinedAt: Date;
   
-	public readonly premiumSince?: Date;
+	public premiumSinceAt?: Date;
   
-	public readonly timedOutUntil?: Date;
+	public timedOutUntilAt?: Date;
   
-	public readonly deaf?: boolean;
+	public deaf?: boolean;
   
-	public readonly mute?: boolean;
+	public mute?: boolean;
   
 	public constructor(
 		client: LunaryClient,
@@ -47,21 +47,35 @@ class Member extends Structure {
 
 		this.user = user;
 
-		this.nick = data.nick ?? undefined;
+		this._patch(data);
+	}
 
-		this.avatar = data.avatar ?? undefined;
+	public _patch(data: APIFullOrInteractionGuildMember) {
+		this.joinedAt = new Date(data.joined_at);
 
-		this.pending = data.pending ?? false;
+		if(data.nick !== undefined) {
+			this.nick = data.nick ?? undefined;
+		}
+
+		if(data.avatar !== undefined) {
+			this.avatar = data.avatar ?? undefined;
+		}
+
+		if(data.pending !== undefined) {
+			this.pending = data.pending ?? false;
+		}
   
 		if('deaf' in data) this.deaf = data.deaf;
 
 		if('mute' in data) this.mute = data.mute;
-  
-		this.joinedAt = new Date(data.joined_at);
-  
-		this.premiumSince = data.premium_since ? new Date(data.premium_since) : undefined;
-  
-		this.timedOutUntil = data.communication_disabled_until ? new Date(data.communication_disabled_until) : undefined;
+
+		if(data.premium_since !== undefined && data.premium_since !== null) {
+			this.premiumSinceAt = new Date(data.premium_since);
+		}
+
+		if(data.communication_disabled_until !== undefined && data.communication_disabled_until !== null) {
+			this.timedOutUntilAt = new Date(data.communication_disabled_until);
+		}
 
 		this.roles = data.roles as Snowflake[];
 	}
