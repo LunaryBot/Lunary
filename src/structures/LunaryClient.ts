@@ -2,7 +2,6 @@ import EventEmitter from 'events';
 import fastify from 'fastify';
 import fastifyBodyRaw from 'fastify-raw-body';
 import fs from 'fs';
-import Redis from 'ioredis';
 import tweetnacl from 'tweetnacl';
 
 import { Command, CommandGroup, SubCommand } from '@Command';
@@ -12,10 +11,8 @@ import { CommandInteraction, Application, User, ComponentInteraction } from '@di
 import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
 
-
-
 import Prisma from './Prisma';
-
+import Redis from './Redis';
 
 interface ClientCommands {
     slash: Command[],
@@ -30,9 +27,10 @@ class Client extends EventEmitter {
 	private readonly _token: string;
 	
 	public readonly fastify = fastify();
-	public readonly redis = new Redis(process.env.REDIS_URL);
-	public readonly prisma = new Prisma(this);
 	public readonly rest: REST;
+	
+	public readonly prisma = new Prisma(this);
+	public readonly redis = new Redis(this);
 
 	public readonly user: User = null as any;
 	public readonly application: Application = null as any;
