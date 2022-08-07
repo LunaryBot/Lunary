@@ -4,7 +4,6 @@ import EventListener from '@EventListener';
 
 import { CommandInteraction } from '@discord';
 
-
 const CommandTypes = {
 	1: 'slash',
 	2: 'user',
@@ -35,6 +34,14 @@ class CommandListener extends EventListener {
 			if(subcommand) {
 				command = subcommand as SubCommand;
 			}
+		}
+
+		if(command.requirements?.ownerOnly === true) {
+			const { application } = this.client;
+
+			if(application.team ? !application.team?.members.has(context.user.id) : application.owner.id !== context.user.id) return context.createMessage({
+				content: '<:L_angry:959094353329004544> **Eieiei**, só pessoas especiais podem usar este comando!',
+			});
 		}
 
 		await command.run(context);

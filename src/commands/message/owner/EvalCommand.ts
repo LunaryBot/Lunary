@@ -16,6 +16,15 @@ class EvalCommand extends Command {
 	constructor(client: LunaryClient) {
 		super(client, {
 			name: 'Eval',
+			requirements: {
+				database: {
+					guild: true,
+					user: true,
+					permissions: true,
+					reasons: true,
+				},
+				ownerOnly: true,
+			},
 		});
 	}
 
