@@ -1,27 +1,35 @@
 import { APITeam, APITeamMember } from 'discord-api-types/v10';
 
+import Collection from '@utils/Collection';
+
 import Structure from './Base';
 import { User } from './User';
 
 class Team extends Structure {
 	public icon: string | null;
 	public id: string;
-	public members: Array<TeamMember>;
+	public members: Collection<TeamMember>;
 	public name: string;
 	public ownerUserId: string;
 
-	constructor(client: LunaryClient, data: APITeam) {
+	constructor(client: LunaryClient, raw: APITeam) {
 		super(client);
 
-		this.icon = data.icon;
+		this.id = raw.id;
 
-		this.id = data.id;
+		this._patch(raw);
+	}
 
-		this.members = data.members.map(member => new TeamMember(this.client, member));
+	public _patch(raw: APITeam) {
+		this.name = raw.name;
 
-		this.name = data.name;
+		this.ownerUserId = raw.owner_user_id;
 
-		this.ownerUserId = data.id;
+		if(raw.icon !== undefined && raw.icon !== null) {
+			this.icon = raw.icon;
+		}
+		
+		this.members = new Collection<TeamMember>(raw.members.map(member => [member.user.id, new TeamMember(this.client, member)]));
 	}
 }
 
@@ -31,16 +39,24 @@ class TeamMember extends Structure {
 	public teamId: string;
 	public user: User;
 
-	constructor(client: LunaryClient, data: APITeamMember) {
+	constructor(client: LunaryClient, raw: APITeamMember) {
 		super(client);
 		
-		this.membershipState = data.membership_state;
+		this.teamId = raw.team_id;
 
-		this.permissions = data.permissions;
+		this.user = new User(this.client, raw.user);
 
-		this.teamId = data.team_id;
+		this._patch(raw);
+	}
 
-		this.user = new User(this.client, data.user);
+	public _patch(raw: APITeamMember) {
+		this.membershipState = raw.membership_state;
+
+		this.permissions = raw.permissions;
+	}
+
+	public get id() {
+		return this.user.id;
 	}
 }
 
