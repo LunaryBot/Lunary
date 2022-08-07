@@ -93,7 +93,7 @@ class EvalCommand extends Command {
 		};
 
 		await context.createMessage({
-			content: `\`\`\`js\n${result.replace(regext, (this.client as any)._token.length).replace(/```/g, '\\`\\`\\`').slice(0, 1990)}\`\`\``,
+			content: `\`\`\`js\n${result.replace(regext, '*'.repeat((this.client as any)._token.length)).replace(/```/g, '\\`\\`\\`').slice(0, 1990)}\`\`\``,
 		});
 	}
 
