@@ -1,4 +1,4 @@
-import { RESTGetAPIOAuth2CurrentApplicationResult } from 'discord-api-types/v10';
+import { RESTGetAPIOAuth2CurrentApplicationResult as RESTGetMeApplication } from 'discord-api-types/v10';
 
 import { OAuth2Scopes } from '@discord/types';
 
@@ -7,7 +7,7 @@ import { Team } from './Team';
 import { User } from './User';
 
 
-class Application extends Structure {
+class Application extends Structure<RESTGetMeApplication> {
 	public id: string;
 	public name: string;
 	public icon: string | null;
@@ -30,83 +30,83 @@ class Application extends Structure {
         permissions: string;
     };
 
-	constructor(client: LunaryClient, data: RESTGetAPIOAuth2CurrentApplicationResult) {
-		super(client);
+	constructor(client: LunaryClient, raw: RESTGetMeApplication) {
+		super(client, raw);
 
-		this.id = data.id;
+		this.id = raw.id;
 
 		Object.defineProperty(this, 'verifyKey', {
 			enumerable: false,
 			writable: false,
-			value: data.verify_key,
+			value: raw.verify_key,
 		});
 
-		this._patch(data);
+		this._patch(raw);
 	}
 
-	public _patch(data: RESTGetAPIOAuth2CurrentApplicationResult) {
-		this.name = data.name;
+	public _patch(raw: RESTGetMeApplication) {
+		this.name = raw.name;
 
-		if(data.icon) {
-			this.icon = data.icon;
+		if(raw.icon) {
+			this.icon = raw.icon;
 		}
 
-		if(data.description) {
-			this.description = data.description;
+		if(raw.description) {
+			this.description = raw.description;
 		}
 
-		if(data.rpc_origins) {
-			this.rpcOrigin = data.rpc_origins;
+		if(raw.rpc_origins) {
+			this.rpcOrigin = raw.rpc_origins;
 		}
 
-		if(data.bot_public !== undefined) {
-			this.botPublic = data.bot_public;
+		if(raw.bot_public !== undefined) {
+			this.botPublic = raw.bot_public;
 		}
 
-		if(data.bot_require_code_grant !== undefined) {
-			this.botRequireCodeGrant = data.bot_require_code_grant;
+		if(raw.bot_require_code_grant !== undefined) {
+			this.botRequireCodeGrant = raw.bot_require_code_grant;
 		}
 
-		if(data.terms_of_service_url) {
-			this.termsOfServiceUrl = data.terms_of_service_url;
+		if(raw.terms_of_service_url) {
+			this.termsOfServiceUrl = raw.terms_of_service_url;
 		}
 
-		if(data.privacy_policy_url) {
-			this.privacyPolicyUrl = data.privacy_policy_url;
+		if(raw.privacy_policy_url) {
+			this.privacyPolicyUrl = raw.privacy_policy_url;
 		}
 
-		if(data.owner) {
-			this.owner = new User(this.client, data.owner);
+		if(raw.owner) {
+			this.owner = new User(this.client, raw.owner);
 		}
 
-		if(data.team) {
-			this.team = new Team(this.client, data.team);
+		if(raw.team) {
+			this.team = new Team(this.client, raw.team);
 		}
 
-		if(data.guild_id) {
-			this.guildId = data.guild_id;
+		if(raw.guild_id) {
+			this.guildId = raw.guild_id;
 		}
 
-		if(data.slug) {
-			this.slug = data.slug;
+		if(raw.slug) {
+			this.slug = raw.slug;
 		}
 
-		if(data.cover_image) {
-			this.coverImage = data.cover_image;
+		if(raw.cover_image) {
+			this.coverImage = raw.cover_image;
 		}
 
 		// @ts-ignore
-		if(data.flags) {
+		if(raw.flags) {
 			// @ts-ignore
-			this.flags = data.flags;
+			this.flags = raw.flags;
 		}
 
-		if(data.tags) {
-			this.tags = data.tags;
+		if(raw.tags) {
+			this.tags = raw.tags;
 		}
 
-		if(data.install_params) {
-			this.installParams = data.install_params as any;
+		if(raw.install_params) {
+			this.installParams = raw.install_params as any;
 		}
 	}
 }
