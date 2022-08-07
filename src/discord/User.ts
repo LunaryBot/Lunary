@@ -6,7 +6,7 @@ import { RequiresToken } from '@decorators';
 import Structure from './Base';
 
 
-class User extends Structure {
+class User extends Structure<APIUser> {
 	public readonly id: Snowflake;
 
 	public username: string;
@@ -23,16 +23,16 @@ class User extends Structure {
 
 	public channel?: APIDMChannel;
 
-	public constructor(client: LunaryClient, data: APIUser) {
-		super(client);
+	public constructor(client: LunaryClient, raw: APIUser) {
+		super(client, raw);
 
-		this.id = data.id as Snowflake;
+		this.id = raw.id as Snowflake;
 
-		this.system = data.system ?? false;
+		this.system = raw.system ?? false;
 
-		this.bot = data.bot ?? false;
+		this.bot = raw.bot ?? false;
 
-		this._patch(data);
+		this._patch(raw);
 	}
 
 	public _patch(raw: APIUser) {
@@ -53,11 +53,11 @@ class User extends Structure {
 
 	@RequiresToken
   	public async getDMChannel() {
-  		const data = (await this.client.rest.post(Routes.userChannels(), {
+  		const raw = (await this.client.rest.post(Routes.userChannels(), {
   			body: { recipient_id: this.id },
   		})) as APIDMChannel;
 
-  		return data;
+  		return raw;
   	}
 
 	public toString() {
