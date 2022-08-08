@@ -45,7 +45,9 @@ class RedisCacheHandler {
 		});
 	}
 
-	public async get(key: RedisKey) {let value = await this.redis.get(key);
+	public async get(key: RedisKey) {
+		let value = await this.redis.get(key);
+		
 		if(value === null) {
 			if(keysRegex.test(key.toString())) {
 				const execed = keysRegex.exec(key.toString()) as RegExpExecArray;
