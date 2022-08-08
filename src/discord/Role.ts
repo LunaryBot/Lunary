@@ -4,34 +4,38 @@ import Structure from './Base';
 import type { AbstractGuild } from './Guilds';
 import { Permissions } from './Permissions';
 
-
 interface RoleTags {
   isPremiumSubscriberRole: boolean;
   integrationId?: Snowflake;
   botId?: Snowflake;
 }
 
-class Role extends Structure {
+class Role extends Structure<APIRole> {
 	public readonly guild: AbstractGuild;
 	public readonly id: Snowflake;
-	public readonly name: string;
-	public readonly color: number;
-	public readonly hoisted: boolean;
-	public readonly position: number;
-	public readonly permissions: Permissions;
+	public name: string;
+	public color: number;
+	public hoisted: boolean;
+	public position: number;
+	public permissions: Permissions;
 	public readonly managed: boolean;
-	public readonly mentionable: boolean;
-	public readonly icon?: string;
-	public readonly emoji?: string;
-	public readonly tags?: RoleTags;
+	public mentionable: boolean;
+	public icon?: string;
+	public emoji?: string;
+	public tags?: RoleTags;
 
 	public constructor(client: LunaryClient, guild: AbstractGuild, data: APIRole) {
-		super(client);
+		super(client, data);
 
 		this.guild = guild;
 
 		this.id = data.id as Snowflake;
 
+		this.managed = data.managed;
+		
+	}
+
+	public _patch(data: APIRole) {
 		this.name = data.name;
 
 		this.color = data.color;
@@ -42,19 +46,23 @@ class Role extends Structure {
 
 		this.permissions = new Permissions(data.permissions);
 
-		this.managed = data.managed;
-
 		this.mentionable = data.mentionable;
 
-		this.icon = data.icon || undefined;
+		if(data.icon !== undefined && data.icon !== null) {
+			this.icon = data.icon || undefined;
+		}
 
-		this.emoji = data.unicode_emoji || undefined;
+		if(data.unicode_emoji !== undefined) {
+			this.emoji = data.unicode_emoji || undefined;
+		}
 
-		this.tags = {
-			isPremiumSubscriberRole: data.tags?.premium_subscriber === null,
-			integrationId: data.tags?.integration_id as Snowflake,
-			botId: data.tags?.bot_id as Snowflake,
-		};
+		if(data.tags !== undefined) {
+			this.tags = {
+				isPremiumSubscriberRole: data.tags?.premium_subscriber === null,
+				integrationId: data.tags?.integration_id as Snowflake,
+				botId: data.tags?.bot_id as Snowflake,
+			};
+		}
 	}
 
 	public toString() {
