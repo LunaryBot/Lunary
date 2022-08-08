@@ -5,7 +5,7 @@ import Collection from '@utils/Collection';
 import Structure from './Base';
 import { User } from './User';
 
-class Team extends Structure {
+class Team extends Structure<APITeam> {
 	public icon: string | null;
 	public id: string;
 	public members: Collection<TeamMember>;
@@ -13,7 +13,7 @@ class Team extends Structure {
 	public ownerUserId: string;
 
 	constructor(client: LunaryClient, raw: APITeam) {
-		super(client);
+		super(client, raw);
 
 		this.id = raw.id;
 
@@ -33,14 +33,14 @@ class Team extends Structure {
 	}
 }
 
-class TeamMember extends Structure {
+class TeamMember extends Structure<APITeamMember> {
 	public membershipState: 1 | 2;
 	public permissions: Array<string>;
 	public teamId: string;
 	public user: User;
 
 	constructor(client: LunaryClient, raw: APITeamMember) {
-		super(client);
+		super(client, raw);
 		
 		this.teamId = raw.team_id;
 
