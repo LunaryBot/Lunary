@@ -4,7 +4,7 @@ import { Channel } from '../Channels';
 import { Role } from '../Role';
 import { AbstractGuild } from './AbstractGuild';
 
-class Guild extends AbstractGuild {
+class Guild extends AbstractGuild<APIGuild & { channels?: Array<APIChannel> }> {
 	public name: string;
 
 	public description?: string;
@@ -23,48 +23,48 @@ class Guild extends AbstractGuild {
 
 	public ownerId: string;
 
-	public constructor(client: LunaryClient, data: APIGuild & { channels?: Array<APIChannel> }) {
-		super(client, data.id as Snowflake);
+	public constructor(client: LunaryClient, raw: APIGuild & { channels?: Array<APIChannel> }) {
+		super(client, raw.id as Snowflake);
 
-		this._patch(data);
+		this._patch(raw);
 	}
 
-	public _patch(data: APIGuild & { channels?: Array<APIChannel> }) {
-		if(data.name) {
-			this.name = data.name;
+	public _patch(raw: APIGuild & { channels?: Array<APIChannel> }) {
+		if(raw.name) {
+			this.name = raw.name;
 		}
 
-		if(data.description) {
-			this.description = data.description;
+		if(raw.description) {
+			this.description = raw.description;
 		}
 
-		if(data.icon) {
-			this.icon = data.icon;
+		if(raw.icon) {
+			this.icon = raw.icon;
 		}
 
-		if(data.splash) {
-			this.splash = data.splash;
+		if(raw.splash) {
+			this.splash = raw.splash;
 		}
 
-		if(data.discovery_splash) {
-			this.discoverySplash = data.discovery_splash;
+		if(raw.discovery_splash) {
+			this.discoverySplash = raw.discovery_splash;
 		}
 
-		if(data.features) {
-			this.features = data.features;
+		if(raw.features) {
+			this.features = raw.features;
 		}
 
-		if(data.roles) {
-			this.roles = data.roles.map((role) => new Role(this.client, this, role)).sort((a, b) => a.position - b.position);
+		if(raw.roles) {
+			this.roles = raw.roles.map((role) => new Role(this.client, this, role)).sort((a, b) => a.position - b.position);
 		}
 
-		if(data.channels) {
+		if(raw.channels) {
 			// @ts-ignore
-			this.channels = data.channels.map((channel) => Channel.from(this.client, channel)) as ReadonlyArray<Channel>;
+			this.channels = raw.channels.map((channel) => Channel.from(this.client, channel)) as ReadonlyArray<Channel>;
 		}
 
-		if(data.owner_id) {
-			this.ownerId = data.owner_id;
+		if(raw.owner_id) {
+			this.ownerId = raw.owner_id;
 		}
 		
 		return this;

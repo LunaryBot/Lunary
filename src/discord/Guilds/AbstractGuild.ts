@@ -1,13 +1,13 @@
-import type { Snowflake } from '@discord/types';
+import { Snowflake } from '@discord/types';
 
 import Structure from '../Base';
 
 
-class AbstractGuild extends Structure {
+class AbstractGuild<GuildRawType = { id: Snowflake }> extends Structure<GuildRawType> {
 	public readonly id: Snowflake;
 
 	public constructor(client: LunaryClient, id: Snowflake) {
-		super(client);
+		super(client, { id });
 
 		this.id = id;
 	}
