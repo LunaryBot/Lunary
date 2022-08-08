@@ -4,25 +4,25 @@ import Structure from './Base';
 import { User } from './User';
 
 
-class Message extends Structure {
+class Message extends Structure<APIMessage> {
 	id: string;
 	content: string;
 	type: MessageType;
 	author: User;
 	channelId: string;
   
-	constructor(client: LunaryClient, data: APIMessage) {
-		super(client);
+	constructor(client: LunaryClient, raw: APIMessage) {
+		super(client, raw);
         
-		this.id = data.id;
+		this.id = raw.id;
         
-		this.content = data.content;
+		this.content = raw.content;
 
-		this.type = data.type;
+		this.type = raw.type;
 
-		this.author = new User(client, data.author);
+		this.author = new User(client, raw.author);
 
-		this.channelId = data.channel_id;
+		this.channelId = raw.channel_id;
 	}
 }
 
