@@ -7,7 +7,7 @@ import { AbstractGuild } from './Guilds';
 import { User } from './User';
 
 
-class Member extends Structure {
+class Member extends Structure<APIFullOrInteractionGuildMember> {
 	public readonly id: Snowflake;
   
 	public readonly guild: AbstractGuild;
@@ -37,9 +37,9 @@ class Member extends Structure {
 		guild: AbstractGuild,
 		id: Snowflake,
 		user: User,
-		data: APIFullOrInteractionGuildMember
+		raw: APIFullOrInteractionGuildMember
 	) {
-		super(client);
+		super(client, raw);
 
 		this.id = id;
 
@@ -47,37 +47,37 @@ class Member extends Structure {
 
 		this.user = user;
 
-		this._patch(data);
+		this._patch(raw);
 	}
 
-	public _patch(data: APIFullOrInteractionGuildMember) {
-		this.joinedAt = new Date(data.joined_at);
+	public _patch(raw: APIFullOrInteractionGuildMember) {
+		this.joinedAt = new Date(raw.joined_at);
 
-		if(data.nick !== undefined) {
-			this.nick = data.nick ?? undefined;
+		if(raw.nick !== undefined) {
+			this.nick = raw.nick ?? undefined;
 		}
 
-		if(data.avatar !== undefined) {
-			this.avatar = data.avatar ?? undefined;
+		if(raw.avatar !== undefined) {
+			this.avatar = raw.avatar ?? undefined;
 		}
 
-		if(data.pending !== undefined) {
-			this.pending = data.pending ?? false;
+		if(raw.pending !== undefined) {
+			this.pending = raw.pending ?? false;
 		}
   
-		if('deaf' in data) this.deaf = data.deaf;
+		if('deaf' in raw) this.deaf = raw.deaf;
 
-		if('mute' in data) this.mute = data.mute;
+		if('mute' in raw) this.mute = raw.mute;
 
-		if(data.premium_since !== undefined && data.premium_since !== null) {
-			this.premiumSinceAt = new Date(data.premium_since);
+		if(raw.premium_since !== undefined && raw.premium_since !== null) {
+			this.premiumSinceAt = new Date(raw.premium_since);
 		}
 
-		if(data.communication_disabled_until !== undefined && data.communication_disabled_until !== null) {
-			this.timedOutUntilAt = new Date(data.communication_disabled_until);
+		if(raw.communication_disabled_until !== undefined && raw.communication_disabled_until !== null) {
+			this.timedOutUntilAt = new Date(raw.communication_disabled_until);
 		}
 
-		this.roles = data.roles as Snowflake[];
+		this.roles = raw.roles as Snowflake[];
 	}
 
     @RequiresToken
@@ -88,10 +88,10 @@ class Member extends Structure {
 	}
   
     @RequiresToken
-    async ban(data: { deleteMessageDays?: number; reason?: string }) {
+    async ban(raw: { deleteMessageDays?: number; reason?: string }) {
     	await this.client.rest.put(Routes.guildBan(this.guild.id, this.id), {
-    		body: { delete_message_days: data.deleteMessageDays },
-    		headers: data.reason ? { 'X-Audit-Log-Reason': data.reason } : undefined,
+    		body: { delete_message_days: raw.deleteMessageDays },
+    		headers: raw.reason ? { 'X-Audit-Log-Reason': raw.reason } : undefined,
     	});
     }
 
