@@ -11,6 +11,7 @@ import { CommandInteraction, Application, User, ComponentInteraction } from '@di
 import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
 
+import Locale from './Locale';
 import Prisma from './Prisma';
 import Redis from './Redis';
 
@@ -22,6 +23,7 @@ interface ClientCommands {
 
 const _Command = Command;
 const _CommandGroup = CommandGroup;
+const _Locale = Locale;
 
 class Client extends EventEmitter {
 	private readonly _token: string;
@@ -35,12 +37,14 @@ class Client extends EventEmitter {
 	public readonly user: User = null as any;
 	public readonly application: Application = null as any;
 
-	public events: Array<EventListener> = [];
 	public commands: ClientCommands = {
 		slash: [],
 		user: [],
 		message: [],
 	};
+
+	public events: Array<EventListener> = [];
+	public locales: Array<Locale> = [];
 
 	constructor(token: string) {
 		super();
@@ -89,32 +93,12 @@ class Client extends EventEmitter {
 		});
 	}
 
-	private async _loadListeners(): Promise<EventListener[]> {
-		const regex = /^(.*)Listener\.(t|j)s$/;
-		const events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
-
-		const eventsName: Array<string> = [];
-		for(const event of events) {
-			const { default: Base } = require(__dirname + `/../events/${event}`);
-            
-			const instance = new Base(this) as EventListener;
-
-			this.events.push(instance);
-
-			eventsName.push(...instance.events);
-
-			instance.listen.bind(instance)();
-		};
-
-		logger.info(`Loaded ${eventsName.length} events of ${events.length} files`, { label: 'Lunary, Events', details: `> ${eventsName.join(' | ')}` });
-
-		return this.events;
-	}
-
 	private async _loadCommands(): Promise<ClientCommands> {
 		const fileRegex = /^(.*)(Command|SubCommand|CommandGroup)(\.(j|t)s)?$/;
         
 		const types = fs.readdirSync(__dirname + '/../commands') as Array<'slash' | 'user' | 'message'>;
+
+		const client = this;
 
 		for(const type of types) {
 			const categeries = fs.readdirSync(`${__dirname}/../commands/${type}`);
@@ -124,7 +108,6 @@ class Client extends EventEmitter {
 
 				for(const command of commands) {
 					if(fs.lstatSync(`${__dirname}/../commands/${type}/${category}/${command}`).isDirectory()) {
-						const client = this;
 						const _command: Command = this.commands[type].find(cmd => cmd.name === splitCommandName(command)) || eval(`
 						new (class ${command.replace(fileRegex, '$1$2')} extends _Command { constructor() { 
                                 super(client, { 
@@ -194,9 +177,47 @@ class Client extends EventEmitter {
 		}
 	}
 
+	private async _loadListeners(): Promise<EventListener[]> {
+		const regex = /^(.*)Listener\.(t|j)s$/;
+		const events = fs.readdirSync(__dirname + '/../events').filter(file => regex.test(file));
+
+		const eventsName: Array<string> = [];
+		for(const event of events) {
+			const { default: Base } = require(__dirname + `/../events/${event}`);
+            
+			const instance = new Base(this) as EventListener;
+
+			this.events.push(instance);
+
+			eventsName.push(...instance.events);
+
+			instance.listen.bind(instance)();
+		};
+
+		logger.info(`Loaded ${eventsName.length} events of ${events.length} files`, { label: 'Lunary, Events', details: `> ${eventsName.join(' | ')}` });
+
+		return this.events;
+	}
+
+	private async _loadLocales(): Promise<Locale[]> {
+		const locales = fs.readdirSync(process.cwd() + '/locales').filter(file => !/^.*\..*$/.test(file));
+
+		const client = this;
+        
+		for(const locale of locales) {
+			logger.info(`Loading locale ${locale}`, { label: 'Lunary, Locales' });
+            
+			const instance = eval(`new (class ${locale.split('-').map(x => x.isUpperCase() ? x : x.toTitleCase()).join('')}Locale extends _Locale { constructor() { super(client, '${locale}') } })`);
+			this.locales.push(instance);
+		}
+
+		return this.locales;
+	}
+
 	async init() {
 		await this._loadListeners();
 		await this._loadCommands();
+		await this._loadLocales();
 
 		const user = await this.rest.get(Routes.user(), { auth: true }).then(data => new User(this, data as APIUser));
 		

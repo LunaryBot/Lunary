@@ -1,20 +1,31 @@
 import { existsSync, readFileSync } from 'fs';
 import yaml from 'js-yaml';
 
+import Collection from '@utils/Collection';
+
 class Locale {
 	public name: string;
 	public dirname: string;
 
-	public t: (ref: string, variables: Object) => string;
+	public cache = new Collection<string>();
 
-	constructor(name: string, dirname: string = `${process.cwd()}/locales`) {
-		this.name = name;
-		this.dirname = `${dirname}/${name}`;
+	constructor(locale: string, dirname: string = `${process.cwd()}/locales`) {
+		this.name = locale;
+		this.dirname = `${dirname}/${locale}`;
+	}
 
-		this.t = (ref: string, variables: Object) => {
+	public translate(ref: string, variables?: Object): string {
+		let output: string;
+
+		if(this.cache.has(ref)) {
+			output = this.cache.get(ref) as string;
+		} else {
 			const split = `${ref}`.split(':');
+
 			let path = split[0];
+
 			if(!/^(.*).ya?ml$/.test(path)) path = `${path}.yml`;
+
 			path = path.replace(/^\/?(.*)$/, '$1');
 
 			if(!existsSync(`${this.dirname}/${path}`)) {
@@ -28,18 +39,26 @@ class Locale {
 
 			const val = typeof data == 'object' && !Array.isArray(data) ? array.reduce((a: any, b: string) => (typeof a != 'undefined' ? a : {})[b], data) : data;
 
-			let output = val ?? ':bug:';
+			if(val !== undefined) {
+				output = String(val);
 
-			if(val)
-				Object.entries(variables || {}).map(([key, value]) => {
-					const regex = new RegExp(`{${key}}`, 'g');
+				this.cache.set(ref, output);
+			} else return ':bug:';
+		}
 
-					output = output.replace(regex, value);
-				});
-			else return ':bug:';
+		return variables ? this.replacePlaceholders(output, variables) : output;
+	}
 
-			return output;
-		};
+	public replacePlaceholders(string: string, variables: Object): string {
+		let output = String(string);
+		
+		Object.entries(variables || {}).forEach(([key, value]) => {
+			const regex = new RegExp(`{${key}}`, 'g');
+
+			output = string.replace(regex, value);
+		});
+
+		return output;
 	}
 };
 
