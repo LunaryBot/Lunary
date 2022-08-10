@@ -23,6 +23,10 @@ class EvalCommand extends Command {
 					permissions: true,
 					reasons: true,
 				},
+				cache: {
+					guild: true,
+					me: true,
+				},
 				ownerOnly: true,
 			},
 		});
@@ -66,8 +70,6 @@ class EvalCommand extends Command {
 			});
 		}
 
-		await context.acknowledge(options.ephemeral);
-
 		const start = Date.now();
 		const regext = new RegExp(
             // @ts-ignore
@@ -94,6 +96,7 @@ class EvalCommand extends Command {
 
 		await context.createMessage({
 			content: `\`\`\`js\n${result.replace(regext, '*'.repeat((this.client as any)._token.length)).replace(/```/g, '\\`\\`\\`').slice(0, 1990)}\`\`\``,
+			ephemeral: options.ephemeral,
 		});
 	}
 

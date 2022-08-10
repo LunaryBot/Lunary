@@ -1,7 +1,7 @@
 import type { Command, SubCommand } from '@Command';
 
-import type { CommandInteraction } from '@discord';
-import { 
+import { CommandInteraction } from '@discord';
+import {
 	ApplicationCommandOptionType, 
 	ApplicationCommandType, 
 } from '@discord/types';
@@ -12,8 +12,7 @@ import type {
 	ChannelType, 
 } from '@discord/types';
 
-import CommandInteractionOptions from '@utils/CommandInteractionOptions';
-
+import CommandInteractionOptions from '../Command/CommandInteractionOptions';
 import Base from './Base';
 
 class ContextCommand extends Base {

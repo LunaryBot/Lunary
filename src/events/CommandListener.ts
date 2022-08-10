@@ -18,23 +18,29 @@ class CommandListener extends EventListener {
 	async on(interaction: CommandInteraction) {
 		const commandType = CommandTypes[interaction.commandType] as 'slash' | 'user' | 'message';
 
-		let command: Command | SubCommand = this.client.commands[commandType].find(c => c.name == interaction.commandName) as Command;
+		let mainCommand: Command | SubCommand = this.client.commands[commandType].find(c => c.name == interaction.commandName) as Command;
 
-		if(!command) return logger.warn(`Command ${interaction.commandName} not found`, { label: 'Lunary, CommandListener' });
+		if(!mainCommand) return logger.warn(`Command ${interaction.commandName} not found`, { label: 'Lunary, CommandListener' });
 
-		if(interaction.isInDM() && command.requirements?.guildOnly) return;
+		if(interaction.isInDM() && mainCommand.requirements?.guildOnly) return;
 
-		const context = new ContextCommand(this.client, interaction, command);
+		const context = new ContextCommand(this.client, interaction, mainCommand);
 
-		if(context.options._subcommand && command.subcommands.length) {
-			const group: CommandGroup | Command = context.options._group && (command as Command).subcommands.find(c => c.name == context.options._group) as CommandGroup || command as Command;
+		if(context.options._subcommand && mainCommand.subcommands.length) {
+			const group: CommandGroup | Command = context.options._group && (mainCommand as Command).subcommands.find(c => c.name == context.options._group) as CommandGroup || mainCommand as Command;
 			
 			const subcommand: SubCommand = group.subcommands.find(c => c.name == context.options._subcommand || c.name == context.options._group) as SubCommand;
 
 			if(subcommand) {
-				command = subcommand as SubCommand;
+				mainCommand = subcommand as SubCommand;
 			}
 		}
+
+		const command = mainCommand;
+
+		context.command = command;
+
+		context.acknowledge();
 
 		if(command.requirements?.ownerOnly === true) {
 			const { application } = this.client;
@@ -42,6 +48,10 @@ class CommandListener extends EventListener {
 			if(application.team ? !application.team?.members.has(context.user.id) : application.owner.id !== context.user.id) return context.createMessage({
 				content: '<:L_angry:959094353329004544> **Eieiei**, só pessoas especiais podem usar este comando!',
 			});
+		}
+
+		if(command.requirements?.cache) {
+			await context.fetchCache(command.requirements.cache);
 		}
 
 		await command.run(context);

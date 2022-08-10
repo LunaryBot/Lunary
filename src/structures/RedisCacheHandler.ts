@@ -63,7 +63,7 @@ class RedisCacheHandler {
 						if(guildMemberKeyRegex.test(key.toString())) {
 							const [, userId] = [ ...(guildMemberKeyRegex.exec(key.toString()) as Array<string>) ];
 
-							const member = await this.client.rest.get(Routes.guildMember(guildId, userId)) as APIGuildMember;
+							const member = await this.client.rest.get(Routes.guildMember(guildId, userId == '@me' ? this.client.user.id : userId)) as APIGuildMember;
 
 							if(member.user !== undefined) {
 								await this.setUser(member.user);
@@ -101,6 +101,18 @@ class RedisCacheHandler {
 		const guild = await this.get(`guilds:${guildId}`) as Guild;
 
 		return guild;
+	}
+
+	public async getGuildMember(guildId: string, userId: string): Promise<Omit<APIGuildMember, 'user'>> {
+		const member = await this.get(`guilds:${guildId}:members:${userId == this.client.user.id ? '@me' : userId}`) as Omit<APIGuildMember, 'user'>;
+
+		return member;
+	}
+
+	public async getUser(userId: string): Promise<APIUser> {
+		const user = await this.get(`guilds:${userId}`) as APIUser;
+
+		return user;
 	}
 
 	async setGuild(guild: (APIGuild & { channels?: Array<APIChannel> }) | Guild) {

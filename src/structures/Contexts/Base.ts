@@ -63,6 +63,8 @@ class Base {
 				{ app_permissions: this.app_permissions }
 			));
 		}
+		
+		return this;
 	}
 
 	get acknowledge() {

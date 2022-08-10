@@ -12,17 +12,7 @@ const config = {
 		debug: 5,
 		graphql: 6,
 	},
-	colors: {
-		error: 'red',
-		warn: 'yellowBG',
-		info: 'green',
-		http: 'blue',
-		debug: 'yellow',
-		graphql: 'magenta',
-	},
 };
-
-winston.addColors(config.colors);
 
 const logger = winston.createLogger({
 	levels: config.levels,
