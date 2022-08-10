@@ -13,8 +13,7 @@ package-lock.json
 yarn.lock
 yarn-error.log
 
-/locales/*
-!/locales/pt-BR
+/locales/
 
 data/commands.json
 json.sqlite

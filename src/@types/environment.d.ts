@@ -14,6 +14,7 @@ declare global {
 
             // Configs
             readonly DEFAULT_LOCALE: string;
+            readonly LOCALES_REPOSITORY: string;
         }
     }
 }
