@@ -121,6 +121,12 @@ class GuildDatabase {
 		return this.reasons;
 	}
 
+	public hasPremium(): boolean {
+		const premiumUntil = this.premiumUntil?.getTime();
+		
+		return this.premiumType !== undefined && premiumUntil !== undefined && premiumUntil <= Date.now();
+	}
+
 	public async save() {
 		const data = this.toJson();
         
@@ -139,18 +145,15 @@ class GuildDatabase {
 	}
 
 	public toJson(): Omit<Prisma.Guild, 'id'> {
-		const data: Partial<Omit<Prisma.Guild, 'id'>> = {};
+		const data: Partial<Omit<Prisma.Guild, 'id'>> = {
+			features: this.features?.bitfield || null,
+			modlogs_channel: this.modlogsChannelId || null,
+			punishments_channel: this.punishmentsChannelId || null,
+		};
 
-		if(this.features) {
-			data.features = this.features.bitfield;
-		}
-
-		if(this.modlogsChannelId) {
-			data.modlogs_channel = this.modlogsChannelId;
-		}
-
-		if(this.punishmentsChannelId) {
-			data.punishments_channel = this.punishmentsChannelId;
+		if(this.hasPremium()) {
+			data.premium_type = this.premiumType;
+			data.premium_until = this.premiumUntil;
 		}
 
 		return data as Omit<Prisma.Guild, 'id'>;
