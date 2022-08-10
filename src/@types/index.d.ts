@@ -14,6 +14,10 @@ export interface CommandRequirements {
         permissions?: boolean;
         reasons?: boolean;
     };
+    cache?: {
+        guild?: boolean;
+        me?: boolean;
+    };
     guildOnly?: boolean;
     ownerOnly?: boolean;
 }
