@@ -98,17 +98,9 @@ class RedisCacheHandler {
 	}
 
 	public async getGuild(guildId: string): Promise<Guild> {
-		const guild = await this.client.redis.get(`guilds:${guildId}`);
+		const guild = await this.get(`guilds:${guildId}`) as Guild;
 
-		if(!guild) {
-			const guild = await this.client.rest.get(Routes.guild(guildId)) as Guild;
-
-			await this.client.redis.set(`guilds:${guildId}`, JSON.stringify(guild));
-
-			return guild;
-		}
-
-		return JSON.parse(guild) as Guild;
+		return guild;
 	}
 
 	async setGuild(guild: (APIGuild & { channels?: Array<APIChannel> }) | Guild) {
