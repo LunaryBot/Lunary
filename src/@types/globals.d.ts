@@ -7,10 +7,12 @@ export {};
 
 declare global {
     interface String {
+        checkSimilarityStrings(string: string): number;
+        isLowerCase(): boolean;
+        isUpperCase(): boolean;
+        removeAccents(): string;
         shorten(length: number): string;
         toTitleCase(): string;
-        checkSimilarityStrings(string: string): number;
-        removeAccents(): string;
     }
 
     interface Object {
