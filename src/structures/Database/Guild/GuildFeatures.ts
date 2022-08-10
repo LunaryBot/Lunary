@@ -1,5 +1,5 @@
-import BitField from './BitField';
-import * as Constants from './Constants';
+import BitField from '@utils/BitField';
+import * as Constants from '@utils/Constants';
 
 type GuildFeature = keyof typeof Constants.GuildFeatures;
 

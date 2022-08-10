@@ -1,1 +1,1 @@
-export * from './GuildDatabase';
+export * from './Guild';

@@ -4,10 +4,8 @@ import { AbstractGuild } from '@discord';
 import type { Guild } from '@discord';
 import type { Snowflake } from '@discord/types';
 
-import GuildFeatures from '@utils/GuildFeatures';
-import GuildPermissions from '@utils/GuildPermissions';
-
-
+import GuildFeatures from './GuildFeatures';
+import GuildPermissions from './GuildPermissions';
 
 class GuildDatabase {
 	public readonly client: LunaryClient;
