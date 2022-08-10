@@ -53,3 +53,7 @@ export const Links = {
 	support: 'https://discord.gg/8K6Zry9Crx',
 	vote: 'https://top.gg/bot/777654875441463296/vote',
 };
+
+export const UserFeatures = {
+	useGuildLocale: 1n << 0n,
+};

@@ -11,13 +11,16 @@ class GuildDatabase {
 	public readonly client: LunaryClient;
 	public readonly guild: Guild;
 
-	public features: GuildFeatures;
+	public features?: GuildFeatures;
 
-	public modlogsChannelId: string;
-	public punishmentsChannelId: string;
+	public modlogsChannelId?: string;
+	public punishmentsChannelId?: string;
 
-	public reasons: Prisma.Reason[];
-	public permissions: GuildPermissions[];
+	public reasons?: Prisma.Reason[];
+	public permissions?: GuildPermissions[];
+
+	public premiumType?: Prisma.GuildPremiumType;
+	public premiumUntil?: Date;
 
 	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
@@ -60,6 +63,11 @@ class GuildDatabase {
 
 		if(data.reasons) {
 			this.reasons = data.reasons;
+		}
+
+		if(data.premium_type && data.premium_until && data.premium_until.getTime() <= Date.now()) {
+			this.premiumType = data.premium_type;
+			this.premiumUntil = data.premium_until;
 		}
 
 		return this;

@@ -7,7 +7,8 @@
     "lint": "eslint ./ --ext .ts --fix",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
-    "prisma:format": "prisma format"
+    "prisma:format": "prisma format",
+    "prisma:dev": "prisma migrate dev && prisma generate"
   },
   "author": "JVOPINHO",
   "license": "AGPL-3.0",
