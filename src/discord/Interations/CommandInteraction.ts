@@ -73,12 +73,12 @@ class CommandInteraction extends Interaction {
 				this.resolved.members = new Collection<Omit<Member, 'user' | 'mute' | 'deaf'>>(Object.entries(members).map(([userId, member]) => {
 					const user = users?.get(userId) as User;
 
-					return ([user.id, new Member(this.client, this.guild as Guild, user.id, user as User, member)]);
+					return ([user.id, new Member(this.client, { id: this.id } as AbstractGuild, user.id, user as User, member)]);
 				}));
 			}
 
 			if(roles) {
-				this.resolved.roles = new Collection<Role>(Object.values(roles).map(role => ([role.id, new Role(this.client, this.guild as Guild, role)])));
+				this.resolved.roles = new Collection<Role>(Object.values(roles).map(role => ([role.id, new Role(this.client, { id: this.id } as AbstractGuild, role)])));
 			}
 
 			if(channels) {

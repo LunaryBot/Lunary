@@ -1,4 +1,4 @@
-import { APIChannel, ChannelType } from '@discord/types';
+import { APIChannel, APIGuildChannel, ChannelType } from '@discord/types';
 
 import Structure from '../Base';
 
@@ -30,6 +30,12 @@ class Channel extends Structure {
 		switch (raw.type) {
 			case ChannelType.GuildText:
 				return new TextChannel(client, raw);
+
+			case ChannelType.GuildCategory:
+				return new CategoryChannel(client, raw);
+
+			case ChannelType.GuildNews:
+				return new NewsChannel(client, raw);
 			
 			default:
 				logger.warn(`Unsupported channel type: ${raw.type}`, { label: 'Discord', details: JSON.stringify(raw, null, 4) });
@@ -39,6 +45,8 @@ class Channel extends Structure {
 	}
 }
 
+const { CategoryChannel } = require('./CategoryChannel');
+const { NewsChannel } = require('./NewsChannel');
 const { TextChannel } = require('./TextChannel');
 
 export { Channel };
