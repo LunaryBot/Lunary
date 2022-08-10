@@ -44,7 +44,7 @@ class Role extends Structure<APIRole> {
 
 		this.position = data.position;
 
-		this.permissions = new Permissions(data.permissions);
+		this.permissions = new Permissions(BigInt(Number(data.permissions)));
 
 		this.mentionable = data.mentionable;
 

@@ -12,7 +12,7 @@ interface PermissionOverwrite {
     deny: Permissions;
 }
 
-class Permissions extends BitField {
+class Permissions extends BitField<keyof typeof Permissions.Flags> {
 	public static defaultBit: bigint = 0n;
 
 	public static Flags = {
