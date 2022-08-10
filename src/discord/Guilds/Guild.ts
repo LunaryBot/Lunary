@@ -55,7 +55,7 @@ class Guild extends AbstractGuild<APIGuild & { channels?: Array<APIChannel> }> {
 		}
 
 		if(raw.roles) {
-			this.roles = raw.roles.map((role) => new Role(this.client, this, role)).sort((a, b) => a.position - b.position);
+			this.roles = raw.roles.map((role) => new Role(this.client, { id: this.id } as AbstractGuild, role)).sort((a, b) => a.position - b.position);
 		}
 
 		if(raw.channels) {
