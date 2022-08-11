@@ -54,6 +54,8 @@ class CommandListener extends EventListener {
 			await context.fetchCache(command.requirements.cache);
 		}
 
+		await context.fetchDatabase(command.requirements?.database);
+
 		await command.run(context);
 	}
 }

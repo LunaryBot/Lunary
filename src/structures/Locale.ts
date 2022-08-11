@@ -4,13 +4,22 @@ import yaml from 'js-yaml';
 import Collection from '@utils/Collection';
 
 class Locale {
-	public name: string;
+	public readonly client: LunaryClient;
+
+	public id: string;
 	public dirname: string;
 
 	public cache = new Collection<string>();
 
-	constructor(locale: string, dirname: string = `${process.cwd()}/locales`) {
-		this.name = locale;
+	constructor(client: LunaryClient, locale: string, dirname: string = `${process.cwd()}/locales`) {
+		Object.defineProperty(this, 'client', {
+			value: client,
+			enumerable: false,
+			writable: false,
+		});
+		
+		this.id = locale;
+		
 		this.dirname = `${dirname}/${locale}`;
 	}
 

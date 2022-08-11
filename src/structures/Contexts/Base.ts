@@ -1,6 +1,10 @@
+import { GuildDatabase, UserDatabase } from '@Database';
+
+import Locale from '@structures/Locale';
+
 import { AbstractGuild, CommandInteraction, ComponentInteraction, Guild, Member, Permissions, TextChannel, User } from '@discord';
-import { ComponentType } from '@discord/types';
-import type { ChannelType } from '@discord/types';
+
+import type { CommandRequirements } from '@types';
 
 class Base {
 	public declare client: LunaryClient;
@@ -15,9 +19,15 @@ class Base {
 	public guild: Guild;
 	public me: Member & { app_permissions: Permissions };
 
+	public databases: {
+		user: UserDatabase;
+		guild?: GuildDatabase;
+	} = {} as any;
+
 	public app_permissions: Permissions;
 
-	public declare t: (key: string, ...args: any[]) => string;
+	public locale: Locale;
+	public t: (key: string, ...args: any[]) => string;
 
 	public dm: boolean;
 
@@ -42,6 +52,8 @@ class Base {
 		}
 
 		this.dm = interaction.isInDM();
+
+		this.setLocale();
 	};
 
 	get guildId() {
@@ -52,7 +64,7 @@ class Base {
 		return this.interaction.user?.id as string;
 	}
 
-	async fetchCache({ guild = false, me = false }) {
+	public async fetchCache({ guild, me }: CommandRequirements['cache'] = {}) {
 		if(guild) {
 			this.guild = await this.client.redis.handler.getGuild(this.guildId as string).then((guild) => new Guild(this.client, guild as any));
 		}
@@ -64,6 +76,37 @@ class Base {
 			));
 		}
 		
+		return this;
+	}
+
+	public async fetchDatabase({ guild = true, reasons: fetchReasons = true, permissions: fetchPermissions = true }: CommandRequirements['database'] = {}) {
+		const { databases } = this;
+		
+		databases.user = await (new UserDatabase(this.client, this.user)).fetch();
+
+		this.setLocale(databases.user.features.has('useGuildLocale') ? this.interaction.guildLocale : this.interaction.locale);
+
+		if(guild) {
+			databases.guild = await (new GuildDatabase(this.client, this.guild)).fetch({ fetchReasons, fetchPermissions });
+		}
+
+		return this;
+	}
+
+	public setLocale(locale?: string) {
+		if(!locale) {
+			locale = this.interaction.locale;
+		}
+
+		this.locale = this.client.locales.find(({ id }) => id === locale) ?? 
+					  this.client.locales.find(({ id }) => id === process.env.DEFAULT_LOCALE) ?? 
+					  this.client.locales[0];
+
+		Object.defineProperty(this, 't', {
+			value: this.locale.translate.bind(this.locale),
+			writable: true,
+		});
+
 		return this;
 	}
 
