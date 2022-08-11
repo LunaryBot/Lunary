@@ -21,4 +21,4 @@ class GuildPermissions extends BitField<GuildPermission> {
 	public static Flags = Constants.GuildPermissions;
 }
 
-export default GuildPermissions;
+export { GuildPermissions };

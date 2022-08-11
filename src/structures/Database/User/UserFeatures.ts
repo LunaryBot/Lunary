@@ -7,4 +7,4 @@ class UserFeatures extends BitField<GuildFeature> {
 	public static Flags = Constants.UserFeatures;
 }
 
-export default UserFeatures;
+export { UserFeatures };

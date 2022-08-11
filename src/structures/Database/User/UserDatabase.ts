@@ -2,7 +2,7 @@ import * as Prisma from '@prisma/client';
 
 import { User } from '@discord';
 
-import UserFeatures from './UserFeatures';
+import { UserFeatures } from './UserFeatures';
 
 class UserDatabase {
 	public readonly client: LunaryClient;
@@ -21,7 +21,7 @@ class UserDatabase {
 	public premiumType?: Prisma.UserPremiumType;
 	public premiumUntil?: Date;
 
-	constructor(client: LunaryClient, user: User, options: {
+	constructor(client: LunaryClient, user: User, options?: {
         data?: Partial<Prisma.User>;
     }) {
 		Object.defineProperty(this, 'client', {
@@ -116,4 +116,4 @@ class UserDatabase {
 	}
 }
 
-export default UserDatabase;
+export { UserDatabase };
