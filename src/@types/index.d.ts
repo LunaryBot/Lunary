@@ -9,7 +9,6 @@ export interface CommandRequirements {
         discord?: Array<keyof typeof Permissions.Flags>;
     };
     database?: {
-        user?: boolean;
         guild?: boolean;
         permissions?: boolean;
         reasons?: boolean;

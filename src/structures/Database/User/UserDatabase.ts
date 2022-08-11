@@ -22,7 +22,7 @@ class UserDatabase {
 	public premiumUntil?: Date;
 
 	constructor(client: LunaryClient, user: User, options?: {
-        data?: Partial<Prisma.User>;
+        data?: Partial<Prisma.User> | null;
     }) {
 		Object.defineProperty(this, 'client', {
 			value: client,

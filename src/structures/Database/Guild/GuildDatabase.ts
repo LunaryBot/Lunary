@@ -25,7 +25,7 @@ class GuildDatabase {
 	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
 		fetchPermissions?: boolean,
-		data?: Partial<Prisma.Guild> & { reasons?: Prisma.Reason[], permissions?: Prisma.GuildPermissions[] },
+		data?: Partial<Prisma.Guild> & { reasons?: Prisma.Reason[], permissions?: Prisma.GuildPermissions[] } | null,
 	}) {
 		Object.defineProperty(this, 'client', {
 			value: client,

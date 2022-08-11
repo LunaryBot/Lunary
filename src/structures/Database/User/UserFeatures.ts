@@ -1,9 +1,9 @@
 import BitField from '@utils/BitField';
 import * as Constants from '@utils/Constants';
 
-type GuildFeature = keyof typeof Constants.UserFeatures;
+type UserFeature = keyof typeof Constants.UserFeatures;
 
-class UserFeatures extends BitField<GuildFeature> {
+class UserFeatures extends BitField<UserFeature> {
 	public static Flags = Constants.UserFeatures;
 }
 
