@@ -7,7 +7,7 @@ import tweetnacl from 'tweetnacl';
 import { Command, CommandGroup, SubCommand } from '@Command';
 import EventListener from '@EventListener';
 
-import { CommandInteraction, Application, User, ComponentInteraction } from '@discord';
+import { CommandInteraction, Application, User, ComponentInteraction, ModalSubimitInteraction } from '@discord';
 import { APIUser, InteractionType, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
 
@@ -89,6 +89,12 @@ class Client extends EventEmitter {
 				const interaction = new ComponentInteraction(this, raw, res);
 
 				this.emit('componentInteraction', interaction);
+			}
+
+			if(raw.type == InteractionType.ModalSubmit) {
+				const interaction = new ModalSubimitInteraction(this, raw, res);
+
+				this.emit('modalSubmitInteraction', interaction);
 			}
 		});
 	}

@@ -6,28 +6,25 @@ import {
 	RESTPostAPIInteractionCallbackFormDataBody, 
 	APITextInputComponent, 
 	APISelectMenuComponent,
-	APIMessageComponentSelectMenuInteraction,
-	APIMessageComponentButtonInteraction,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
+	APIModalSubmitInteraction,
+	ModalSubmitComponent,
 } from '@discord/types';
 
 import { Guild } from '../Guilds';
-import { Message } from '../Message';
 import { Interaction } from './Base';
 import { InteractionWebhook } from './InteractionWebhook';
 
-type APIComponentInteraction = APIMessageComponentSelectMenuInteraction|APIMessageComponentButtonInteraction;
-
 type MessageEditWebhook = (RESTEditWebhook & { ephemeral?: boolean });
 
-class ComponentInteraction extends Interaction {
+class ModalSubimitInteraction extends Interaction {
 	protected webhook: InteractionWebhook;
-	raw: APIMessageComponentSelectMenuInteraction|APIMessageComponentButtonInteraction;
+	raw: APIModalSubmitInteraction;
 
 	locale: string;
 	customId: string;
-	componentType: ComponentType;
-	values?: Array<string>;
+
+	components: Array<ModalSubmitComponent>;
 
 	responseReplied = false;
 	replied = false;
@@ -35,19 +32,15 @@ class ComponentInteraction extends Interaction {
 
 	guild?: Guild;
 
-	constructor(client: LunaryClient, data: APIComponentInteraction, res: RequestResponse) {
+	constructor(client: LunaryClient, data: APIModalSubmitInteraction, res: RequestResponse) {
 		super(client, data, res);
 
 		this.raw = data;
+		
 		this.locale = data.locale;
 		this.customId = data.data.custom_id;
-		this.componentType = data.data.component_type;
 
-		this.message = new Message(this.client, data.message);
-
-		if(data.data.component_type === ComponentType.SelectMenu) {
-			this.values = data.data.values;
-		}
+		this.components = data.data.components?.map(actionRow => actionRow.components.map(component => component)) as any ?? [];
 
 		this.webhook = new InteractionWebhook(this.client, this);
 
@@ -102,17 +95,6 @@ class ComponentInteraction extends Interaction {
 		});
 	}
 
-	async createModal(data: { title: string, custom_id: string, components: Array<{ type: ComponentType.ActionRow, components: Array<APITextInputComponent|APISelectMenuComponent> }> }) {
-		if(this.responseReplied) throw new Error('Cannot create modal after responding');
-
-		const body = {
-			type: InteractionResponseType.Modal,
-			data,
-		} as RESTPostAPIInteractionCallbackFormDataBody;
-
-		return await this.res.send(body);
-	}
-
 	async defer() {
 		if(this.replied) throw new Error('Cannot defer after responding');
 		
@@ -165,6 +147,10 @@ class ComponentInteraction extends Interaction {
 		});
 	}
 
+	getValue(id: string) {
+		return this.components.find(row => row.custom_id === id)?.value;
+	}
+
 	private makeMessageContent(content: string | MessageEditWebhook): MessageEditWebhook {
 		const message: MessageEditWebhook = typeof content === 'string' ? { content } : content;
 	
@@ -175,16 +161,4 @@ class ComponentInteraction extends Interaction {
 	}
 }
 
-class SelectMenuInteraction extends Interaction {
-	raw: APIMessageComponentSelectMenuInteraction;
-	componentType: ComponentType.SelectMenu;
-	values: Array<string>;
-}
-
-class ButtonInteraction extends Interaction {
-	raw: APIMessageComponentButtonInteraction;
-	componentType: ComponentType.Button;
-	values: undefined;
-}
-
-export { ComponentInteraction, SelectMenuInteraction, ButtonInteraction };
+export { ModalSubimitInteraction };
