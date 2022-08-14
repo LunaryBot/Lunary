@@ -1,5 +1,5 @@
 import { Command } from '@Command';
-import type { ContextCommand } from '@Contexts';
+import type { CommandContext } from '@Contexts';
 
 import { ButtonStyle, ComponentType } from '@discord/types';
 
@@ -10,7 +10,7 @@ class PingCommand extends Command {
 		});
 	}
 
-	async run(context: ContextCommand) {
+	async run(context: CommandContext) {
 		context.createMessage({
 			content: 'Pong!',
 			components: [

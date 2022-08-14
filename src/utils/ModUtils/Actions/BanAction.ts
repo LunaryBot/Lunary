@@ -1,6 +1,6 @@
 import type * as Prisma from '@prisma/client';
 
-import { ComponentContext, ContextCommand } from '@Contexts';
+import { ComponentContext, CommandContext } from '@Contexts';
 import { GuildDatabase } from '@Database';
 
 import type { User, Guild } from '@discord';
@@ -10,7 +10,7 @@ import { RawFile } from '@discordjs/rest';
 import { ModUtils } from '../ModUtils';
 
 interface BanProps {
-	context: ContextCommand|ComponentContext;
+	context: CommandContext|ComponentContext;
     user: User;
 	author?: User;
 	reason?: string|Prisma.Reason;
@@ -21,7 +21,7 @@ interface BanProps {
 class BanAction {
 	public readonly client: LunaryClient;
 
-	public context: ContextCommand|ComponentContext;
+	public context: CommandContext|ComponentContext;
 
 	public user: User;
 	public author: User;

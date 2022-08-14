@@ -1,4 +1,4 @@
-import type { ContextCommand } from '@Contexts';
+import type { CommandContext } from '@Contexts';
 
 import type { CommandRequirements, CommandBase } from '@types';
 
@@ -26,7 +26,7 @@ class Base {
 		});
 	};
 
-	public async run(context: ContextCommand): Promise<any> {}
+	public async run(context: CommandContext): Promise<any> {}
 
 	public get commandName() {
 		return this.name;

@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { inspect } from 'util';
 
 import { Command } from '@Command';
-import { ContextCommand } from '@Contexts';
+import { CommandContext } from '@Contexts';
 
 import { Message } from '@discord'; // eslint-disable-line
 
@@ -32,7 +32,7 @@ class EvalCommand extends Command {
 		});
 	}
 
-	async run(context: ContextCommand) {
+	async run(context: CommandContext) {
 		const { content } = context.options.get('message') as Message;
 
 		const [_, flags, code] = [...(content.match(blockcode.test(content) ? blockcode : coderegex) || [null, null, content])];

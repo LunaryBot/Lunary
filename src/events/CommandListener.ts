@@ -1,5 +1,5 @@
 import { Command, CommandGroup, SubCommand } from '@Command';
-import { ContextCommand } from '@Contexts';
+import { CommandContext } from '@Contexts';
 import EventListener from '@EventListener';
 
 import { CommandInteraction } from '@discord';
@@ -24,7 +24,7 @@ class CommandListener extends EventListener {
 
 		if(interaction.isInDM() && mainCommand.requirements?.guildOnly) return;
 
-		const context = new ContextCommand(this.client, interaction, mainCommand);
+		const context = new CommandContext(this.client, interaction, mainCommand);
 
 		if(context.options._subcommand && mainCommand.subcommands.length) {
 			const group: CommandGroup | Command = context.options._group && (mainCommand as Command).subcommands.find(c => c.name == context.options._group) as CommandGroup || mainCommand as Command;

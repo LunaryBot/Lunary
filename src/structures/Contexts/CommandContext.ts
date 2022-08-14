@@ -15,7 +15,7 @@ import type {
 import CommandInteractionOptions from '../Command/CommandInteractionOptions';
 import Base from './Base';
 
-class ContextCommand extends Base {
+class CommandContext extends Base {
 	public command: Command|SubCommand;
 	public interaction: CommandInteraction;
 	public options: CommandInteractionOptions;
@@ -53,4 +53,4 @@ class ContextCommand extends Base {
 	};
 }
 
-export { ContextCommand };
+export { CommandContext };

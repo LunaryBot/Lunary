@@ -1,2 +1,2 @@
-export * from './ContextCommand';
+export * from './CommandContext';
 export * from './ComponentContext';
