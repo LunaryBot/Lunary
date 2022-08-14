@@ -8,7 +8,7 @@ import { GuildChannel } from './GuildChannel';
 type APIGuildChannel = APIGuildChannelBase<ChannelType.GuildCategory|ChannelType.GuildDirectory|ChannelType.GuildNews|ChannelType.GuildForum|ChannelType.GuildText|ChannelType.GuildVoice>
 
 class CategoryChannel extends GuildChannel {
-    @RequiresToken
+    @RequiresToken.bind(this)
 	async channels() {
 		const channels = new Collection<GuildChannel>();
         

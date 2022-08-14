@@ -34,12 +34,12 @@ class GuildChannel extends Channel {
 		return this;
 	}
 
-    @RequiresToken
+    @RequiresToken.bind(this)
 	public delete() {
 		return this.client.rest.delete(Routes.channel(this.id));
 	}
     
-    @RequiresToken
+    @RequiresToken.bind(this)
     public async edit(options: { name?: string, position?: number, parentId?: string }) {
     	const raw = await this.client.rest.patch(Routes.channel(this.id), {
     		body: options as RESTPatchAPIChannelJSONBody,

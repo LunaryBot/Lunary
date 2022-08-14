@@ -42,7 +42,7 @@ class TextChannel extends Channel {
 		return this;
 	}
 
-    @RequiresToken
+    @RequiresToken.bind(this)
 	public async createMessage(content: string|RESTCreateMessage) {
 		return await this.client.rest.post(Routes.channelMessages(this.id), {
 			body: typeof content === 'string' ? { content } : content,

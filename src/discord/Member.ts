@@ -18,7 +18,7 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
   
 	public avatar?: string;
 
-	public roles: ReadonlyArray<Snowflake>;
+	public roles: Array<Snowflake>;
   
 	public pending: boolean = false;
   
@@ -80,14 +80,14 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
 		this.roles = raw.roles as Snowflake[];
 	}
 
-    @RequiresToken
+    @RequiresToken.bind(this)
 	public async addRole(roleId: string, reason?: string) {
 		await this.client.rest.put(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
 			headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
 		});
 	}
   
-    @RequiresToken
+    @RequiresToken.bind(this)
     async ban(raw: { deleteMessageDays?: number; reason?: string }) {
     	await this.client.rest.put(Routes.guildBan(this.guild.id, this.id), {
     		body: { delete_message_days: raw.deleteMessageDays },
@@ -95,21 +95,21 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
     	});
     }
 
-    @RequiresToken
+    @RequiresToken.bind(this)
     async kick(reason?: string) {
     	await this.client.rest.delete(Routes.guildMember(this.guild.id, this.id), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
     	});
     }
 
-    @RequiresToken
+    @RequiresToken.bind(this)
     async removeRole(roleId: string, reason?: string) {
     	await this.client.rest.delete(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
     	});
     }
 
-    @RequiresToken
+    @RequiresToken.bind(this)
     async unban(reason?: string) {
     	await this.client.rest.delete(Routes.guildBan(this.guild.id, this.id), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,

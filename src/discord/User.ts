@@ -1,10 +1,11 @@
-import { Routes, UserFlags } from '@discord/types';
-import type { APIDMChannel, APIUser, Snowflake } from '@discord/types';
+import { DefaultUserAvatarAssets, ImageFormat, Routes, UserAvatarFormat, UserFlags } from '@discord/types';
+import { APIDMChannel, APIUser, Snowflake, CDNRoutes } from '@discord/types';
+import { ImageSize } from '@discordjs/rest';
 
 import { RequiresToken } from '@decorators';
+import Utils from '@utils';
 
 import Structure from './Base';
-
 
 class User extends Structure<APIUser> {
 	public readonly id: Snowflake;
@@ -51,7 +52,23 @@ class User extends Structure<APIUser> {
 		return this;
 	}
 
-	@RequiresToken
+	get tag() {
+		return `${this.username}#${this.discriminator}`;
+	}
+
+	get defaultAvatarURL() {
+		return CDNRoutes.defaultUserAvatar(Number(this.discriminator) % 5 as DefaultUserAvatarAssets);
+	}
+
+	public displayAvatarURL(format: 'jpg' | 'png' | 'webp' | 'gif', size: ImageSize) {
+		if(!this.avatar) {
+			return this.defaultAvatarURL;
+		}
+
+		return Utils._formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^(.*)\.$/, ''), format, size);
+	}
+
+	@RequiresToken.bind(this)
   	public async getDMChannel() {
   		const raw = (await this.client.rest.post(Routes.userChannels(), {
   			body: { recipient_id: this.id },
