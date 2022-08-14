@@ -8,7 +8,7 @@ import { Command, CommandGroup, SubCommand } from '@Command';
 import EventListener from '@EventListener';
 
 import { CommandInteraction, Application, User, ComponentInteraction } from '@discord';
-import { APIUser, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
+import { APIUser, InteractionType, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
 
 import Locale from './Locale';
@@ -75,17 +75,17 @@ class Client extends EventEmitter {
 
 			if(!isAuthenticated) return res.status(401).send();
 
-			if(raw.type == 1) {
+			if(raw.type == InteractionType.Ping) {
 				return res.status(200).send({ type: 1 });
 			}
 
-			if(raw.type == 2) {
+			if(raw.type == InteractionType.ApplicationCommand) {
 				const interaction = new CommandInteraction(this, raw, res);
 
 				this.emit('commandInteraction', interaction);
 			}
 
-			if(raw.type == 3) {
+			if(raw.type == InteractionType.MessageComponent) {
 				const interaction = new ComponentInteraction(this, raw, res);
 
 				this.emit('componentInteraction', interaction);
