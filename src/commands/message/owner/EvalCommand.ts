@@ -19,6 +19,7 @@ class EvalCommand extends Command {
 			requirements: {
 				database: {
 					guild: true,
+					guildEmbeds: true,
 					permissions: true,
 					reasons: true,
 				},
