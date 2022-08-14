@@ -79,7 +79,7 @@ class Base {
 		return this;
 	}
 
-	public async fetchDatabase({ guild = true, reasons: fetchReasons = true, permissions: fetchPermissions = true }: CommandRequirements['database'] = {}) {
+	public async fetchDatabase({ guild = true, reasons: fetchReasons = true, permissions: fetchPermissions = true, guildEmbeds: seletcEmbeds = false }: CommandRequirements['database'] = {}) {
 		const { databases } = this;
 		
 		databases.user = await (new UserDatabase(this.client, this.user)).fetch();
@@ -87,7 +87,7 @@ class Base {
 		this.setLocale(databases.user.features.has('useGuildLocale') ? this.interaction.guildLocale : this.interaction.locale);
 
 		if(guild) {
-			databases.guild = await (new GuildDatabase(this.client, this.guild)).fetch({ fetchReasons, fetchPermissions });
+			databases.guild = await (new GuildDatabase(this.client, this.guild)).fetch({ fetchReasons, fetchPermissions, seletcEmbeds });
 		}
 
 		return this;

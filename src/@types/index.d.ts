@@ -10,6 +10,7 @@ export interface CommandRequirements {
     };
     database?: {
         guild?: boolean;
+        guildEmbeds?: boolean;
         permissions?: boolean;
         reasons?: boolean;
     };

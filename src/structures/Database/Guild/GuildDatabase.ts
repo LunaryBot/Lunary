@@ -1,8 +1,11 @@
-import type * as Prisma from '@prisma/client';
+import * as Prisma from '@prisma/client';
+
 
 import { AbstractGuild } from '@discord';
 import type { Guild } from '@discord';
 import type { Snowflake } from '@discord/types';
+
+import { Embed } from '../../../@types/Database';
 
 import { GuildFeatures } from './GuildFeatures';
 import { GuildPermissions } from './GuildPermissions';
@@ -21,6 +24,8 @@ class GuildDatabase {
 
 	public premiumType?: Prisma.GuildPremiumType;
 	public premiumUntil?: Date;
+
+	public embeds?: Embed[];
 
 	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
@@ -45,9 +50,7 @@ class GuildDatabase {
 	}
 
 	private _patch(data: Partial<Prisma.Guild> & { reasons?: Prisma.Reason[], permissions?: Prisma.GuildPermissions[] }): this {
-		if(data.features) {
-			this.features = new GuildFeatures(data.features);
-		}
+		this.features = new GuildFeatures(data.features || 0n);
 
 		if(data.modlogs_channel) {
 			this.modlogsChannelId = data.modlogs_channel;
@@ -70,31 +73,36 @@ class GuildDatabase {
 			this.premiumUntil = data.premium_until;
 		}
 
+		if(data.embeds?.length) {
+			this.embeds = data.embeds as any;
+		}
+
 		return this;
 	}
 
-	public async fetch({ fetchPermissions = false, fetchReasons = false } = {}): Promise<this> {
+	public async fetch({ fetchPermissions = false, fetchReasons = false, seletcEmbeds = false } = {}): Promise<this> {
 		const query: any = {
 			where: {
 				id: this.guild.id,
 			},
+			select: {
+				embeds: seletcEmbeds,	
+			},
 		};
-
-		if(fetchPermissions || fetchReasons) {
-			query.include = {};
-		}
-
-		if(fetchPermissions) {
-			query.include.permissions = true;
-		}
-
-		if(fetchReasons) {
-			query.include.reasons = true;
-		}
 
 		const data = await this.guild.client.prisma.guild.findUnique(query);
 
-		return this._patch(data || {});
+		this._patch(data || {});
+
+		if(fetchPermissions) {
+			this.fetchPermissions();
+		}
+
+		if(fetchReasons) {
+			this.fetchReasons();
+		}
+
+		return this;
 	}
 
 	public async fetchPermissions(): Promise<GuildPermissions[]> {
