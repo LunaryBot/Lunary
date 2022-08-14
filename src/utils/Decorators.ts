@@ -1,6 +1,4 @@
 export function RequiresToken(_this: any, key: string, desc: PropertyDescriptor) {
-	// @ts-ignore
-	console.log(this, key, desc);
 	const original = desc.value as (...args: any[]) => any;
   
 	desc.value = function (...args: any[]) {
