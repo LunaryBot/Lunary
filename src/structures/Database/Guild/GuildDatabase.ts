@@ -81,16 +81,11 @@ class GuildDatabase {
 	}
 
 	public async fetch({ fetchPermissions = false, fetchReasons = false, seletcEmbeds = false } = {}): Promise<this> {
-		const query: any = {
+		const data = await this.guild.client.prisma.guild.findUnique({
 			where: {
 				id: this.guild.id,
 			},
-			select: {
-				embeds: seletcEmbeds,	
-			},
-		};
-
-		const data = await this.guild.client.prisma.guild.findUnique(query);
+		});
 
 		this._patch(data || {});
 
