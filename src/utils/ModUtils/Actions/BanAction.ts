@@ -143,7 +143,7 @@ class BanAction {
 		});
 
 		if(!context.databases.guild || !context.databases.guild.embeds) {
-			await this.context.fetchDatabase({ guild: true, guildEmbeds: true });
+			await this.context.fetchDatabase({ guild: true });
 		}
 
 		const { punishmentsChannelId } = context.databases.guild as GuildDatabase;

@@ -1,8 +1,13 @@
-import { APIChatInputApplicationCommandInteractionDataResolved, APIMessageApplicationCommandInteractionDataResolved, APIUserApplicationCommandInteractionDataResolved, ApplicationCommandType, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
-import type {
+import {
 	APIApplicationCommandInteraction,
-	ApplicationCommandInteractionResponse,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
+	APIChatInputApplicationCommandInteractionDataResolved, 
+	APIMessageApplicationCommandInteractionDataResolved, 
+	APIUserApplicationCommandInteractionDataResolved, 
+	ApplicationCommandType, 
+	InteractionResponseType, 
+	MessageFlags, 
+	Snowflake,
 } from '@discord/types';
 
 import Collection from '@utils/Collection';

@@ -1,5 +1,11 @@
-import { ComponentType, Routes, InteractionResponseType, MessageFlags, Snowflake, APIModalComponent, RESTPostAPIInteractionCallbackFormDataBody, APIModalSubmission, APITextInputComponent, APISelectMenuComponent } from '@discord/types';
-import type {
+import {
+	ComponentType, 
+	InteractionResponseType, 
+	MessageFlags, 
+	Snowflake, 
+	RESTPostAPIInteractionCallbackFormDataBody, 
+	APITextInputComponent, 
+	APISelectMenuComponent,
 	APIMessageComponentSelectMenuInteraction,
 	APIMessageComponentButtonInteraction,
 	RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook,
@@ -98,6 +104,8 @@ class ComponentInteraction extends Interaction {
 	}
 
 	async createModal(data: { title: string, custom_id: string, components: Array<{ type: ComponentType.ActionRow, components: Array<APITextInputComponent|APISelectMenuComponent> }> }) {
+		if(this.responseReplied) throw new Error('Cannot create modal after responding');
+
 		const body = {
 			type: InteractionResponseType.Modal,
 			data,
