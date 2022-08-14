@@ -1,4 +1,4 @@
-import { ComponentType, Routes, InteractionResponseType, MessageFlags, Snowflake } from '@discord/types';
+import { ComponentType, Routes, InteractionResponseType, MessageFlags, Snowflake, APIModalComponent, RESTPostAPIInteractionCallbackFormDataBody, APIModalSubmission, APITextInputComponent, APISelectMenuComponent } from '@discord/types';
 import type {
 	APIMessageComponentSelectMenuInteraction,
 	APIMessageComponentButtonInteraction,
@@ -97,6 +97,15 @@ class ComponentInteraction extends Interaction {
 		});
 	}
 
+	async createModal(data: { title: string, custom_id: string, components: Array<{ type: ComponentType.ActionRow, components: Array<APITextInputComponent|APISelectMenuComponent> }> }) {
+		const body = {
+			type: InteractionResponseType.Modal,
+			data,
+		} as RESTPostAPIInteractionCallbackFormDataBody;
+
+		return await this.res.send(body);
+	}
+
 	async deleteMessage(id: string) {
 		return await this.webhook.deleteMessage(id);
 	}
@@ -135,7 +144,18 @@ class ComponentInteraction extends Interaction {
 			data: {
 				...message,
 			},
-		}); 
+		});
+	}
+
+	async defer() {
+		if(this.replied) throw new Error('Cannot defer after responding');
+		
+		this.responseReplied = true;
+		this.replied = true;
+
+		return await this.res.send({
+			type: InteractionResponseType.DeferredMessageUpdate,
+		} as RESTPostAPIInteractionCallbackFormDataBody);
 	}
 
 	private makeMessageContent(content: string | MessageEditWebhook): MessageEditWebhook {

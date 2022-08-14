@@ -4,6 +4,8 @@ import EventListener from '@EventListener';
 
 import type { ComponentInteraction } from '@discord';
 
+import { APITextInputComponent, ComponentType, ModalSubmitActionRowComponent, ModalSubmitComponent, TextInputStyle } from 'discord-api-types/v10';
+
 
 class ComponentListener extends EventListener {
 	constructor(client: LunaryClient) {
@@ -12,10 +14,23 @@ class ComponentListener extends EventListener {
     
 	async on(interaction: ComponentInteraction) {
 		if(interaction.customId === 'click_me') {
-			const context = new ComponentContext(this.client, interaction) as ButtonClickContext;
-
-			await context.editParent({
-				content: 'You clicked me!',
+			console.log('Click me!');
+			await interaction.createModal({
+				components: [
+					{
+						type: ComponentType.ActionRow,
+						components: [
+							{
+								type: ComponentType.TextInput,
+								custom_id: 'my_input',
+								label: 'My Input',
+								style: TextInputStyle.Paragraph,
+							},
+						],
+					},
+				],
+				custom_id: 'my_modal',
+				title: 'My Modal',
 			});
 		}
 	}
