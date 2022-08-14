@@ -40,7 +40,7 @@ class ModalSubimitInteraction extends Interaction {
 		this.locale = data.locale;
 		this.customId = data.data.custom_id;
 
-		this.components = data.data.components?.map(actionRow => actionRow.components.map(component => component)) as any ?? [];
+		this.components = data.data.components?.map(actionRow => actionRow.components.map(component => component)).flat() as any ?? [];
 
 		this.webhook = new InteractionWebhook(this.client, this);
 
