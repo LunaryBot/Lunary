@@ -61,11 +61,9 @@ class Locale {
 	public replacePlaceholders(string: string, variables: Object): string {
 		let output = String(string);
 		
-		Object.entries(variables || {}).forEach(([key, value]) => {
-			const regex = new RegExp(`{${key}}`, 'g');
-
-			output = string.replace(regex, value);
-		});
+		for(const [key, val] of Object.entries(variables || null)) {
+			output = output.replace(new RegExp(`{${key}}`, 'g'), val);
+		}
 
 		return output;
 	}
