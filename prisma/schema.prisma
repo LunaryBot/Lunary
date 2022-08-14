@@ -19,6 +19,7 @@ model Guild {
   reasons             Reason[]
   premium_type        GuildPremiumType?
   premium_until       DateTime?
+  embeds              Json[]              @default([])
 
   @@map("GUILDS")
 }
