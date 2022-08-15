@@ -1,3 +1,5 @@
+import Prisma from '@prisma/client';
+
 import { SubCommand } from '@Command';
 import type { Command } from '@Command';
 import type { CommandContext } from '@Contexts';
@@ -5,7 +7,14 @@ import type { CommandContext } from '@Contexts';
 import { Member, User } from '@discord';
 
 import Utils from '@utils';
-import { BanAction } from '@utils/ModUtils/index';
+import { BanAction, ModUtils } from '@utils/ModUtils/index';
+
+import { PunishmentProps, ReplyMessageFn } from '@types';
+
+interface BanProps extends PunishmentProps {
+	days?: 0 | 1 | 7;
+	notifyDM?: boolean;
+}
 
 class BanUserSubCommand extends SubCommand {
 	constructor(client: LunaryClient, parent: Command) {
@@ -21,7 +30,6 @@ class BanUserSubCommand extends SubCommand {
 				guildOnly: true,
 				database: {
 					guild: true,
-					guildEmbeds: true,
 					permissions: true,
 					reasons: true,
 				},
@@ -45,7 +53,7 @@ class BanUserSubCommand extends SubCommand {
 					content: context.t('general:userMissingPermissionsToPunish'),
 				});
 			}
-
+			
 			if(!Utils.highestPosition(context.me, member, context.guild)) {
 				return context.createMessage({
 					content: context.t('general:lunyMissingPermissionsToPunish'),
@@ -53,22 +61,33 @@ class BanUserSubCommand extends SubCommand {
 			}
 		}
 
-		const reason: string = context.options.get('reason');
+		const punishmentReasonProps = await ModUtils.punishmentReason.bind(this)(context);
+
+		const { reason } = punishmentReasonProps;
+		const { replyMessageFn } = punishmentReasonProps;
 
 		const days = context.options.get('days') || 0;
 
 		const notifyDM: boolean = context.options.get('notifyDM') ?? true;
 
-		const action = new BanAction(this.client, {
-			context,
+		const banProps: BanProps = {
 			user,
 			author: context.author,
-			days,
 			notifyDM,
-			reason,
-		});
+			days,
+		};
 
-		await action.execute();
+		if(reason) {
+			banProps.reason = reason;
+		}
+
+		const action = async(replyMessageFn: ReplyMessageFn) => {
+			const action = new BanAction(this.client, context, { ...banProps, member }, replyMessageFn);
+
+			await action.execute();
+		};
+
+		await ModUtils.punishmentConfirmation.bind(this)(context, banProps, action.bind(this), replyMessageFn);
 	}
 }
 

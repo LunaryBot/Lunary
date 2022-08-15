@@ -32,7 +32,8 @@ class Role extends Structure<APIRole> {
 		this.id = data.id as Snowflake;
 
 		this.managed = data.managed;
-		
+
+		this._patch(data);
 	}
 
 	public _patch(data: APIRole) {

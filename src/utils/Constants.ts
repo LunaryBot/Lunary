@@ -54,6 +54,14 @@ export const Links = {
 	vote: 'https://top.gg/bot/777654875441463296/vote',
 };
 
+export const PunishmentTypes = {
+	BAN: 1n << 0n,
+	KICK: 1n << 1n,
+	MUTE: 1n << 2n,
+	ADV: 1n << 3n,
+};
+
 export const UserFeatures = {
-	useGuildLocale: 1n << 0n,
+	quickPunishment: 1n << 0n,
+	useGuildLocale: 1n << 1n,
 };

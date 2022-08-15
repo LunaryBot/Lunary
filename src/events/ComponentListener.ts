@@ -1,10 +1,8 @@
-import { ComponentContext } from '@Contexts';
-import type { ButtonClickContext } from '@Contexts';
 import EventListener from '@EventListener';
 
 import type { ComponentInteraction } from '@discord';
 
-import { APITextInputComponent, ComponentType, ModalSubmitActionRowComponent, ModalSubmitComponent, TextInputStyle } from 'discord-api-types/v10';
+import { ComponentType, TextInputStyle } from 'discord-api-types/v10';
 
 
 class ComponentListener extends EventListener {

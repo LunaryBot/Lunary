@@ -1,7 +1,7 @@
 import * as Prisma from '@prisma/client';
 
 
-import { AbstractGuild } from '@discord';
+import { AbstractGuild, Member } from '@discord';
 import type { Guild } from '@discord';
 import type { Snowflake } from '@discord/types';
 
@@ -128,6 +128,28 @@ class GuildDatabase {
 		const premiumUntil = this.premiumUntil?.getTime();
 		
 		return this.premiumType !== undefined && premiumUntil !== undefined && premiumUntil <= Date.now();
+	}
+
+	public async permissionsFor(member: Member) {
+		if(!this.permissions) {
+			await this.fetchPermissions();
+		}
+
+		const permissions = this.permissions as GuildPermissions[];
+
+		const memberPermissions = permissions.filter(permission => 
+			(permission.type == 'MEMBER' && permission.id == member.id) || 
+			(permission.type == 'ROLE' && member.roles.includes(permission.id as Snowflake))
+		).reduce((acc, permission) => acc | permission.bitfield, 0n);
+
+		this.client.prisma.punishment.findMany();
+
+		return new GuildPermissions({
+			guild_id: this.guild.id,
+			id: member.id,
+			type: 'MEMBER',
+			permissions: memberPermissions,
+		});
 	}
 
 	public async save() {

@@ -1,4 +1,7 @@
-import { Permissions } from '@discord';
+import Prisma from '@prisma/client';
+
+import { Permissions, User } from '@discord';
+import { RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook } from '@discord/types';
 
 import type { GuildPermissions } from '../utils/Constants';
 
@@ -33,30 +36,12 @@ export interface VoteData {
 	date: number
 }
 
-export interface Punishment {
-    id: string;
-	user_id: string;
-	author_id: string;
-	guild_id: string;
-    created_at: Date;
-	reason?: string;
-	type: PunishmentTypes;
-	duration?: number;
+export interface PunishmentProps {
+    user: User;
+    author: User;
+    reason?: string|Prisma.Reason;
+    notifyDM?: boolean;
 }
-
-export interface PunishmentMute extends Punishment {
-    duration: number;
-}
-
-export enum PunishmentType {
-    Ban = 'BAN',
-    Kick = 'KICK',
-    Mute = 'MUTE',
-    Warn = 'ADV',
-    Adv = 'ADV',
-}
-
-type PunishmentTypes = 'BAN' | 'KICK' | 'MUTE' | 'ADV';
   
 export interface Reason {
     id: string;
@@ -67,3 +52,5 @@ export interface Reason {
     keys?: Array<string>;
     days?: number;
 }
+
+export type ReplyMessageFn = (content: RESTEditWebhook & { ephemeral?: boolean }) => Promise<any>

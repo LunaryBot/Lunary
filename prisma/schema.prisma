@@ -46,7 +46,7 @@ enum GuildPremiumType {
 }
 
 model Punishment {
-  id         String         @id @unique
+  id         Int            @id @unique @default(autoincrement())
   guild_id   String
   user_id    String
   author_id  String
@@ -56,7 +56,6 @@ model Punishment {
   reason     String?
   reason_id  String?
   deleted    Boolean?       @default(false)
-  revoker_id String?
 
   @@map("PUNISHMENTS")
 }

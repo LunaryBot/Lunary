@@ -49,7 +49,7 @@ class Locale {
 			const val = typeof data == 'object' && !Array.isArray(data) ? array.reduce((a: any, b: string) => (typeof a != 'undefined' ? a : {})[b], data) : data;
 
 			if(val !== undefined) {
-				output = String(val);
+				output = typeof val == 'object' ? JSON.stringify(val) : val;
 
 				this.cache.set(ref, output);
 			} else return ':bug:';
