@@ -5,8 +5,8 @@ import Prisma from '@prisma/client';
 import { ComponentContext, CommandContext } from '@Contexts';
 import { GuildDatabase } from '@Database';
 
-import { ComponentInteraction, Member, ModalSubimitInteraction, SelectMenuInteraction, User } from '@discord';
-import { APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ButtonStyle, APISelectMenuOption, APISelectMenuComponent, ComponentType, TextInputStyle, MessageFlags } from '@discord/types';
+import { Channel, ComponentInteraction, Member, Message, ModalSubimitInteraction, SelectMenuInteraction, User } from '@discord';
+import { APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ButtonStyle, APISelectMenuOption, APISelectMenuComponent, ComponentType, TextInputStyle, MessageFlags, APIMessage, Routes, RESTGetAPIChannelMessagesQuery } from '@discord/types';
 
 import { Links, PunishmentTypes } from '@utils/Constants';
 import TimeUtils from '@utils/TimeUtils';
@@ -14,6 +14,7 @@ import TimeUtils from '@utils/TimeUtils';
 import { PunishmentProps, ReplyMessageFn } from '@types';
 
 import JsonPlaceholderReplacer from '../JsonPlaceholderReplacer';
+import { TextTranscript } from './Transcript';
 
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
 
@@ -57,6 +58,18 @@ class ModUtils {
 		}
 
 		return punishmentMessage;
+	}
+
+	public static async generateTranscript(channel: Channel, type: 'TEXT') {
+		const Transcript = TextTranscript;
+
+		const messagesFetched = await this.client.rest.get(Routes.channelMessages(channel.id)) as APIMessage[];
+
+		const messages = messagesFetched.slice(0, 20).map(message => new Message(this.client, message)).sort((a, b) => a.timestamp - b.timestamp);
+
+		const transcript = new Transcript(this.client, messages, channel);
+
+		return transcript.toBuffer();
 	}
 
 	public static async punishmentReason(context: ComponentContext|CommandContext) {
