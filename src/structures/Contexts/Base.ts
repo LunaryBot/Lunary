@@ -66,11 +66,7 @@ class Base {
 
 	public async fetchCache({ guild, me }: CommandRequirements['cache'] = {}) {
 		if(guild) {
-			this.guild = await this.client.redis.handler.getGuild(this.guildId as string).then((guild) => {
-				console.log(guild);
-
-				return new Guild(this.client, guild as any);
-			});
+			this.guild = await this.client.redis.handler.getGuild(this.guildId as string).then((guild) => new Guild(this.client, guild as any));
 		}
 
 		if(me) {
