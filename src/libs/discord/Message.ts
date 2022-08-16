@@ -26,6 +26,8 @@ class Message extends Structure<APIMessage> {
 		guildId?: string;
 	};
 
+	referencedMessage: Message;
+
 	mentions: {
 		everyone?: boolean;
 		users?: User[];
@@ -54,7 +56,7 @@ class Message extends Structure<APIMessage> {
 	public _path(raw: APIMessage) {
 		this.attachments = raw.attachments;
 
-		this.author = new User(this.client, raw.author);
+		this.author = raw.author ? new User(this.client, raw.author) : { id: (raw as any).author_id } as User;
 
 		this.content = raw.content;
 
@@ -67,6 +69,10 @@ class Message extends Structure<APIMessage> {
 				messageId,
 				guildId,
 			};
+		}
+
+		if(raw.referenced_message) {
+			this.referencedMessage = new Message(this.client, raw.referenced_message);
 		}
 
 		const { mention_everyone, mention_roles, mention_channels, mentions } = raw;
@@ -113,6 +119,10 @@ class Message extends Structure<APIMessage> {
 		}
 
 		return this;
+	}
+
+	get authorId(): string {
+		return this.author.id;
 	}
 }
 

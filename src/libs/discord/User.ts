@@ -65,7 +65,7 @@ class User extends Structure<APIUser> {
 			return this.defaultAvatarURL;
 		}
 
-		return Utils._formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^(.*)\.$/, ''), format, size);
+		return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^(.*)\.$/, ''), format, size);
 	}
 
 	@RequiresToken.bind(this)

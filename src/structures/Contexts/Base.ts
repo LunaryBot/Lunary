@@ -67,6 +67,8 @@ class Base {
 	public async fetchCache({ guild, me }: CommandRequirements['cache'] = {}) {
 		if(guild) {
 			this.guild = await this.client.redis.handler.getGuild(this.guildId as string).then((guild) => new Guild(this.client, guild as any));
+
+			this.channel = this.guild.channels.find((channel) => channel.id === this.interaction.channelId) as TextChannel;
 		}
 
 		if(me) {
