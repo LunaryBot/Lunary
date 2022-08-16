@@ -65,7 +65,7 @@ class KickAction {
 		let notifiedDM = true;
 
 		try {
-			if(this.member && options.notifyDM != false) {
+			if(options.notifyDM != false) {
 				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('kick:defaultDmMessage', {
