@@ -75,199 +75,202 @@ class ModUtils {
 	public static async punishmentReason(context: ComponentContext|CommandContext) {
 		let replyMessageFn: ReplyMessageFn = context.createMessage.bind(context.interaction);
 
-		const reason = await (new Promise<string|Prisma.Reason|null>(async(resolve, reject) => {
-			const reasons = context.databases.guild ? (context.databases.guild.reasons || await context.databases.guild.fetchReasons()) : [];
-
-			const reasonOption: string = (context as CommandContext).options.get('reason');
-
-			const memberHasPermission = context.databases.guild?.features?.has('mandatoryReason') ? (await context.databases.guild?.permissionsFor(context.member as Member))?.has('lunarPunishmentOutReason') ?? false : true;
-			
-			if(reasonOption || (!reasonOption && memberHasPermission)) {
-				return resolve(findReasonByKey(reasonOption) || reasonOption || context.t('general:reasonNotInformed.defaultReason') || null);
-			};
-
-			const components = [
-				{
-					type: 1,
-					components: [
-						{
-							type: 2,
-							custom_id: `${context.interaction.id}-cancel`,
-							label: context.t('general:reasonNotInformed.components.cancel'),
-							style: ButtonStyle.Danger,
-						},
-						{
-							type: 2,
-							custom_id: `${context.interaction.id}-skip`,
-							label: context.t('general:reasonNotInformed.components.skip'),
-							style: ButtonStyle.Secondary,
-							disabled: !memberHasPermission,
-						},
-						{
-							type: 2,
-							custom_id: `${context.interaction.id}-addReason`,
-							label: context.t('general:reasonNotInformed.components.addReason'),
-							style: ButtonStyle.Success,
-						},
-					],
-				},
-			] as APIActionRowComponent<APIMessageActionRowComponent>[];
-
-			if(reasons?.length > 0) {
-				components.push({
-					type: 1,
-					components: [
-                        {
-                        	custom_id: `${context.interaction.id}-selectReason`,
-                        	type: ComponentType.SelectMenu,
-                        	placeholder: context.t('general:reasonNotInformed.components.selectReason'),
-                        	max_values: 1,
-                        	min_values: 1,
-                        	options: reasons.map(reason => {
-                        		const op = {
-                        			label: reason.text.shorten(100),
-                        			value: reason.id,
-                        		} as APISelectMenuOption;
-
-                        		if((reason.type & PunishmentTypes.BAN) === PunishmentTypes.BAN && typeof reason.days === 'number') {
-                        			op.description = `${context.t(`ban:delete_messages.${reason.days}${reason.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
-                        		}
-
-                        		if((reason.type & PunishmentTypes.MUTE) === PunishmentTypes.MUTE && reason.duration) {
-                        			op.description = `${context.t('mute:duration')}: ${TimeUtils.durationToString(reason.duration, context.t)}`.shorten(100);
-                        		}
-
-                        		return op;
-                        	}),
-                        } as APISelectMenuComponent,
-					],
+		try {
+			const reason = await (new Promise<string|Prisma.Reason|null>(async(resolve, reject) => {
+				const reasons = context.databases.guild ? (context.databases.guild.reasons || await context.databases.guild.fetchReasons()) : [];
+	
+				const reasonOption: string = (context as CommandContext).options.get('reason');
+	
+				const memberHasPermission = context.databases.guild?.features?.has('mandatoryReason') ? (await context.databases.guild?.permissionsFor(context.member as Member))?.has('lunarPunishmentOutReason') ?? false : true;
+				
+				if(reasonOption || (!reasonOption && memberHasPermission)) {
+					return resolve(findReasonByKey(reasonOption) || reasonOption || context.t('general:reasonNotInformed.defaultReason') || null);
+				};
+	
+				const components = [
+					{
+						type: 1,
+						components: [
+							{
+								type: 2,
+								custom_id: `${context.interaction.id}-cancel`,
+								label: context.t('general:reasonNotInformed.components.cancel'),
+								style: ButtonStyle.Danger,
+							},
+							{
+								type: 2,
+								custom_id: `${context.interaction.id}-skip`,
+								label: context.t('general:reasonNotInformed.components.skip'),
+								style: ButtonStyle.Secondary,
+								disabled: !memberHasPermission,
+							},
+							{
+								type: 2,
+								custom_id: `${context.interaction.id}-addReason`,
+								label: context.t('general:reasonNotInformed.components.addReason'),
+								style: ButtonStyle.Success,
+							},
+						],
+					},
+				] as APIActionRowComponent<APIMessageActionRowComponent>[];
+	
+				if(reasons?.length > 0) {
+					components.push({
+						type: 1,
+						components: [
+							{
+								custom_id: `${context.interaction.id}-selectReason`,
+								type: ComponentType.SelectMenu,
+								placeholder: context.t('general:reasonNotInformed.components.selectReason'),
+								max_values: 1,
+								min_values: 1,
+								options: reasons.map(reason => {
+									const op = {
+										label: reason.text.shorten(100),
+										value: reason.id,
+									} as APISelectMenuOption;
+	
+									if((reason.type & PunishmentTypes.BAN) === PunishmentTypes.BAN && typeof reason.days === 'number') {
+										op.description = `${context.t(`ban:delete_messages.${reason.days}${reason.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
+									}
+	
+									if((reason.type & PunishmentTypes.MUTE) === PunishmentTypes.MUTE && reason.duration) {
+										op.description = `${context.t('mute:duration')}: ${TimeUtils.durationToString(reason.duration, context.t)}`.shorten(100);
+									}
+	
+									return op;
+								}),
+							} as APISelectMenuComponent,
+						],
+					});
+				}
+	
+				let key = 'confirmNormal';
+	
+				if(!memberHasPermission && reasons.length) {
+					key = 'confirmWithReasonsSeteds';
+				} else if(memberHasPermission) {
+					key = `confirmWithPermission${reasons.length > 0 ? 'AndReasonsSeteds' : ''}`;
+				}
+	
+				await replyMessageFn({
+					content: context.t(`general:reasonNotInformed.${key}`, {
+						author: context.user.toString(),
+					}),
+					components,
 				});
-			}
-
-			let key = 'confirmNormal';
-
-			if(!memberHasPermission && reasons.length) {
-				key = 'confirmWithReasonsSeteds';
-			} else if(memberHasPermission) {
-				key = `confirmWithPermission${reasons.length > 0 ? 'AndReasonsSeteds' : ''}`;
-			}
-
-			await replyMessageFn({
-				content: context.t(`general:reasonNotInformed.${key}`, {
-					author: context.user.toString(),
-				}),
-				components,
-			});
-
-			const collector = new ComponentCollector(this.client, {
-				time: 1 * 1000 * 60,
-				user: context.user,
-				filter: (interaction: ComponentInteraction) => interaction.customId?.startsWith(`${context.interaction.id}-`),
-			});
-
-			collector
-				.on('collect', async(interaction: ComponentInteraction) => {
-					const id = interaction.customId.split('-')[1];
-
-					switch (id) {
-						case 'cancel': {
-							collector.stop('canceled');
-
-							interaction.deleteOriginalMessage();
-
-							reject('canceled');
-
-							break;
-						}
-
-						case 'skip': {
-							collector.stop('skipped');
-
-							replyMessageFn = interaction.editParent.bind(interaction);
-                            
-							resolve(null);
-
-							break;
-						}
-
-						case 'addReason': {
-							interaction.createModal({
-								title: context.t('general:reasonNotInformed.modalReason.title'),
-								custom_id: `${context.interaction.id}-addReasonModal`,
-								components: [
-									{
-										type: 1,
-										components: [
-											{
-                                            	type: 4,
-                                            	custom_id: 'reason',
-                                            	placeholder: context.t('general:reasonNotInformed.modalReason.placeholder'),
-                                            	max_length: 400,
-                                            	label: context.t('general:reasonNotInformed.modalReason.label'),
-                                            	style: TextInputStyle.Paragraph,
-                                            	required: true,
-											},
-										],
-									},
-								],
-							});
-
-							collector.resetTimer();
-
-							break;
-						}
-
-						case 'selectReason': {
-							collector.stop('reasonAdded');
-                            
-							replyMessageFn = interaction.editParent.bind(interaction);
-                            
-							const reason = reasons.find(r => r.id === (interaction as SelectMenuInteraction).values[0]);
-                            
-							resolve(reason || null);
-                            
-							break;
-						}
-                        
-						case 'addReasonModal': {
-							collector.stop('reasonAdded');
-
-							replyMessageFn = interaction.editParent.bind(interaction);
-
-							const reason = ((interaction as any) as ModalSubimitInteraction).getValue('reason') as string;
-
-							resolve(findReasonByKey(reason) || reason);
-
-							break;
-						}
-					}
-				})
-				.on('end', async(reason?: string) => {
-					if(reason == 'timeout') {
-						components.map(row => row.components.map(component => {
-							component.disabled = true;
-
-							if(component.type == ComponentType.SelectMenu) {
-								component.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
+	
+				const collector = new ComponentCollector(this.client, {
+					time: 1 * 1000 * 60,
+					user: context.user,
+					filter: (interaction: ComponentInteraction) => interaction.customId?.startsWith(`${context.interaction.id}-`),
+				});
+	
+				collector
+					.on('collect', async(interaction: ComponentInteraction) => {
+						const id = interaction.customId.split('-')[1];
+	
+						switch (id) {
+							case 'cancel': {
+								collector.stop('canceled');
+	
+								interaction.deleteOriginalMessage();
+	
+								reject('canceled');
+	
+								break;
 							}
-
-							return component;
-						}));
-                        
-						context.interaction.editOriginalMessage({
-							components,
-						});
-
-						reject('timeout');
-					}
-				});
-
-			function findReasonByKey(key: string): Prisma.Reason|undefined {
-				return reasons.find(r => r.keys?.includes(key));
-			}
-		}));
-
-		return { reason, replyMessageFn };
+	
+							case 'skip': {
+								collector.stop('skipped');
+	
+								replyMessageFn = interaction.editParent.bind(interaction);
+								
+								resolve(null);
+	
+								break;
+							}
+	
+							case 'addReason': {
+								interaction.createModal({
+									title: context.t('general:reasonNotInformed.modalReason.title'),
+									custom_id: `${context.interaction.id}-addReasonModal`,
+									components: [
+										{
+											type: 1,
+											components: [
+												{
+													type: 4,
+													custom_id: 'reason',
+													placeholder: context.t('general:reasonNotInformed.modalReason.placeholder'),
+													max_length: 400,
+													label: context.t('general:reasonNotInformed.modalReason.label'),
+													style: TextInputStyle.Paragraph,
+													required: true,
+												},
+											],
+										},
+									],
+								});
+	
+								collector.resetTimer();
+	
+								break;
+							}
+	
+							case 'selectReason': {
+								collector.stop('reasonAdded');
+								
+								replyMessageFn = interaction.editParent.bind(interaction);
+								
+								const reason = reasons.find(r => r.id === (interaction as SelectMenuInteraction).values[0]);
+								
+								resolve(reason || null);
+								
+								break;
+							}
+							
+							case 'addReasonModal': {
+								collector.stop('reasonAdded');
+	
+								replyMessageFn = interaction.editParent.bind(interaction);
+	
+								const reason = ((interaction as any) as ModalSubimitInteraction).getValue('reason') as string;
+	
+								resolve(findReasonByKey(reason) || reason);
+	
+								break;
+							}
+						}
+					})
+					.on('end', async(reason?: string) => {
+						if(reason == 'timeout') {
+							components.map(row => row.components.map(component => {
+								component.disabled = true;
+	
+								if(component.type == ComponentType.SelectMenu) {
+									component.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
+								}
+	
+								return component;
+							}));
+							
+							context.interaction.editOriginalMessage({
+								components,
+							});
+	
+							reject('timeout');
+						}
+					});
+	
+				function findReasonByKey(key: string): Prisma.Reason|undefined {
+					return reasons.find(r => r.keys?.includes(key));
+				}
+			}));
+			return { reason, replyMessageFn, canceled: false };
+		} catch (error) {
+			return { reason: null, replyMessageFn, canceled: true };
+		}
 	}
 
 	public static async punishmentConfirmation(context: ComponentContext|CommandContext, punishment: PunishmentProps, executeAction: (ReplyMessageFn: ReplyMessageFn) => Promise<any>, replyMessageFn: ReplyMessageFn = context.createMessage.bind(context)) {

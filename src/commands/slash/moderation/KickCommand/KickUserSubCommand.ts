@@ -66,10 +66,13 @@ class KickUserSubCommand extends SubCommand {
 			});
 		}
 
-		const punishmentReasonProps = await ModUtils.punishmentReason.bind(this)(context);
+		const { reason, replyMessageFn, canceled = false } = await ModUtils.punishmentReason.bind(this)(context).catch(() => {
+			return {} as { reason: string | Prisma.Reason | null; replyMessageFn: ReplyMessageFn; canceled?: boolean };
+		});
 
-		const { reason } = punishmentReasonProps;
-		const { replyMessageFn } = punishmentReasonProps;
+		if(canceled) {
+			return;
+		}
 
 		const notifyDM: boolean = context.options.get('notifyDM') ?? true;
 
