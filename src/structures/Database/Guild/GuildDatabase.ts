@@ -142,8 +142,6 @@ class GuildDatabase {
 			(permission.type == 'ROLE' && member.roles.includes(permission.id as Snowflake))
 		).reduce((acc, permission) => acc | permission.bitfield, 0n);
 
-		this.client.prisma.punishment.findMany();
-
 		return new GuildPermissions({
 			guild_id: this.guild.id,
 			id: member.id,

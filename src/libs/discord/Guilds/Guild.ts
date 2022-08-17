@@ -1,6 +1,8 @@
 import type { APIChannel, APIGuild, GuildFeature, Snowflake } from '@discord/types';
 
 import { Channel } from '../Channels';
+import { Member } from '../Member';
+import { Permissions } from '../Permissions';
 import { Role } from '../Role';
 import { AbstractGuild } from './AbstractGuild';
 
@@ -72,6 +74,12 @@ class Guild extends AbstractGuild<APIGuild & { channels?: Array<APIChannel> }> {
 
 	public static fromAbstract(guild: AbstractGuild, data: APIGuild) {
 		return new this(guild.client, data);
+	}
+
+	public permissionsFor(member: Member) {
+		const memberPermissions = this.roles.filter(role => member.roles.includes(role.id as Snowflake)).reduce((acc, role) => acc | role.permissions.bitfield, 0n);
+
+		return new Permissions(memberPermissions);
 	}
 }
 
