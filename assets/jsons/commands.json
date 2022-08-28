@@ -1,0 +1,643 @@
+{
+    "ban": {
+        "name": "ban",
+        "description": "〔🔨 • Moderação〕Bane um usuário do servidor.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔🔨 • Moderação〕Bane um usuário, mesmo que o usuário não estiver no servidor.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser banido.",
+                        "type": 6,
+                        "required": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para o banimento."
+                    },
+                    {
+                        "type": 5,
+                        "name": "notify-dm",
+                        "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado). (Padrão: True)"
+                    },
+                    {
+                        "type": 3,
+                        "name": "days",
+                        "description": "〔📆 • Days〕Quantidade do histórico de mensganes que devem ser apagado.",
+                        "choices": [
+                            {
+                                "name": "Não excluir mensagens",
+                                "value": "0"
+                            },
+                            {
+                                "name": "Últimas 24 horas",
+                                "value": "1"
+                            },
+                            {
+                                "name": "Últimos 7 dias",
+                                "value": "7"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "info",
+                "type": 1,
+                "description": "〔🔨 • Moderação〕Mostra as informações do banimento de um usuário banido no servidor.",
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/tag/id) a ser visto as informações do banimento.",
+                        "type": 3,
+                        "required": true,
+                        "autocomplete": true
+                    }
+                ]
+            },
+            {
+                "name": "remove",
+                "type": 1,
+                "description": "〔🔨 • Moderação〕Retira o ban de um usuário do seu servidor.",
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/tag/id) a ser retirado o banimento.",
+                        "type": 3,
+                        "required": true,
+                        "autocomplete": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para retirar o banimento."
+                    }
+                ]
+            }
+        ]
+    },
+
+    "kick": {
+        "name": "kick",
+        "description": "〔🔨 • Moderação〕Expulsa um usuário do servidor.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔🔨 • Moderação〕Expulsa um usuário.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser expulso.",
+                        "type": 6,
+                        "required": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para a expulsão."
+                    },
+                    {
+                        "type": 5,
+                        "name": "notify-dm",
+                        "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
+                    }
+                ]
+            }
+        ]
+    },
+
+    "mute": {
+        "name": "mute",
+        "description": "〔🔨 • Moderação〕 Silencia um usuário por um período de tempo determinado no servidor.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔🔨 • Moderação〕Silencia um usuário por um período de tempo determinado no servidor.",
+                "type": 1,
+                "options": [
+                    {
+                        "type": 6,
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser silenciado.",
+                        "required": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para o silenciamento."
+                    },
+                    {
+                        "type": 3,
+                        "name": "duration",
+                        "description": "〔🕓 • Duration〕Duração do silenciamento.",
+                        "autocomplete": true
+                    },
+                    {
+                        "type": 5,
+                        "name": "notify-dm",
+                        "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
+                    }
+                ]
+            },
+            {
+                "name": "remove",
+                "type": 1,
+                "description": "〔🔨 • Moderação〕Retira o silenciamento de um usuário do servidor.",
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser retirado o silenciamento.",
+                        "type": 6,
+                        "required": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para retirar o silenciamento."
+                    }
+                ]
+            }
+        ]
+    },
+
+    "adv": {
+        "name": "adv",
+        "description": "〔🔨 • Moderação〕Aplica uma advertência/aviso em um usuário do servidor.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔🔨 • Moderação〕Aplica uma advertência/aviso em um usuário do servidor.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser advertido.",
+                        "type": 6,
+                        "required": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "reason",
+                        "description": "〔📑 • Reason〕Motivo para a advertência."
+                    },
+                    {
+                        "type": 5,
+                        "name": "notify-dm",
+                        "description": "〔📬 • Notify DM〕Notificar a punição via mensagem direta(Privado)."
+                    }
+                ]
+            },
+            {
+                "name": "info",
+                "type": 1,
+                "description": "〔🔨 • Moderação〕Mostra as informações de uma advertência/aviso do servidor.",
+                "options": [
+                    {
+                        "name": "id",
+                        "description": "〔📂 • ID〕ID da advertência/aviso a ser visto as informações.",
+                        "type": 3,
+                        "required": true,
+                        "autocomplete": true
+                    }
+                ]
+            },
+            {
+                "name": "list",
+                "description": "〔🔨 • Moderação〕Mostra as advertências/avisos de um usuário do servidor.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser visto as advertências/avisos.",
+                        "type": 6
+                    },
+                    {
+                        "name": "author",
+                        "description": "〔👤 • User〕Filtra as advertências/avios pelo autor.",
+                        "type": 6
+                    },
+                    {
+                        "name": "show_deleteds",
+                        "type": 5,
+                        "description": "〔📁 • Deletadas〕Mostra as advertências/avios já deletadas."
+                    }
+                ]
+            },
+            {
+                "name": "remove",
+                "type": 2,
+                "description": "〔🔨 • Moderação〕Remove as advertências/avisos de um usuário do servidor.",
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔🔨 • Moderação〕Remove a última advertência/aviso de um usuário.",
+                        "type": 1,
+                        "options": [
+                            {
+                                "name": "user",
+                                "description": "〔👤 • User〕Usuário(@user/id) a ser removido a última advertência.",
+                                "type": 6,
+                                "required": true
+                            },
+                            {
+                                "name": "amount",
+                                "description": "〔🧮 • Amount〕Quantidade de advertências/avisos a serem apagadas.",
+                                "type": 3
+                            }
+                        ]
+                    },
+                    {
+                        "name": "id",
+                        "description": "〔🔨 • Moderação〕Remove uma advertência/aviso pelo ID.",
+                        "type": 1,
+                        "options": [
+                            {
+                                "name": "id",
+                                "description": "〔📂 • ID〕ID da advertência/aviso a ser removida.",
+                                "type": 3,
+                                "required": true,
+                                "autocomplete": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": 1,
+                "name": "edit",
+                "description": "〔🔨 • Moderação〕Edita o motivo de uma advertência/aviso do servidor.",
+                "options": [
+                    {
+                        "type": 3,
+                        "name": "id",
+                        "description": "〔📂 • ID〕ID da advertência/aviso a ser editada.",
+                        "required": true,
+                        "autocomplete": true
+                    },
+                    {
+                        "type": 3,
+                        "name": "newreason",
+                        "description": "〔📑 • Reason〕Novo motivo para a advertência.",
+                        "required": true
+                    },
+                    {
+                        "type": 11,
+                        "name": "attachment",
+                        "description": "〔📎 • Attachment〕Arquivo anexado para a punição."
+                    }
+                ]
+            }
+        ]
+    },
+
+    "clean": {
+        "name": "clean",
+        "description": "〔🚨 • Administração〕Limpa uma quantidade de 2 até 500 mensagens.",
+        "type": 1,
+        "options": [
+            {
+                "type": 10,
+                "name": "amount",
+                "description": "〔🧮 • Amount〕Quantidade de mensagens a serem apagadas [Entre 2 e 500].",
+                "required": true
+            },
+            {
+                "type": 4,
+                "name": "user",
+                "description": "〔👤 • User〕Filtra as mensagens de um usuário(@user/id)."
+            }
+        ]
+    },
+
+    "help": {
+        "name": "help",
+        "type": 1,
+        "description": "〔🌙 • Luny〕Meu comando de ajuda.",
+        "options": null
+    },
+
+    "ping": {
+        "name": "ping",
+        "description": "〔🌙 • Luny〕Veja a minha latência.",
+        "type": 1,
+        "options": [
+            {
+                "type": 3,
+                "name": "type",
+                "description": "〔📍 • Type〕Veja os stats de uma área específica minha.",
+                "choices": [
+                    {
+                        "name": "clusters",
+                        "value": "clusters"
+                    }
+                ]
+            }
+        ]
+    },
+
+    "user": {
+        "name": "user",
+        "description": "〔✍️ • Utilitários〕Veja as informações de um usuário.",
+        "type": 1,
+        "options": [
+            {
+                "name": "info",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um usuário.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser visto as informações.",
+                        "type": 6
+                    }
+                ]
+            },
+            {
+                "name": "avatar",
+                "description": "〔✍️ • Utilitários〕Veja o avatar de um usuário.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser visto o avatar.",
+                        "type": 6
+                    }
+                ]
+            },
+            {
+                "name": "banner",
+                "description": "〔✍️ • Utilitários〕Veja o banner de um usuário.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "user",
+                        "description": "〔👤 • User〕Usuário(@user/id) a ser visto o banner.",
+                        "type": 6
+                    }
+                ]
+            }
+        ]
+    },
+
+    "kitsu": {
+        "name": "kitsu",
+        "description": "〔✍️ • Utilitários〕Faça uma pesquisa em kitsu.io",
+        "type": 1,
+        "options": [
+            {
+                "name": "anime",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um anime em kitsu.io",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "query",
+                        "description": "〔🔍 • Query〕 Nome do anime para pesquisar em kitsu.io",
+                        "type": 3,
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "name": "manga",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um manga em kitsu.io",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "query",
+                        "description": "〔🔍 • Query〕 Nome do manga para pesquisar em kitsu.io",
+                        "type": 3,
+                        "required": true
+                    }
+                ]
+            }
+        ]
+    },
+
+    "profile": {
+        "name": "profile",
+        "description": "〔🎀 • Social〕Mostra o perfil de um usuário.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔👤 • User〕Usuário(@user/id) a ser visto o banner.",
+                "type": 6
+            }
+        ]
+    },
+
+    "channel": {
+        "name": "channel",
+        "description": "〔✍️ • Utilitários〕Veja as informações de um canal.",
+        "type": 1,
+        "options": [
+            {
+                "name": "info",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um canal.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "channel",
+                        "description": "〔💬 • Channel〕Canal(#channel/id) a ser visto as informações.",
+                        "type": 7,
+                        "channel_types": [
+                            0,
+                            2,
+                            5,
+                            6,
+                            10,
+                            13
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "lock",
+                "description": "〔🚨 • Administração〕Bloqueia que usuários enviem mensagem em um canal de texto.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "channel",
+                        "description": "〔💬 • Channel〕Canal ser bloqueado.",
+                        "type": 7,
+                        "channel_types": [
+                            0,
+                            2,
+                            5,
+                            10,
+                            11,
+                            12,
+                            13
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "unlock",
+                "description": "〔🚨 • Administração〕Desloqueia que usuários enviem mensagem em um canal de texto.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "channel",
+                        "description": "〔💬 • Channel〕Canal ser desbloqueado.",
+                        "type": 7,
+                        "channel_types": [
+                            0,
+                            2,
+                            5,
+                            10,
+                            11,
+                            12,
+                            13
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+
+    "role": {
+        "name": "role",
+        "description": "〔✍️ • Utilitários〕Veja as informações de um cargo.",
+        "type": 1,
+        "options": [
+            {
+                "name": "info",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um cargo.",
+                "type": 1,
+                "options": [
+                    {
+                        "name": "role",
+                        "description": "〔💼 • Role〕Cargo(@role/id) a ser visto as informações.",
+                        "type": 8,
+                        "required": true
+                    }
+                ]
+            }
+        ]
+    },
+
+    "server": {
+        "name": "server",
+        "description": "〔✍️ • Utilitários〕Veja as informações de um servidor.",
+        "type": 1,
+        "options": [
+            {
+                "name": "info",
+                "description": "〔✍️ • Utilitários〕Veja as informações de um servidor.",
+                "type": 1
+            }
+        ]
+    },
+
+    "luas": {
+        "name": "luas",
+        "description": "〔🎀 • Social〕Veja o seu saldo atual de luas(moedas), ou de outra pessoa.",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔👤 • User〕Usuário(@user/id) a ser visto o saldo.",
+                "type": 6
+            }
+        ]
+    },
+
+    "daily": {
+        "name": "daily",
+        "description": "〔🎀 • Social〕Receba suas luas diárias.",
+        "type": 1
+    },
+
+    "pay": {
+        "name": "pay",
+        "description": "〔🎀 • Social〕Pague outra pessoa luas(moedas).",
+        "type": 1,
+        "options": [
+            {
+                "name": "user",
+                "description": "〔👤 • User〕Usuário(@user/id) a ser pago.",
+                "type": 6,
+                "required": true
+            },
+            {
+                "name": "amount",
+                "description": "〔🧮 • Amount〕Quantidade de luas(moedas) a serem transferidas.",
+                "type": 4,
+                "required": true
+            }
+        ]
+    },
+
+    "aboutme": {
+        "name": "aboutme",
+        "description": "〔🎀 • Social〕Altere seu \"Sobre Mim\" no meu comando de perfil!.",
+        "type": 1,
+        "options": [
+            {
+                "name": "text",
+                "description": "〔📝 • Text〕Seu novo aboutme.",
+                "type": 3,
+                "required": true
+            }
+        ]
+    },
+
+    "quickpunishment": {
+        "name": "quickpunishment",
+        "description": "〔⚙️ • Config〕Punir usuários em um canal de texto.",
+        "type": 1
+    },
+
+    "lunar": {
+        "name": "lunar",
+        "description": "〔🌙 • Luny〕Veja algumas informações sobre essa botzinho.",
+        "type": 1,
+        "options": [
+            {
+                "name": "info",
+                "description": "〔🌙 • Luny〕Veja algumas informações sobre essa botzinho.",
+                "type": 1
+            }
+        ]
+    },
+
+    "User Info": {
+        "name": "User Info",
+        "type": 2
+    },
+
+    "User Avatar": {
+        "name": "User Avatar",
+        "type": 2
+    },
+
+    "User Banner": {
+        "name": "User Banner",
+        "type": 2
+    },
+
+    "User Profile": {
+        "name": "User Profile",
+        "type": 2
+    },
+
+    "User Adv List": {
+        "name": "User Adv List",
+        "type": 2
+    },
+
+    "Eval": {
+        "name": "Eval",
+        "type": 3
+    }
+}
