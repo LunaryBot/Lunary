@@ -323,11 +323,7 @@ class ModUtils {
 		const collector = new ComponentCollector(this.client, {
 			time: 1 * 1000 * 60,
 			user: context.user,
-			filter: (interaction: ComponentInteraction) => {
-				console.log(interaction.customId?.startsWith(`${context.interaction.id}-`));
-
-				return interaction.customId?.startsWith(`${context.interaction.id}-`);
-			},
+			filter: (interaction: ComponentInteraction) => interaction.customId?.startsWith(`${context.interaction.id}-`),
 		});
 
 		collector

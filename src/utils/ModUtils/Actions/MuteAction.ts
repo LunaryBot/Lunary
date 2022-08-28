@@ -1,11 +1,14 @@
+import { ComponentCollector } from '@Collectors';
 import type * as Prisma from '@prisma/client';
 
 import { ComponentContext, CommandContext } from '@Contexts';
 import { GuildDatabase } from '@Database';
 
-import type { User, Guild, Member } from '@discord';
-import { ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes } from '@discord/types';
+import type { User, Guild, Member, ComponentInteraction, SelectMenuInteraction, ModalSubimitInteraction } from '@discord';
+import { APIActionRowComponent, APIMessageActionRowComponent, APISelectMenuComponent, ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes, TextInputStyle, Utils } from '@discord/types';
 import { RawFile } from '@discordjs/rest';
+
+import TimeUtils from '@utils/TimeUtils';
 
 import { PunishmentProps, ReplyMessageFn } from '@types';
 
@@ -13,7 +16,7 @@ import { ModUtils } from '../ModUtils';
 
 interface MuteProps extends Omit<PunishmentProps, 'author'> {
 	member: Member;
-	duration: number;
+	duration: number | Date;
 	author?: User;
 	notifyDM?: boolean;
 }
@@ -29,7 +32,7 @@ class MuteAction {
 	public guild: Guild;
 	
 	public reason?: string | Prisma.Reason;
-	public duration: number;
+	public duration: number | Date;
 	
 	public options: {
 		notifyDM?: boolean;
@@ -61,10 +64,23 @@ class MuteAction {
 		this.replyMessageFn = replyMessageFn || this.context.createMessage.bind(this.context);
 	}
 
+	get communicationDisabledUntil() {
+		const { duration } = this;
+
+		return duration instanceof Date ? duration.toISOString() : new Date(Date.now() + duration).toISOString();
+	}
+
 	public async execute() {
-		const { user, author, guild, reason, options, context } = this;
+		const { user, author, guild, reason, options, context, duration } = this;
 
 		let notifiedDM = true;
+		
+		await this.client.rest.patch(Routes.guildMember(guild.id, user.id), {
+			body: {
+				communication_disabled_until: this.communicationDisabledUntil,
+			} as RESTPatchAPIGuildMemberJSONBody,
+			reason: `${author.tag}: ${reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason')}`,
+		});
 
 		try {
 			if(options.notifyDM != false) {
@@ -80,7 +96,7 @@ class MuteAction {
 								components: [
 									{
 										type: ComponentType.Button,
-										custom_id: `guild_kicked-${guild.id}`,
+										custom_id: `guild_muted-${guild.id}`,
 										label: `${context.t('general:sentFrom')} ${guild.name}`.shorten(80),
 										style: ButtonStyle.Secondary,
 										disabled: true,
@@ -94,13 +110,6 @@ class MuteAction {
 		} catch (error: any) {
 			notifiedDM = false;
 		};
-		
-		await this.client.rest.patch(Routes.guildMember(guild.id, user.id), {
-			body: {
-				communication_disabled_until: `${Date.now() + this.duration}`,
-			} as RESTPatchAPIGuildMemberJSONBody,
-			reason: `${author.tag}: ${reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason')}`,
-		});
 		
 		const punishmentData = {
 			type: 'MUTE',
@@ -156,6 +165,174 @@ class MuteAction {
 			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
+		}
+	}
+
+	async handleDuration() {
+		const { context } = this;
+
+		try {
+			const duration = await new Promise<number|Date>(async (resolve, reject) => {
+				const components: APIActionRowComponent<APIMessageActionRowComponent>[] = [
+					{
+						type: 1,
+						components: [
+							{
+								type: 3,
+								custom_id: `${context.interaction.id}-selectDuration`,
+								min_values: 1,
+								max_values: 1,
+								placeholder: context.t('mute:selectDurationPlaceholder'),
+								options: [
+									{ label: context.t('mute:60seconds'), value: (1 * 1000 * 60).toString() },
+									{ label: context.t('mute:5minutes'), value: (5 * 1000 * 60).toString() },
+									{ label: context.t('mute:10minutes'), value: (10 * 1000 * 60).toString() },
+									{ label: context.t('mute:30minutes'), value: (30 * 1000 * 60).toString() },
+									{ label: context.t('mute:1hour'), value: (1 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:3hours'), value: (3 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:5hours'), value: (5 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:12hours'), value: (12 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:24hours'), value: (24 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:3days'), value: (3 * 24 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:7days'), value: (7 * 24 * 1000 * 60 * 60).toString() },
+									{ label: context.t('mute:custom'), value: 'custom', emoji: { name: '🖌️' } },
+								],
+							},
+						],
+					},
+				];
+
+				const defaultDurationForReason = (this.reason as Prisma.Reason)?.duration;
+
+				if(defaultDurationForReason) {
+					const SelectMenuOptions = (components[0].components[0] as APISelectMenuComponent).options;
+					const defaultDurationForReasonHumanFormated = TimeUtils.durationToString(defaultDurationForReason, context.t as Function);
+
+					(components[0].components[0] as APISelectMenuComponent).options = [
+						{
+							label: context.t('mute:defaultDurationForReason', { duration: defaultDurationForReason }),
+							description: defaultDurationForReasonHumanFormated,
+							value: 'defaultDuration',
+						},
+						...SelectMenuOptions,
+					];
+
+					components.push({
+						type: 1,
+						components: [
+							{
+								label: context.t('mute:defaultDuration'),
+								custom_id: `${context.interaction.id}-defaultDuration`,
+								type: 2,
+								style: ButtonStyle.Primary,
+							},
+						],
+					});
+				}
+
+				await this.replyMessageFn({
+					content: context.t('mute:selectDurationMessage'),
+					components,
+				});
+
+				const collector = new ComponentCollector(context.client, {
+					time: 1 * 1000 * 60,
+					user: context.user,
+					filter: (interaction: ComponentInteraction) => interaction.customId?.startsWith(`${context.interaction.id}-`),
+				});
+
+				collector
+					.on('collect', async (interaction: ComponentInteraction) => {
+						const id = interaction.customId.split('-')[1];
+						this.replyMessageFn = context.editOriginalMessage.bind(context);
+
+						switch (id) {
+							case 'selectDuration': {
+								const duration = (interaction as SelectMenuInteraction).values[0];
+
+								if(duration == 'defaultDuration') {
+									resolve(defaultDurationForReason as number);
+								}
+
+								if(duration == 'custom') {
+									interaction.createModal({
+										title: context.t('mute:customDurationModal.title'),
+										custom_id: `${context.interaction.id}-customDuration`,
+										components: [
+											{
+												type: ComponentType.ActionRow,
+												components: [
+													{
+														type: ComponentType.TextInput,
+														custom_id: 'customDurationInput',
+														style: TextInputStyle.Short,
+														required: true,
+														placeholder: context.t('mute:customDurationModal.placeholder'),
+														label: context.t('mute:customDurationModal.label'),
+													},
+												],
+											},
+										],
+									});
+
+									return collector.resetTimer();
+								}
+
+								await interaction.defer();
+								
+								resolve(parseInt(duration));
+								
+								collector.stop();
+								break;
+							}
+							
+							case 'defaultDuration': {
+								await interaction.defer();
+								
+								resolve(defaultDurationForReason as number);
+								
+								collector.stop();
+								
+								break;
+							}
+							
+							case 'customDuration': {
+								await interaction.defer();
+
+								const duration = ((interaction as any) as ModalSubimitInteraction).getValue('customDurationInput') as string;
+
+								resolve(TimeUtils.getStringTime(duration));
+                            
+								collector.stop();
+
+								break;
+							}
+						}
+					})
+					.on('end', (reason?: string) => {
+						if(reason == 'timeout') {
+							components.map(row => row.components.map(component => {
+								component.disabled = true;
+
+								if(component.type == ComponentType.SelectMenu) {
+									component.placeholder = context.t('general:timeForSelectionEsgotated').shorten(100);
+								}
+
+								return component;
+							}));
+                        
+							context.interaction.editOriginalMessage({
+								components,
+							});
+
+							reject('timeout');
+						}
+					});
+			});
+
+			return { duration, canceled: false };
+		} catch {
+			return { duration: 0, canceled: true };
 		}
 	}
 }
