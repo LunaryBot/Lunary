@@ -386,14 +386,14 @@ class ModUtils {
 			{ aliases: ['user.username', 'user.name'], value: user.username },
 			{ aliases: ['user.discriminator'], value: user.discriminator },
 			{ aliases: ['user.id'], value: user.id },
-			{ aliases: ['user.avatar', 'user.icon'], value: user.displayAvatarURL('png', 1024) },
+			{ aliases: ['user.avatar', 'user.icon'], value: user.displayAvatarURL({ format: 'png', size: 1024 }) },
             // Author
 			{ aliases: ['@author', 'author.mention', '@staff', 'staff.mention'], value: author.toString() },
 			{ aliases: ['author.tag', 'staff.tag'], value: `${author.username}#${author.discriminator}` },
 			{ aliases: ['author.username', 'user.name'], value: author.username },
 			{ aliases: ['author.discriminator'], value: author.discriminator },
 			{ aliases: ['author.id', 'staff.id'], value: author.id },
-			{ aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.displayAvatarURL('png', 1024) },
+			{ aliases: ['author.avatar', 'author.icon', 'staff.avatar', 'staff.icon'], value: author.displayAvatarURL({ format: 'png', size: 1024 }) },
             // Punishment
 			{ aliases: ['punishment', 'punishment.type'], value: punishment.type || 'ᕙ(⇀‸↼‶)ᕗ' },
 			{ aliases: ['punishment.id'], value: punishment.id },

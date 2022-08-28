@@ -1,13 +1,12 @@
 import { Guild, Member, Message } from '@discord';
-import { CDNRoutes, ImageFormat as ImageFormats } from '@discord/types';
+import { ImageFormat as ImageFormats } from '@discord/types';
 import { ImageSize } from '@discordjs/rest';
 
 type ImageFormat = 'jpg' | 'png' | 'webp' | 'gif';
 
-class Utils {public static formatImage(url: string, format: ImageFormat, size: ImageSize) {
-        
-	if(!format || !Object.keys(ImageFormats).includes(format.toLowerCase())) {
-		format = (url.includes('/a_') ? 'gif' : 'png') as ImageFormat;
+class Utils {public static formatImage(url: string, { format, size = 1024, dynamic = true }: { format: ImageFormat, size?: ImageSize, dynamic?: boolean }) {
+	if(dynamic || !format || !Object.keys(ImageFormats).includes(format.toLowerCase())) {
+		format = (url.includes('/a_') ? 'gif' : format) as ImageFormat;
 	}
 			
 	if(!size || size < 16 || size > 4096 || (size & (size - 1))) {

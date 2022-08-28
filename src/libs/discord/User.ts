@@ -60,12 +60,12 @@ class User extends Structure<APIUser> {
 		return CDNRoutes.defaultUserAvatar(Number(this.discriminator) % 5 as DefaultUserAvatarAssets);
 	}
 
-	public displayAvatarURL(format: 'jpg' | 'png' | 'webp' | 'gif', size: ImageSize) {
+	public displayAvatarURL(options: { format: 'jpg' | 'png' | 'webp' | 'gif', size?: ImageSize, dynamic?: boolean }) {
 		if(!this.avatar) {
 			return this.defaultAvatarURL;
 		}
 
-		return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^(.*)\.$/, ''), format, size);
+		return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
 	}
 
 	@RequiresToken.bind(this)
