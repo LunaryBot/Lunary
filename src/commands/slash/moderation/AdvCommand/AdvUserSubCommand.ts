@@ -5,7 +5,7 @@ import type { CommandContext } from '@Contexts';
 
 import { Member, User } from '@discord';
 
-import { AdvAction, ModUtils } from '@utils/ModUtils/index';
+import { AdvAction, ModUtils } from '@utils/ModUtils';
 
 import { PunishmentProps, ReplyMessageFn } from '@types';
 
