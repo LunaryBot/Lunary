@@ -1,16 +1,21 @@
 import { exec } from 'child_process';
 import { inspect } from 'util';
 
+
 import { Command } from '@Command';
 import { CommandContext } from '@Contexts';
 
+const Discord = require('@discord');
 import { Message } from '@discord'; // eslint-disable-line
+import { Routes as APIRestRoutes } from 'discord-api-types/v10';
 
 const coderegex = /^(--.[^\s]+\s?)*?(.*)$/is;
-
 const blockcode = /^(--.+\s?)*?```(?:js)?(.+[^\\])```$/is;
+const discordRestRouteRegex = /^((get|post|put|delete|patch):)?(.*)(\((.*?)\))$/i;
 
-const Discord = require('@discord');
+const commands = require('../../../../assets/jsons/commands.json');
+
+const Routes = APIRestRoutes;
 
 class EvalCommand extends Command {
 	constructor(client: LunaryClient) {
@@ -34,15 +39,17 @@ class EvalCommand extends Command {
 	async run(context: CommandContext) {
 		const { content } = context.options.get('message') as Message;
 
-		const [_, flags, code] = [...(content.match(blockcode.test(content) ? blockcode : coderegex) || [null, null, content])];
+		const [_, flags, _code] = [...(content.match(blockcode.test(content) ? blockcode : coderegex) || [null, null, content])];
 
-		const options = { prompt: false, depth: 0, async: false, ephemeral: false };
+		const options = { prompt: false, depth: 0, async: false, ephemeral: false, discordRest: null as string|null, discordRestMethod: null as 'get' | 'post' | 'put' | 'delete' | 'patch' | null };
 
 		if(flags) {
 			const flagsArray = flags.trim().split('--');
 
 			flagsArray.forEach(flag => {
-				const [key, value] = flag.split(':');
+				const [key, ...values] = flag.split(':');
+
+				const value = values?.join(':');
 
 				switch (key.trim()) {
 					case 'prompt': {
@@ -65,6 +72,22 @@ class EvalCommand extends Command {
 						options.ephemeral = true;
 						break;
 					}
+
+					case 'discord-rest': {
+						options.discordRest = discordRestRouteRegex.test(value)
+							? value.replace(discordRestRouteRegex, (string, _, method, key, __, params) => {
+								console.log(string, _, method, key, __, params);
+
+								const route = (Routes as any)[key] as Function;
+
+								if(method) options.discordRestMethod = method;
+
+								if(!route) return string;
+
+								return eval(`(function ${route.toString()})(${params})`);
+							})
+							: value;
+					}
 				}
 			});
 		}
@@ -75,15 +98,25 @@ class EvalCommand extends Command {
 			this.client._token, 'g'
 		);
 
+		let code: string = _code as string ?? undefined;
 		let result;
 		try {
 			if(options.prompt == true) result = this.consoleRun(code as string);
-			else if(options.async == true) result = await eval(`(async() => { ${code} })()`);
-			else result = await eval(code as string);
+			else {
+				if(options.async == true) code = `(async() => { ${code} })()`;
+
+				result = await eval(code);
+			}
 
 			if(result instanceof Promise) {
 				result = await result;
 			};
+
+			if(options.discordRest) {
+				const data = result?.body ? result : { body: result?.body };
+
+				result = await this.client.rest[options.discordRestMethod || 'get'](options.discordRest as any, data);
+			}
 
 			if(typeof result !== 'string') result = await inspect(result, { depth: options.depth });
 
