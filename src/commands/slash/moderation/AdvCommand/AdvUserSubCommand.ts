@@ -1,13 +1,11 @@
 import Prisma from '@prisma/client';
 
-import { SubCommand } from '@Command';
-import type { Command } from '@Command';
+import { SubCommand, Command } from '@Command';
 import type { CommandContext } from '@Contexts';
 
 import { Member, User } from '@discord';
 
-import Utils from '@utils';
-import { KickAction, ModUtils } from '@utils/ModUtils/index';
+import { AdvAction, ModUtils } from '@utils/ModUtils/index';
 
 import { PunishmentProps, ReplyMessageFn } from '@types';
 
@@ -74,7 +72,7 @@ class AdvUserSubCommand extends SubCommand {
 		}
 
 		const action = async(replyMessageFn: ReplyMessageFn) => {
-			const action = new KickAction(this.client, context, { ...advProps, member }, replyMessageFn);
+			const action = new AdvAction(this.client, context, { ...advProps, member }, replyMessageFn);
 
 			await action.execute();
 		};
