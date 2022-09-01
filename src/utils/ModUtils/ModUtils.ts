@@ -130,11 +130,11 @@ class ModUtils {
 										value: reason.id,
 									} as APISelectMenuOption;
 	
-									if((reason.type & PunishmentTypes.BAN) === PunishmentTypes.BAN && typeof reason.days === 'number') {
+									if(reason.type.includes('BAN') && typeof reason.days === 'number') {
 										op.description = `${context.t(`ban:delete_messages.${reason.days}${reason.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
 									}
 	
-									if((reason.type & PunishmentTypes.MUTE) === PunishmentTypes.MUTE && reason.duration) {
+									if(reason.type.includes('MUTE') && reason.duration) {
 										op.description = `${context.t('mute:duration')}: ${TimeUtils.durationToString(reason.duration, context.t)}`.shorten(100);
 									}
 	
