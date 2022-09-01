@@ -16,7 +16,7 @@ const config = {
 
 const logger = winston.createLogger({
 	levels: config.levels,
-	level: 'graphql',
+	level: 'info',
 	transports: [
 		new winston.transports.Console({ 
 			format: combine(
