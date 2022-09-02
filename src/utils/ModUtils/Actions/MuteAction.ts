@@ -2,7 +2,7 @@ import { ComponentCollector } from '@Collectors';
 import type * as Prisma from '@prisma/client';
 
 import { ComponentContext, CommandContext } from '@Contexts';
-import { GuildDatabase } from '@Database';
+import { GuildDatabase, PunishmentFlags } from '@Database';
 
 import type { User, Guild, Member, ComponentInteraction, SelectMenuInteraction, ModalSubimitInteraction } from '@discord';
 import { APIActionRowComponent, APIMessageActionRowComponent, APISelectMenuComponent, ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes, TextInputStyle, Utils } from '@discord/types';
@@ -73,7 +73,7 @@ class MuteAction {
 	public async execute() {
 		const { user, author, guild, reason, options, context, duration } = this;
 
-		let notifiedDM = true;
+		let notifiedDM = options.notifyDM != false;
 		
 		await this.client.rest.patch(Routes.guildMember(guild.id, user.id), {
 			body: {
@@ -111,6 +111,12 @@ class MuteAction {
 			notifiedDM = false;
 		};
 		
+		const flags = new PunishmentFlags([
+			this.author.id == this.client.user.id ? 'system' : 0n,
+			options.notifyDM == false ? 'notNotifyInDM' : 0n,
+			notifiedDM == false && options.notifyDM != false ? 'failedToNotifyInDM' : 0n,
+		]);
+
 		const punishmentData = {
 			type: 'MUTE',
 			guild_id: guild.id,
@@ -118,6 +124,7 @@ class MuteAction {
 			author_id: author.id,
 			created_at: new Date(),
 			duration: this.duration,
+			flags: flags.bitfield,
 		} as Prisma.Punishment;
 
 		if(typeof reason === 'object') {

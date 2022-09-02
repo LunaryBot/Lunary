@@ -1,7 +1,7 @@
 import type * as Prisma from '@prisma/client';
 
 import { ComponentContext, CommandContext } from '@Contexts';
-import { GuildDatabase } from '@Database';
+import { GuildDatabase, PunishmentFlags } from '@Database';
 
 import type { User, Guild, Member } from '@discord';
 import { ButtonStyle, ComponentType, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, RESTPutAPIGuildBanJSONBody, Routes } from '@discord/types';
@@ -64,10 +64,10 @@ class BanAction {
 	public async execute() {
 		const { user, author, guild, reason, options, context } = this;
 
-		let notifiedDM = true;
+		let notifiedDM = this.member && options.notifyDM != false;
 
 		try {
-			if(this.member && options.notifyDM != false) {
+			if(notifiedDM) {
 				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('ban:defaultDmMessage', {
@@ -101,6 +101,12 @@ class BanAction {
 			} as RESTPutAPIGuildBanJSONBody,
 			reason: `${author.tag}: ${reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason')}`,
 		});
+
+		const flags = new PunishmentFlags([
+			this.author.id == this.client.user.id ? 'system' : 0n,
+			options.notifyDM == false && this.member ? 'notNotifyInDM' : 0n,
+			notifiedDM == false && options.notifyDM != false ? 'failedToNotifyInDM' : 0n,
+		]);
 		
 		const punishmentData = {
 			type: 'BAN',
@@ -108,6 +114,7 @@ class BanAction {
 			user_id: user.id,
 			author_id: author.id,
 			created_at: new Date(),
+			flags: flags.bitfield,
 		} as Prisma.Punishment;
 
 		if(typeof reason === 'object') {

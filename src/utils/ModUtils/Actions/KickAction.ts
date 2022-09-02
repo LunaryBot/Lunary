@@ -1,7 +1,7 @@
 import type * as Prisma from '@prisma/client';
 
 import { ComponentContext, CommandContext } from '@Contexts';
-import { GuildDatabase } from '@Database';
+import { GuildDatabase, PunishmentFlags } from '@Database';
 
 import type { User, Guild, Member } from '@discord';
 import { ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes } from '@discord/types';
@@ -62,7 +62,7 @@ class KickAction {
 	public async execute() {
 		const { user, author, guild, reason, options, context } = this;
 
-		let notifiedDM = true;
+		let notifiedDM = options.notifyDM != false;
 
 		try {
 			if(options.notifyDM != false) {
@@ -96,6 +96,12 @@ class KickAction {
 		await this.client.rest.delete(Routes.guildMember(guild.id, user.id), {
 			reason: `${author.tag}: ${reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason')}`,
 		});
+
+		const flags = new PunishmentFlags([
+			this.author.id == this.client.user.id ? 'system' : 0n,
+			options.notifyDM == false ? 'notNotifyInDM' : 0n,
+			notifiedDM == false && options.notifyDM != false ? 'failedToNotifyInDM' : 0n,
+		]);
 		
 		const punishmentData = {
 			type: 'KICK',
@@ -103,6 +109,7 @@ class KickAction {
 			user_id: user.id,
 			author_id: author.id,
 			created_at: new Date(),
+			flags: flags.bitfield,
 		} as Prisma.Punishment;
 
 		if(typeof reason === 'object') {
