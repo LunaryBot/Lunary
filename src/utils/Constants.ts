@@ -54,6 +54,12 @@ export const Links = {
 	vote: 'https://top.gg/bot/777654875441463296/vote',
 };
 
+export const PunishmentFlags = {
+	system: 1n << 0n,
+	notNotifyInDM: 1n << 1n,
+	failedToNotifyInDM: 1n << 2n,
+};
+
 export const PunishmentTypes = {
 	BAN: 1n << 0n,
 	KICK: 1n << 1n,

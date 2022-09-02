@@ -52,7 +52,7 @@ model Punishment {
   author_id  String
   type       PunishmentType
   created_at DateTime
-  flags      Int            @default(0)
+  flags      BigInt            @default(0)
   duration   Int?
   reason     String?
   reason_id  String?
