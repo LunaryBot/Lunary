@@ -12,8 +12,6 @@ import { ModUtils } from '@utils/ModUtils';
 
 import { APIActionRowComponent, APIEmbed, APIMessageActionRowComponent, APIUser, ButtonStyle } from 'discord-api-types/v10';
 
-const meRegex = /^@?me$/i;
-
 class AdvListSubCommand extends SubCommand {
 	constructor(client: LunaryClient, parent: Command) {
 		super(client, {
@@ -24,6 +22,7 @@ class AdvListSubCommand extends SubCommand {
 					lunary: ['lunarViewHistory'],
 				},
 				database: {
+					guild: true,
 					reasons: true,
 				},
 				guildOnly: true,
@@ -37,13 +36,19 @@ class AdvListSubCommand extends SubCommand {
 
 		const author = context.options.get('author');
 		const showDeleteds: boolean = Boolean(context.options.get('show_deleteds'));
+
+		const deletedWhere: any = {};
+
+		if(!showDeleteds) deletedWhere.not = true;
+
+		console.log(showDeleteds);
         
 		const advs = await this.client.prisma.punishment.findMany({
 			where: {
 				guild_id: context.guildId,
 				user_id: user.id,
 				author_id: author?.id,
-				deleted: showDeleteds,
+				deleted: deletedWhere,
 				type: Prisma.PunishmentType.ADV,
 			},
 			orderBy: {

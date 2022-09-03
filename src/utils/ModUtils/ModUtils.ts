@@ -39,6 +39,8 @@ class ModUtils {
 	}
 
 	public static formatDatabasePunishmentId(punishmentId: string) {
+		punishmentId = punishmentId.replace(/^#/, '');
+
 		const letter = punishmentId.charAt(0);
 
 		const number = punishmentId.substring(1);
