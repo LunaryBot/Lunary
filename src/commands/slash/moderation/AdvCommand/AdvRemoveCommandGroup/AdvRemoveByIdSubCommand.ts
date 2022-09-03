@@ -26,6 +26,8 @@ class AdvRemoveByIdSubCommand extends SubCommand {
 		const adv = await this.client.prisma.punishment.findFirst({
 			where: {
 				id: databaseFormatedId,
+				type: PunishmentType.ADV,
+				deleted: false,
 				guild_id: context.guildId,
 			},
 		});
