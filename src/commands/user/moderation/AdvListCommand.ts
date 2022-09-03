@@ -15,7 +15,7 @@ import { APIActionRowComponent, APIEmbed, APIMessageActionRowComponent, APIUser,
 class AdvListSubCommand extends SubCommand {
 	constructor(client: LunaryClient, parent: Command) {
 		super(client, {
-			name: 'list',
+			name: 'Adv List',
 			requirements: {
 				permissions: {
 					discord: ['viewAuditLog'],
@@ -33,20 +33,12 @@ class AdvListSubCommand extends SubCommand {
 
 	public async run(context: CommandContext) {
 		const user: User = context.options.get('user') || context.user;
-
-		const author = context.options.get('author');
-		const showDeleteds: boolean = Boolean(context.options.get('show_deleteds'));
-
-		const deletedWhere: any = {};
-
-		if(!showDeleteds) deletedWhere.not = true;
         
 		const advs = await this.client.prisma.punishment.findMany({
 			where: {
 				guild_id: context.guildId,
 				user_id: user.id,
-				author_id: author?.id,
-				deleted: deletedWhere,
+				deleted: false,
 				type: Prisma.PunishmentType.ADV,
 			},
 			orderBy: {
