@@ -1,4 +1,4 @@
-import { Punishment, PunishmentType } from '@prisma/client';
+import { PunishmentType } from '@prisma/client';
 
 import { CommandGroup, SubCommand } from '@Command';
 import { CommandContext } from '@Contexts';
