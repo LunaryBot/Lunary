@@ -25,7 +25,7 @@ model Guild {
 }
 
 model GuildPermissions {
-  id          String                @id @unique
+  id          String                @id
   type        GuildPermissionType
   guild_id    String
   permissions BigInt
@@ -38,6 +38,7 @@ model GuildPermissions {
 enum GuildPermissionType {
   ROLE
   MEMBER
+  COMMAND
 }
 
 enum GuildPremiumType {
