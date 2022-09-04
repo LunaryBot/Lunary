@@ -22,7 +22,7 @@ class CommandListener extends EventListener {
 
 		if(!mainCommand) return logger.warn(`Command ${interaction.commandName} not found`, { label: 'Lunary, CommandListener' });
 
-		if(interaction.isInDM() && mainCommand.requirements?.guildOnly) return;
+		if(!interaction.isInServer() && mainCommand.requirements?.guildOnly) return;
 
 		const context = new CommandContext(this.client, interaction, mainCommand);
 
@@ -40,7 +40,7 @@ class CommandListener extends EventListener {
 
 		context.command = command;
 
-		context.acknowledge();
+		context.acknowledge(commandType == 'user');
 
 		if(command.requirements?.ownerOnly === true) {
 			const { application } = this.client;

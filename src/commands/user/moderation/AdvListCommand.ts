@@ -1,7 +1,7 @@
 import { ComponentCollector } from '@Collectors';
 import Prisma from '@prisma/client';
 
-import { SubCommand, Command } from '@Command';
+import { Command } from '@Command';
 import type { CommandContext } from '@Contexts';
 
 import { ComponentInteraction, User } from '@discord';
@@ -12,8 +12,8 @@ import { ModUtils } from '@utils/ModUtils';
 
 import { APIActionRowComponent, APIEmbed, APIMessageActionRowComponent, APIUser, ButtonStyle } from 'discord-api-types/v10';
 
-class AdvListSubCommand extends SubCommand {
-	constructor(client: LunaryClient, parent: Command) {
+class AdvListSubCommand extends Command {
+	constructor(client: LunaryClient) {
 		super(client, {
 			name: 'Adv List',
 			requirements: {
@@ -28,7 +28,7 @@ class AdvListSubCommand extends SubCommand {
 				guildOnly: true,
 			},
 			dirname: __dirname,
-		}, parent);
+		});
 	}
 
 	public async run(context: CommandContext) {
@@ -158,13 +158,6 @@ class AdvListSubCommand extends SubCommand {
 				}
 
 				await interaction.editParent(await chunkPage(index));
-			})
-			.on('end', () => {
-				components.map(row => row.components?.map(y => { y.disabled = true; return y; }));
-
-				context.interaction.editOriginalMessage({
-					components,
-				});
 			});
 	}
 }
