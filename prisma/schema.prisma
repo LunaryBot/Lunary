@@ -10,6 +10,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Embed {
+  guild_id                     String
+  type                         EmbedType
+
+  content                      String?
+
+  embed_title                  String?
+  embed_description            String?
+  embed_url                    String?
+  embed_timestamp              String?
+  embed_color                  String?
+
+  // Footer
+  embed_footer_text            String?
+  embed_footer_icon_url        String?
+  embed_footer_proxy_icon_url  String?
+
+  // Image
+  embed_image_url              String?
+  embed_image_proxy_url        String?
+  embed_image_height           Int?
+  embed_image_width            Int?
+
+  // Thumbnail
+  embed_thumbnail_url          String?
+  embed_thumbnail_proxy_url    String?
+  embed_thumbnail_height       Int?
+  embed_thumbnail_width        Int?
+
+  // Field
+  embed_fields                 Json[]    @default([])
+
+  @@id([guild_id, type])
+}
+
+enum EmbedType {
+  BAN
+  KICK
+  MUTE
+  ADV
+  NOFITYDM
+}
+
 model Guild {
   id                  String              @id @unique
   modlogs_channel     String?
@@ -19,9 +62,6 @@ model Guild {
   reasons             Reason[]
   premium_type        GuildPremiumType?
   premium_until       DateTime?
-  embeds              Json[]              @default([])
-
-  @@map("GUILDS")
 }
 
 model GuildPermissions {
@@ -31,8 +71,6 @@ model GuildPermissions {
   permissions BigInt
 
   guild       Guild?                @relation(fields: [guild_id], references: [id])
-
-  @@map("GUILD_PERMISSIONS")
 }
 
 enum GuildPermissionType {
@@ -58,8 +96,6 @@ model Punishment {
   reason     String?
   reason_id  String?
   deleted    Boolean?       @default(false)
-
-  @@map("PUNISHMENTS")
 }
 
 enum PunishmentType {
@@ -79,8 +115,6 @@ model Reason {
   days     Int?
 
   guild    Guild?   @relation(fields: [guild_id], references: [id])
-
-  @@map("REASONS")
 }
 
 model User {
@@ -93,8 +127,6 @@ model User {
   last_daily_at              DateTime?
   premium_type               UserPremiumType?
   premium_until              DateTime?
-
-  @@map("USERS")
 }
 
 enum UserPremiumType {
