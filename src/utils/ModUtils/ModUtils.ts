@@ -19,7 +19,7 @@ import { TextTranscript } from './Transcript';
 const az = [ ...'abcdefghijklmnopqrstuvwxyz' ];
 
 interface PunishmentOptions { 
-	type: string; 
+	type: PunishmentType; 
 	user: User;
 	author: User;
 	reason: string;
@@ -48,10 +48,10 @@ class ModUtils {
 		return Number(`${az.indexOf(letter.toLowerCase())}${number}`);
 	}
 
-	public static formatPunishmentMessage(punishment: PunishmentOptions, t: (ref: string, variables?: Object) => string, database: GuildDatabase) {
+	public static async formatPunishmentMessage(punishment: PunishmentOptions, t: (ref: string, variables?: Object) => string, database: GuildDatabase) {
 		const punishmentMessage: any = ModUtils.replacePlaceholders(
-			database.embeds?.find(embed => embed.type == 'BAN')?.data || JSON.parse(t('general:punishment_message')) as APIEmbed,
-			punishment
+			await database.getEmbed(punishment.type) || JSON.parse(t('general:punishment_message')) as APIEmbed,
+			{ ...punishment, type: t(`${punishment.type.toLowerCase()}:punishmentType`) }
 		);
 
 		if(punishmentMessage.embed) {
@@ -378,7 +378,7 @@ class ModUtils {
 			});
 	}
 
-	public static replacePlaceholders(json: Object, punishment: PunishmentOptions) {
+	public static replacePlaceholders(json: Object, punishment: Omit<PunishmentOptions, 'type'> & { type: string }) {
 		const { author, user } = punishment;
 
 		const placeholders = [
