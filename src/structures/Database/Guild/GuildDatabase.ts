@@ -1,11 +1,11 @@
 import * as Prisma from '@prisma/client';
-
+import { EmbedType } from '@prisma/client';
 
 import { AbstractGuild, Member } from '@discord';
 import type { Guild } from '@discord';
-import type { Snowflake } from '@discord/types';
+import type { APIEmbed, Snowflake } from '@discord/types';
 
-import { Embed } from '../../../@types/Database';
+import Utils from '@utils';
 
 import { GuildFeatures } from './GuildFeatures';
 import { GuildPermissions } from './GuildPermissions';
@@ -25,7 +25,7 @@ class GuildDatabase {
 	public premiumType?: Prisma.GuildPremiumType;
 	public premiumUntil?: Date;
 
-	public embeds?: Embed[];
+	public embeds?: Prisma.Embed[];
 
 	constructor(client: LunaryClient, guild: Guild|Snowflake, options?: { 
 		fetchReasons?: boolean, 
@@ -73,10 +73,6 @@ class GuildDatabase {
 			this.premiumUntil = data.premium_until;
 		}
 
-		if(data.embeds?.length) {
-			this.embeds = data.embeds as any;
-		}
-
 		return this;
 	}
 
@@ -122,6 +118,24 @@ class GuildDatabase {
 		this.reasons = data;
 
 		return this.reasons;
+	}
+
+	public async getEmbed(type: EmbedType) {
+		if(!this.embeds) {
+			const embeds = await this.client.prisma.embed.findMany({
+				where: {
+					guild_id: this.guild.id,
+				},
+			});
+
+			this.embeds = embeds || [];
+		}
+
+		const embed = this.embeds.find(embed => embed.type == type);
+
+		if(!embed) return null;
+
+		return Utils.formatDatabaseEmbed(embed);
 	}
 
 	public hasPremium(): boolean {
