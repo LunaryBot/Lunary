@@ -161,7 +161,7 @@ class MuteAction {
 				{ 
 					author, 
 					user, 
-					type: context.t('mute:punishmentType'), 
+					type: 'MUTE', 
 					reason: reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason'), 
 					id: `#${ModUtils.formatHumanPunishmentId(id)}`, 
 				}, 

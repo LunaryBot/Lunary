@@ -138,17 +138,19 @@ class AdvAction {
 		const { punishmentsChannelId } = context.databases.guild as GuildDatabase;
 
 		if(punishmentsChannelId) {
-			const content = ModUtils.formatPunishmentMessage(
+			const content = await ModUtils.formatPunishmentMessage(
 				{ 
 					author, 
 					user, 
-					type: context.t('adv:punishmentType'), 
+					type: 'ADV', 
 					reason: reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason'), 
 					id: `#${ModUtils.formatHumanPunishmentId(id)}`, 
 				}, 
 				context.t.bind(context.t),
 				context.databases.guild as GuildDatabase
 			);
+
+			console.log(content);
 
 			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,

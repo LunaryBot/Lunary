@@ -147,11 +147,11 @@ class BanAction {
 		const { punishmentsChannelId } = context.databases.guild as GuildDatabase;
 
 		if(punishmentsChannelId) {
-			const content = ModUtils.formatPunishmentMessage(
+			const content = await ModUtils.formatPunishmentMessage(
 				{ 
 					author, 
 					user, 
-					type: context.t('ban:punishmentType'), 
+					type: 'BAN', 
 					reason: reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason'), 
 					id: `#${ModUtils.formatHumanPunishmentId(id)}`, 
 				}, 
