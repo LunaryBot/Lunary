@@ -13,19 +13,6 @@ class PingCommand extends Command {
 	async run(context: CommandContext) {
 		context.createMessage({
 			content: 'Pong!',
-			components: [
-				{
-					type: ComponentType.ActionRow,
-					components: [
-						{
-							type: ComponentType.Button,
-							custom_id: 'click_me',
-							style: ButtonStyle.Primary,
-							label: 'Click Me!',
-						},
-					],
-				},
-			],
 		});
 	}
 }
