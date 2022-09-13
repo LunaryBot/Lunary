@@ -91,7 +91,7 @@ model Punishment {
   author_id  String
   type       PunishmentType
   created_at DateTime
-  flags      BigInt            @default(0)
+  flags      BigInt         @default(0)
   duration   Int?
   reason     String?
   reason_id  String?
@@ -106,15 +106,15 @@ enum PunishmentType {
 }
 
 model Reason {
-  id       String   @id @unique @default(cuid())
+  id       String           @id @unique @default(cuid())
   text     String
   guild_id String
   type     PunishmentType[]
-  keys     String[] @default([])
+  keys     String[]         @default([])
   duration Int?
   days     Int?
 
-  guild    Guild?   @relation(fields: [guild_id], references: [id])
+  guild    Guild?           @relation(fields: [guild_id], references: [id])
 }
 
 model User {
