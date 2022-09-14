@@ -15,9 +15,6 @@ yarn-error.log
 
 /locales/
 
-data/commands.json
-json.sqlite
-
-logs/*
+logs/
 
 prisma/migrations/
