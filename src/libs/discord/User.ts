@@ -1,9 +1,10 @@
-import { DefaultUserAvatarAssets, ImageFormat, Routes, UserAvatarFormat, UserFlags } from '@discord/types';
+import { DefaultUserAvatarAssets, ImageFormat, Routes, UserAvatarFormat, UserFlags as Flags } from '@discord/types';
 import { APIDMChannel, APIUser, Snowflake, CDNRoutes } from '@discord/types';
 import { ImageSize } from '@discordjs/rest';
 
 import { RequiresToken } from '@decorators';
 import Utils from '@utils';
+import BitField from '@utils/BitField';
 
 import Structure from './Base';
 
@@ -19,6 +20,8 @@ class User extends Structure<APIUser> {
 	public readonly system: boolean = false;
 
 	public readonly bot: boolean = false;
+
+	public flags = new UserFlags(0n);
 
 	public publicFlags: number | null;
 
@@ -47,6 +50,8 @@ class User extends Structure<APIUser> {
 
 		if(raw.public_flags !== undefined) {
 			this.publicFlags = raw.public_flags;
+
+			this.flags.bitfield = BigInt(this.publicFlags);
 		}
 
 		return this;
@@ -82,4 +87,18 @@ class User extends Structure<APIUser> {
 	}
 }
 
-export { User, UserFlags as Flags, UserFlags };
+const flags = Object.fromEntries(
+	Object.entries(Flags)
+		.map(([key, value]) => 
+			isNaN(Number(key)) && key !== 'Quarantined'
+				? [key, BigInt(value)] 
+				: null
+		)
+		.filter(x => x !== null) as [string, bigint][]
+);
+
+class UserFlags extends BitField<keyof typeof Flags> {
+	public static Flags = flags;
+}
+
+export { User, UserFlags };
