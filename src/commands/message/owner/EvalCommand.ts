@@ -115,7 +115,7 @@ class EvalCommand extends Command {
 			if(options.discordRest) {
 				const data = result?.body ? result : { body: result?.body };
 
-				result = await this.client.rest[options.discordRestMethod || 'get'](options.discordRest as any, data);
+				result = await this.client.apis.discord[options.discordRestMethod || 'get'](options.discordRest as any, data);
 			}
 
 			if(typeof result !== 'string') result = await inspect(result, { depth: options.depth });

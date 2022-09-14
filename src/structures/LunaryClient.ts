@@ -29,7 +29,9 @@ class Client extends EventEmitter {
 	private readonly _token: string;
 	
 	public readonly fastify = fastify();
-	public readonly rest: REST;
+	public readonly apis: { 
+		discord: REST 
+	};
 	
 	public readonly prisma = new Prisma(this);
 	public readonly redis = new Redis(this);
@@ -55,7 +57,9 @@ class Client extends EventEmitter {
 			value: token,
 		});
 
-		this.rest = new REST({ version: '10' }).setToken(this._token);
+		this.apis = {
+			discord: new REST({ version: '10' }).setToken(this._token),
+		};
 
 		this.fastify.register(fastifyBodyRaw as any, {
 			fields: 'rawBody',
@@ -225,9 +229,9 @@ class Client extends EventEmitter {
 		await this._loadCommands();
 		await this._loadLocales();
 
-		const user = await this.rest.get(Routes.user(), { auth: true }).then(data => new User(this, data as APIUser));
+		const user = await this.apis.discord.get(Routes.user(), { auth: true }).then(data => new User(this, data as APIUser));
 		
-		const application = await this.rest.get(Routes.oauth2CurrentApplication()).then(data => new Application(this, data as RESTGetAPIOAuth2CurrentApplicationResult));
+		const application = await this.apis.discord.get(Routes.oauth2CurrentApplication()).then(data => new Application(this, data as RESTGetAPIOAuth2CurrentApplicationResult));
 		
 		Object.defineProperty(this, 'user', {
 			writable: false,

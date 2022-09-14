@@ -91,7 +91,7 @@ class AdvAction {
         
 		try {
 			if(options.notifyDM != false) {
-				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
+				await this.client.apis.discord.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('adv:defaultDmMessage', {
 							guild_name: this.guild.name,
@@ -152,7 +152,7 @@ class AdvAction {
 
 			console.log(content);
 
-			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
+			await this.client.apis.discord.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
 		}

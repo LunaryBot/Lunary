@@ -22,19 +22,19 @@ class InteractionWebhook extends Webhook {
 	}
 
 	async getOriginalMessage() {
-		const data = await this.client.rest.post(this.webhookMessage('@original'));
+		const data = await this.client.apis.discord.post(this.webhookMessage('@original'));
 		
 		return data as APIMessage;
 	}
 
 	async editOriginalMessage(body: JSONEditWebhook) {
-		const data = await this.client.rest.patch(this.webhookMessage('@original'), { body });
+		const data = await this.client.apis.discord.patch(this.webhookMessage('@original'), { body });
 
 		return data as APIMessage;
 	}
 
 	async deleteOriginalMessage() {
-		await this.client.rest.delete(this.webhookMessage('@original'));
+		await this.client.apis.discord.delete(this.webhookMessage('@original'));
 	}
 }
 

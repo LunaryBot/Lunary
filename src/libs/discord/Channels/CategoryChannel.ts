@@ -12,7 +12,7 @@ class CategoryChannel extends GuildChannel {
 	async channels() {
 		const channels = new Collection<GuildChannel>();
         
-		const guildChannels = await this.client.rest.get(Routes.guildChannels(this.guildId)) as APIGuildChannel[];
+		const guildChannels = await this.client.apis.discord.get(Routes.guildChannels(this.guildId)) as APIGuildChannel[];
 
 		if(this.guildId) {
 			for(const channel of guildChannels) {

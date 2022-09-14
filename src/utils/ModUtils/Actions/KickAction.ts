@@ -66,7 +66,7 @@ class KickAction {
 
 		try {
 			if(options.notifyDM != false) {
-				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
+				await this.client.apis.discord.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('kick:defaultDmMessage', {
 							guild_name: this.guild.name,
@@ -93,7 +93,7 @@ class KickAction {
 			notifiedDM = false;
 		};
 		
-		await this.client.rest.delete(Routes.guildMember(guild.id, user.id), {
+		await this.client.apis.discord.delete(Routes.guildMember(guild.id, user.id), {
 			reason: `${author.tag}: ${reason ? (typeof reason === 'string' ? reason : reason.text) : context.t('general:reasonNotInformed.defaultReason')}`,
 		});
 
@@ -154,7 +154,7 @@ class KickAction {
 				context.databases.guild as GuildDatabase
 			);
 
-			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
+			await this.client.apis.discord.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
 		}

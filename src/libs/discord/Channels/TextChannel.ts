@@ -44,7 +44,7 @@ class TextChannel extends Channel {
 
     @RequiresToken.bind(this)
 	public async createMessage(content: string|RESTCreateMessage) {
-		return await this.client.rest.post(Routes.channelMessages(this.id), {
+		return await this.client.apis.discord.post(Routes.channelMessages(this.id), {
 			body: typeof content === 'string' ? { content } : content,
 		});
 	}

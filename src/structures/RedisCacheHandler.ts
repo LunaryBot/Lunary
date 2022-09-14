@@ -63,7 +63,7 @@ class RedisCacheHandler {
 						if(guildMemberKeyRegex.test(key.toString())) {
 							const [, userId] = [ ...(guildMemberKeyRegex.exec(key.toString()) as Array<string>) ];
 
-							const member = await this.client.rest.get(Routes.guildMember(guildId, userId == '@me' ? this.client.user.id : userId)) as APIGuildMember;
+							const member = await this.client.apis.discord.get(Routes.guildMember(guildId, userId == '@me' ? this.client.user.id : userId)) as APIGuildMember;
 
 							if(member.user !== undefined) {
 								await this.setUser(member.user);
@@ -71,9 +71,9 @@ class RedisCacheHandler {
 
 							value = await this.setGuildMember(guildId, userId, member);
 						} else {
-							const guild = await this.client.rest.get(Routes.guild(guildId)) as APIGuild;
+							const guild = await this.client.apis.discord.get(Routes.guild(guildId)) as APIGuild;
 	
-							const channels = await this.client.rest.get(Routes.guildChannels(guildId)) as Array<APIChannel>;
+							const channels = await this.client.apis.discord.get(Routes.guildChannels(guildId)) as Array<APIChannel>;
 	
 							value = await this.setGuild({ ...guild, channels });
 						}
@@ -84,7 +84,7 @@ class RedisCacheHandler {
 					case 'users': {
 						const userId = id;
 
-						const user = await this.client.rest.get(Routes.user(userId)) as APIUser;
+						const user = await this.client.apis.discord.get(Routes.user(userId)) as APIUser;
 
 						value = await this.setUser(user);
 

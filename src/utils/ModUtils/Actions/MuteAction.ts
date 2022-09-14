@@ -75,7 +75,7 @@ class MuteAction {
 
 		let notifiedDM = options.notifyDM != false;
 		
-		await this.client.rest.patch(Routes.guildMember(guild.id, user.id), {
+		await this.client.apis.discord.patch(Routes.guildMember(guild.id, user.id), {
 			body: {
 				communication_disabled_until: this.communicationDisabledUntil,
 			} as RESTPatchAPIGuildMemberJSONBody,
@@ -84,7 +84,7 @@ class MuteAction {
 
 		try {
 			if(options.notifyDM != false) {
-				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
+				await this.client.apis.discord.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('mute:defaultDmMessage', {
 							guild_name: this.guild.name,
@@ -169,7 +169,7 @@ class MuteAction {
 				context.databases.guild as GuildDatabase
 			);
 
-			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
+			await this.client.apis.discord.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
 		}

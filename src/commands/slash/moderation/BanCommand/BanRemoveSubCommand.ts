@@ -30,7 +30,7 @@ class BanRemoveSubCommand extends SubCommand {
 
 		const ban = await new Promise<RESTGetAPIGuildBanResult|undefined>(async(resolve, reject) => {
 			if(idRegex.test(query)) {
-				const ban = await this.client.rest.get(Routes.guildBan(context.guildId as string, query)).catch(() => {}) as RESTGetAPIGuildBanResult;
+				const ban = await this.client.apis.discord.get(Routes.guildBan(context.guildId as string, query)).catch(() => {}) as RESTGetAPIGuildBanResult;
                 
 				return resolve(ban);
 			} else {
@@ -48,7 +48,7 @@ class BanRemoveSubCommand extends SubCommand {
 
 		const reason = context.options.get('reason') as string;
 
-		await this.client.rest.delete(Routes.guildBan(context.guildId as string, user.id), {
+		await this.client.apis.discord.delete(Routes.guildBan(context.guildId as string, user.id), {
 			reason: context.t('general:punishedBy', {
 				user: context.user.tag,
 				reason: reason || context.t('general:reasonNotInformed.defaultReason'),

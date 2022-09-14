@@ -82,14 +82,14 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
 
     @RequiresToken.bind(this)
 	public async addRole(roleId: string, reason?: string) {
-		await this.client.rest.put(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
+		await this.client.apis.discord.put(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
 			headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
 		});
 	}
   
     @RequiresToken.bind(this)
     async ban(raw: { deleteMessageDays?: number; reason?: string }) {
-    	await this.client.rest.put(Routes.guildBan(this.guild.id, this.id), {
+    	await this.client.apis.discord.put(Routes.guildBan(this.guild.id, this.id), {
     		body: { delete_message_days: raw.deleteMessageDays },
     		headers: raw.reason ? { 'X-Audit-Log-Reason': raw.reason } : undefined,
     	});
@@ -97,21 +97,21 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
 
     @RequiresToken.bind(this)
     async kick(reason?: string) {
-    	await this.client.rest.delete(Routes.guildMember(this.guild.id, this.id), {
+    	await this.client.apis.discord.delete(Routes.guildMember(this.guild.id, this.id), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
     	});
     }
 
     @RequiresToken.bind(this)
     async removeRole(roleId: string, reason?: string) {
-    	await this.client.rest.delete(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
+    	await this.client.apis.discord.delete(Routes.guildMemberRole(this.guild.id, this.id, roleId), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
     	});
     }
 
     @RequiresToken.bind(this)
     async unban(reason?: string) {
-    	await this.client.rest.delete(Routes.guildBan(this.guild.id, this.id), {
+    	await this.client.apis.discord.delete(Routes.guildBan(this.guild.id, this.id), {
     		headers: reason ? { 'X-Audit-Log-Reason': reason } : undefined,
     	});
     }

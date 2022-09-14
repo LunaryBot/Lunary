@@ -38,31 +38,31 @@ class Webhook extends Structure {
 	}
 
 	public static async fromToken(client: LunaryClient, id: string, token: string) {
-		const data = (await client.rest.get(Routes.webhook(id, token))) as APIWebhook;
+		const data = (await client.apis.discord.get(Routes.webhook(id, token))) as APIWebhook;
 
 		return new Webhook(client, data, token);
 	}
 
 	public async execute(body: JSONExecuteWebhook) {
-		const data = await this.client.rest.post(this.url, { body });
+		const data = await this.client.apis.discord.post(this.url, { body });
 
 		return data as APIMessage;
 	}
 
 	public async getMessage(id: string) {
-		const data = await this.client.rest.get(this.webhookMessage(id));
+		const data = await this.client.apis.discord.get(this.webhookMessage(id));
 
 		return data as APIMessage;
 	}
 
 	public async editMessage(id: string, body: JSONEditWebhook) {
-		const data = await this.client.rest.patch(this.webhookMessage(id), { body });
+		const data = await this.client.apis.discord.patch(this.webhookMessage(id), { body });
 
 		return data as APIMessage;
 	}
 
 	public async deleteMessage(id: string) {
-		await this.client.rest.delete(this.webhookMessage(id));
+		await this.client.apis.discord.delete(this.webhookMessage(id));
 	}
 
 	public webhookMessage(id: string) {

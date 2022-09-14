@@ -68,7 +68,7 @@ class BanAction {
 
 		try {
 			if(notifiedDM) {
-				await this.client.rest.post(Routes.channelMessages((await user.getDMChannel()).id), {
+				await this.client.apis.discord.post(Routes.channelMessages((await user.getDMChannel()).id), {
 					body: {
 						content: this.context.t('ban:defaultDmMessage', {
 							guild_name: this.guild.name,
@@ -95,7 +95,7 @@ class BanAction {
 			notifiedDM = false;
 		};
 		
-		await this.client.rest.put(Routes.guildBan(guild.id, user.id), {
+		await this.client.apis.discord.put(Routes.guildBan(guild.id, user.id), {
 			body: {
 				delete_message_days: options.days || 0,
 			} as RESTPutAPIGuildBanJSONBody,
@@ -159,7 +159,7 @@ class BanAction {
 				context.databases.guild as GuildDatabase
 			);
 
-			await this.client.rest.post(Routes.channelMessages(punishmentsChannelId), {
+			await this.client.apis.discord.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
 		}

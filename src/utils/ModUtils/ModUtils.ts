@@ -65,7 +65,7 @@ class ModUtils {
 	public static async generateTranscript(channel: Channel, type: 'TEXT') {
 		const Transcript = TextTranscript;
 
-		const messagesFetched = await this.client.rest.get(Routes.channelMessages(channel.id)) as APIMessage[];
+		const messagesFetched = await this.client.apis.discord.get(Routes.channelMessages(channel.id)) as APIMessage[];
 
 		const messages = messagesFetched.slice(0, 20).map(message => new Message(this.client, message)).sort((a, b) => a.timestamp - b.timestamp);
 
