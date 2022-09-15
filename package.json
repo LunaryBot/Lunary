@@ -16,6 +16,7 @@
     "@discordjs/rest": "^0.5.0",
     "@prisma/client": "4.1.0",
     "axios": "^0.26.1",
+    "canvas": "^2.10.1",
     "chalk": "4.0.0",
     "discord-api-types": "^0.36.1",
     "dotenv": "^16.0.0",
