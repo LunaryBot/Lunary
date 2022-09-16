@@ -8,6 +8,7 @@ export {};
 declare global {
     interface String {
         checkSimilarityStrings(string: string): number;
+        firstCharInLowerCase(): string;
         isLowerCase(): boolean;
         isUpperCase(): boolean;
         removeAccents(): string;

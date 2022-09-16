@@ -40,6 +40,10 @@ String.prototype.checkSimilarityStrings = function(string: string): number {
 	return ((matches / len1) + (matches / len2) + ((matches - t) / matches)) / 3.0;
 };
 
+String.prototype.firstCharInLowerCase = function() {
+	return this.replace(/^./g, (char) => char.toLowerCase());
+};
+
 String.prototype.isLowerCase = function() {
 	return this.toString().toLowerCase() === this.toString();
 };
@@ -60,5 +64,5 @@ String.prototype.shorten = function(length: number): string {
 };
 
 String.prototype.toTitleCase = function(): string {
-	return this.replace(/\w\S*/g, function (string) { return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase(); });
+	return this.replace(/\w\S*/g, (string) => string.charAt(0).toUpperCase() + string.substr(1).toLowerCase());
 };
