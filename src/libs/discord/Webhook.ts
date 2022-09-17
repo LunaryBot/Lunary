@@ -62,8 +62,6 @@ class Webhook extends Structure {
 			headers = { 'Content-Type': 'multipart/form-data', ...form.getHeaders() };
 		}
 
-		console.log(requestData);
-
 		const { data } = await axios.post(`https://discord.com/api${this.url}`, requestData, {
 			headers,
 		});
