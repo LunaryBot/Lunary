@@ -1,3 +1,6 @@
+import axios from 'axios';
+import FormData from 'form-data';
+
 import {
 	APIMessage,
 	APIWebhook,
@@ -8,6 +11,7 @@ import {
 	APIInteractionWebhook,
 	Routes,
 } from '@discord/types';
+import { RawFile } from '@discordjs/rest';
 
 import Structure from './Base';
 
@@ -43,8 +47,26 @@ class Webhook extends Structure {
 		return new Webhook(client, data, token);
 	}
 
-	public async execute(body: JSONExecuteWebhook) {
-		const data = await this.client.apis.discord.post(this.url, { body });
+	public async execute(body: JSONExecuteWebhook, files?: RawFile[]) {
+		let requestData: any = body;
+		let headers: Record<string, string> = {};
+
+		if(files) {
+			const form = new FormData();
+
+			files.forEach((file, i) => form.append(`file${i + 1}`, file.data, file.name));
+			form.append('payload_json', JSON.stringify(body));
+
+			requestData = form;
+
+			headers = { 'Content-Type': 'multipart/form-data', ...form.getHeaders() };
+		}
+
+		console.log(requestData);
+
+		const { data } = await axios.post(`https://discord.com/api${this.url}`, requestData, {
+			headers,
+		});
 
 		return data as APIMessage;
 	}

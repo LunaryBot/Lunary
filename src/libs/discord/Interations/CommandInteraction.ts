@@ -9,6 +9,7 @@ import {
 	MessageFlags, 
 	Snowflake,
 } from '@discord/types';
+import { RawFile } from '@discordjs/rest';
 
 import Collection from '@utils/Collection';
 
@@ -112,17 +113,17 @@ class CommandInteraction extends Interaction {
 		this.ephemeral = ephemeral ?? false;
 	}
 
-	async createFollowUp(content: string | MessageEditWebhook) {
+	async createFollowUp(content: string | MessageEditWebhook, files?: RawFile[]) {
 		const message: MessageEditWebhook = this.makeMessageContent(content);
 
 		delete message.ephemeral;
 
 		if(!this.replied) throw new Error('Cannot follow up before responding');
 
-		return await this.webhook.execute(message);
+		return await this.webhook.execute(message, files);
 	}
 
-	async createMessage(content: string | MessageEditWebhook) {
+	async createMessage(content: string | MessageEditWebhook, files?: RawFile[]) {
 		if(this.replied) throw new Error('Cannot create message after responding');
         
 		const message: MessageEditWebhook = this.makeMessageContent(content);
@@ -130,7 +131,7 @@ class CommandInteraction extends Interaction {
 		if(this.acknowledged) {
 			this.replied = true;
 
-			return await this.createFollowUp(message);
+			return await this.createFollowUp(message, files);
 		}
 
 		this.replied = true;
