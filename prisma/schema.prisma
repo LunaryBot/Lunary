@@ -119,12 +119,17 @@ model Reason {
 
 model User {
   id                         String           @id @unique
-  aboutme                    String?
   features                   BigInt?
+  flags                      BigInt?
+
   luas                       Int?
-  xp                         Int?
-  last_punishment_applied_id String?
   last_daily_at              DateTime?
+
+  bio                        String?
+  xp                         Int?
+  inventory                  BigInt?
+  inventary_using            BigInt?
+
   premium_type               UserPremiumType?
   premium_until              DateTime?
 }
