@@ -1,5 +1,7 @@
 import 'dotenv/config';
+import './tools/Number';
 import './tools/Logger';
+import './tools/Object';
 import './tools/String';
 
 import Client from '@LunaryClient';

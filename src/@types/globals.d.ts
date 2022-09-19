@@ -6,6 +6,14 @@ import Client from '../structures/LunaryClient';
 export {};
 
 declare global {
+    interface Number {
+        formatUnits(allowned?: Array<'K' | 'M' | 'bi' | 'tri'>): string;
+    }
+
+    interface Object {
+        static isObject(val: any): boolean;
+    }
+
     interface String {
         checkSimilarityStrings(string: string): number;
         firstCharInLowerCase(): string;
@@ -14,10 +22,6 @@ declare global {
         removeAccents(): string;
         shorten(length: number): string;
         toTitleCase(): string;
-    }
-
-    interface Object {
-        static isObject(val: any): boolean;
     }
     
     const logger: Logger;
