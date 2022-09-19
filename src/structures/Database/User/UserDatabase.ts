@@ -3,20 +3,23 @@ import * as Prisma from '@prisma/client';
 import { User } from '@discord';
 
 import { UserFeatures } from './UserFeatures';
+import { UserFlags } from './UserFlags';
+import { UserInventory, UserInventoryUsing } from './UserInventory';
 
 class UserDatabase {
 	public readonly client: LunaryClient;
 	public readonly user: User;
 
-	public features: UserFeatures;
+	public features = new UserFeatures(0n);
+	public flags = new UserFlags(0n);
 
 	public xp: number;
-	public aboutme?: string;
+	public bio?: string;
+	public inventory = new UserInventory(0n);
+	public usingInventory = new UserInventoryUsing(0n);
 
 	public luas: number;
 	public lastDailyAt?: Date;
-
-	public lastPunishmentAppliedId?: string;
 
 	public premiumType?: Prisma.UserPremiumType;
 	public premiumUntil?: Date;
@@ -42,21 +45,26 @@ class UserDatabase {
 	}
 
 	public _patch(data: Partial<Prisma.User>): this {
-		this.features = new UserFeatures(data.features ?? 0n);
+		this.features.bitfield = data.features ?? 0n;
+		this.flags.bitfield = data.flags ?? 0n;
 
 		this.luas = data.luas ?? 0;
 		this.xp = data.xp ?? 0;
 
-		if(data.aboutme) {
-			this.aboutme = data.aboutme;
+		if(data.bio) {
+			this.bio = data.bio;
+		}
+
+		if(data.inventory) {
+			this.inventory.bitfield = data.inventory;
+		}
+
+		if(data.inventary_using) {
+			this.usingInventory.bitfield = data.inventary_using;
 		}
 
 		if(data.last_daily_at) {
 			this.lastDailyAt = data.last_daily_at;
-		}
-
-		if(data.last_punishment_applied_id) {
-			this.lastPunishmentAppliedId = data.last_punishment_applied_id;
 		}
 
 		if(data.premium_type && data.premium_until && data.premium_until.getTime() <= Date.now()) {
@@ -105,9 +113,9 @@ class UserDatabase {
 			features: this.features.bitfield || null,
 			luas: this.luas || null,
 			xp: this.xp || null,
-			aboutme: this.aboutme || null,
+			bio: this.bio || null,
+			flags: this.flags.bitfield || null,
 			last_daily_at: this.lastDailyAt || null,
-			last_punishment_applied_id: this.lastPunishmentAppliedId || null,
 			premium_type: this.premiumType || null,
 			premium_until: this.premiumUntil || null,
 		};
