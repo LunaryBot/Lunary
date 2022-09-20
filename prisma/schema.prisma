@@ -65,12 +65,14 @@ model Guild {
 }
 
 model GuildPermissions {
-  id          String                @id
+  id          String
   type        GuildPermissionType
   guild_id    String
   permissions BigInt
 
   guild       Guild?                @relation(fields: [guild_id], references: [id])
+
+  @@id([guild_id, id])
 }
 
 enum GuildPermissionType {
