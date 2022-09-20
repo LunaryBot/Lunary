@@ -74,7 +74,7 @@ class ModUtils {
 		return transcript.toBuffer();
 	}
 
-	public static async punishmentReason(context: ComponentContext|CommandContext) {
+	public static async punishmentReason(context: ComponentContext|CommandContext, type: PunishmentType) {
 		let replyMessageFn: ReplyMessageFn = context.createMessage.bind(context.interaction);
 
 		try {
@@ -83,7 +83,7 @@ class ModUtils {
 	
 				const reasonOption: string = (context as CommandContext).options.get('reason');
 	
-				const memberHasPermission = context.databases.guild?.features?.has('mandatoryReason') ? (await context.databases.guild?.permissionsFor(context.member as Member))?.has('lunarPunishmentOutReason') ?? false : true;
+				const memberHasPermission = context.databases.guild?.features?.has(`mandatoryReasonTo${type.toTitleCase()}` as any) ? (await context.databases.guild?.permissionsFor(context.member as Member))?.has('lunarPunishmentOutReason') ?? false : true;
 				
 				if(reasonOption || (!reasonOption && memberHasPermission)) {
 					return resolve(findReasonByKey(reasonOption) || reasonOption || context.t('general:reasonNotInformed.defaultReason') || null);

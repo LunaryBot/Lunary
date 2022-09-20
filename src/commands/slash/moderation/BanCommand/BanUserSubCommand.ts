@@ -61,7 +61,7 @@ class BanUserSubCommand extends SubCommand {
 			}
 		}
 
-		const { reason, replyMessageFn, canceled = false } = await ModUtils.punishmentReason.bind(this)(context).catch(() => {
+		const { reason, replyMessageFn, canceled = false } = await ModUtils.punishmentReason.bind(this)(context, 'BAN').catch(() => {
 			return {} as { reason: string | Prisma.Reason | null; replyMessageFn: ReplyMessageFn; canceled?: boolean };
 		});
 
