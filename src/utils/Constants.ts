@@ -26,8 +26,14 @@ export const Colors = {
 };
 
 export const GuildFeatures = {
-	mandatoryReason: 1n << 0n,
-	sendTranscript: 1n << 1n,
+	// Mandatory Reason
+	mandatoryReasonToBan: 1n << 0n,
+	mandatoryReasonToKick: 1n << 1n,
+	mandatoryReasonToMute: 1n << 2n,
+	mandatoryReasonToAdv: 1n << 3n,
+
+	// Transcript
+	useHTMLTranscript: 1n << 4n,
 };
 
 export const GuildPermissions = {
