@@ -19,8 +19,8 @@ model Embed {
   embed_title                  String?
   embed_description            String?
   embed_url                    String?
-  embed_timestamp              String?
-  embed_color                  String?
+  embed_timestamp              Boolean?
+  embed_color                  Int?
 
   // Author
   embed_author_name            String?
