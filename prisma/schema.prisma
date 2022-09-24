@@ -22,6 +22,12 @@ model Embed {
   embed_timestamp              String?
   embed_color                  String?
 
+  // Author
+  embed_author_name            String?
+  embed_author_url             String?
+  embed_author_icon            String?
+  embed_author_proxy_url       String?
+
   // Footer
   embed_footer_text            String?
   embed_footer_icon_url        String?
