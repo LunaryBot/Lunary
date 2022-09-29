@@ -11,42 +11,12 @@ datasource db {
 }
 
 model Embed {
-  guild_id                     String
-  type                         EmbedType
+  guild_id  String
+  type      EmbedType
 
-  content                      String?
+  content   String?
 
-  embed_title                  String?
-  embed_description            String?
-  embed_url                    String?
-  embed_timestamp              Boolean?
-  embed_color                  Int?
-
-  // Author
-  embed_author_name            String?
-  embed_author_url             String?
-  embed_author_icon            String?
-  embed_author_proxy_url       String?
-
-  // Footer
-  embed_footer_text            String?
-  embed_footer_icon_url        String?
-  embed_footer_proxy_icon_url  String?
-
-  // Image
-  embed_image_url              String?
-  embed_image_proxy_url        String?
-  embed_image_height           Int?
-  embed_image_width            Int?
-
-  // Thumbnail
-  embed_thumbnail_url          String?
-  embed_thumbnail_proxy_url    String?
-  embed_thumbnail_height       Int?
-  embed_thumbnail_width        Int?
-
-  // Field
-  embed_fields                 Json[]    @default([])
+  embeds    Json[]    @default([])
 
   @@id([guild_id, type])
 }
