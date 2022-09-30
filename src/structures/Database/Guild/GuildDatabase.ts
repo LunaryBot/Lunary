@@ -76,7 +76,7 @@ class GuildDatabase {
 		return this;
 	}
 
-	public async fetch({ fetchPermissions = false, fetchReasons = false, seletcEmbeds = false } = {}): Promise<this> {
+	public async fetch({ fetchPermissions = false, fetchReasons = false, fetchEmbeds = false } = {}): Promise<this> {
 		const data = await this.guild.client.prisma.guild.findUnique({
 			where: {
 				id: this.guild.id,
@@ -125,6 +125,7 @@ class GuildDatabase {
 			const embeds = await this.client.prisma.embed.findMany({
 				where: {
 					guild_id: this.guild.id,
+					type,
 				},
 			});
 
@@ -135,7 +136,7 @@ class GuildDatabase {
 
 		if(!embed) return null;
 
-		return Utils.formatDatabaseEmbed(embed);
+		return embed;
 	}
 
 	public hasPremium(): boolean {

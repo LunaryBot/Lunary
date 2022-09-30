@@ -1,17 +1,15 @@
-import type { JsonValue } from '@prisma/client';
+import type { EmbedType, JsonValue } from '@prisma/client';
 
 import { APIEmbed } from '@discord/types';
 
-enum EmbedTypes {
-    BAN = 'BAN',
-    KICK = 'KICK',
-    MUTE = 'MUTE',
-    ADV = 'ADV',
+export interface Embed {
+    type: EmbedType;
+    guild_id: string;
+    content?: string | null;
+    embeds?: Array<Omit<APIEmbed, 'type' | 'timestamp'> & { timestamp: boolean }> | null;
 }
 
-interface Embed {
-    type: keyof typeof EmbedTypes;
-    data: APIEmbed;
+export interface EmbedBuilded {
+    content?: string | null;
+    embeds?: Array<Omit<APIEmbed, 'type'>> | null;
 }
-
-export { EmbedTypes, Embed };

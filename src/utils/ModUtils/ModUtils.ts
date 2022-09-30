@@ -8,9 +8,10 @@ import { GuildDatabase } from '@Database';
 import { Channel, ComponentInteraction, Member, Message, ModalSubimitInteraction, SelectMenuInteraction, User } from '@discord';
 import { APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ButtonStyle, APISelectMenuOption, APISelectMenuComponent, ComponentType, TextInputStyle, MessageFlags, APIMessage, Routes, RESTGetAPIChannelMessagesQuery } from '@discord/types';
 
-import { Links, PunishmentTypes } from '@utils/Constants';
+import { Links } from '@utils/Constants';
 import TimeUtils from '@utils/TimeUtils';
 
+import { Embed, EmbedBuilded } from '../../@types/Database';
 import { PunishmentProps, ReplyMessageFn } from '@types';
 
 import JsonPlaceholderReplacer from '../JsonPlaceholderReplacer';
@@ -49,17 +50,22 @@ class ModUtils {
 	}
 
 	public static async formatPunishmentMessage(punishment: PunishmentOptions, t: (ref: string, variables?: Object) => string, database: GuildDatabase) {
-		const punishmentMessage: any = ModUtils.replacePlaceholders(
+		const punishmentMessage = ModUtils.replacePlaceholders(
 			await database.getEmbed(punishment.type) || JSON.parse(t('general:punishment_message')) as APIEmbed,
 			{ ...punishment, type: t(`${punishment.type.toLowerCase()}:punishmentType`) }
-		);
+		) as Prisma.Embed;
 
-		if(punishmentMessage.embed) {
-			punishmentMessage.embeds = [ punishmentMessage.embed ];
-			delete punishmentMessage.embed;
-		}
+		const formated: EmbedBuilded = { 
+			content: punishmentMessage.content, 
+			embeds: ((punishmentMessage.embeds as any) as Embed['embeds'])?.map(embed => {
+				return {
+					...embed,
+					timestamp: embed.timestamp == true ? new Date().toISOString() : undefined,
+				};
+			}), 
+		};
 
-		return punishmentMessage;
+		return formated;
 	}
 
 	public static async generateTranscript(channel: Channel, type: 'TEXT') {
