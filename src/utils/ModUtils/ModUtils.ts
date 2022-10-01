@@ -358,12 +358,15 @@ class ModUtils {
 
 						executeAction(replyMessageFn.bind(interaction));
 
-						if(id == 'quickpunishment') context.createFollowup({
-							content: context.t('quickpunishment:enable', {
-								author: context.user.toString(),
-							}),
-							ephemeral: true,
-						});
+						if(id == 'quickpunishment') {
+							await context.databases.user.save();
+							context.createFollowup({
+								content: context.t('quickpunishment:enable', {
+									author: context.user.toString(),
+								}),
+								ephemeral: true,
+							});
+						}
 
 						break;
 					}
