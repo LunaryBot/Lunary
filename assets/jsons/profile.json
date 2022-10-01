@@ -1,0 +1,30 @@
+{
+    "backgrounds": {
+        "default": "https://imgur.com/4V7z79E.png"
+    },
+    "patterns": {},
+    "badges": {
+        "BughunterLevel1": "https://cdn.discordapp.com/emojis/892105152771817513.png?v=1",
+        "BughunterLevel2": "https://cdn.discordapp.com/emojis/892105146534879263.png?v=1",
+        "DiscordCertifiedModerator": "https://cdn.discordapp.com/emojis/892105147910586408.png?v=1",
+        "DiscordEmployee": "https://cdn.discordapp.com/emojis/892107117966786641.png?v=1",
+        "EarlySupporter": "https://cdn.discordapp.com/emojis/892105143825362955.png?v=1",
+        "EarlyVerifiedBotDeveloper": "https://cdn.discordapp.com/emojis/892105149064044615.png?v=1",
+        "HouseBalance": "https://cdn.discordapp.com/emojis/892105154013310986.png?v=1",
+        "HouseBravery": "https://cdn.discordapp.com/emojis/892105156878008360.png?v=1",
+        "HouseBrilliance": "https://cdn.discordapp.com/emojis/892105142927773716.png?v=1",
+        "HypesquadEvents": "https://cdn.discordapp.com/emojis/892105151190536202.png?v=1",
+        "PartneredServerOwner": "https://cdn.discordapp.com/emojis/892107388738474044.png?v=1",
+        "VerifiedBot": "https://cdn.discordapp.com/emojis/892381020555452416.png?v=1",
+
+        "lunarDeveloper": "https://cdn.discordapp.com/emojis/891881243212382221.png?v=1",
+        "lunarStaff": "https://cdn.discordapp.com/emojis/1020370405527146547.png?v=1",
+        "lunarBugHunter": "https://cdn.discordapp.com/emojis/820275526148292630.png?v=1",
+        "lunarContributorFanart": "https://cdn.discordapp.com/emojis/987790398162341908.png?v=1",
+        "lunarContributorGithub": "https://cdn.discordapp.com/emojis/1020370910961733712.png?v=1",
+        "lunarDonator": "https://cdn.discordapp.com/emojis/1019957255233355807.png?v=1"
+    },
+    "details": {
+        "lua": "q"
+    }
+}

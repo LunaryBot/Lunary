@@ -1,4 +1,4 @@
-import { DefaultUserAvatarAssets, ImageFormat, Routes, UserAvatarFormat, UserFlags as Flags } from '@discord/types';
+import { DefaultUserAvatarAssets, ImageFormat, Routes, UserAvatarFormat } from '@discord/types';
 import { APIDMChannel, APIUser, Snowflake, CDNRoutes } from '@discord/types';
 import { ImageSize } from '@discordjs/rest';
 
@@ -87,18 +87,23 @@ class User extends Structure<APIUser> {
 	}
 }
 
-const flags = Object.fromEntries(
-	Object.entries(Flags)
-		.map(([key, value]) => 
-			isNaN(Number(key)) && key !== 'Quarantined'
-				? [key, BigInt(value)] 
-				: null
-		)
-		.filter(x => x !== null) as [string, bigint][]
-);
+const Flags = {
+	DiscordEmployee: 1n << 0n,
+	PartneredServerOwner: 1n << 1n,
+	HypesquadEvents: 1n << 2n,
+	BughunterLevel1: 1n << 3n,
+	HouseBravery: 1n << 6n,
+	HouseBrilliance: 1n << 7n,
+	HouseBalance: 1n << 8n,
+	EarlySupporter: 1n << 9n,
+	BughunterLevel2: 1n << 14n,
+	VerifiedBot: 1n << 16n,
+	EarlyVerifiedBotDeveloper: 1n << 17n,
+	DiscordCertifiedModerator: 1n << 18n,
+};
 
 class UserFlags extends BitField<keyof typeof Flags> {
-	public static Flags = flags;
+	public static Flags = Flags;
 }
 
 export { User, UserFlags };

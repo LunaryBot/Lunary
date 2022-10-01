@@ -22,6 +22,7 @@ declare global {
         removeAccents(): string;
         shorten(length: number): string;
         toTitleCase(): string;
+        wordWrap(maxWidth: number): string
     }
     
     const logger: Logger;

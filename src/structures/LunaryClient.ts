@@ -1,3 +1,4 @@
+import { Image, loadImage } from 'canvas';
 import EventEmitter from 'events';
 import fastify from 'fastify';
 import fastifyBodyRaw from 'fastify-raw-body';
@@ -14,6 +15,7 @@ import { REST } from '@discordjs/rest';
 import Locale from './Locale';
 import Prisma from './Prisma';
 import Redis from './Redis';
+import Template from './Template';
 
 interface ClientCommands {
     slash: Command[],
@@ -47,6 +49,9 @@ class Client extends EventEmitter {
 
 	public events: Array<EventListener> = [];
 	public locales: Array<Locale> = [];
+	public templates: Array<Template> = [];
+
+	public canvasImages = new Map<string, Image>();
 
 	constructor(token: string) {
 		super();
@@ -101,6 +106,16 @@ class Client extends EventEmitter {
 				this.emit('modalSubmitInteraction', interaction);
 			}
 		});
+	}
+
+	public async getCanvasImage(key: string, imageURL: string = key) {
+		if(this.canvasImages.has(key)) return this.canvasImages.get(key) as Image;
+
+		const img = await loadImage(imageURL);
+
+		this.canvasImages.set(key, img);
+
+		return img;
 	}
 
 	private async _loadCommands(): Promise<ClientCommands> {
@@ -224,10 +239,28 @@ class Client extends EventEmitter {
 		return this.locales;
 	}
 
+	private async _loadTemplates(): Promise<Template[]> {
+		const types = fs.readdirSync(__dirname + '/../templates');
+		for(const templateType of types) {
+			const templates = fs.readdirSync(__dirname + `/../templates/${templateType}`);
+
+			for(const template of templates) {
+				const { default: Base } = require(__dirname + `/../templates/${templateType}/${template}`);
+
+				const instance = new Base(this) as Template;
+
+				this.templates.push(instance);
+			}
+		}
+
+		return this.templates;
+	}
+
 	async init() {
 		await this._loadListeners();
 		await this._loadCommands();
 		await this._loadLocales();
+		await this._loadTemplates();
 
 		const user = await this.apis.discord.get(Routes.user(), { auth: true }).then(data => new User(this, data as APIUser));
 		

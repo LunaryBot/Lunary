@@ -9,15 +9,19 @@ class UserInventory extends BitField<Inventory> {
 
 class UserInventoryUsing extends UserInventory {
 	get background() {
-		return (this.toArray().find(item => item.startsWith('profileBackground'))  || 'profileBackgroundDefault' as Inventory)?.replace('profileBackground', '').toLowerCase();
+		return (this.toArray().find(item => item.startsWith('profileBackground'))  || 'profileBackgroundDefault' as Inventory)?.replace('profileBackground', '').firstCharInLowerCase();
 	}
 
 	get pattern() {
-		return (this.toArray().find(item => item.startsWith('profilePattern')))?.replace('profilePattern', '').toLowerCase();
+		return (this.toArray().find(item => item.startsWith('profilePattern')))?.replace('profilePattern', '').firstCharInLowerCase();
 	}
 
 	get profileLayout() {
-		return (this.toArray().find(item => item.startsWith('profileLayout')) || 'profileLayoutDefault' as Inventory)?.replace('profileLayout', '').toLowerCase();
+		return (this.toArray().find(item => item.startsWith('profileLayout')) || 'profileLayoutDefault' as Inventory)?.replace('profileLayout', '').firstCharInLowerCase();
+	}
+
+	get emblem(): string | undefined {
+		return undefined;
 	}
 }
 

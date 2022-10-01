@@ -66,3 +66,34 @@ String.prototype.shorten = function(length: number): string {
 String.prototype.toTitleCase = function(): string {
 	return this.replace(/\w\S*/g, (string) => string.charAt(0).toUpperCase() + string.substr(1).toLowerCase());
 };
+
+String.prototype.wordWrap = function(maxWidth: number) {
+	const newLineStr = '\n';
+	const done = false;
+	let res = '';
+
+	let string = `${this}`;
+
+	while(string.length > maxWidth) {
+		let found = false;
+		for(let i = maxWidth - 1; i >= 0; i--) {
+			if(testWhite(string.charAt(i))) {
+				res = res + [string.slice(0, i), newLineStr].join('');
+				string = string.slice(i + 1);
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			res += [string.slice(0, maxWidth), newLineStr].join('');
+			string = string.slice(maxWidth);
+		}
+	}
+
+	return res + string;
+};
+
+function testWhite(x: string) {
+	const white = new RegExp(/^\s$/);
+	return white.test(x.charAt(0));
+}

@@ -1,9 +1,15 @@
 import Prisma from '@prisma/client';
+import { Canvas, CanvasRenderingContext2D } from 'canvas';
 
-import { Permissions, User } from '@discord';
+import { Permissions, User, UserFlags } from '@discord';
 import { RESTPostAPIInteractionFollowupJSONBody as RESTEditWebhook } from '@discord/types';
 
 import type { GuildPermissions } from '../utils/Constants';
+
+export interface CanvasInfo {
+	canvas: Canvas;
+	context: CanvasRenderingContext2D;
+}
 
 export interface CommandRequirements {
     permissions?: {
@@ -36,21 +42,38 @@ export interface VoteData {
 	date: number
 }
 
+export interface ProfileInfos {
+    avatar: string;
+	username: string;
+	background: string;
+	bio: string;
+	flags: string[];
+	xp: number;
+	luas: number;
+    
+    color?: string;
+	rankPosition?: string;
+	pattern?: string;
+	emblem?: string;
+
+    marry?: {
+        username: string;
+        avatar: string;
+        timestamp: string;
+    }
+}
+
+export interface ProfileTemplateBuilded {
+    canvas: Canvas;
+    context: CanvasRenderingContext2D;
+    buffer(): Buffer;
+}
+
 export interface PunishmentProps {
     user: User;
     author: User;
     reason?: string|Prisma.Reason;
     notifyDM?: boolean;
-}
-  
-export interface Reason {
-    id: string;
-    text: string;
-    type: number;
-    guild_id: string;
-    duration?: number;
-    keys?: Array<string>;
-    days?: number;
 }
 
 export type ReplyMessageFn = (content: RESTEditWebhook & { ephemeral?: boolean }) => Promise<any>
