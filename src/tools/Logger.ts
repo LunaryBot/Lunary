@@ -23,8 +23,8 @@ const logger = winston.createLogger({
 				colorize({ level: true }),
 				winston.format.simple(),
 				timestamp(),
-				printf(({ level, message, label, timestamp = new Date().toISOString() }) => {
-					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}`;
+				printf(({ level, message, label, timestamp = new Date().toISOString(), details }) => {
+					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}${details ? `\n${details}` : ''}`;
 				})
 			), 
 		}),
@@ -33,8 +33,8 @@ const logger = winston.createLogger({
 			format: combine(
 				winston.format.simple(),
 				timestamp(),
-				printf(({ level, message, label, timestamp = new Date().toISOString() }) => {
-					return `${timestamp} ${level} --- ${label ? `[${label}]` : ''} ${message}`;
+				printf(({ level, message, label, timestamp = new Date().toISOString(), details }) => {
+					return `${timestamp} ${level} --- ${label ? `[${label}]` : ''} ${message}${details ? `\n${details}` : ''}`;
 				})
 		    ),
 		}),
