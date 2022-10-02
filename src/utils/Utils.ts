@@ -52,11 +52,11 @@ class Utils {
 			format = (url.includes('/a_') ? 'gif' : format) as ImageFormat;
 		}
 			
-		if(!size || size < 16 || size > 4096 || (size & (size - 1))) {
+		if(size && (size < 16 || size > 4096 || (size & (size - 1)))) {
 			size = 2048;
 		}
 			
-		return `https://cdn.discordapp.com/${url}.${format}?size=${size}`;
+		return `https://cdn.discordapp.com/${url}.${format}${size ? '?size=${size}' : ''}`;
 	}
 
 	public static highestPosition(member1: Member, member2: Member, guild: Guild) {
