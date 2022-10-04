@@ -1,6 +1,8 @@
-import { APIFullOrInteractionGuildMember, Routes, Snowflake } from '@discord/types';
+import { APIFullOrInteractionGuildMember, CDNRoutes, Routes, Snowflake } from '@discord/types';
+import { ImageSize } from '@discordjs/rest';
 
 import { RequiresToken } from '@decorators';
+import Utils from '@utils';
 
 import Structure from './Base';
 import { AbstractGuild } from './Guilds';
@@ -93,6 +95,14 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
     		body: { delete_message_days: raw.deleteMessageDays },
     		headers: raw.reason ? { 'X-Audit-Log-Reason': raw.reason } : undefined,
     	});
+    }
+
+    public displayAvatarURL(options: { format: 'jpg' | 'png' | 'webp' | 'gif', size?: ImageSize, dynamic?: boolean }) {
+    	if(!this.avatar) {
+    		return this.user.displayAvatarURL(options);
+    	}
+
+    	return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
     }
 
     @RequiresToken.bind(this)
