@@ -47,7 +47,7 @@ class Utils {
 		return dataFormated as EmbedFormated;
 	}
 
-	public static formatImage(url: string, { format, size = 1024, dynamic = true }: { format: ImageFormat, size?: ImageSize, dynamic?: boolean }) {
+	public static formatImage(url: string, { format, size, dynamic = true }: { format: ImageFormat, size?: ImageSize, dynamic?: boolean }) {
 		if(dynamic || !format || !Object.keys(ImageFormats).includes(format.toLowerCase())) {
 			format = (url.includes('/a_') ? 'gif' : format) as ImageFormat;
 		}
@@ -56,7 +56,7 @@ class Utils {
 			size = 2048;
 		}
 			
-		return `https://cdn.discordapp.com/${url}.${format}${size ? '?size=${size}' : ''}`;
+		return `https://cdn.discordapp.com/${url}.${format}${size ? `?size=${size}` : ''}`;
 	}
 
 	public static highestPosition(member1: Member, member2: Member, guild: Guild) {
