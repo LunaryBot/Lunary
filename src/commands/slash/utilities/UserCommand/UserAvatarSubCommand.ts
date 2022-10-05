@@ -11,7 +11,7 @@ import { ButtonStyle } from 'discord-api-types/v10';
 
 const imageSizes = [128, 256, 512, 1024, 2048];
 
-class UserAvatarCommand extends SubCommand {
+class UserAvatarSubCommand extends SubCommand {
 	constructor(client: LunaryClient, parent: Command) {
 		super(client, {
 			name: 'avatar',
@@ -142,4 +142,4 @@ class UserAvatarCommand extends SubCommand {
 	}
 }
 
-export default UserAvatarCommand;
+export default UserAvatarSubCommand;
