@@ -1,4 +1,3 @@
-import { ComponentCollector } from '@Collectors';
 import { PunishmentType } from '@prisma/client';
 import Prisma from '@prisma/client';
 
@@ -8,6 +7,7 @@ import { GuildDatabase } from '@Database';
 import { Channel, ComponentInteraction, Member, Message, ModalSubimitInteraction, SelectMenuInteraction, User } from '@discord';
 import { APIEmbed, APIActionRowComponent, APIMessageActionRowComponent, ButtonStyle, APISelectMenuOption, APISelectMenuComponent, ComponentType, TextInputStyle, MessageFlags, APIMessage, Routes, RESTGetAPIChannelMessagesQuery } from '@discord/types';
 
+import { ComponentCollector } from '@Collectors';
 import { Links } from '@utils/Constants';
 import TimeUtils from '@utils/TimeUtils';
 

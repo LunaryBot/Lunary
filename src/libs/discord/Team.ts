@@ -1,6 +1,7 @@
+import Collection from '@utils/Collection';
+
 import { APITeam, APITeamMember } from 'discord-api-types/v10';
 
-import Collection from '@utils/Collection';
 
 import Structure from './Base';
 import { User } from './User';

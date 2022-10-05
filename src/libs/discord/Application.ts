@@ -1,6 +1,7 @@
+import { OAuth2Scopes } from '@discord/types';
+
 import { RESTGetAPIOAuth2CurrentApplicationResult as RESTGetMeApplication } from 'discord-api-types/v10';
 
-import { OAuth2Scopes } from '@discord/types';
 
 import Structure from './Base';
 import { Team } from './Team';

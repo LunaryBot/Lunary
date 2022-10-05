@@ -1,4 +1,3 @@
-import { ComponentCollector } from '@Collectors';
 import Prisma from '@prisma/client';
 
 import { SubCommand, Command } from '@Command';
@@ -6,6 +5,7 @@ import type { CommandContext } from '@Contexts';
 
 import { ComponentInteraction, User } from '@discord';
 
+import { ComponentCollector } from '@Collectors';
 import chunk from '@utils/Chunk';
 import { Colors } from '@utils/Constants';
 import { ModUtils } from '@utils/ModUtils';

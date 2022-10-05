@@ -100,7 +100,7 @@ module.exports = {
 					'/^@(Command|Contexts|Database|EventListener)/',
 					'/^@structures/',
 					'/^@discord/',
-					'/^@(utils|decorators|ModUtils)/',
+					'/^@(utils|decorators|ModUtils|Collectors)/',
 					'/^.*(types)/',
 				],
 				alphabetize: { order: 'asc', ignoreCase: true },

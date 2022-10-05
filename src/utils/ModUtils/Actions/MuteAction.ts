@@ -1,4 +1,3 @@
-import { ComponentCollector } from '@Collectors';
 import type * as Prisma from '@prisma/client';
 
 import { ComponentContext, CommandContext } from '@Contexts';
@@ -8,6 +7,7 @@ import type { User, Guild, Member, ComponentInteraction, SelectMenuInteraction, 
 import { APIActionRowComponent, APIMessageActionRowComponent, APISelectMenuComponent, ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes, TextInputStyle, Utils } from '@discord/types';
 import { RawFile } from '@discordjs/rest';
 
+import { ComponentCollector } from '@Collectors';
 import TimeUtils from '@utils/TimeUtils';
 
 import { PunishmentProps, ReplyMessageFn } from '@types';
