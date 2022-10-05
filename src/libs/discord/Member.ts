@@ -102,7 +102,7 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
     		return this.user.displayAvatarURL(options);
     	}
 
-    	return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
+    	return Utils.formatImage(CDNRoutes.guildMemberAvatar(this.guild.id, this.id, this.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
     }
 
     @RequiresToken.bind(this)
