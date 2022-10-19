@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,14 +8,72 @@ datasource db {
 }
 
 model Embed {
-  guild_id  String
-  type      EmbedType
-
-  content   String?
-
-  embeds    Json[]    @default([])
+  guild_id String
+  type     EmbedType
+  content  String?
+  embeds   Json[]    @default([])
 
   @@id([guild_id, type])
+}
+
+model Guild {
+  id                  String             @id @unique
+  modlogs_channel     String?
+  punishments_channel String?
+  features            BigInt?
+  premium_type        GuildPremiumType?
+  premium_until       DateTime?
+  permissions         GuildPermissions[]
+  reasons             Reason[]
+}
+
+model GuildPermissions {
+  id          String
+  type        GuildPermissionType
+  guild_id    String
+  permissions BigInt
+  guild       Guild               @relation(fields: [guild_id], references: [id])
+
+  @@id([guild_id, id])
+}
+
+model Punishment {
+  id         Int            @id @unique @default(autoincrement())
+  guild_id   String
+  user_id    String
+  author_id  String
+  created_at DateTime
+  flags      BigInt         @default(0)
+  duration   Int?
+  reason     String?
+  reason_id  String?
+  deleted    Boolean?       @default(false)
+  type       PunishmentType
+}
+
+model Reason {
+  id       String           @id @unique @default(cuid())
+  text     String
+  guild_id String
+  keys     String[]         @default([])
+  duration Int?
+  days     Int?
+  types    PunishmentType[]
+  guild    Guild            @relation(fields: [guild_id], references: [id])
+}
+
+model User {
+  id              String           @id @unique
+  features        BigInt?
+  luas            Int?
+  xp              Int?
+  last_daily_at   DateTime?
+  premium_type    UserPremiumType?
+  premium_until   DateTime?
+  bio             String?
+  flags           BigInt?
+  inventary_using BigInt?
+  inventory       BigInt?
 }
 
 enum EmbedType {
@@ -29,31 +84,9 @@ enum EmbedType {
   NOFITYDM
 }
 
-model Guild {
-  id                  String              @id @unique
-  modlogs_channel     String?
-  punishments_channel String?
-  features            BigInt?
-  permissions         GuildPermissions[]
-  reasons             Reason[]
-  premium_type        GuildPremiumType?
-  premium_until       DateTime?
-}
-
-model GuildPermissions {
-  id          String
-  type        GuildPermissionType
-  guild_id    String
-  permissions BigInt
-
-  guild       Guild?                @relation(fields: [guild_id], references: [id])
-
-  @@id([guild_id, id])
-}
-
 enum GuildPermissionType {
-  ROLE
   MEMBER
+  ROLE
   COMMAND
 }
 
@@ -62,54 +95,11 @@ enum GuildPremiumType {
   PLUS
 }
 
-model Punishment {
-  id         Int            @id @unique @default(autoincrement())
-  guild_id   String
-  user_id    String
-  author_id  String
-  type       PunishmentType
-  created_at DateTime
-  flags      BigInt         @default(0)
-  duration   Int?
-  reason     String?
-  reason_id  String?
-  deleted    Boolean?       @default(false)
-}
-
 enum PunishmentType {
   BAN
   MUTE
   KICK
   ADV
-}
-
-model Reason {
-  id       String           @id @unique @default(cuid())
-  text     String
-  guild_id String
-  type     PunishmentType[]
-  keys     String[]         @default([])
-  duration Int?
-  days     Int?
-
-  guild    Guild?           @relation(fields: [guild_id], references: [id])
-}
-
-model User {
-  id                         String           @id @unique
-  features                   BigInt?
-  flags                      BigInt?
-
-  luas                       Int?
-  last_daily_at              DateTime?
-
-  bio                        String?
-  xp                         Int?
-  inventory                  BigInt?
-  inventary_using            BigInt?
-
-  premium_type               UserPremiumType?
-  premium_until              DateTime?
 }
 
 enum UserPremiumType {
