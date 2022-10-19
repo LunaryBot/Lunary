@@ -103,7 +103,7 @@ class Client extends EventEmitter {
 			if(raw.type == InteractionType.ModalSubmit) {
 				const interaction = new ModalSubimitInteraction(this, raw, res);
 
-				this.emit('modalSubmitInteraction', interaction);
+				this.emit('componentInteraction', interaction);
 			}
 		});
 	}

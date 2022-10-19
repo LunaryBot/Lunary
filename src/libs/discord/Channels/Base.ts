@@ -38,7 +38,7 @@ class Channel extends Structure {
 				return new NewsChannel(client, raw);
 			
 			default:
-				logger.warn(`Unsupported channel type: ${raw.type}`, { label: 'Discord', details: JSON.stringify(raw, null, 4) });
+				// logger.warn(`Unsupported channel type: ${raw.type}`, { label: 'Discord', details: JSON.stringify(raw, null, 4) });
 
 				return new Channel(client, raw);
 		}

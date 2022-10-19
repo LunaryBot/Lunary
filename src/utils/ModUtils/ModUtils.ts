@@ -32,9 +32,9 @@ class ModUtils {
 	static client: LunaryClient;
 
 	public static formatHumanPunishmentId(punishmentsCount: number): string {
-		const a = (punishmentsCount + 1) % 1000000;
+		const a = punishmentsCount % 1000000;
 
-		const id = az[Math.floor((punishmentsCount + 1) / 1000000)].toUpperCase() + '0'.repeat(6 - a.toString().length) + a;
+		const id = az[Math.floor(punishmentsCount / 1000000)].toUpperCase() + '0'.repeat(6 - a.toString().length) + a;
         
 		return id;
 	}
@@ -135,14 +135,14 @@ class ModUtils {
 								options: reasons.map(reason => {
 									const op = {
 										label: reason.text.shorten(100),
-										value: reason.id,
+										value: reason.id.toString(),
 									} as APISelectMenuOption;
 	
-									if(reason.type.includes('BAN') && typeof reason.days === 'number') {
+									if(reason.types.includes('BAN') && typeof reason.days === 'number') {
 										op.description = `${context.t(`ban:delete_messages.${reason.days}${reason.days > 1 ? 'days' : 'day'}`)}`.shorten(100);
 									}
 	
-									if(reason.type.includes('MUTE') && reason.duration) {
+									if(reason.types.includes('MUTE') && reason.duration) {
 										op.description = `${context.t('mute:duration')}: ${TimeUtils.durationToString(reason.duration, context.t)}`.shorten(100);
 									}
 	
@@ -221,7 +221,7 @@ class ModUtils {
 									],
 								});
 	
-								collector.resetTimer();
+								// collector.resetTimer();
 	
 								break;
 							}
@@ -229,9 +229,9 @@ class ModUtils {
 							case 'selectReason': {
 								collector.stop('reasonAdded');
 								
-								replyMessageFn = interaction.editParent.bind(interaction);
+								replyMessageFn = context.editOriginalMessage.bind(context);
 								
-								const reason = reasons.find(r => r.id === (interaction as SelectMenuInteraction).values[0]);
+								const reason = reasons.find(r => r.id.toString() === (interaction as SelectMenuInteraction).values[0]);
 								
 								resolve(reason || null);
 								
@@ -240,8 +240,12 @@ class ModUtils {
 							
 							case 'addReasonModal': {
 								collector.stop('reasonAdded');
+
+								console.log('a');
+
+								interaction.defer();
 	
-								replyMessageFn = interaction.editParent.bind(interaction);
+								replyMessageFn = context.editOriginalMessage.bind(context);
 	
 								const reason = ((interaction as any) as ModalSubimitInteraction).getValue('reason') as string;
 	

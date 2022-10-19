@@ -33,22 +33,21 @@ async function main() {
 
 	await client.init();
 
-	const infos: ProfileInfos = {
-		avatar: 'https://cdn.discordapp.com/avatars/452618703792766987/689cc5e9c3379d1b3c37551939d53a40.png?size=1024',
-		background: 'default',
-		bio: 'Developer <3',
-		flags: ['HouseBravery', 'lunarDeveloper', 'lunarStaff'],
-		luas: 2400000,
-		username: 'Bae',
-		xp: 100,
-		emblem: 'https://cdn.discordapp.com/emojis/885321797380239390.png',
-	};
+	// const infos: ProfileInfos = {
+	// 	avatar: 'https://cdn.discordapp.com/avatars/452618703792766987/689cc5e9c3379d1b3c37551939d53a40.png?size=1024',
+	// 	background: 'default',
+	// 	bio: 'Developer <3',
+	// 	flags: ['HouseBravery', 'lunarDeveloper', 'lunarStaff'],
+	// 	luas: 2400000,
+	// 	username: 'Bae',
+	// 	xp: 100,
+	// 	emblem: 'https://cdn.discordapp.com/emojis/885321797380239390.png',
+	// };
 
-	client.templates.find(template => template.type == 0)?.build(infos as ProfileInfos).then(({ buffer }: ProfileTemplateBuilded) => {
-		fs.writeFileSync('profile.png', buffer());
-
-		logger.debug('Profile test builded');
-	});
+	// client.templates.find(template => template.type == 0)?.build(infos as ProfileInfos).then(({ buffer }: ProfileTemplateBuilded) => {
+	// 	logger.debug('Profile test builded');
+	// 	fs.writeFileSync('profile.png', buffer());
+	// });
 }
 
 process.on('uncaughtExceptionMonitor', (err) => {

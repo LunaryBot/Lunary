@@ -46,19 +46,19 @@ model Punishment {
   flags      BigInt         @default(0)
   duration   Int?
   reason     String?
-  reason_id  String?
   deleted    Boolean?       @default(false)
   type       PunishmentType
+  reason_id  Int?
 }
 
 model Reason {
-  id       String           @id @unique @default(cuid())
   text     String
   guild_id String
   keys     String[]         @default([])
   duration Int?
   days     Int?
   types    PunishmentType[]
+  id       Int              @id @unique @default(autoincrement())
   guild    Guild            @relation(fields: [guild_id], references: [id])
 }
 

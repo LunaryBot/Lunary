@@ -5,10 +5,11 @@
     "dev": "tsc && TS_NODE_BASEURL=./build node -r tsconfig-paths/register .",
     "start": "TS_NODE_BASEURL=./build node -r tsconfig-paths/register .",
     "lint": "eslint ./ --ext .ts --fix",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate",
+    "prisma:dev": "prisma migrate dev && prisma generate",
+    "prisma:fetch": "prisma db pull && prisma generate",
     "prisma:format": "prisma format",
-    "prisma:dev": "prisma migrate dev && prisma generate"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "author": "JVOPINHO",
   "license": "AGPL-3.0",
