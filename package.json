@@ -19,7 +19,7 @@
     "axios": "^0.26.1",
     "canvas": "^2.10.1",
     "chalk": "4.0.0",
-    "discord-api-types": "^0.36.1",
+    "discord-api-types": "^0.37.15",
     "dotenv": "^16.0.0",
     "fastify": "^4.2.0",
     "fastify-raw-body": "^4.0.0",
