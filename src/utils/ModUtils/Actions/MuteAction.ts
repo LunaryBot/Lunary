@@ -4,7 +4,7 @@ import { ComponentContext, CommandContext } from '@Contexts';
 import { GuildDatabase, PunishmentFlags } from '@Database';
 
 import type { User, Guild, Member, ComponentInteraction, SelectMenuInteraction, ModalSubimitInteraction } from '@discord';
-import { APIActionRowComponent, APIMessageActionRowComponent, APISelectMenuComponent, ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes, TextInputStyle, Utils } from '@discord/types';
+import { APIActionRowComponent, APIMessageActionRowComponent, APISelectMenuComponent, APIStringSelectComponent, ButtonStyle, ComponentType, RESTDeleteAPIGuildMemberResult, RESTPatchAPIGuildMemberJSONBody, RESTPostAPIChannelMessageJSONBody as RESTCreateMessage, Routes, TextInputStyle, Utils } from '@discord/types';
 import { RawFile } from '@discordjs/rest';
 
 import { ComponentCollector } from '@Collectors';
@@ -212,10 +212,10 @@ class MuteAction {
 				const defaultDurationForReason = (this.reason as Prisma.Reason)?.duration;
 
 				if(defaultDurationForReason) {
-					const SelectMenuOptions = (components[0].components[0] as APISelectMenuComponent).options;
+					const SelectMenuOptions = (components[0].components[0] as APIStringSelectComponent).options;
 					const defaultDurationForReasonHumanFormated = TimeUtils.durationToString(defaultDurationForReason, context.t as Function);
 
-					(components[0].components[0] as APISelectMenuComponent).options = [
+					(components[0].components[0] as APIStringSelectComponent).options = [
 						{
 							label: context.t('mute:defaultDurationForReason', { duration: defaultDurationForReason }),
 							description: defaultDurationForReasonHumanFormated,
