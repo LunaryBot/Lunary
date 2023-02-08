@@ -37,9 +37,7 @@ class UserProfileCommand extends Command {
 		const usingInventory = user.id == context.user.id ? context.databases.user.inventory.using : new UserInventory(database?.inventory || [], database?.inventory_using as any).using;
 
 		const layout = await this.client.getShopItem(usingInventory.layout);
-		// console.log(this.client.shopItemsCache);
 		const background = await this.client.getShopItem(usingInventory.background);
-
 
 		console.log(usingInventory.layout, usingInventory.background, layout, background);
         

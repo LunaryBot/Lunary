@@ -277,8 +277,6 @@ class Client extends EventEmitter {
 		if(!item) {
 			await this.getShoItems();
 
-			console.log(this.shopItemsCache);
-
 			item = find();
 		}
 

@@ -100,6 +100,7 @@ const Flags = {
 	VerifiedBot: 1n << 16n,
 	EarlyVerifiedBotDeveloper: 1n << 17n,
 	DiscordCertifiedModerator: 1n << 18n,
+	ActiveDeveloper: 1n << 22n,
 };
 
 class UserFlags extends BitField<keyof typeof Flags> {

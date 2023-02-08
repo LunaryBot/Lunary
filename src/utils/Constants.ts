@@ -15,9 +15,12 @@ export const BadgesEmojis = {
 	HypesquadEvents: '<:HYPESQUAD_EVENTS:892105151190536202>',
 	PartneredServerOwner: '<:PARTNERED_SERVER_OWNER:892107388738474044>',
 	VerifiedBot: '<:VerifiedBOT:892381020555452416>',
+	ActiveDeveloper: '<:ACTIVE_DEVELOPER:1073017111699525632>',
 };
 
 export const BadgesEmojisURLS = emojisURLEnum(BadgesEmojis) as { [key in keyof typeof BadgesEmojis]: string };
+
+console.log(BadgesEmojisURLS);
 
 export const Colors = {
 	MAIN: 10494192, 
