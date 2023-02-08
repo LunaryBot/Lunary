@@ -58,8 +58,10 @@ model Reason {
   duration Int?
   days     Int?
   types    PunishmentType[]
-  id       Int              @id @unique @default(autoincrement())
+  id       Int              @default(autoincrement())
   guild    Guild            @relation(fields: [guild_id], references: [id])
+
+  @@id([guild_id, id])
 }
 
 model User {
@@ -72,8 +74,20 @@ model User {
   premium_until   DateTime?
   bio             String?
   flags           BigInt?
-  inventary_using BigInt?
-  inventory       BigInt?
+  inventory_using Json             @default("{\"layout\": 1, \"background\": 0}")
+  inventory       Int[]
+}
+
+model ShopItem {
+  id              Int            @id @default(autoincrement())
+  name            String
+  description     String
+  type            ShopItemType
+  price           Int
+  rarity          ShopItemRarity
+  last_appearance DateTime?
+  enabled         Boolean        @default(true)
+  assets          Json?
 }
 
 enum EmbedType {
@@ -104,4 +118,19 @@ enum PunishmentType {
 
 enum UserPremiumType {
   PLUS
+}
+
+enum ShopItemRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+  EXOTIC
+  MYSTIC
+}
+
+enum ShopItemType {
+  BACKGROUND
+  LAYOUT
 }

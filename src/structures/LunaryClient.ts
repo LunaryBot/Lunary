@@ -1,3 +1,4 @@
+import { ShopItem } from '@prisma/client';
 import { Image, loadImage } from 'canvas';
 import EventEmitter from 'events';
 import fastify from 'fastify';
@@ -50,6 +51,8 @@ class Client extends EventEmitter {
 	public events: Array<EventListener> = [];
 	public locales: Array<Locale> = [];
 	public templates: Array<Template> = [];
+
+	public shopItemsCache: Array<ShopItem> = [];
 
 	public canvasImages = new Map<string, Image>();
 
@@ -254,6 +257,32 @@ class Client extends EventEmitter {
 		}
 
 		return this.templates;
+	}
+
+	async getShoItems(): Promise<ShopItem[]> {
+		const items = await this.prisma.shopItem.findMany();
+
+		this.shopItemsCache = items;
+
+		return this.shopItemsCache;
+	}
+
+	async getShopItem(id: number) {
+		const find = () => {
+			return this.shopItemsCache.find(item => item.id == id);
+		};
+
+		let item = find();
+
+		if(!item) {
+			await this.getShoItems();
+
+			console.log(this.shopItemsCache);
+
+			item = find();
+		}
+
+		return item;
 	}
 
 	async init() {

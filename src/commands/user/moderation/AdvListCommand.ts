@@ -76,7 +76,10 @@ class AdvListSubCommand extends Command {
 				const reason = adv.reason_id
 					? await this.client.prisma.reason.findUnique({
 						where: {
-							id: adv.reason_id,
+							guild_id_id: {
+								id: adv.reason_id,
+								guild_id: adv.guild_id,
+							},
 						},
 					}).then(reason => reason?.text)
 					: adv.reason;

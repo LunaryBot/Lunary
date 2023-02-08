@@ -1,6 +1,6 @@
 import { Command } from '@Command';
 import type { CommandContext } from '@Contexts';
-import { UserFlags, UserInventoryUsing } from '@Database';
+import { UserFlags, UserInventory } from '@Database';
 
 import Template from '@structures/Template';
 
@@ -29,13 +29,16 @@ class UserProfileSubCommand extends Command {
 
 		const userFlags = user.id == context.user.id ? context.databases.user.flags : new UserFlags(database?.flags || 0n);
 
-		const usingInventory = user.id == context.user.id ? context.databases.user.usingInventory : new UserInventoryUsing(database?.inventary_using || 0n);
+		const usingInventory = user.id == context.user.id ? context.databases.user.inventory.using : new UserInventory(database?.inventory || [], database?.inventory_using as any).using;
+
+		const layout = await this.client.getShopItem(usingInventory.layout);
+		const background = await this.client.getShopItem(usingInventory.background);
         
-		const profileTemplate = this.client.templates.find(template => template.name == usingInventory.profileLayout) as Template;
+		const profileTemplate = this.client.templates.find(template => template.name == layout?.name.toLowerCase()) as Template;
 
 		const infos: ProfileInfos = {
 			avatar: user.displayAvatarURL({ format: 'jpg', size: 1024 }),
-			background: usingInventory.background,
+			background: (background?.assets as any).link,
 			bio: database?.bio || '#Luna',
 			flags: [
 				...user.flags.toArray(),

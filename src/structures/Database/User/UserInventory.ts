@@ -1,28 +1,12 @@
-import BitField from '@utils/BitField';
-import * as Constants from '@utils/Constants';
+class UserInventory {
+	public owned: number[];
+	public using: { layout: number, background: number };
 
-type Inventory = keyof typeof Constants.UserInventory;
-
-class UserInventory extends BitField<Inventory> {
-	public static Flags = Constants.UserInventory;
-}
-
-class UserInventoryUsing extends UserInventory {
-	get background() {
-		return (this.toArray().find(item => item.startsWith('profileBackground'))  || 'profileBackgroundDefault' as Inventory)?.replace('profileBackground', '').firstCharInLowerCase();
-	}
-
-	get pattern() {
-		return (this.toArray().find(item => item.startsWith('profilePattern')))?.replace('profilePattern', '').firstCharInLowerCase();
-	}
-
-	get profileLayout() {
-		return (this.toArray().find(item => item.startsWith('profileLayout')) || 'profileLayoutDefault' as Inventory)?.replace('profileLayout', '').firstCharInLowerCase();
-	}
-
-	get emblem(): string | undefined {
-		return undefined;
+	constructor(owned: number[], using: { layout: number, background: number } = {} as any) {
+		this.owned = owned.length ? owned : [0, 1];
+			
+		this.using = { background: using.background ?? 0, layout: using.layout ?? 1 };
 	}
 }
 
-export { UserInventory, UserInventoryUsing };
+export { UserInventory };

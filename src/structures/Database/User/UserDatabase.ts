@@ -4,7 +4,7 @@ import { User } from '@discord';
 
 import { UserFeatures } from './UserFeatures';
 import { UserFlags } from './UserFlags';
-import { UserInventory, UserInventoryUsing } from './UserInventory';
+import { UserInventory } from './UserInventory';
 
 class UserDatabase {
 	public readonly client: LunaryClient;
@@ -15,8 +15,7 @@ class UserDatabase {
 
 	public xp: number;
 	public bio?: string;
-	public inventory = new UserInventory(0n);
-	public usingInventory = new UserInventoryUsing(0n);
+	public inventory: UserInventory;
 
 	public luas: number;
 	public lastDailyAt?: Date;
@@ -51,16 +50,10 @@ class UserDatabase {
 		this.luas = data.luas ?? 0;
 		this.xp = data.xp ?? 0;
 
+		this.inventory = new UserInventory(data.inventory || [], data.inventory_using as any);
+
 		if(data.bio) {
 			this.bio = data.bio;
-		}
-
-		if(data.inventory) {
-			this.inventory.bitfield = data.inventory;
-		}
-
-		if(data.inventary_using) {
-			this.usingInventory.bitfield = data.inventary_using;
 		}
 
 		if(data.last_daily_at) {
@@ -100,15 +93,17 @@ class UserDatabase {
 			},
 			create: {
 				id: this.user.id,
-				...data,
+				...data as any,
 			},
-			update: data,
+			update: data as any,
 		});
 
 		return this._patch(user);
 	}
 
 	public toJson(): Omit<Prisma.User, 'id'> {
+		const inventory = this.inventory.using;
+
 		const data: Partial<Omit<Prisma.User, 'id'>> = {
 			features: this.features.bitfield || null,
 			luas: this.luas || null,
@@ -118,6 +113,8 @@ class UserDatabase {
 			last_daily_at: this.lastDailyAt || null,
 			premium_type: this.premiumType || null,
 			premium_until: this.premiumUntil || null,
+			inventory: this.inventory.owned || [],
+			inventory_using: { background: Number(inventory.background ?? 0), layout: Number(inventory.layout ?? 1) },
 		};
 		
 		return data as Omit<Prisma.User, 'id'>;
