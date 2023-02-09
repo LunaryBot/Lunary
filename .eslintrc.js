@@ -99,7 +99,7 @@ module.exports = {
 					'module',
 					'/^@(Command|Contexts|Database|EventListener)/',
 					'/^@structures/',
-					'/^@discord/',
+					'/^@(discord|libs)/',
 					'/^@(utils|decorators|ModUtils|Collectors)/',
 					'/^.*(types)/',
 				],

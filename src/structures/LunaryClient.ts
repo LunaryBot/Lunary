@@ -12,8 +12,7 @@ import EventListener from '@EventListener';
 import { CommandInteraction, Application, User, ComponentInteraction, ModalSubimitInteraction } from '@discord';
 import { APIUser, InteractionType, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
-
-import Kitsu from '@utils/Kitsu';
+import Kitsu from '@libs/kitsu';
 
 import Locale from './Locale';
 import Prisma from './Prisma';

@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
 
-import { KitsuAnimeData, KitsuMangaData } from '../@types/Kitsu';
+import { KitsuAnimeData, KitsuMangaData } from '../../@types/Kitsu';
 
 class Kitsu {
 	static baseURL = 'https://kitsu.io/api/edge/';

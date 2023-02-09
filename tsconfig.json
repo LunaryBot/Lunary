@@ -36,6 +36,7 @@
             "@utils": ["./utils"],
             "@utils/*": ["./utils/*"],
             "@discord/types": ["./@types/discord"],
+            "@libs/*": ["./libs/*"],
             "@discord": ["./libs/discord/"]
         },
     },
