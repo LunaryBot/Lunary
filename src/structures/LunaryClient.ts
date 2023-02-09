@@ -13,6 +13,8 @@ import { CommandInteraction, Application, User, ComponentInteraction, ModalSubim
 import { APIUser, InteractionType, RESTGetAPIOAuth2CurrentApplicationResult, Routes } from '@discord/types';
 import { REST } from '@discordjs/rest';
 
+import Kitsu from '@utils/Kitsu';
+
 import Locale from './Locale';
 import Prisma from './Prisma';
 import Redis from './Redis';
@@ -33,7 +35,8 @@ class Client extends EventEmitter {
 	
 	public readonly fastify = fastify();
 	public readonly apis: { 
-		discord: REST 
+		discord: REST,
+		kitsu: typeof Kitsu
 	};
 	
 	public readonly prisma = new Prisma(this);
@@ -67,6 +70,7 @@ class Client extends EventEmitter {
 
 		this.apis = {
 			discord: new REST({ version: '10' }).setToken(this._token),
+			kitsu: Kitsu,
 		};
 
 		this.fastify.register(fastifyBodyRaw as any, {
