@@ -9,7 +9,6 @@ import { User } from './User';
 
 
 class Application extends Structure<RESTGetMeApplication> {
-	public id: string;
 	public name: string;
 	public icon: string | null;
 	public description: string;
@@ -33,8 +32,6 @@ class Application extends Structure<RESTGetMeApplication> {
 
 	constructor(client: LunaryClient, raw: RESTGetMeApplication) {
 		super(client, raw);
-
-		this.id = raw.id;
 
 		Object.defineProperty(this, 'verifyKey', {
 			enumerable: false,

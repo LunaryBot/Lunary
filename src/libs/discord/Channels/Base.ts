@@ -3,7 +3,6 @@ import { APIChannel, APIGuildChannel, ChannelType } from '@discord/types';
 import Structure from '../Base';
 
 class Channel extends Structure {
-	public readonly id: string;
 
 	public readonly type: ChannelType;
 
@@ -12,7 +11,6 @@ class Channel extends Structure {
 	public constructor(client: LunaryClient, raw: APIChannel) {
 		super(client);
 
-		this.id = raw.id;
 		this.type = raw.type;
 
 		this._patch(raw);

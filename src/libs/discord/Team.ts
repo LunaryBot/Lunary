@@ -8,15 +8,12 @@ import { User } from './User';
 
 class Team extends Structure<APITeam> {
 	public icon: string | null;
-	public id: string;
 	public members: Collection<TeamMember>;
 	public name: string;
 	public ownerUserId: string;
 
 	constructor(client: LunaryClient, raw: APITeam) {
 		super(client, raw);
-
-		this.id = raw.id;
 
 		this._patch(raw);
 	}
@@ -56,6 +53,7 @@ class TeamMember extends Structure<APITeamMember> {
 		this.permissions = raw.permissions;
 	}
 
+	// @ts-ignore
 	public get id() {
 		return this.user.id;
 	}

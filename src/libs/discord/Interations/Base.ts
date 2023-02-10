@@ -8,7 +8,6 @@ import { InteractionWebhook } from './InteractionWebhook';
 
   
 class Interaction extends Structure {
-	public readonly id: string;
 	public readonly token: string;
 
 	protected webhook: InteractionWebhook;

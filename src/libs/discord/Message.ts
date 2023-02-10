@@ -6,7 +6,6 @@ import { User } from './User';
 
 
 class Message extends Structure<APIMessage> {
-	id: string;
 	content: string;
 	type: MessageType;
 	author: User;
@@ -37,8 +36,6 @@ class Message extends Structure<APIMessage> {
   
 	constructor(client: LunaryClient, raw: APIMessage) {
 		super(client, raw);
-        
-		this.id = raw.id;
 
 		this.timestamp = Date.parse(raw.timestamp);
 
