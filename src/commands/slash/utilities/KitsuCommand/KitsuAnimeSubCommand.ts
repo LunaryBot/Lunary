@@ -19,7 +19,6 @@ class KitsuAnimeSubCommand extends SubCommand {
 	}
 
 	public async run(context: CommandContext) {
-		await context.interaction.acknowledge();
 		const search = context.options.get('query') as string;
 
 		const results = (await this.client.apis.kitsu.searchAnime(search))?.slice(0, 25);
