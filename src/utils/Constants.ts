@@ -20,8 +20,6 @@ export const BadgesEmojis = {
 
 export const BadgesEmojisURLS = emojisURLEnum(BadgesEmojis) as { [key in keyof typeof BadgesEmojis]: string };
 
-console.log(BadgesEmojisURLS);
-
 export const Colors = {
 	MAIN: 10494192, 
 	RED: 16065893,
