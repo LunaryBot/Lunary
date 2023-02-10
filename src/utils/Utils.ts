@@ -1,6 +1,6 @@
 import { Embed, EmbedType } from '@prisma/client';
 
-import { Guild, Member, Message } from '@discord';
+import { Guild, Member, Message, Role } from '@discord';
 import { APIEmbed, ImageFormat as ImageFormats } from '@discord/types';
 import { ImageSize } from '@discordjs/rest';
 
@@ -12,6 +12,24 @@ interface EmbedFormated extends Omit<APIEmbed, 'type'> {
 }
 
 class Utils {
+	public static displayColor(member: Member, guild: Guild) {
+		const roles = [ ...guild.roles.values() ].filter(role => member.roles.includes(role.id));
+
+		const coloredRoles = roles.filter(role => role.color);
+
+		if(!coloredRoles.length) return null;
+
+		return coloredRoles.reduce((prev, role) => (comparePositionTo(role, prev) > 0 ? role : prev)).color ?? null;
+
+		function comparePositionTo(role1: Role, role2: Role) {
+			if(role1.position === role2.position) {
+				return Number(BigInt(role2.id) - BigInt(role1.id));
+			}
+          
+			return role1.position - role2.position;
+		}
+	}
+	
 	public static formatDatabaseEmbed(embed: Embed) {
 		const dataFormated: any = {};
 		  
