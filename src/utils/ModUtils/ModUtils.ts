@@ -50,8 +50,12 @@ class ModUtils {
 	}
 
 	public static async formatPunishmentMessage(punishment: PunishmentOptions, t: (ref: string, variables?: Object) => string, database: GuildDatabase) {
+		const custom = await database.getEmbed(punishment.type);
+
+		const message = custom || JSON.parse(t('general:punishment_message')) as APIEmbed;
+		
 		const punishmentMessage = ModUtils.replacePlaceholders(
-			await database.getEmbed(punishment.type) || JSON.parse(t('general:punishment_message')) as APIEmbed,
+			message,
 			{ ...punishment, type: t(`${punishment.type.toLowerCase()}:punishmentType`) }
 		) as Prisma.Embed;
 
@@ -63,6 +67,22 @@ class ModUtils {
 					timestamp: embed.timestamp == true ? new Date().toISOString() : undefined,
 				};
 			}), 
+			components: custom
+				? [
+					{
+						type: ComponentType.ActionRow,
+						components: [
+							{
+								type: ComponentType.Button,
+								custom_id: `guild-${database.guild.id}`,
+								label: `${t('general:sentFrom')} ${database.guild.name}`.shorten(80),
+								style: ButtonStyle.Secondary,
+								disabled: true,
+							},
+						],
+					},
+				]
+				: [],
 		};
 
 		return formated;

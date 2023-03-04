@@ -1,6 +1,6 @@
 import type { EmbedType, JsonValue } from '@prisma/client';
 
-import { APIEmbed } from '@discord/types';
+import type { APIEmbed, APIMessageActionRowComponent, APIMessageComponent } from '@discord/types';
 
 export interface Embed {
     type: EmbedType;
@@ -12,4 +12,5 @@ export interface Embed {
 export interface EmbedBuilded {
     content?: string | null;
     embeds?: Array<Omit<APIEmbed, 'type'>> | null;
+    components?: Array<APIMessageActionRowComponent<APIMessageComponent>>;
 }
