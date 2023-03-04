@@ -4,7 +4,6 @@ import { User } from '@discord';
 
 import { UserFeatures } from './UserFeatures';
 import { UserFlags } from './UserFlags';
-import { UserInventory } from './UserInventory';
 
 class UserDatabase {
 	public readonly client: LunaryClient;
@@ -12,16 +11,22 @@ class UserDatabase {
 
 	public features = new UserFeatures(0n);
 	public flags = new UserFlags(0n);
+	
+	public profile: {
+		bio?: string;
+		background: number;
+		layout: number;
+	};
 
 	public xp: number;
-	public bio?: string;
-	public inventory: UserInventory;
+	public inventory: number[];
 
 	public luas: number;
 	public lastDailyAt?: Date;
 
 	public premiumType?: Prisma.UserPremiumType;
 	public premiumUntil?: Date;
+
 
 	constructor(client: LunaryClient, user: User, options?: {
         data?: Partial<Prisma.User> | null;
@@ -50,11 +55,11 @@ class UserDatabase {
 		this.luas = data.luas ?? 0;
 		this.xp = data.xp ?? 0;
 
-		this.inventory = new UserInventory(data.inventory || [], data.inventory_using as any);
-
-		if(data.bio) {
-			this.bio = data.bio;
-		}
+		this.profile = {
+			bio: data.bio || undefined,
+			background: (data.profile as any)?.background || 0,
+			layout: (data.profile as any)?.layout || 1,
+		};
 
 		if(data.last_daily_at) {
 			this.lastDailyAt = data.last_daily_at;
@@ -102,19 +107,17 @@ class UserDatabase {
 	}
 
 	public toJson(): Omit<Prisma.User, 'id'> {
-		const inventory = this.inventory.using;
-
 		const data: Partial<Omit<Prisma.User, 'id'>> = {
 			features: this.features.bitfield || null,
 			luas: this.luas || null,
 			xp: this.xp || null,
-			bio: this.bio || null,
+			bio: this.profile.bio || null,
 			flags: this.flags.bitfield || null,
 			last_daily_at: this.lastDailyAt || null,
 			premium_type: this.premiumType || null,
 			premium_until: this.premiumUntil || null,
-			inventory: this.inventory.owned || [],
-			inventory_using: { background: Number(inventory.background ?? 0), layout: Number(inventory.layout ?? 1) },
+			inventory: this.inventory || [],
+			profile: { background: this.profile.background, layout: this.profile.layout },
 		};
 		
 		return data as Omit<Prisma.User, 'id'>;

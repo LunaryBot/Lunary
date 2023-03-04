@@ -1,9 +1,10 @@
+import { User as UserDatabase } from '@prisma/client';
 import { createReadStream, writeFileSync } from 'fs';
 import { Readable } from 'stream';
 
 import { Command } from '@Command';
 import type { CommandContext } from '@Contexts';
-import { UserFlags, UserInventory } from '@Database';
+import { UserFlags } from '@Database';
 
 import Template from '@structures/Template';
 
@@ -30,16 +31,22 @@ class UserProfileCommand extends Command {
 				where: {
 					id: user.id,
 				},
-			});
+			}) || {} as UserDatabase;
 
 		const userFlags = user.id == context.user.id ? context.databases.user.flags : new UserFlags(database?.flags || 0n);
 
-		const usingInventory = user.id == context.user.id ? context.databases.user.inventory.using : new UserInventory(database?.inventory || [], database?.inventory_using as any).using;
+		const profileSettings = user.id == context.user.id
+			? context.databases.user.profile
+			: {
+				bio: database.bio || undefined,
+				background: (database.profile as any)?.background || 0,
+				layout: (database.profile as any)?.layout || 1,
+			};
 
-		const layout = await this.client.getShopItem(usingInventory.layout);
-		const background = await this.client.getShopItem(usingInventory.background);
+		const layout = await this.client.getShopItem(profileSettings.layout);
+		const background = await this.client.getShopItem(profileSettings.background);
 
-		console.log(usingInventory.layout, usingInventory.background, layout, background);
+		console.log(profileSettings.layout, profileSettings.background, layout, background);
         
 		const profileTemplate = this.client.templates.find(template => template.name == layout?.name.toLowerCase()) as Template;
 
