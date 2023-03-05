@@ -197,20 +197,6 @@
                 ]
             },
             {
-                "name": "info",
-                "type": 1,
-                "description": "〔🔨 • Moderação〕Mostra as informações de uma advertência/aviso do servidor.",
-                "options": [
-                    {
-                        "name": "id",
-                        "description": "〔📂 • ID〕ID da advertência/aviso a ser visto as informações.",
-                        "type": 3,
-                        "required": true,
-                        "autocomplete": true
-                    }
-                ]
-            },
-            {
                 "name": "list",
                 "description": "〔🔨 • Moderação〕Mostra as advertências/avisos de um usuário do servidor.",
                 "type": 1,
