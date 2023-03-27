@@ -8,8 +8,6 @@ import Client from '@LunaryClient';
 import { exec } from 'child_process';
 import fs from 'fs';
 
-import { ProfileTemplateBuilded, ProfileInfos } from './@types';
-
 async function main() {
 	if(!fs.existsSync('./locales')) {
 		logger.warn('Locales folder not found, creating...', { label: 'Locales' });
