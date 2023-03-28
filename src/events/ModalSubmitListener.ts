@@ -12,12 +12,7 @@ class ModalSubmitListener extends EventListener {
 	}
     
 	async on(interaction: ModalSubimitInteraction) {
-		if(interaction.customId === 'my_modal') {
-			console.log(interaction.components);
-			await interaction.createMessage({
-				content: `You entered: ${interaction.getValue('my_input')}`,
-			});
-		}
+		
 	}
 }
 
