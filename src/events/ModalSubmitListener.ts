@@ -3,7 +3,6 @@ import type { ButtonClickContext } from '@Contexts';
 import EventListener from '@EventListener';
 
 import type { ComponentInteraction, ModalSubimitInteraction } from '@discord';
-import { ComponentType, TextInputStyle } from '@discord/types';
 
 
 class ModalSubmitListener extends EventListener {
