@@ -2,7 +2,7 @@ import { ComponentContext } from '@Contexts';
 import type { ButtonClickContext } from '@Contexts';
 import EventListener from '@EventListener';
 
-import type { ComponentInteraction, ModalSubimitInteraction } from '@discord';
+import type { ModalSubimitInteraction } from '@discord';
 
 
 class ModalSubmitListener extends EventListener {
