@@ -6,6 +6,7 @@ import Utils from '@utils';
 
 import Structure from './Base';
 import { AbstractGuild } from './Guilds';
+import { Permissions } from './Permissions';
 import { User } from './User';
 
 
@@ -33,6 +34,8 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
 	public deaf?: boolean;
   
 	public mute?: boolean;
+
+	public permissions?: Permissions;
   
 	public constructor(
 		client: LunaryClient,
@@ -70,6 +73,8 @@ class Member extends Structure<APIFullOrInteractionGuildMember> {
 		if('deaf' in raw) this.deaf = raw.deaf;
 
 		if('mute' in raw) this.mute = raw.mute;
+
+		if('permissions' in raw) this.permissions = new Permissions(BigInt(raw.permissions));
 
 		if(raw.premium_since !== undefined && raw.premium_since !== null) {
 			this.premiumSinceAt = new Date(raw.premium_since);
