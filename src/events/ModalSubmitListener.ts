@@ -1,5 +1,3 @@
-import { ComponentContext } from '@Contexts';
-import type { ButtonClickContext } from '@Contexts';
 import EventListener from '@EventListener';
 
 import type { ModalSubimitInteraction } from '@discord';
