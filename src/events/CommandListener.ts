@@ -42,16 +42,38 @@ class CommandListener extends EventListener {
 
 		context.acknowledge(commandType == 'user');
 
-		if(command.requirements?.ownerOnly === true) {
-			const { application } = this.client;
+		if(command.requirements) {
+			const { requirements } = command;
 
-			if(application.team ? !application.team?.members.has(context.user.id) : application.owner.id !== context.user.id) return context.createMessage({
-				content: '<:L_angry:959094353329004544> **Eieiei**, só pessoas especiais podem usar este comando!',
-			});
-		}
+			if(requirements.ownerOnly === true) {
+				const { application } = this.client;
+	
+				if(application.team ? !application.team?.members.has(context.user.id) : application.owner.id !== context.user.id) return context.createMessage({
+					content: '<:L_angry:959094353329004544> **Eieiei**, só pessoas especiais podem usar este comando!',
+				});
+			}
 
-		if(command.requirements?.cache) {
-			await context.fetchCache(command.requirements.cache);
+			if(requirements.permissions && interaction.guildId) {
+				const permissions = await command.verifyPermissions(context);
+
+				if(!permissions.member)
+					return context.createMessage(
+						context.t('general:userMissingPermissions', {
+							permissions: requirements.permissions?.discord?.map(x => context.t(`permissions:${x}`)).join(', '),
+						})
+					);
+
+				if(!permissions.me)
+					return context.createMessage(
+						context.t('general:lunyMissingPermissions', {
+							permissions: requirements.permissions?.me?.map(x => context.t(`permissions:${x}`)).join(', '),
+						})
+					);
+			}
+	
+			if(requirements.cache) {
+				await context.fetchCache(requirements.cache);
+			}
 		}
 
 		await context.fetchDatabase(command.requirements?.database);
