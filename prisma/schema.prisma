@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider                                            = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider                                            = "postgresql"
+  url                                                 = env("DATABASE_URL")
 }
 
 model Embed {
@@ -32,7 +32,7 @@ model GuildPermissions {
   type        GuildPermissionType
   guild_id    String
   permissions BigInt
-  guild       Guild               @relation(fields: [guild_id], references: [id])
+  guild       Guild               @relation(fields    : [guild_id], references: [id])
 
   @@id([guild_id, id])
 }
@@ -59,7 +59,7 @@ model Reason {
   days     Int?
   types    PunishmentType[]
   id       Int              @default(autoincrement())
-  guild    Guild            @relation(fields: [guild_id], references: [id])
+  guild    Guild            @relation(fields          : [guild_id], references: [id])
 
   @@id([guild_id, id])
 }
