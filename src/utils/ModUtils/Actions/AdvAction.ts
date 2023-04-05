@@ -150,8 +150,6 @@ class AdvAction {
 				context.databases.guild as GuildDatabase
 			);
 
-			console.log(content);
-
 			await this.client.apis.discord.post(Routes.channelMessages(punishmentsChannelId), {
 				body: content as RESTCreateMessage,
 			});
