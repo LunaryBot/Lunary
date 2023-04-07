@@ -42,8 +42,14 @@ class CommandListener extends EventListener {
 
 		context.acknowledge(commandType == 'user');
 
+		await context.fetchDatabase(command.requirements?.database);
+
 		if(command.requirements) {
 			const { requirements } = command;
+
+			if(requirements.cache) {
+				await context.fetchCache(requirements.cache);
+			}
 
 			if(requirements.ownerOnly === true) {
 				const { application } = this.client;
@@ -70,13 +76,7 @@ class CommandListener extends EventListener {
 						})
 					);
 			}
-	
-			if(requirements.cache) {
-				await context.fetchCache(requirements.cache);
-			}
 		}
-
-		await context.fetchDatabase(command.requirements?.database);
 
 		await command.run(context);
 	}

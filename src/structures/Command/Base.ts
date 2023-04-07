@@ -50,7 +50,7 @@ class Base {
 			}
 
 			if(permissions.me) {
-				const memberPermissions = context.me.app_permissions;
+				const memberPermissions = context.app_permissions;
 
 				if(!permissions.me.every(perm => memberPermissions.has(perm))) data.me = false;
 			}
