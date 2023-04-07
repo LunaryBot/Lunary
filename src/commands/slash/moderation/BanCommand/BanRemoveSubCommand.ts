@@ -28,15 +28,13 @@ class BanRemoveSubCommand extends SubCommand {
 	public async run(context: CommandContext){
 		const query = (context.options.get('user') as string).replace(mentionRegex, '$1');
 
-		const ban = await new Promise<RESTGetAPIGuildBanResult|undefined>(async(resolve, reject) => {
-			if(idRegex.test(query)) {
+		const ban = idRegex.test(query)
+			? await new Promise<RESTGetAPIGuildBanResult|undefined>(async(resolve, reject) => {
 				const ban = await this.client.apis.discord.get(Routes.guildBan(context.guildId as string, query)).catch(() => {}) as RESTGetAPIGuildBanResult;
                 
 				return resolve(ban);
-			} else {
-				return resolve(undefined);
-			}
-		});
+			})
+			: undefined;
 
 		if(!ban) {
 			return await context.createMessage({
