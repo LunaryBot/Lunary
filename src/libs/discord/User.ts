@@ -66,11 +66,7 @@ class User extends Structure<APIUser> {
 	}
 
 	public displayAvatarURL(options: { format: 'jpg' | 'png' | 'webp' | 'gif', size?: ImageSize, dynamic?: boolean }) {
-		if(!this.avatar) {
-			return this.defaultAvatarURL;
-		}
-
-		return Utils.formatImage(CDNRoutes.userAvatar(this.id, this.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
+		return Utils.userDisplayAvatarURL(this, options);
 	}
 
 	@RequiresToken.bind(this)

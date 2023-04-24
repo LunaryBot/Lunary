@@ -25,7 +25,7 @@ class BanRemoveSubCommand extends SubCommand {
 		}, parent);
 	}
 
-	public async run(context: CommandContext){
+	public async run(context: CommandContext) {
 		const query = (context.options.get('user') as string).replace(mentionRegex, '$1');
 
 		const ban = idRegex.test(query)
@@ -38,7 +38,7 @@ class BanRemoveSubCommand extends SubCommand {
 
 		if(!ban) {
 			return await context.createMessage({
-				content: context.t('ban_info:userNotBanned'),
+				content: context.t('ban_remove:userNotBanned'),
 			});
 		}
 

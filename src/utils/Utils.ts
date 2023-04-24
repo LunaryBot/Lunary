@@ -1,7 +1,7 @@
 import { Embed, EmbedType } from '@prisma/client';
 
-import { Guild, Member, Message, Role } from '@discord';
-import { APIEmbed, ImageFormat as ImageFormats } from '@discord/types';
+import { Guild, Member, Message, Role, User } from '@discord';
+import { APIEmbed, ImageFormat as ImageFormats, CDNRoutes, DefaultUserAvatarAssets, APIUser } from '@discord/types';
 import { ImageSize } from '@discordjs/rest';
 
 type ImageFormat = 'jpg' | 'png' | 'webp' | 'gif';
@@ -63,6 +63,14 @@ class Utils {
 		});
 		  
 		return dataFormated as EmbedFormated;
+	}
+
+	public static userDisplayAvatarURL(user: APIUser | User, options: { format: ImageFormat, size?: ImageSize, dynamic?: boolean }) {
+		if(!user.avatar) {
+			return CDNRoutes.defaultUserAvatar(Number(user.discriminator) % 5 as DefaultUserAvatarAssets);
+		}
+
+		return Utils.formatImage(CDNRoutes.userAvatar(user.id, user.avatar, '' as any).replace(/^\/(.*)\.$/, '$1'), options);
 	}
 
 	public static formatImage(url: string, { format, size, dynamic = true }: { format: ImageFormat, size?: ImageSize, dynamic?: boolean }) {
