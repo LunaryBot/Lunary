@@ -1,8 +1,8 @@
 import { Command, SubCommand } from '@Command';
 import type { CommandContext } from '@Contexts';
 
-import { APIActionRowComponent, APIBan, APIButtonComponent, APIEmbed, APIMessageComponent, APISelectMenuComponent, ButtonStyle, RESTGetAPIGuildBanResult, RESTGetAPIGuildBansResult, Routes } from '@discord/types';
-import { ComponentInteraction, SelectMenuInteraction } from '@libs/discord';
+import { APIActionRowComponent, APIBan, APIButtonComponent, APIEmbed, APIMessageComponent, APISelectMenuComponent, ButtonStyle, RESTGetAPIGuildBanResult, RESTGetAPIGuildBansResult, Routes, TextInputStyle } from '@discord/types';
+import { ComponentInteraction, Member, ModalSubimitInteraction, SelectMenuInteraction } from '@libs/discord';
 
 import { ComponentCollector } from '@Collectors';
 import Utils from '@utils';
@@ -175,28 +175,78 @@ class BanInfoSubCommand extends SubCommand {
 		});
 
 		const collector = new ComponentCollector(this.client, {
-			max: 1,
 			user: context.user,
 			time: 1 * 1000 * 60,
 			filter: (interaction: ComponentInteraction) => interaction.customId?.startsWith(`${context.interaction.id}-`),
 		});
 
-		// const reason = context.options.get('reason') as string;
+		collector
+			.on('collect', async (interaction: ComponentInteraction|ModalSubimitInteraction) => {
+				const id = interaction.customId.split('-')[1];
 
-		// await this.client.apis.discord.delete(Routes.guildBan(context.guildId as string, user.id), {
-		// 	reason: context.t('general:punishedBy', {
-		// 		user: context.user.tag,
-		// 		reason: reason || context.t('general:reasonNotInformed.defaultReason'),
-		// 	}).shorten(512),
-		// });
+				collector.resetTimer();
 
-		// return await context.createMessage({
-		// 	content: context.t('ban_info:removeBan', {
-		// 		author_mention: context.user.toString(),
-		// 		user_tag: `${user.username}#${user.discriminator}`,
-		// 		user_id: user.id,
-		// 	}),
-		// });
+				switch (id) {
+					case 'unban': {
+						(interaction as ComponentInteraction).createModal({
+							title: context.t('general:reasonNotInformed.modalReason.title'),
+							custom_id: `${context.interaction.id}-addReasonModal`,
+							components: [
+								{
+									type: 1,
+									components: [
+										{
+                                        	type: 4,
+                                        	custom_id: 'reason',
+                                        	placeholder: context.t('general:reasonNotInformed.modalReason.placeholder'),
+                                        	max_length: 400,
+                                        	label: context.t('general:reasonNotInformed.modalReason.label'),
+                                        	style: TextInputStyle.Paragraph,
+                                        	required: context.databases.guild?.features?.has('mandatoryReasonToBan') ? !(await context.databases.guild?.permissionsFor(context.member as Member))?.has('lunarPunishmentOutReason') : false,
+										},
+									],
+								},
+							],
+						});
+
+						break;
+					}
+
+					case 'addReasonModal': {
+						await interaction.acknowledge();
+
+						collector.stop();
+                    
+						const reason = (interaction as ModalSubimitInteraction).getValue('reason');
+
+						await this.client.apis.discord.delete(Routes.guildBan(context.guildId as string, user.id), {
+							reason: context.t('general:punishedBy', {
+								user: context.user.tag,
+								reason: reason || context.t('general:reasonNotInformed.defaultReason'),
+							}).shorten(512),
+						});
+
+						return await interaction.createMessage({
+							content: context.t('ban_info:removeBan', {
+								author_mention: context.user.toString(),
+								user_tag: `${user.username}#${user.discriminator}`,
+								user_id: user.id,
+							}),
+						});
+					}
+				}
+			})
+			.on('end', () => {
+				components.map(row => row.components.map(c => {
+					c.disabled = true;
+
+					return c;
+				}));
+                
+				context.interaction.editOriginalMessage({
+					components,
+				});
+			});
 	}
 }
 
