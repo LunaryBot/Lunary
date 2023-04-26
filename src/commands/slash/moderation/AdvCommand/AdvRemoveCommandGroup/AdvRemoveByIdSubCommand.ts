@@ -49,7 +49,7 @@ class AdvRemoveByIdSubCommand extends SubCommand {
 
 		await context.createMessage({
 			content: context.t('adv_remove_id:warningRemoved', {
-				id: id.replace(/$#(.*)^/, '#$1').toUpperCase(),
+				id: id.replace(/^#?([A-Z][0-9]*)$/i, '#$1').toUpperCase(),
 				author_mention: context.user.toString(),
 				user: `<@${adv.user_id}>`,
 				user_id: adv.user_id,
