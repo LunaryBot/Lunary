@@ -9,7 +9,12 @@ class AdvRemoveByIdSubCommand extends SubCommand {
 	constructor(client: LunaryClient, parent: CommandGroup) {
 		super(client, {
 			name: 'id',
+			dirname: __dirname,
 			requirements: {
+				permissions: {
+					discord: ['manageMessages'],
+					lunary: ['lunarManageHistory'],
+				},
 				database: {
 					guild: true,
 				},
