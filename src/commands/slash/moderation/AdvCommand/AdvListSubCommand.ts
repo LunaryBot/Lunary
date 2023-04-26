@@ -18,7 +18,7 @@ class AdvListSubCommand extends SubCommand {
 			name: 'list',
 			requirements: {
 				permissions: {
-					discord: ['viewAuditLog'],
+					discord: ['viewAuditLog'], // permission in analysis
 					lunary: ['lunarViewHistory'],
 				},
 				database: {
