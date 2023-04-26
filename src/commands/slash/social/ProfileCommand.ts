@@ -45,8 +45,6 @@ class UserProfileCommand extends Command {
 
 		const layout = await this.client.getShopItem(profileSettings.layout);
 		const background = await this.client.getShopItem(profileSettings.background);
-
-		console.log(profileSettings.layout, profileSettings.background, layout, background);
         
 		const profileTemplate = this.client.templates.find(template => template.name == layout?.name.toLowerCase()) as Template;
 
