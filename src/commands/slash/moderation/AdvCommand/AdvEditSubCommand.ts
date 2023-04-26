@@ -51,6 +51,7 @@ class AdvRemoveByIdSubCommand extends SubCommand {
 			},
 			data: {
 				reason,
+				reason_id: null,
 			},
 		});
 
