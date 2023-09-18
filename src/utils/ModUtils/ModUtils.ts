@@ -100,6 +100,12 @@ class ModUtils {
 		return transcript.toBuffer();
 	}
 
+	public static isNSFWReason(reason: string) {
+		const keyWords = ['nsfw', 'porn', 'xxx', 'adult', 'explicit', 'nude', 'sexual'];
+
+		return keyWords.some(keyWord => reason.includes(keyWord));
+	}
+
 	public static async punishmentReason(context: ComponentContext|CommandContext, type: PunishmentType) {
 		let replyMessageFn: ReplyMessageFn = context.createMessage.bind(context.interaction);
 

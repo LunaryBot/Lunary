@@ -58,7 +58,7 @@ class User extends Structure<APIUser> {
 	}
 
 	get tag() {
-		return `${this.username}#${this.discriminator}`;
+		return this.discriminator == '0' ? this.username : `${this.username}#${this.discriminator}`;
 	}
 
 	get defaultAvatarURL() {

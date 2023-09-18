@@ -71,6 +71,7 @@ export const PunishmentFlags = {
 	system: 1n << 0n,
 	notNotifyInDM: 1n << 1n,
 	failedToNotifyInDM: 1n << 2n,
+	nsfw: 1n << 3n,
 };
 
 export const PunishmentTypes = {
