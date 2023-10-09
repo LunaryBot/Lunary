@@ -24,9 +24,9 @@ class MuteUserSubCommand extends SubCommand {
 			dirname: __dirname,
 			requirements: {
 				permissions: {
-					me: ['kickMembers'],
-					lunary: ['lunarKickMembers'],
-					discord: ['kickMembers'],
+					me: ['moderateMembers'],
+					lunary: ['lunarMuteMembers'],
+					discord: ['moderateMembers'],
 				},
 				guildOnly: true,
 				database: {
