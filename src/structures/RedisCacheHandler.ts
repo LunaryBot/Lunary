@@ -7,7 +7,7 @@ import buildRoute from '@utils/BuildRoute';
 import type Redis from './Redis';
 
 type Channel = Pick<APIChannel, 'id' | 'name' | 'type'> & { position?: number, parent_id?: string, nsfw?: boolean };
-type Guild = Pick<APIGuild, 'id' | 'name' | 'icon' | 'features' | 'banner'> & { ownerId: string, roles: Array<Role>, channels: Array<Channel> };
+type Guild = Pick<APIGuild, 'id' | 'name' | 'icon' | 'features' | 'banner' | 'owner_id'> & { roles: Array<Role>, channels: Array<Channel> };
 type Role = Pick<APIRole, 'id' | 'name' | 'color' | 'hoist' | 'permissions' | 'position'>;
 
 const keysRegex = /^(channels|guilds|users):(\d{16,20}).*?$/;
@@ -120,7 +120,7 @@ class RedisCacheHandler {
 			id: guild.id,
 			name: guild.name,
 			icon: guild.icon,
-			ownerId: (guild as Guild).ownerId ?? (guild as APIGuild).owner_id,
+			owner_id: guild.owner_id,
 			features: guild.features,
 			banner: guild.banner,
 		};

@@ -1,7 +1,6 @@
 import { exec } from 'child_process';
 import { inspect } from 'util';
 
-
 import { Command } from '@Command';
 import { CommandContext } from '@Contexts';
 
