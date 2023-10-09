@@ -123,7 +123,7 @@ class MuteAction {
 			user_id: user.id,
 			author_id: author.id,
 			created_at: new Date(),
-			duration: this.duration,
+			duration: this.duration instanceof Date ? this.duration.getTime() - Date.now() : this.duration,
 			flags: flags.bitfield,
 		} as Prisma.Punishment;
 
