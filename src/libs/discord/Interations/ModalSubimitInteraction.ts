@@ -156,7 +156,7 @@ class ModalSubimitInteraction extends Interaction {
 	
 		return {
 			...message,
-			flags: message.ephemeral ?? false ? MessageFlags.Ephemeral : 0, 
+			flags: message.ephemeral ? MessageFlags.Ephemeral : undefined, 
 		};
 	}
 }
