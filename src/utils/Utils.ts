@@ -86,13 +86,13 @@ class Utils {
 	}
 
 	public static highestPosition(member1: Member, member2: Member, guild: Guild) {
-		// if(guild.ownerId == member1.id) { 
-		// 	return true; 
-		// };
+		if(guild.ownerId == member1.id) { 
+			return true; 
+		};
 
-		// if(member1.id == member2.id || guild.ownerId == member2.id) { 
-		// 	return false; 
-		// };
+		if(member1.id == member2.id || guild.ownerId == member2.id) { 
+			return false; 
+		};
 
 		const roles = [ ...guild.roles.values() ].sort((a, b) => a.position - b.position);
 
