@@ -25,19 +25,7 @@
         "strictPropertyInitialization": false,
         "baseUrl": "./src",
         "paths": {
-            "@LunaryClient": ["./structures/LunaryClient"],
-            "@EventListener": ["./structures/EventListener"],
-            "@Command": ["./structures/Command"],
-            "@Contexts": ["./structures/Contexts"],
-            "@Database": ["./structures/Database"],
-            "@Collectors": ["./utils/Collectors"],
-            "@decorators": ["./utils/Decorators"],
-            "@structures/*": ["./structures/*"],
-            "@utils": ["./utils"],
-            "@utils/*": ["./utils/*"],
-            "@discord/types": ["./@types/discord"],
-            "@libs/*": ["./libs/*"],
-            "@discord": ["./libs/discord/"]
+            "@/*": ["./*"],
         },
     },
     "exclude": [
