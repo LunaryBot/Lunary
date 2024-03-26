@@ -9,7 +9,9 @@
     "prisma:fetch": "prisma db pull && prisma generate",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   },
   "author": "JVOPINHO",
   "license": "AGPL-3.0",
@@ -36,6 +38,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@types/dotenv": "^8.2.0",
     "@types/js-yaml": "^4.0.5",
     "@types/moment-duration-format": "^2.2.3",
@@ -44,6 +48,7 @@
     "@typescript-eslint/parser": "^5.30.5",
     "eslint": "^8.19.0",
     "eslint-plugin-import-helpers": "^1.2.1",
+    "husky": "^9.0.11",
     "prisma": "^4.1.0",
     "tsconfig-paths": "^4.0.0",
     "tsx": "^4.7.1",
