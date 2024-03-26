@@ -11,7 +11,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prepare": "husky",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "commit": "git-cz"
   },
   "author": "JVOPINHO",
   "license": "AGPL-3.0",
@@ -40,12 +41,15 @@
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
+    "@commitlint/types": "^19.0.3",
     "@types/dotenv": "^8.2.0",
     "@types/js-yaml": "^4.0.5",
     "@types/moment-duration-format": "^2.2.3",
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.19.0",
     "eslint-plugin-import-helpers": "^1.2.1",
     "husky": "^9.0.11",
@@ -53,5 +57,10 @@
     "tsconfig-paths": "^4.0.0",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
