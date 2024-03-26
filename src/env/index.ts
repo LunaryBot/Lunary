@@ -16,11 +16,9 @@ const envSchema = z.object({
 const _env = envSchema.safeParse(process.env);
 
 if(!_env.success) {
-	logger.error('Invalid environment variables', { message: _env.error.format() });
+	logger.error('Invalid environment variables', { label: 'Environment', message: _env.error.format() });
 
 	throw new Error('Invalid environment variables.');
 }
 
-export const env = _env.data as Omit<typeof _env.data, 'WA_PHONE_NUMBER_ID'> & {
-  WA_PHONE_NUMBER_ID: `${number}`
-};
+export const env = _env.data;
