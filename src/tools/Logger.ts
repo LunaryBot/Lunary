@@ -1,7 +1,7 @@
-import chalk from 'chalk';
-import winston from 'winston';
+import chalk from 'chalk'
+import winston from 'winston'
 
-const { printf, combine, timestamp, colorize } = winston.format; 
+const { printf, combine, timestamp, colorize } = winston.format 
 
 const config = {
 	levels: {
@@ -12,7 +12,7 @@ const config = {
 		debug: 5,
 		graphql: 6,
 	},
-};
+}
 
 const logger = winston.createLogger({
 	levels: config.levels,
@@ -24,7 +24,7 @@ const logger = winston.createLogger({
 				winston.format.simple(),
 				timestamp(),
 				printf(({ level, message, label, timestamp = new Date().toISOString(), details }) => {
-					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}${details ? `\n${details}` : ''}`;
+					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}${details ? `\n${details}` : ''}`
 				})
 			), 
 		}),
@@ -34,16 +34,14 @@ const logger = winston.createLogger({
 				winston.format.simple(),
 				timestamp(),
 				printf(({ level, message, label, timestamp = new Date().toISOString(), details }) => {
-					return `${timestamp} ${level} --- ${label ? `[${label}]` : ''} ${message}${details ? `\n${details}` : ''}`;
+					return `${timestamp} ${level} --- ${label ? `[${label}]` : ''} ${message}${details ? `\n${details}` : ''}`
 				})
 		    ),
 		}),
 	],
 	exitOnError: false,
-});
-
-logger.child = () => logger;
+})
 
 Object.defineProperty(global, 'logger', {
 	value: logger,
-});
+})

@@ -1,10 +1,10 @@
-import { FastifyReply } from 'fastify';
-import { Logger } from 'winston';
+import { FastifyReply } from 'fastify'
+import { Logger } from 'winston'
 
-import Client from '../structures/LunaryClient';
+import Client from '../structures/LunaryClient'
 
-export {};
+export {}
 
 declare global {
-    const logger: Logger;
+    const logger: Logger
 }
