@@ -11,6 +11,8 @@ const envSchema = z.object({
 	DATABASE_URL: z.string(),
 	DEFAULT_LOCALE: z.string(),
 	LOCALES_REPOSITORY: z.string(),
+
+	CLUSTER_ID: z.coerce.number().default(0),
 })
 
 const _env = envSchema.safeParse(process.env)
