@@ -97,15 +97,18 @@ module.exports = {
 				newlinesBetween: 'always',
 				groups: [
 					'module',
-					'/^@/.*/',
 					'/^@/helpers/',
 					'/^@/structures/',
+					'/^@/services/',
 					'/^@/utils/',
+					'/^@/libs/',
+					'/^@/env/',
 					'/^@/@types/',
+					['parent', 'sibling', 'index'],
 				],
 				alphabetize: { order: 'asc', ignoreCase: true },
 			},
 		],
 	},
 	ignorePatterns: ['build'],
-};
+}
