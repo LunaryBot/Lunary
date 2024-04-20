@@ -1,9 +1,6 @@
 import {
-	RuleConfigCondition,
 	RuleConfigSeverity,
-	RulesConfig,
-	TargetCaseType,
-} from '@commitlint/types';
+} from '@commitlint/types'
 
 export default {
 	extends: ['@commitlint/config-conventional'],
@@ -27,4 +24,4 @@ export default {
 			],
 		],
 	},
-};
+}
