@@ -1,57 +1,42 @@
-import { Client } from 'eris'
-import path from 'path'
+import { REST } from '@discordjs/rest'
+import { Routes, RESTGetAPIOAuth2CurrentApplicationResult } from 'discord-api-types/v10'
+import Eris, { Client, ClientOptions } from 'eris'
 
 import { CommandsHandler, EventListener, ListenersHandler } from '@/helpers'
-import { BaseCommand, SlashCommand } from '@/helpers/Command'
-
-import { DiscordService } from '@/services'
+import { BaseCommand, SlashCommand, VanillaCommand } from '@/helpers/Command'
 
 import { env } from '@/env'
 
 interface LunaryOptions {
-	discord?: {
-		rest?: {
-			version: '10' | '9' | '8'
-		}
-	}
+	prefix: string
+	eris?: ClientOptions
 }
 
 export class LunaryClient extends Client {
-	readonly token: string
-
-	public services: {} = {}
-
-	public commands = [] as Array<BaseCommand>
-	public events = [] as Array<EventListener>
-    
-	constructor(token: string, options: LunaryOptions = {}) {
-		super(token)
-		
-		Object.defineProperty(this, 'token', {
-			enumerable: false,
-			writable: false,
-			value: token,
-		})
+	public apis: {
+		discord: REST
 	}
 
-	init({ commandsDir, listenersDir }: { commandsDir: string, listenersDir: string }) {
+	public commands = [] as Array<BaseCommand|SlashCommand|VanillaCommand>
+	public events = [] as Array<EventListener>
+
+	public prefix: string
+	public owners: string[] = []
+    
+	constructor(token: string, options: LunaryOptions) {
+		super(token, options.eris)
+
+		this.apis = {
+			discord: new REST({ version: '10' }).setToken(token),
+		}
+
+		this.prefix = options.prefix
+	}
+
+	async init({ commandsDir, listenersDir }: { commandsDir: string, listenersDir: string }) {
 		const commandsHandler = new CommandsHandler(this, commandsDir)
 
 		this.commands = commandsHandler.load()
-
-		const recursiveCommand = (command: BaseCommand, array: string[]): string[] => {
-			array.push(command.constructor.name)
-
-			if(command.parent) {
-				return recursiveCommand(command.parent, array)
-			} else {
-				return array
-			}
-		}
-
-		this.commands.sort((one, two) => (one.key > two.key ? -1 : 1)).forEach(command => {
-			console.log(recursiveCommand(command, []).join(' -> '))
-		})
 
 		const listenersHandler = new ListenersHandler(this, listenersDir)
 
@@ -59,6 +44,10 @@ export class LunaryClient extends Client {
 
 		logger.info(`Loaded ${this.events.length} events`, { label: `Cluster ${env.CLUSTER_ID}, Client, Event Loader` })
 
-		this.connect()
+		await this.connect()
+	}
+
+	prefixRegexp(prefix: string = this.prefix) {
+		return new RegExp(`^(${`${prefix}`.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}|<@!?${this.user.id}>)( )*`, 'gi')
 	}
 }

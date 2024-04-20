@@ -1,43 +1,43 @@
 import Eris from 'eris'
 
+import { LunaryModule } from '@/structures/LunaryModule'
+
 import { StringUtils } from '@/utils'
 
 type EventCallback = (...args: any[]) => void
 
-export class EventListener<EventsName extends string = string> {
-    [key: `on${string}`]: EventCallback
-    
-    public readonly client: LunaryClient
-    public readonly events: Array<EventsName>
-    public readonly multipleOnFunctions: boolean
-    
-    constructor(client: LunaryClient, events: EventsName|Array<EventsName>, multipleOnFunctions = false) {
-    	Object.defineProperty(this, 'client', {
-    		value: client,
-    		enumerable: false,
-    		writable: false,
-    	})
+export function EventListen(...events: string[]) {
+	return function (_: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		const original = descriptor.value as (...args: any[]) => any
+        
+		descriptor.value = function() {
+			const self = this as EventListener
 
-    	this.events = Array.isArray(events) ?  events : [events]
+			for(const event of events) {
+				self.client.on(event, original.bind(self))
+			}
 
-    	this.multipleOnFunctions = multipleOnFunctions
-    }
-
-    listen() {
-    	this.events.forEach(eventName => {
-    		if(this.multipleOnFunctions) {
-    			this.client.on(eventName, (...args: unknown[]) => this[`on${StringUtils.toTitleCase(eventName)}`](...args))
-    		} else {
-    			this.client.on(eventName, (...args: unknown[]) => this.on(...args))  
-    		}
-    	})
-    }
+			return events
+		}
+	}
 }
 
-export class DiscordEventListener extends EventListener<keyof Eris.EventListeners> {}
+export const DiscordEventListen = EventListen as (...events: Array<keyof Eris.EventListeners>) => Function
 
-export class ExempleEventListener extends EventListener {
-	constructor(client: LunaryClient) {
-		super(client, [])
-	}
+export class EventListener extends LunaryModule {
+    [key: `on${string}`]: EventCallback
+
+    public readonly events = [] as string[]
+
+    listen() {
+    	const keys = Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+
+    	for(const key of keys) {
+			// @ts-expect-error
+    		const property = this[key]
+    		if(key.startsWith('on') && typeof property === 'function') {
+    			this.events.push(...property.bind(this)())
+    		}
+    	}
+    }
 }

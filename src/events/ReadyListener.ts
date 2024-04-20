@@ -1,14 +1,34 @@
-import { Constants } from 'eris'
+import Eris, { OAuthApplicationInfo, OAuthTeamMember } from 'eris'
 
-import { DiscordEventListener } from '@/helpers'
+import { DiscordEventListen, EventListener } from '@/helpers'
 
-export default class ReadyListener extends DiscordEventListener {
-	constructor(client: LunaryClient) {
-		super(client, 'ready')
-	}
+import { env } from '@/env'
 
+const createOwnerUser = (client: LunaryClient, raw: OAuthApplicationInfo['owner'] | OAuthTeamMember['user']) => {
+	const user = new Eris.User(raw as any, client)
+
+	return user
+}
+
+export default class ReadyListener extends EventListener {
+	@DiscordEventListen('ready')
 	async on() {
-		console.log('a')
+		logger.info(`Logged in as ${this.client.user.username}`, { label: `Cluster ${env.CLUSTER_ID}, Client` })
+
 		await this.client.editStatus('idle')
+
+		const application = await this.client.getOAuthApplication()
+
+		const owners = [ application.owner, ...(application.team?.members || []) ]
+
+		for(const owner of owners) {
+			if(owner) {
+				const user = createOwnerUser(this.client, (owner as OAuthTeamMember).user ?? owner)
+
+				this.client.users.set(user.id, user)
+
+				this.client.owners.push(user.id)
+			}
+		}
 	}
 }
