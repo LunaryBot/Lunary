@@ -14,10 +14,14 @@ function main() {
 		port: env.PORT,
 	})
 
-	const lunary = new LunaryClient(env.DISCORD_CLIENT_TOKEN)
-
-	lunary.on('ready', (interaction) => {
-		console.log('Ready!')
+	const lunary = new LunaryClient(env.DISCORD_CLIENT_TOKEN, {
+		prefix: 'canary.',
+		eris: {
+			intents: ['guilds', 'guildMembers', 'guildBans', 'guildIntegrations', 'guildWebhooks', 'guildVoiceStates', 'guildMessages'],
+			rest: {
+				baseURL: '/api/v10',
+			},
+		},
 	})
 
 	lunary.init({
