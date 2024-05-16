@@ -1,5 +1,4 @@
-import 'dotenv/config'
-
+import process from 'node:process'
 import { z } from 'zod'
 
 const envSchema = z.object({
@@ -13,6 +12,10 @@ const envSchema = z.object({
 	LOCALES_REPOSITORY: z.string(),
 
 	CLUSTER_ID: z.coerce.number().default(0),
+	CLUSTER_AMOUNT: z.coerce.number().default(0),
+	SHARD_AMOUNT: z.coerce.number().default(0),
+	SHARDS_PER_CLUSTER: z.coerce.number().default(0),
+	CLUSTER_SHARDS: z.string().default('').transform(arg => arg.split(',').map(shard => parseInt(shard))),
 })
 
 const _env = envSchema.safeParse(process.env)

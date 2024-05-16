@@ -1,6 +1,9 @@
+import { SlashCommandContext } from '@/structures/Context/CommandContext'
+
 import { BaseCommand, CommandTypes, CommandOptions } from './BaseCommand'
 
-export class SlashCommand extends BaseCommand<'SlashCommand'> {
+export class SlashCommand extends BaseCommand {
+	public type: 'SlashCommand'
 	public parent: SlashCommand
 	public subcommands: SlashCommand[]
 
@@ -9,11 +12,17 @@ export class SlashCommand extends BaseCommand<'SlashCommand'> {
 	constructor(client: LunaryClient, options: Omit<CommandOptions, 'type'>) {
 		super(client, { ...options, type: CommandTypes.SlashCommand })
 	}
+
+	run(context: SlashCommandContext): any {}
+
+	get data() {
+		
+		return ''
+	}
 }
 
 export class ExempleSlashCommand extends SlashCommand {
 	constructor(client: LunaryClient) {
 		super(client, { name: '*' })
 	}
-    
 }

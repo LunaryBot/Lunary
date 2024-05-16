@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { LunaryCluster } from '@/structures/cluster'
+
 import { env } from '@/env'
 
 import { EventListener } from '../EventListener'
@@ -16,7 +18,7 @@ export class ListenersHandler {
 		const files = fs.readdirSync(this.dirname).filter(file => regex.test(file))
 
 		for(const file of files) {
-			logger.info(`Loading event ${file.replace(regex, '$1Event')}`, { label: `Cluster ${env.CLUSTER_ID}, Client, Event Loader` })
+			logger.info(`Loading event ${file.replace(regex, '$1Event')}`, { label: `Cluster ${LunaryCluster.id}, Client, Event Loader` })
 
 			const { default: Base } = require(path.resolve(this.dirname, file)) as { default: typeof EventListener }
             

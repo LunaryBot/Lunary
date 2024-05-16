@@ -8,4 +8,12 @@ export class LunaryModule {
     		writable: false,
     	})
 	}
+
+	static setClient(object: object, client: LunaryClient) {
+		return Object.defineProperty(object, 'client', {
+			value: client,
+			enumerable: false,
+			writable: false,
+		})
+	}
 }

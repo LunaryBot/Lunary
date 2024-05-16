@@ -1,14 +1,18 @@
 import fs from 'node:fs'
-import path, { ParsedPath } from 'node:path'
+import path from 'node:path'
 
-import { StringUtils } from '@/utils'
-
+import { LunaryCluster } from '@/structures/cluster'
 import {
 	SlashCommand,
 	BaseCommand,
 	VanillaCommand,
 	ExempleBaseCommand,
-} from '../Command'
+} from '@/structures/Command'
+
+import { StringUtils } from '@/utils'
+
+import { env } from '@/env'
+
 
 type CommandClass = 
 	typeof BaseCommand | 
@@ -52,7 +56,7 @@ const classByFolder = {
 }
 
 export class CommandsHandler {
-	commands: ExempleBaseCommand[] = []
+	commands = [] as Array<BaseCommand>
 
 	constructor(readonly client: LunaryClient, readonly dirname: string) {}
 
@@ -76,6 +80,8 @@ export class CommandsHandler {
 				}
 			}
 		}
+
+		logger.info(`Loaded ${this.commands.length} commands`, { label: `Cluster ${LunaryCluster.id}, Client, Command Loader` })
 
 		return this.commands
 	}
@@ -135,7 +141,7 @@ export class CommandsHandler {
 
 					this.commands.push(instance)
 
-					logger.info(`Loading ${instance.constructor.name} (${instance.type})`, { label: `Cluster ${process.env.CLUSTER_ID}, Client, Commands Loader` })
+					logger.info(`Loading ${instance.constructor.name} (${instance.type})`, { label: `Cluster ${LunaryCluster.id}, Client, Commands Loader` })
 				}
 			}
 			

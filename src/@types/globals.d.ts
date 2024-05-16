@@ -1,3 +1,4 @@
+import type { } from 'eris'
 import type { FastifyReply } from 'fastify'
 import type { Logger } from 'winston'
 
@@ -9,4 +10,8 @@ declare global {
     const logger: Logger
 
     type LunaryClient = _LunaryClient
+
+    type If<Value extends boolean, TrueResult, FalseResult = null> = Value extends true
+        ? TrueResult
+        : FalseResult
 }

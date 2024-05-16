@@ -1,33 +1,47 @@
-import 'tools/Logger'
+import '@/tools/Logger'
 
+import { randomUUID } from 'crypto'
+import cluster, { Worker } from 'node:cluster'
 import path from 'path'
 
-import { LunaryClient } from '@/structures/LunaryClient'
+import { ClusterManager } from '@/structures/cluster'
 import { Server } from '@/structures/Server'
 
 import { env } from '@/env'
 
-
 function main() {
-	const server = new Server({
-		hostname: env.HOST,
-		port: env.PORT,
-	})
+	if(cluster.isPrimary) {
+		const server = new Server({
+			hostname: env.HOST,
+			port: env.PORT,
+		})
+		
+		const clusterManager = new ClusterManager({
+			shardAmount: 1,
+			clusterAmout: 1,
+			startFilename: path.resolve(__dirname, 'lunary.ts'),
+		})
 
-	const lunary = new LunaryClient(env.DISCORD_CLIENT_TOKEN, {
-		prefix: 'canary.',
-		eris: {
-			intents: ['guilds', 'guildMembers', 'guildBans', 'guildIntegrations', 'guildWebhooks', 'guildVoiceStates', 'guildMessages'],
-			rest: {
-				baseURL: '/api/v10',
-			},
-		},
-	})
+		clusterManager.on('ready', (clusterID: number) => {
+			logger.info(`Cluster ${clusterID} connected`, { label: 'Cluster Manager' })
+		})
 
-	lunary.init({
-		commandsDir: path.resolve(__dirname, 'commands'),
-		listenersDir: path.resolve(__dirname, 'events'),
-	})
+		clusterManager.on('create', (clusterID: number, shards: number[]) => {
+			logger.info(`Cluster ${clusterID} spawned with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { label: 'Cluster Manager' })
+		})
+	
+		clusterManager.on('error', (clusterID: number, err: string) => {
+			logger.error(`${err}`, { label: `Cluster ${clusterID}` })
+		})
+	
+		clusterManager.on('exit', (clusterID: number) => {
+			logger.error(`Cluster ${clusterID} exited`, { label: `Cluster ${clusterID}` })
+		})
+	
+		clusterManager.init()
+	} else if(cluster.isWorker) {
+		import('@/lunary')
+	}
 }
 
 main()

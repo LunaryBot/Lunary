@@ -1,21 +1,29 @@
 import { REST } from '@discordjs/rest'
-import { Routes, RESTGetAPIOAuth2CurrentApplicationResult } from 'discord-api-types/v10'
-import Eris, { Client, ClientOptions } from 'eris'
+import Eris, { ClientOptions } from 'eris'
 
 import { CommandsHandler, EventListener, ListenersHandler } from '@/helpers'
-import { BaseCommand, SlashCommand, VanillaCommand } from '@/helpers/Command'
+
+import { BaseCommand, SlashCommand, VanillaCommand } from '@/structures/Command'
 
 import { env } from '@/env'
+
+import { LunaryCluster } from './cluster'
+import { Prisma, PrismaClientOptions } from './database'
 
 interface LunaryOptions {
 	prefix: string
 	eris?: ClientOptions
+	prisma?: PrismaClientOptions
 }
 
-export class LunaryClient extends Client {
+export class LunaryClient extends Eris.Client {
+	public readonly cluster: LunaryCluster
+
 	public apis: {
 		discord: REST
 	}
+
+	public prisma: Prisma
 
 	public commands = [] as Array<BaseCommand|SlashCommand|VanillaCommand>
 	public events = [] as Array<EventListener>
@@ -25,6 +33,9 @@ export class LunaryClient extends Client {
     
 	constructor(token: string, options: LunaryOptions) {
 		super(token, options.eris)
+
+		this.cluster = new LunaryCluster(this)
+		this.prisma = new Prisma(this, options.prisma)
 
 		this.apis = {
 			discord: new REST({ version: '10' }).setToken(token),
@@ -42,7 +53,11 @@ export class LunaryClient extends Client {
 
 		this.events = listenersHandler.load()
 
-		logger.info(`Loaded ${this.events.length} events`, { label: `Cluster ${env.CLUSTER_ID}, Client, Event Loader` })
+		logger.info(`Loaded ${this.events.length} events`, { label: `Cluster ${LunaryCluster.id}, Client, Event Loader` })
+
+		// this.prisma.$connect().then(() => {
+		// 	logger.info('Connected to database', { label: `Cluster ${LunaryCluster.id}, Prisma` })
+		// })
 
 		await this.connect()
 	}

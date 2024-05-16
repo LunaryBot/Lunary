@@ -24,7 +24,7 @@ const logger = winston.createLogger({
 				winston.format.simple(),
 				timestamp(),
 				printf(({ level, message, label, timestamp = new Date().toISOString(), details }) => {
-					return `${timestamp} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}${details ? `\n${details}` : ''}`
+					return `${timestamp} ${process.pid} ${level} --- ${label ? `[${chalk.cyan(label)}]:` : ''} ${message}${details ? `\n${details}` : ''}`
 				})
 			), 
 		}),

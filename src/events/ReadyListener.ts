@@ -2,6 +2,8 @@ import Eris, { OAuthApplicationInfo, OAuthTeamMember } from 'eris'
 
 import { DiscordEventListen, EventListener } from '@/helpers'
 
+import { LunaryCluster } from '@/structures/cluster'
+
 import { env } from '@/env'
 
 const createOwnerUser = (client: LunaryClient, raw: OAuthApplicationInfo['owner'] | OAuthTeamMember['user']) => {
@@ -13,7 +15,9 @@ const createOwnerUser = (client: LunaryClient, raw: OAuthApplicationInfo['owner'
 export default class ReadyListener extends EventListener {
 	@DiscordEventListen('ready')
 	async on() {
-		logger.info(`Logged in as ${this.client.user.username}`, { label: `Cluster ${env.CLUSTER_ID}, Client` })
+		logger.info(`Logged in as ${this.client.user.username}`, { label: `Cluster ${LunaryCluster.id}, Client` })
+
+		this.client.cluster.init()
 
 		await this.client.editStatus('idle')
 

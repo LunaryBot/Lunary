@@ -1,8 +1,10 @@
 import path, { ParsedPath } from 'node:path'
 
+import { CommandContext } from '@/structures/Context/CommandContext'
 import { LunaryModule } from '@/structures/LunaryModule'
 
 import { DiscordPermissions } from '@/utils'
+
 
 export interface CommandOptions {
     name: string
@@ -11,6 +13,7 @@ export interface CommandOptions {
     requirements?: CommandRequirements
     cooldown?: number
     isBeta?: boolean
+	isDisabled?: boolean
 }
 
 export interface CommandRequirements {
@@ -29,31 +32,33 @@ export interface CommandRequirements {
 }
 
 export enum CommandTypes {
+	Unknown,
     SlashCommand,
 	VanillaCommand
 }
 
 type CommandTypesKeys = keyof typeof CommandTypes
 
-export class BaseCommand<CommandType extends CommandTypesKeys = CommandTypesKeys> extends LunaryModule {
+export class BaseCommand extends LunaryModule {
 	readonly key: string
 
 	public name: string
-	public type: CommandType
+	public type: CommandTypesKeys
 	public path?: ParsedPath
 	public requirements?: CommandRequirements | null
 	public cooldown: number
 
 	public isBeta: boolean
+	public isDisabled: boolean
 
-	public parent: BaseCommand<CommandType>
-	public subcommands: BaseCommand<CommandType>[] = []
+	public parent: BaseCommand
+	public subcommands: BaseCommand[] = []
 
 	constructor(client: LunaryClient, options: CommandOptions) {
 		super(client)
         
 		this.name = options.name
-		this.type = (typeof options.type === 'string' ? options.type : CommandTypes[options.type]) as CommandType
+		this.type = (typeof options.type === 'string' ? options.type : CommandTypes[options.type]) as CommandTypesKeys
 
 		if(options.path) {
 			this.setPath(options.path)
@@ -66,10 +71,21 @@ export class BaseCommand<CommandType extends CommandTypesKeys = CommandTypesKeys
 		this.cooldown = options.cooldown ?? 0
 
 		this.isBeta = options.isBeta ?? false
+		this.isDisabled = options.isDisabled ?? false
 	}
 
-	setParentCommand(command: BaseCommand<CommandType>) {
+	addSubCommand(command: BaseCommand) {
+		command.parent = this
+
+		this.subcommands.push(command)
+
+		return this
+	}
+
+	setParentCommand(command: BaseCommand) {
 		this.parent = command
+		
+		command.addSubCommand(this)
 	}
 
 	setPath(pathString: string | ParsedPath) {
@@ -78,13 +94,7 @@ export class BaseCommand<CommandType extends CommandTypesKeys = CommandTypesKeys
 		return this.path as ParsedPath
 	}
 
-	addSubCommand(command: BaseCommand<CommandType>) {
-		command.parent = this
-
-		this.subcommands.push(command)
-
-		return this
-	}
+	run(context: CommandContext): any {}
 }
 
 export class ExempleBaseCommand extends BaseCommand {
