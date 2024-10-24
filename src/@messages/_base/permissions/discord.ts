@@ -1,0 +1,62 @@
+import { Constants } from 'oceanic.js'
+
+import { StringTemplate } from '../typing'
+
+const Permissions = {
+	CREATE_INSTANT_INVITE: 'Criar convite',
+	KICK_MEMBERS: 'Expulsar membros',
+	BAN_MEMBERS: 'Banir membros',
+	ADMINISTRATOR: 'Administrador',
+	MANAGE_CHANNELS: 'Gerenciar canais',
+	MANAGE_GUILD: 'Gerenciar servidor',
+	ADD_REACTIONS: 'Adicionar reações',
+	VIEW_AUDIT_LOG: 'Ver o registro de auditoria',
+	PRIORITY_SPEAKER: 'Voz prioritária',
+	STREAM: 'Vídeo',
+	VIEW_CHANNEL: 'Ver canais',
+	SEND_MESSAGES: 'Enviar mensagens',
+	SEND_TTS_MESSAGES: 'Enviar mensagens em Text-para-voz',
+	MANAGE_MESSAGES: 'Gerenciar mensagens',
+	EMBED_LINKS: 'Inserir links',
+	ATTACH_FILES: 'Anexar arquivos',
+	READ_MESSAGE_HISTORY: 'Ver histórico de mensagens',
+	MENTION_EVERYONE: 'Mencionar everyone, here e todos os cargos',
+	USE_EXTERNAL_EMOJIS: 'Usar emojis externos',
+	VIEW_GUILD_INSIGHTS: 'Ver Análises do servidor',
+	CONNECT: 'Conectar',
+	SPEAK: 'Falar',
+	MUTE_MEMBERS: 'Silenciar membros',
+	DEAFEN_MEMBERS: 'Ensurdecer membros',
+	MOVE_MEMBERS: 'Mover membros',
+	USE_VAD: 'Usar Detecção de voz',
+	CHANGE_NICKNAME: 'Alterar apelido',
+	MANAGE_ROLES: 'Gerenciar cargos',
+	MANAGE_WEBHOOKS: 'Gerenciar webhooks',
+	MANAGE_GUILD_EXPRESSIONS: 'Gerenciar expressões',
+	USE_APPLICATION_COMMANDS: 'Usar comandos de aplicativo',
+	REQUEST_TO_SPEAK: 'Pedir para falar',
+	MANAGE_EVENTS: 'Gerenciar eventos',
+	MANAGE_THREADS: 'Gerenciar tópicos',
+	CREATE_PUBLIC_THREADS: 'Criar tópicos públicos',
+	CREATE_PRIVATE_THREADS: 'Criar tópicos privados',
+	USE_EXTERNAL_STICKERS: 'Usar figurinhas externas',
+	SEND_MESSAGES_IN_THREADS: 'Enviar mensagens em tópicos',
+	USE_EMBEDDED_ACTIVITIES: 'Usar atividades',
+	MODERATE_MEMBERS: 'Membros de castigo',
+	VIEW_CREATOR_MONETIZATION_ANALYTICS: 'Ver Análises de inscrições do servidor',
+	USE_SOUNDBOARD: 'Usar efeitos sonoros',
+	CREATE_GUILD_EXPRESSIONS: 'Criar expressões',
+	CREATE_EVENTS: 'Criar eventos',
+	USE_EXTERNAL_SOUNDS: 'Usar sons externos',
+	SEND_VOICE_MESSAGES: 'Enviar mensagens de voz',
+	SEND_POLLS: 'Criar Enquetes',
+	MANAGE_NICKNAMES: 'Gerenciar apelidos',
+	SET_VOICE_CHANNEL_STATUS: 'Definir status do canal de voz',
+} as Record<Constants.PermissionName, string>
+
+export const DiscordPermission: StringTemplate<{ permission: Constants.PermissionName }> = {
+	type: 'string',
+	val({ permission }) {
+		return Permissions[permission] ?? permission
+	},
+}

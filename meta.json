@@ -1,0 +1,566 @@
+{
+    "Nether's Delight": {
+        "name": "Nether's Delight",
+        "description": "Nether addon for Farmer's Delight\n34.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/nethers-delight",
+        "image": "https://images-ext-1.discordapp.net/external/EMvOdeFh4iycmsTxIOEtBf5OLxji5FOgrftTBERaheQ/https/media.forgecdn.net/avatars/thumbnails/397/613/256/256/637598857629083481.png"
+    },
+    "Overflowing Bars [Forge & Fabric]": {
+        "name": "Overflowing Bars [Forge & Fabric]",
+        "description": "Expand health, armor and armor toughness bars beyond vanilla. Nice and compact without confusing colors.\n11.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/overflowing-bars",
+        "image": "https://images-ext-1.discordapp.net/external/BmLN6-CB55LTcSOxiiBApFZrPu4Rs5llc_vnTCymDPM/https/media.forgecdn.net/avatars/thumbnails/807/99/256/256/638175843933386225.png"
+    },
+    "Serene Seasons": {
+        "name": "Serene Seasons",
+        "description": "Seasons with changing colors, shifting temperatures, and more!\n47.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/serene-seasons",
+        "image": "https://images-ext-1.discordapp.net/external/eHuaOwwToNbosCnJCgfIXnY_BLU8z1tZXTaFSLIfizE/https/media.forgecdn.net/avatars/thumbnails/881/200/256/256/638311173747555092.png"
+    },
+    "Luna": {
+        "name": "Luna",
+        "description": "Core mod for all Luna Pixel Studios modpacks.\n7.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/luna",
+        "image": "https://images-ext-1.discordapp.net/external/rS_ac7ri7xRx6gMTgcltocS87nFlpurc7P5867Rs6Iw/https/media.forgecdn.net/avatars/thumbnails/868/982/256/256/638283827789891727.png"
+    },
+    "Mindful Darkness [Forge & Fabric]": {
+        "name": "Mindful Darkness [Forge & Fabric]",
+        "description": "Turning all the lights off! Automatic dark mode for guis; as configurable as possible.\n8.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/mindful-darkness",
+        "image": "https://images-ext-1.discordapp.net/external/PXDsLXe1IippThSsJGiT5OILYxKMqovmT8e04-gxUsU/https/media.forgecdn.net/avatars/thumbnails/807/106/256/256/638175844127695571.png"
+    },
+    "Miner's Delight +": {
+        "name": "Miner's Delight +",
+        "description": "Farmer's Delight add-on for miners\n2.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/miners-delight-plus",
+        "image": "https://images-ext-1.discordapp.net/external/ip-UJaLrlqSLQ337qQbzoAUgpZGnuj55pzJIXcpiaqg/https/media.forgecdn.net/avatars/thumbnails/921/975/256/256/638386898893732195.png"
+    },
+    "MrCrayfish's Gun Mod": {
+        "name": "MrCrayfish's Gun Mod",
+        "description": "A new and exciting weapon mod with attachments and enchantments!\n21.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/mrcrayfishs-gun-mod",
+        "image": "https://images-ext-1.discordapp.net/external/RBcXa7NtJd-jfip-MvWFQ_zW2GhXHqa8A2sKie2BEk0/https/media.forgecdn.net/avatars/thumbnails/871/316/256/256/638288810616649286.png"
+    },
+    "Night Config Fixes [Forge & Fabric]": {
+        "name": "Night Config Fixes [Forge & Fabric]",
+        "description": "A small number of workarounds for relatively common issues concerning the Night Config library.\n13.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/night-config-fixes",
+        "image": "https://images-ext-1.discordapp.net/external/ZK0sczTwBWXoUGVCt9jZwD37qLk7xtOiVuWSolJTSCM/https/media.forgecdn.net/avatars/thumbnails/776/608/256/256/638118759411671350.png"
+    },
+    "Geophilic – Vanilla Biome Overhauls": {
+        "name": "Geophilic – Vanilla Biome Overhauls",
+        "description": "A subtle overhaul of vanilla Overworld biomes.\n13.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/geophilic",
+        "image": "https://images-ext-1.discordapp.net/external/BXGbCjIliDcmKUqqiVS1z_RaGfRqT3ghwJk2ibZAjXI/https/media.forgecdn.net/avatars/thumbnails/648/354/256/256/638049857735165515.png"
+    },
+    "Immersive Engineering": {
+        "name": "Immersive Engineering",
+        "description": "A retro-futuristic tech mod!\n132.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/immersive-engineering",
+        "image": "https://images-ext-1.discordapp.net/external/CHZRwMtqdy9HDyTGg4NBFlTz-0fTOrmBYOMwQpxkLlk/https/media.forgecdn.net/avatars/thumbnails/20/135/256/256/635707329671959611.png"
+    },
+    "Immersive Posts": {
+        "name": "Immersive Posts",
+        "description": "Extendable treated-wood, aluminium, steel posts and more for ImmersiveEngineering.\n12.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/immersiveposts",
+        "image": "https://images-ext-1.discordapp.net/external/tQXwgGL-nIWrSq-tGjxuSSxuoJYFzeW94Q71l5HA-XE/https/media.forgecdn.net/avatars/thumbnails/235/613/256/256/637086790793528636.png"
+    },
+    "Item Filters": {
+        "name": "Item Filters",
+        "description": "Item Filters is a library mod that is used by mods like FTB Quests. It adds several filter items that let you precisely select which items to match.\n99.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/item-filters",
+        "image": "https://images-ext-1.discordapp.net/external/CyE1J-aXZxquQIdKwRQCUytElCPmGN3lc1NDN_xsbFc/https/media.forgecdn.net/avatars/thumbnails/183/63/256/256/636812486536100113.png"
+    },
+    "Leaves Be Gone [Forge & Fabric]": {
+        "name": "Leaves Be Gone [Forge & Fabric]",
+        "description": "Quick leaf decay from cutting down trees. Built for fast performance and mod compat!\n15.6M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/leaves-be-gone",
+        "image": "https://images-ext-1.discordapp.net/external/lc2Ne74lcsbgkJL7EGtLfB-V8LmqaENqceiKwzQj5Kc/https/media.forgecdn.net/avatars/thumbnails/858/41/256/256/638263100611823642.png"
+    },
+    "Engineers Delight": {
+        "name": "Engineers Delight",
+        "description": "adds a bit more integration between Farmers Delight and Immersive Engineering.\n1.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/engineers-delight",
+        "image": "https://images-ext-1.discordapp.net/external/veDRwVqUseqlT8u47dS2lwWrWxRYPlbC13wGfzStfXo/https/media.forgecdn.net/avatars/thumbnails/817/568/256/256/638195780328139021.png"
+    },
+    "Explorify – Dungeons & Structures": {
+        "name": "Explorify – Dungeons & Structures",
+        "description": "A simplistic, vanilla-friendly collection of new structures.\n16.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/explorify",
+        "image": "https://images-ext-1.discordapp.net/external/oGrggnX9le6tP0WI7sW1IR2yI-N-oP9fap0nvsOVsvM/https/media.forgecdn.net/avatars/thumbnails/656/579/256/256/638056688029543379.png"
+    },
+    "Farmer's Delight": {
+        "name": "Farmer's Delight",
+        "description": "A cozy expansion to farming and cooking!\n76.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/farmers-delight",
+        "image": "https://images-ext-1.discordapp.net/external/CkVXD3KusAiG4PYU7v_M7U79iKZhhHFtQ3GmpK9sOlc/https/media.forgecdn.net/avatars/thumbnails/396/11/256/256/637595005615179370.png"
+    },
+    "Farmer's Respite": {
+        "name": "Farmer's Respite",
+        "description": "Tea addon for Farmer's Delight\n10.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/farmers-respite",
+        "image": "https://images-ext-1.discordapp.net/external/huYIHIoeGabJp96GK9sjx9Y8zOeb3jSFr8PXi4JKI4A/https/media.forgecdn.net/avatars/thumbnails/460/721/256/256/637739148850316506.png"
+    },
+    "Geophilic Reforged – Biome Additions": {
+        "name": "Geophilic Reforged – Biome Additions",
+        "description": "A subtle overhaul of vanilla and mod Overworld biomes\n2.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/geophilic-reforged",
+        "image": "https://images-ext-1.discordapp.net/external/Mr7HhBGb4-1U4i-pXvZsvRrEx9zuLzD9ZBKsm2_bCGI/https/media.forgecdn.net/avatars/thumbnails/907/319/256/256/638358338586335497.png"
+    },
+    "End's Phantasm": {
+        "name": "End's Phantasm",
+        "description": "The vanilla friendly End update we were all waiting for!\n4.5M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/phantasm",
+        "image": "https://images-ext-1.discordapp.net/external/cmj5Vs2pypDc41cZ9K-9cya7l24ldEfs7J4Mpl410zk/https/media.forgecdn.net/avatars/thumbnails/627/662/256/256/638023107190922765.png"
+    },
+    "Ender's Delight": {
+        "name": "Ender's Delight",
+        "description": "🍇A Farmer's Delight which add ender themed food\n9.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/enders-delight",
+        "image": "https://images-ext-1.discordapp.net/external/9nOKRFBrxuwgaLzd35Oex0YiB0Vtgak1gdtwC7FV5oc/https/media.forgecdn.net/avatars/thumbnails/973/773/256/256/638476553038779715.png"
+    },
+    "Endless Biomes": {
+        "name": "Endless Biomes",
+        "description": "A mod improving the End dimension\n6.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/endless-biomes",
+        "image": "https://images-ext-1.discordapp.net/external/4nmMqrS9Uj2lvczkFXGT3U8lSwlHRs3zIoL89xZNZ-s/https/media.forgecdn.net/avatars/thumbnails/779/508/256/256/638124220506205668.png"
+    },
+    "Enemy Expansion": {
+        "name": "Enemy Expansion",
+        "description": "Adding variety to combat encounters in Minecraft!\n2.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/enemy-expansion",
+        "image": "https://images-ext-1.discordapp.net/external/1pQcCyXZ7pJ1VwL5UFeicOTHpxutrgONYvmvv7c2Bhg/https/media.forgecdn.net/avatars/thumbnails/623/781/256/256/638018245436049722.png"
+    },
+    "Cultural Delights": {
+        "name": "Cultural Delights",
+        "description": "A Farmer's Delight addon that adds food systems from around the world.\n8.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/cultural-delights",
+        "image": "https://images-ext-1.discordapp.net/external/0KTnkMc8jWB5AUGQz4oFKPELRJWs273H35m5XWYfbkk/https/media.forgecdn.net/avatars/thumbnails/523/974/256/256/637844697378782554.png"
+    },
+    "Dungeons Enhanced": {
+        "name": "Dungeons Enhanced",
+        "description": "A vanilla friendly Dungeon and Structure expansion\n12.5M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/dungeonsenhanced",
+        "image": "https://images-ext-1.discordapp.net/external/4FLZIC_TLg5iiPHKXMocpg_sirGCjB5NpRYsjTO2hSw/https/media.forgecdn.net/avatars/thumbnails/1032/713/256/256/638555989319021884.png"
+    },
+    "Easy Anvils [Forge & Fabric]": {
+        "name": "Easy Anvils [Forge & Fabric]",
+        "description": "Be ready for overhauled anvils! Items stay, better name tags, many tweaks!\n15.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/easy-anvils",
+        "image": "https://images-ext-1.discordapp.net/external/3W5ZGq6hhQ78uUGWF_tGAafG4k9ANPRnobjN_Ux1Bps/https/media.forgecdn.net/avatars/thumbnails/776/208/256/256/638118115739130285.png"
+    },
+    "Easy Magic [Forge & Fabric]": {
+        "name": "Easy Magic [Forge & Fabric]",
+        "description": "Enchanting tables as they always should have been! Items stay after closing, and easy re-rolls.\n27.6M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/easy-magic",
+        "image": "https://images-ext-1.discordapp.net/external/2BGc0Ics8PzZ8hNf9FvLqkQiT0VvDzg8ir4tDIvrnQE/https/media.forgecdn.net/avatars/thumbnails/776/154/256/256/638118060302729911.png"
+    },
+    "End Remastered": {
+        "name": "End Remastered",
+        "description": "Make your journey towards the End more challenging and engaging with End Remastered!\n13.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/endremastered",
+        "image": "https://images-ext-1.discordapp.net/external/xRRsh3Q_-l6V_mbFZBeIygh-zHH3dmsI1Wt_CIe7T-w/https/media.forgecdn.net/avatars/thumbnails/426/964/256/256/637658056889454340.png"
+    },
+    "Create: Extended Cogwheels": {
+        "name": "Create: Extended Cogwheels",
+        "description": "A small mod to add more cog types to create\n2.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-extended-cogs",
+        "image": "https://images-ext-1.discordapp.net/external/tV66famiIpV0qTNHq3uvUJxUlfcDazpK08XIhQk5g74/https/media.forgecdn.net/avatars/thumbnails/678/973/256/256/638068706453658102.png"
+    },
+    "Create: Framed": {
+        "name": "Create: Framed",
+        "description": "A Create mod addon that adds more Framed Glass variants.\n734.0K Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-framed",
+        "image": "https://images-ext-1.discordapp.net/external/PPTtknLNlxje8__dUf6z2nsYrwCQ9s_jnSNx0q3_8Q8/https/media.forgecdn.net/avatars/thumbnails/922/838/256/256/638388766008416292.png"
+    },
+    "Create: Interiors": {
+        "name": "Create: Interiors",
+        "description": "A complement to the Create mod that adds new, functional furniture.\n2.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/interiors",
+        "image": "https://images-ext-1.discordapp.net/external/mBUgvMQDn_3I8GkzD0Nt8doD8SYfTo1X-B6qRYn6IIU/https/media.forgecdn.net/avatars/thumbnails/1009/819/256/256/638533154900698664.png"
+    },
+    "Create: New Age": {
+        "name": "Create: New Age",
+        "description": "Create: New Age is an addon for the Create mod that adds integration with electricity.\n5.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-new-age",
+        "image": "https://images-ext-1.discordapp.net/external/609zRvHaoPTJF_vu3al69K4SzYLSx9W7D7lTwK6aevo/https/media.forgecdn.net/avatars/thumbnails/868/983/256/256/638283831005466383.png"
+    },
+    "Create: Steam 'n' Rails": {
+        "name": "Create: Steam 'n' Rails",
+        "description": "Adding depth to Create's rail network & steam system\n18.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-steam-n-rails",
+        "image": "https://images-ext-1.discordapp.net/external/zBao6y6x5YhNnYdVB1RZ8a0v8UxOlIGCIPQF32Ay50U/https/media.forgecdn.net/avatars/thumbnails/635/559/256/256/638037447277826357.png"
+    },
+    "Create: ComputerCraft (CC: Tweaked)": {
+        "name": "Create: ComputerCraft (CC: Tweaked)",
+        "description": "CC: Tweaked but with a design more fitting of the Create Mod\n1.1M Downloads | Resource Packs",
+        "url": "https://www.curseforge.com/minecraft/texture-packs/create-computercraft",
+        "image": "https://images-ext-1.discordapp.net/external/eS_7JaheBXrSaTqx_ilExHv5HTIijKN8ZyqtmlVDXi4/https/media.forgecdn.net/avatars/thumbnails/840/854/256/256/638235094143218061.png"
+    },
+    "Create: Copycats+": {
+        "name": "Create: Copycats+",
+        "description": "All the copycats you've ever wanted, combined into a single mod!\n2.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/copycats",
+        "image": "https://images-ext-1.discordapp.net/external/UTVZIu7b7U3nNjKpVVfkUUklBt8oNiq6e4d99job9Is/https/media.forgecdn.net/avatars/thumbnails/946/562/256/256/638432563570802556.png"
+    },
+    "Create: Crystal Clear": {
+        "name": "Create: Crystal Clear",
+        "description": "A mod that adds glass casings to create\n3.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-crystal-clear",
+        "image": "https://images-ext-1.discordapp.net/external/Z3rYNC9Of6SEtk-UUTxe--EEYT1eQ9O_kDyBh6T7RZQ/https/media.forgecdn.net/avatars/thumbnails/601/287/256/256/637980136211380412.png"
+    },
+    "Create: Design n' Decor": {
+        "name": "Create: Design n' Decor",
+        "description": "a Create addon focused on QOL decoration features that expand on the base decoration ability of Create whilst focusing on community feedback\n1.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-design-n-decor",
+        "image": "https://images-ext-1.discordapp.net/external/yMZzM5j7e1mgv1mx-KE2_y9x8NSRcoDyK6z-ZXIS6IE/https/media.forgecdn.net/avatars/thumbnails/890/28/256/256/638330120614323622.png"
+    },
+    "Create: Dynamic Village": {
+        "name": "Create: Dynamic Village",
+        "description": "An expansion to Create that adds a fully-featured host of Create-mod village professions.\n1.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/dynamic-village",
+        "image": "https://images-ext-1.discordapp.net/external/8mKvhDC1YgLlL4r8eNzD7cO5t5evhHZVjcYbIf4QqbU/https/media.forgecdn.net/avatars/thumbnails/885/726/256/256/638321433385850716.png"
+    },
+    "Create Railways Navigator": {
+        "name": "Create Railways Navigator",
+        "description": "Get possible train connections in your world from one station to another using the Create Railways Navigator. An addon for the Create Mod.\n340.7K Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-railways-navigator",
+        "image": "https://images-ext-1.discordapp.net/external/yfx26MA7D_qOk6Gd2Wr6-ynsxcz0BG5Xg2WHNahPV0c/https/media.forgecdn.net/avatars/thumbnails/975/254/256/256/638478471821212735.png"
+    },
+    "Create Recycle Everything": {
+        "name": "Create Recycle Everything",
+        "description": "Use Crushing Wheels to recycle useless items and clean up the storage. Perfect for modpacks.\n2.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-recycle-everything",
+        "image": "https://images-ext-1.discordapp.net/external/-MlA0kiVWyi5g1GWqHHqVbeFLq1wlQ6aEFnMHzgAntg/https/media.forgecdn.net/avatars/thumbnails/846/920/256/256/638246036486387385.png"
+    },
+    "Create Slice & Dice": {
+        "name": "Create Slice & Dice",
+        "description": "Making automation for Farmers Delight more sensible\n14.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/slice-and-dice",
+        "image": "https://images-ext-1.discordapp.net/external/0Ui7sSw2eHE0m_M1ypgz5Z25Mu3bUpcxdUJmOalyAzo/https/media.forgecdn.net/avatars/thumbnails/592/364/256/256/637964174110406177.png"
+    },
+    "Create: Bells & Whistles": {
+        "name": "Create: Bells & Whistles",
+        "description": "Adornments and decorations for the aesthetically concerned Create engineer.\n3.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/bellsandwhistles",
+        "image": "https://images-ext-1.discordapp.net/external/uYSKjPbP-gVR2Exx3LbbU-4Cb755QpOoYSJVnwlibKI/https/media.forgecdn.net/avatars/thumbnails/882/423/256/256/638314180335173300.png"
+    },
+    "Create Compressed": {
+        "name": "Create Compressed",
+        "description": "Adds full blocks for raw materials. Have less micro-management & more storage space!\n1.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-compressed",
+        "image": "https://images-ext-1.discordapp.net/external/c4WUDySh6_W8iZjmQpxVSeh6jERwP01dSndHDUGzNPU/https/media.forgecdn.net/avatars/thumbnails/846/757/256/256/638245826822462190.png"
+    },
+    "Create Crafts & Additions": {
+        "name": "Create Crafts & Additions",
+        "description": "Electrifying the Create mod!\n41.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/createaddition",
+        "image": "https://images-ext-1.discordapp.net/external/7r3eOWJoe3vRgE0VBSUmJcixhC-vso04aFkymvPwfA4/https/media.forgecdn.net/avatars/thumbnails/405/250/256/256/637616939209778882.png"
+    },
+    "Create Enchantment Industry": {
+        "name": "Create Enchantment Industry",
+        "description": "Automatic Enchanting, with Create.\n11.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-enchantment-industry",
+        "image": "https://images-ext-1.discordapp.net/external/GTkGewMn4t5QQLm7DPVIsqTTMTnbWUOzqneub2OLEjg/https/media.forgecdn.net/avatars/thumbnails/624/857/256/256/638021175448741701.png"
+    },
+    "Create Jetpack": {
+        "name": "Create Jetpack",
+        "description": "Upgrade your backtank and utilize the pressurized air to fly\n8.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-jetpack",
+        "image": "https://images-ext-1.discordapp.net/external/l2Zi4j1WgA1SMvpXrY8I5QQDrjxkHAZNk_lvXSe3u5o/https/media.forgecdn.net/avatars/thumbnails/585/29/256/256/637951524914026425.png"
+    },
+    "Create Planetary Tweaks": {
+        "name": "Create Planetary Tweaks",
+        "description": "adds items and tweaks for Create Planetary modpack\n1.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-planetary-tweaks",
+        "image": "https://images-ext-1.discordapp.net/external/WhNCWXw8QBl5JlCiPgG1jyLWtvo08W-j6G_X1aCDfO4/https/media.forgecdn.net/avatars/thumbnails/818/830/256/256/638197961562487330.png"
+    },
+    "Xaero's World Map": {
+        "name": "Xaero's World Map",
+        "description": "Adds a fullscreen worldmap which shows you what you have explored in the world. Can work together with Xaero's Minimap.\n71.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/xaeros-world-map",
+        "image": "https://images-ext-1.discordapp.net/external/hluq4P6MUjEnRNwPGr4GzFCZ22zVn3Mv3KSiODFfUAU/https/media.forgecdn.net/avatars/thumbnails/196/654/256/256/636886857118683130.png"
+    },
+    "Thin Air [Forge & Fabric]": {
+        "name": "Thin Air [Forge & Fabric]",
+        "description": "The air is not always breathable in the depths of the earth and other dimensions.\n1.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/new-thin-air",
+        "image": "https://images-ext-1.discordapp.net/external/FBnuuwzGovhaIo3sR6ldwKD4SzMAJr241BBIPpeCdDM/https/media.forgecdn.net/avatars/thumbnails/837/176/256/256/638230223994313568.png"
+    },
+    "Trading Post [Forge & Fabric]": {
+        "name": "Trading Post [Forge & Fabric]",
+        "description": "Rule the village! Trade with every villager at once!\n23.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/trading-post",
+        "image": "https://images-ext-1.discordapp.net/external/n3qP4lABpOft0yxVC6oSbZGah-BHz7mQkbSBp5eeN3E/https/media.forgecdn.net/avatars/thumbnails/776/152/256/256/638118060002759129.png"
+    },
+    "Visual Workbench [Forge & Fabric]": {
+        "name": "Visual Workbench [Forge & Fabric]",
+        "description": "Items stay inside of crafting tables and are also rendered on top. It's really fancy!\n28.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/visual-workbench",
+        "image": "https://images-ext-1.discordapp.net/external/EV4beBN0o1LnfTbqNywrAcCBGJIafpFdK7Mi-t9uUP8/https/media.forgecdn.net/avatars/thumbnails/802/986/256/256/638168095863992377.png"
+    },
+    "Withering Boon for Tetra": {
+        "name": "Withering Boon for Tetra",
+        "description": "Adds new materials and schematics to Tetra\n1.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/tetra-booster-pack",
+        "image": "https://images-ext-1.discordapp.net/external/By_xG_nPdBmMh-ReIRB9QdDpoqaiPRVOOser7G7raQg/https/media.forgecdn.net/avatars/thumbnails/962/48/256/256/638458711626202197.png"
+    },
+    "Xaero's Minimap": {
+        "name": "Xaero's Minimap",
+        "description": "Displays the nearby world terrain, players, mobs, entities in the corner of your screen. Lets you create waypoints which help you find the locations you've marked.\n95.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap",
+        "image": "https://images-ext-1.discordapp.net/external/0PafeNOc57Nv5Q7-EZzkiYjvt9E4fUuMfu4fPvGdZzw/https/media.forgecdn.net/avatars/thumbnails/92/854/256/256/636258666554688823.png"
+    },
+    "Tetra": {
+        "name": "Tetra",
+        "description": "Modular items, exploration and technology\n20.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/tetra",
+        "image": "https://images-ext-1.discordapp.net/external/_eNy2jPvcsIE-1TjBRtGJmLt343T44Vk-OOc3UbsTws/https/media.forgecdn.net/avatars/thumbnails/145/263/256/256/636561479419470125.png"
+    },
+    "Tetra Extras": {
+        "name": "Tetra Extras",
+        "description": "Adds extra resources from other mods to tetra.\n1.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/tetra-extras",
+        "image": "https://images-ext-1.discordapp.net/external/1r9zIIQTMD7gzebJc7AMzpDISBS6NwooUY3Wi4LZOcQ/https/media.forgecdn.net/avatars/thumbnails/892/921/256/256/638335602446424383.jpeg"
+    },
+    "L_Ender 's Cataclysm": {
+        "name": "L_Ender 's Cataclysm",
+        "description": "Add Dungeons and Bosses \n29.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/lendercataclysm",
+        "image": "https://images-ext-1.discordapp.net/external/oG1QRHGQr6T5l29I_JhajDW4vX7FpdvaRgVDX46DmGw/https/media.forgecdn.net/avatars/thumbnails/460/870/256/256/637739722679428303.png"
+    },
+    "Upgraded Netherite": {
+        "name": "Upgraded Netherite",
+        "description": "Adds upgraded versions of Netherite with helpful effects.\n18.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/upgraded-netherite",
+        "image": "https://images-ext-1.discordapp.net/external/wXXUTj57vbyYdZZTU5oAWAe5ssTz_vDkMNu_PJ0KNSE/https/media.forgecdn.net/avatars/thumbnails/485/934/256/256/637786805980317845.png"
+    },
+    "Tetranomicon": {
+        "name": "Tetranomicon",
+        "description": "Adds Tetra support to other mods' materials.\n11.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/tetranomicon",
+        "image": "https://images-ext-1.discordapp.net/external/W8QKxZm2GyP2-mEZ8wofrjQnYC4tbjRNTX8gsz9IVII/https/media.forgecdn.net/avatars/thumbnails/342/136/256/256/637485806201591590.png"
+    },
+    "Silence's Turrets": {
+        "name": "Silence's Turrets",
+        "description": "It has more than 30 turrets\n1.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/silences-defense-tower",
+        "image": "https://images-ext-1.discordapp.net/external/WqbQRz9J4eMuYOxM2SXogSmkXodI1beRX_HCDXHa0SM/https/media.forgecdn.net/avatars/thumbnails/857/460/256/256/638261943499138275.png"
+    },
+    "Skin Layers 3D (Fabric§Forge)": {
+        "name": "Skin Layers 3D (Fabric/Forge)",
+        "description": "Render the player skin layer in 3d!\n34.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d",
+        "image": "https://images-ext-1.discordapp.net/external/AFEIn5KZ1r2cdU3xgiRv8Znm3Ddvfrw2wRpSZQN0Ktk/https/media.forgecdn.net/avatars/thumbnails/426/742/256/256/637657627491599401.png"
+    },
+    "Sophisticated Backpacks": {
+        "name": "Sophisticated Backpacks",
+        "description": "Yet another backpack mod this time with backpack you can place in world, color in different color combinations, upgrade with more inventory and enhance with many functional upgrades\n69.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks",
+        "image": "https://images-ext-1.discordapp.net/external/A136ARAoOd6l_bifoLJZ-ln_qMsZy0ELKEq1JqXMS5A/https/media.forgecdn.net/avatars/thumbnails/375/56/256/256/637549610342642859.png"
+    },
+    "Sophisticated Core": {
+        "name": "Sophisticated Core",
+        "description": "Library mod for Sophisticated mods\n46.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/sophisticated-core",
+        "image": "https://images-ext-1.discordapp.net/external/qxUHAAYxZ9I6I9IyCfukC3lYpMs6cwitL28_JI1U99U/https/media.forgecdn.net/avatars/thumbnails/540/438/256/256/637866039314801108.png"
+    },
+    "Sophisticated Storage": {
+        "name": "Sophisticated Storage",
+        "description": "Storage mod with multiple tiers and functional upgrades\n19.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/sophisticated-storage",
+        "image": "https://images-ext-1.discordapp.net/external/ux3-zVu6GXGwkTehiea8NSWu8fDYB82IpW5b4qVmK74/https/media.forgecdn.net/avatars/thumbnails/543/206/256/256/637872959580005837.png"
+    },
+    "Art of Forging: A Tetra Addon": {
+        "name": "Art of Forging: A Tetra Addon",
+        "description": "An addon mod for Tetra\n4.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/art-of-forging-a-tetra-addon",
+        "image": "https://images-ext-1.discordapp.net/external/2zhYsayKA-emTKl3sZ_VTW9C9DLIpGu3RQMsmDpSBWA/https/media.forgecdn.net/avatars/thumbnails/560/606/256/256/637911791439744041.png"
+    },
+    "YUNG's Better Ocean Monuments (Forge)": {
+        "name": "YUNG's Better Ocean Monuments (Forge)",
+        "description": "A complete redesign of Minecraft's ocean monuments!\n24.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-ocean-monuments",
+        "image": "https://images-ext-1.discordapp.net/external/1umOfybsSzOm1GCfZFdYS3OeIAylsDoX8Q2zs5YWsDE/https/media.forgecdn.net/avatars/thumbnails/881/116/256/256/638311017813611458.png"
+    },
+    "YUNG's Bridges (Forge)": {
+        "name": "YUNG's Bridges (Forge)",
+        "description": "Adds beautiful naturally generated bridges throughout the world\n27.5M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-bridges",
+        "image": "https://images-ext-1.discordapp.net/external/okFG_myq82hXp1oH_wOHgQo0jMv1hG0grNG06oiMonQ/https/media.forgecdn.net/avatars/thumbnails/881/134/256/256/638311021928949709.png"
+    },
+    "Ad Astra": {
+        "name": "Ad Astra",
+        "description": "Live long and prosper, Ad Astra!\n17.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/ad-astra",
+        "image": "https://images-ext-1.discordapp.net/external/Lq8bnbJo5VrwcJpPRggb6ljSSLUK06gYQZVwqS2kkgs/https/media.forgecdn.net/avatars/thumbnails/641/352/256/256/638043417933656861.png"
+    },
+    "Ad Tetra!": {
+        "name": "Ad Tetra!",
+        "description": "Adds compat between Tetra and Ad Astra!\n4.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/ad-tetra",
+        "image": "https://images-ext-1.discordapp.net/external/eRZUJDI1RRFqFMY0AJUDo-RQOvY2Fi8JNF5-ftdHwsM/https/media.forgecdn.net/avatars/thumbnails/777/430/256/256/638120545712479391.png"
+    },
+    "Atmospheric": {
+        "name": "Atmospheric",
+        "description": "Fills the world with fleshed out & diverse landscapes!\n17.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/atmospheric",
+        "image": "https://images-ext-1.discordapp.net/external/9Am9rltp3t4hiOGXMyW1EuB5mMEsG1Ce4xEpp9g9U8s/https/media.forgecdn.net/avatars/thumbnails/904/426/256/256/638354589833181239.png"
+    },
+    "YUNG's API (Forge)": {
+        "name": "YUNG's API (Forge)",
+        "description": "A library mod for some of YUNG's Minecraft mods\n70.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-api",
+        "image": "https://images-ext-1.discordapp.net/external/cbIrKs2HlUNHe5fJBo-1lphPqpQtarTLZ4RLV5OfB48/https/media.forgecdn.net/avatars/thumbnails/881/136/256/256/638311022829381213.png"
+    },
+    "YUNG's Better Desert Temples (Forge)": {
+        "name": "YUNG's Better Desert Temples (Forge)",
+        "description": "A complete redesign of Minecraft's desert temples!\n23.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-desert-temples",
+        "image": "https://images-ext-1.discordapp.net/external/F_xcBwpLg9-wLgs_Y7Xw-imnJG6JZ3De5pFArlA6AOI/https/media.forgecdn.net/avatars/thumbnails/881/113/256/256/638311014668815538.png"
+    },
+    "YUNG's Better End Island (Forge)": {
+        "name": "YUNG's Better End Island (Forge)",
+        "description": "An overhaul of the main End Island where the dragon fight takes place!\n13.6M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-end-island",
+        "image": "https://images-ext-1.discordapp.net/external/BLjeUxXEJk0uO7FdHZ04bxVos13mdMv-Po9OR_06dTA/https/media.forgecdn.net/avatars/thumbnails/881/124/256/256/638311019747754894.png"
+    },
+    "YUNG's Better Mineshafts (Forge)": {
+        "name": "YUNG's Better Mineshafts (Forge)",
+        "description": "A long-awaited and much-needed abandoned mineshaft overhaul!\n75.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-forge",
+        "image": "https://images-ext-1.discordapp.net/external/4n65vss8RpQpjNfrVvNd4ggjHHDjjxazU7L8asBDfxw/https/media.forgecdn.net/avatars/thumbnails/881/107/256/256/638311012004755859.png"
+    },
+    "YUNG's Better Nether Fortresses (Forge)": {
+        "name": "YUNG's Better Nether Fortresses (Forge)",
+        "description": "A complete redesign of Minecraft's Nether fortresses!\n21.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-nether-fortresses",
+        "image": "https://images-ext-1.discordapp.net/external/cH4CjzLcm7meBUUZSjsLZ7R5xjtR4jg2Ct3KECj73f8/https/media.forgecdn.net/avatars/thumbnails/881/118/256/256/638311018415562520.png"
+    },
+    "Chalk": {
+        "name": "Chalk",
+        "description": "You'll never lose your way again!\n6.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/chalk",
+        "image": "https://images-ext-1.discordapp.net/external/Ymz2zgcVHTXMbTAtdcMIqqh8oAI9K8ufIwuWZ1ipZ9o/https/media.forgecdn.net/avatars/thumbnails/822/560/256/256/638205779710304418.png"
+    },
+    "Chef's Delight [Forge]": {
+        "name": "Chef's Delight [Forge]",
+        "description": "Add-on for the Farmer's Delight mod. Adds 2 new professions to villagers.\n5.6M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/chefs-delight-forge",
+        "image": "https://images-ext-1.discordapp.net/external/Mt63ai7PfgOnxEkZqFd7Uzjujm3cfmnHkZmc0Q1biM0/https/media.forgecdn.net/avatars/thumbnails/784/308/256/256/638133050057336713.png"
+    },
+    "Chipped": {
+        "name": "Chipped",
+        "description": "Every block deserves a friend.\n38.2M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/chipped",
+        "image": "https://images-ext-1.discordapp.net/external/pc_BISK6TDo8cdkoo3xrgsh5nOjojwqyUq-BkD2P_-c/https/media.forgecdn.net/avatars/thumbnails/495/254/256/256/637808243655328652_animated.gif"
+    },
+    "Cold Sweat": {
+        "name": "Cold Sweat",
+        "description": "Adds a fitting and difficult temperature system to Minecraft, plus more!\n2.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/cold-sweat",
+        "image": "https://images-ext-1.discordapp.net/external/5Aw27h0NxUmvxoC8wq2faGLpf0FhCjtNoASqPgp5Nwc/https/media.forgecdn.net/avatars/thumbnails/787/953/256/256/638140984115537308.png"
+    },
+    "Brewin' And Chewin'": {
+        "name": "Brewin' And Chewin'",
+        "description": "Fermenting addon for Farmer's Delight\n3.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/brewin-and-chewin",
+        "image": "https://images-ext-1.discordapp.net/external/bFccjQwQ7gU65BuN7z1SibA7AmOxiZdkeOhR-6zzCt4/https/media.forgecdn.net/avatars/thumbnails/564/35/256/256/637919784221963476.png"
+    },
+    "Bygone Nether": {
+        "name": "Bygone Nether",
+        "description": "Adds new biome-specific structures and mobs to the nether dimension\n18.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/bygone-nether",
+        "image": "https://images-ext-1.discordapp.net/external/GDEr3gKqeOqOmEr-GciJgKx2JCY_qUM8_YjLKQEEZfs/https/media.forgecdn.net/avatars/thumbnails/497/444/256/256/637813713407635129.png"
+    },
+    "Carry On": {
+        "name": "Carry On",
+        "description": "Carry On allows you to pick up Tile Entities and Mobs and carry them around!\n91.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/carry-on",
+        "image": "https://images-ext-1.discordapp.net/external/NP095RCrYIY5ZRl5wOqQYtHK_4GY7PB4fLyCmjND-fw/https/media.forgecdn.net/avatars/thumbnails/109/514/256/256/636380307126307812.png"
+    },
+    "CC: Tweaked": {
+        "name": "CC: Tweaked",
+        "description": "CC: Tweaked is a fork of ComputerCraft, adding programmable computers, turtles and more to Minecraft.\n49.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/cc-tweaked",
+        "image": "https://images-ext-1.discordapp.net/external/TW94rixaGMNnoUkBZlQsCoHC1Ug4D5CjVzqnEAALzwc/https/media.forgecdn.net/avatars/thumbnails/130/871/256/256/636463439690354770.png"
+    },
+    "CC:C Bridge": {
+        "name": "CC:C Bridge",
+        "description": "Adds compatibility between the ComputerCraft and Create mod via peripherals!\n3.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/cccbridge",
+        "image": "https://images-ext-1.discordapp.net/external/MtMSLYXPuFDOTQvmT32RUQJ6_T0LecacENPEhJqXrW0/https/media.forgecdn.net/avatars/thumbnails/783/298/256/256/638131140009514066.png"
+    },
+    "Auto Leveling": {
+        "name": "Auto Leveling",
+        "description": "Adds mobs auto leveling.\n2.4M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/auto-leveling",
+        "image": "https://images-ext-1.discordapp.net/external/MxxfjlpVY-ckM71nAuKoAcMidHCUPyLgbVjKrIqivFE/https/media.forgecdn.net/avatars/thumbnails/541/439/256/256/637868757971457445.png"
+    },
+    "Alex's Mobs": {
+        "name": "Alex's Mobs",
+        "description": "85+ New mobs with stylistic quality above the default game.\n63.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/alexs-mobs",
+        "image": "https://images-ext-1.discordapp.net/external/0QiMz_jqWnoyPgCKsLGECShE-oDEcvNiVnpcVbrwqUs/https/media.forgecdn.net/avatars/thumbnails/543/777/256/256/637874731161865623.jpeg"
+    },
+    "All Bark, All Bite": {
+        "name": "All Bark, All Bite",
+        "description": "A mod that adds vanilla-style dog mobs and other canine-related features\n1.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/all-bark-all-bite",
+        "image": "https://images-ext-1.discordapp.net/external/ph5Z2xX79iQE5j8RcypFYJvJvfENYNE8txZn6kw6iDI/https/media.forgecdn.net/avatars/thumbnails/785/154/256/256/638135035511661720.png"
+    },
+    "Bartering Station [Forge & Fabric]": {
+        "name": "Bartering Station [Forge & Fabric]",
+        "description": "Still running around bartering manually? Let's put those lazy piglins to work instead!\n13.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/bartering-station",
+        "image": "https://images-ext-1.discordapp.net/external/raOzidDTRFUevjxpb9-qtgB1LbQ22tzYTb6quWdoc30/https/media.forgecdn.net/avatars/thumbnails/776/97/256/256/638117979898664451.png"
+    },
+    "Blue Skies": {
+        "name": "Blue Skies",
+        "description": "Blue Skies is survival mod that adds aspects like dimensions, dungeons and more in a light and dark scenario.\n35.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/blue-skies",
+        "image": "https://images-ext-1.discordapp.net/external/AaKPqGPpH7T8pbz3Vt177TO41BAfHEzujaWpbluNOqE/https/media.forgecdn.net/avatars/thumbnails/241/891/256/256/637131079632015619.png"
+    },
+    "Create : Misc & Things": {
+        "name": "Create : Misc & Things",
+        "description": "🔧 Add useful and fun things to Create\n3.7M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-misc-and-things",
+        "image": "https://images-ext-1.discordapp.net/external/hEr_pKmWHSn2PhZBZmpe_VptUa8OCAAqElzzfbHOkk0/https/media.forgecdn.net/avatars/thumbnails/873/437/256/256/638293470247022480.png"
+    },
+    "ChoiceTheorem's Overhauled Village": {
+        "name": "ChoiceTheorem's Overhauled Village",
+        "description": "Enhances and creates new villages and pillager outposts, that perfectly fit into your Minecraft world.\n21.1M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/choicetheorems-overhauled-village",
+        "image": "https://images-ext-1.discordapp.net/external/raMkXzUeqsgaXg8bNSdB5VmaMuNGh4Jx522Pr8OhWS8/https/media.forgecdn.net/avatars/thumbnails/834/260/256/256/638224736286948659.png"
+    },
+    "Compat O' Plenty": {
+        "name": "Compat O' Plenty",
+        "description": "Integrates Biomes O' Plenty with Quark, Farmer's Delight and Buzzier Bees.\n2.8M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/compat-o-plenty",
+        "image": "https://images-ext-1.discordapp.net/external/RgRsFCGbfbfpDQdT0kvrmSZA1mxrI0oqJjrU6Fpnwvs/https/media.forgecdn.net/avatars/thumbnails/470/28/256/256/637756302183942632.png"
+    },
+    "Create Central Kitchen": {
+        "name": "Create Central Kitchen",
+        "description": "Automatic Kitchen Work & Integration\n4.9M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-central-kitchen",
+        "image": "https://images-ext-1.discordapp.net/external/N5CoX9RDqTObr7r55iXahHR5S6rrLFBNGpmfmdg5V3U/https/media.forgecdn.net/avatars/thumbnails/770/583/256/256/638109213062028041.png"
+    },
+    "Create Blue Skies Compat": {
+        "name": "Create Blue Skies Compat",
+        "description": "Adds compatibility recipes & items between Create and Blue Skies \n1.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-blue-skies-compat",
+        "image": "https://images-ext-1.discordapp.net/external/7nXQxJyn09HDG7hjAkUG67-knNzQ7jvVdIhdfcuyayU/https/media.forgecdn.net/avatars/thumbnails/816/5/256/256/638192619058381608.png"
+    },
+    "Create Air [Forge]": {
+        "name": "Create Air [Forge]",
+        "description": "Adds compatibility between Create and Thin Air. Making the player use diving tanks in deep caves.\n1.0M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-air-forge",
+        "image": "https://images-ext-1.discordapp.net/external/I9-NF3OW-cgzR4wUoff0EOt82VH2cydXv--Kx27hAJE/https/media.forgecdn.net/avatars/thumbnails/839/605/256/256/638232850597989781.png"
+    },
+    "Create Ad Astra Compat": {
+        "name": "Create Ad Astra Compat",
+        "description": "Adds crushed ore compatability for ad astra ores\n2.3M Downloads | Mods",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/create-ad-astra-compat",
+        "image": "https://images-ext-1.discordapp.net/external/jcsZy2BwuMqjF8DvmDD2ulzzT1woEz5iVMRLpS398zw/https/media.forgecdn.net/avatars/thumbnails/791/83/256/256/638147111866533471.png"
+    }
+}

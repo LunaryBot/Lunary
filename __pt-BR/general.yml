@@ -1,0 +1,42 @@
+# @message
+# @description Lunary don't has permissions to execute command
+# @type message-object
+# @param {Permissions} Permissions to execute command
+LunaryMissingPermissions:
+  content: >-
+    <:cry:902169710949445643> **|** Eu não tenho permissão para executar esse comando, eu preciso da permissão `{{Permissions}}`.
+
+# @message
+# @description Lunary don't has permissions to punish this member
+# @type message-object
+# @param {Author} Author mention
+LunaryMissingPermissionsToPunish:
+  content: >-
+    <:nonn:798271889671192697> {{Author}} **|** Ixi... Eu não consigo punir este usuário, ele é mais importante que eu aqui! <:cry:902169710949445643>
+
+# @message
+# @description User don't has permissions to execute command
+# @type message-object
+# @param {Permissions} Permissions to execute command
+UserMissingPermissions:
+  content: >-
+    <:sigh:885721398788632586> **|** Para utilizar esse comando você precisa da permissão `{{Permissions}}`, e infelizmente (ou felizmente), você não possui essa permissão...
+
+# @message
+# @description User don't has permissions to punish this member
+# @type message-object
+# @param {Author} Author Mention
+UserMissingPermissionsToPunish:
+  content: >-
+    <:nonn:798271889671192697> {{Author}} **|** Oops... Aparentemente este usuário tem um cargo um pouco mais acima que o seu, assim não poderá puni-lo, espertinho(a). <:sigh:885721398788632586>
+
+# @message
+# @description 
+# @type message-object
+SelectAReason:
+  content: >-
+    <:L_thinking:959094491116101642> Adicione um motivo para a punição.
+
+# @message
+# @description 
+# @type message-object

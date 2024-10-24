@@ -50,6 +50,10 @@ export class StringUtils {
 		return string.replace(/^./g, (char) => char.toLowerCase())
 	};
 
+	static firstCharInUpperCase(string: string) {
+		return string.replace(/^./g, (char) => char.toUpperCase())
+	};
+
 	static isLowerCase(string: string) {
 		return string.toLowerCase() === string
 	};

@@ -1,30 +1,34 @@
 generator client {
-  provider                                            = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider                                            = "postgresql"
-  url                                                 = env("DATABASE_URL")
-}
-
-model Embed {
-  guild_id String
-  type     EmbedType
-  content  String?
-  embeds   Json[]    @default([])
-
-  @@id([guild_id, type])
+  provider = "postgresql"
+  url = env("DATABASE_URL")
 }
 
 model Guild {
   id                  String             @id @unique
-  modlogs_channel     String?
-  punishments_channel String?
   features            BigInt?
+  message_kit_id      String?
   premium_type        GuildPremiumType?
   premium_until       DateTime?
   permissions         GuildPermissions[]
   reasons             Reason[]
+  log_channels        GuildLogChannel[]
+}
+
+model GuildLogChannel {
+  channel_id  String
+  guild_id    String
+
+  type        LogType
+
+  message     Json
+
+  guild       Guild @relation(fields: [guild_id], references: [id])
+
+  @@id([guild_id, channel_id, type])
 }
 
 model GuildPermissions {
@@ -32,7 +36,7 @@ model GuildPermissions {
   type        GuildPermissionType
   guild_id    String
   permissions BigInt
-  guild       Guild               @relation(fields    : [guild_id], references: [id])
+  guild       Guild               @relation(fields: [guild_id], references: [id])
 
   @@id([guild_id, id])
 }
@@ -40,62 +44,44 @@ model GuildPermissions {
 model Punishment {
   id         Int            @id @unique @default(autoincrement())
   guild_id   String
-  user_id    String
+  users      String[]
   author_id  String
   created_at DateTime
+  expires_at DateTime?
   flags      BigInt         @default(0)
   duration   Int?
   reason     String?
-  deleted    Boolean?       @default(false)
+  closed     Boolean       @default(false)
   type       PunishmentType
-  reason_id  Int?
 }
 
 model Reason {
-  text     String
+  id       String           @default(cuid()) @id @unique
   guild_id String
+  text     String
   keys     String[]         @default([])
   duration Int?
   days     Int?
   types    PunishmentType[]
-  id       Int              @default(autoincrement())
-  guild    Guild            @relation(fields          : [guild_id], references: [id])
-
-  @@id([guild_id, id])
+  guild    Guild?           @relation(fields: [guild_id], references: [id])
 }
 
 model User {
   id            String           @id @unique
-  features      BigInt?
-  luas          Int?
-  xp            Int?
-  last_daily_at DateTime?
+  features      BigInt           @default(0)
   premium_type  UserPremiumType?
   premium_until DateTime?
-  bio           String?
-  flags         BigInt?
-  inventory     Int[]
-  profile       Json             @default("{\"layout\": 1, \"background\": 0}")
 }
 
-model ShopItem {
-  id              Int            @id @default(autoincrement())
-  name            String
-  description     String
-  type            ShopItemType
-  price           Int
-  rarity          ShopItemRarity
-  last_appearance DateTime?
-  enabled         Boolean        @default(true)
-  assets          Json?
-}
-
-enum EmbedType {
-  BAN
-  KICK
-  MUTE
-  ADV
-  NOFITYDM
+enum LogType {
+  MODACTION_BAN
+  MODACTION_KICK
+  MODACTION_MUTE
+  MODACTION_ADV
+  NOTIFYDM_BAN
+  NOTIFYDM_KICK
+  NOTIFYDM_MUTE
+  NOTIFYDM_ADV
 }
 
 enum GuildPermissionType {
@@ -118,19 +104,4 @@ enum PunishmentType {
 
 enum UserPremiumType {
   PLUS
-}
-
-enum ShopItemRarity {
-  COMMON
-  UNCOMMON
-  RARE
-  EPIC
-  LEGENDARY
-  EXOTIC
-  MYSTIC
-}
-
-enum ShopItemType {
-  BACKGROUND
-  LAYOUT
 }

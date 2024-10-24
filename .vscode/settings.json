@@ -1,5 +1,28 @@
 {
     "material-icon-theme.folders.associations": {
-        "managers": "controller"
-    }
+        "managers": "controller",
+        "logger": "mock",
+        "repositories": "class",
+        "builders": "class",
+        "observer": "review"
+    },
+    "workbench.colorCustomizations": {
+        "minimap.background": "#00000000",
+        "scrollbar.shadow": "#00000000"
+    },
+    "explorer.fileNesting.patterns": {
+        "ModHelper.ts": "*ModHelper.ts",
+        "docker-compose.yml": "*dockerfile"
+    },
+    "autoBarrel.language.defaultLanguage": "TypeScript",
+    "autoBarrel.files.disableRecursiveBarrelling": true,
+    "autoBarrel.files.includeExtensionOnExport": ["ts"],
+    "autoBarrel.files.ignoreFilePathPatternOnExport": ["**/*.spec.*", "**/*.test.*"],
+    "autoBarrel.files.keepExtensionOnExport": false,
+    "autoBarrel.files.detectExportsInFiles": true,
+    "autoBarrel.files.exportDefaultFilename": "filename",
+    "autoBarrel.formatting.excludeSemiColonAtEndOfLine": true,
+    "autoBarrel.formatting.useSingleQuotes": true,
+    "autoBarrel.formatting.endOfLine": "lf",
+    "autoBarrel.formatting.insertFinalNewline": true,
 }

@@ -11,6 +11,7 @@ module.exports = {
 	plugins: [
 		'@typescript-eslint',
 		'eslint-plugin-import-helpers',
+		'eslint-plugin-unused-imports',
 	],
 	rules: {
 		indent: [
@@ -97,18 +98,25 @@ module.exports = {
 				newlinesBetween: 'always',
 				groups: [
 					'module',
-					'/^@/helpers/',
-					'/^@/structures/',
+					'/^@.*/structures/',
+					'/^@.*/helpers/',
+					'/^@/cluster/',
 					'/^@/services/',
+					'/^@/database/',
 					'/^@/utils/',
+					'/^.*Decorators.*?/',
+					'/^@/tools/',
 					'/^@/libs/',
+					'/^@/logger/',
+					'/^@/global/',
 					'/^@/env/',
-					'/^@/@types/',
+					['/^@/@types/', '/^.*typing*/'],
 					['parent', 'sibling', 'index'],
 				],
 				alphabetize: { order: 'asc', ignoreCase: true },
 			},
 		],
+		'unused-imports/no-unused-imports': 'warn',
 	},
 	ignorePatterns: ['build'],
 }

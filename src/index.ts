@@ -1,46 +1,52 @@
-import '@/tools/Logger'
+import '@/global/setup'
 
-import { randomUUID } from 'crypto'
-import cluster, { Worker } from 'node:cluster'
-import path from 'path'
+import cluster from 'node:cluster'
 
-import { ClusterManager } from '@/structures/cluster'
-import { Server } from '@/structures/Server'
+import { ClusterManager } from '@/cluster'
+
+import { logger } from '@/logger'
 
 import { env } from '@/env'
 
-function main() {
+async function main() {
 	if(cluster.isPrimary) {
-		const server = new Server({
-			hostname: env.HOST,
-			port: env.PORT,
-		})
-		
 		const clusterManager = new ClusterManager({
 			shardAmount: 1,
 			clusterAmout: 1,
-			startFilename: path.resolve(__dirname, 'lunary.ts'),
+			enableApiCluster: false,
 		})
 
-		clusterManager.on('ready', (clusterID: number) => {
-			logger.info(`Cluster ${clusterID} connected`, { label: 'Cluster Manager' })
+		clusterManager.on('ready', (clusterId: number) => {
+			logger.info(`Cluster ${clusterId} connected`, { tags: 'Cluster Manager' })
 		})
 
-		clusterManager.on('create', (clusterID: number, shards: number[]) => {
-			logger.info(`Cluster ${clusterID} spawned with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { label: 'Cluster Manager' })
+		clusterManager.on('create', (clusterId: number, shards: number[]) => {
+			logger.info(`Cluster ${clusterId} spawned with ${shards.length} Shard(s)(${shards[0]} ~ ${shards[shards.length - 1]})`, { tags: ['Cluster Manager'] })
 		})
 	
-		clusterManager.on('error', (clusterID: number, err: string) => {
-			logger.error(`${err}`, { label: `Cluster ${clusterID}` })
+		clusterManager.on('error', (clusterId: number, err: string) => {
+			logger.error(`${err}`, { tags: `Cluster ${clusterId}` })
 		})
 	
-		clusterManager.on('exit', (clusterID: number) => {
-			logger.error(`Cluster ${clusterID} exited`, { label: `Cluster ${clusterID}` })
+		clusterManager.on('exit', (clusterId: number) => {
+			logger.error(`Cluster ${clusterId} exited`, { tags: `Cluster ${clusterId}` })
 		})
 	
 		clusterManager.init()
 	} else if(cluster.isWorker) {
-		import('@/lunary')
+		switch (env.CLUSTER_TASK) {
+			case 'LUNARY': {
+				import('@/apps/lunary')
+
+				break
+			}
+
+			case 'API': {
+				import('@/apps/api')
+
+				break
+			}
+		}
 	}
 }
 

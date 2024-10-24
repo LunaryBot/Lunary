@@ -1,6 +1,6 @@
 type fn = (...args: unknown[]) => unknown
 
-class Collection<ObjectType = unknown> extends Map<string, ObjectType> {
+export class Collection<ObjectType = unknown> extends Map<string, ObjectType> {
 	public limit?: number
 
 	constructor(baseData?: Array<[string, ObjectType]>, limit?: number) {
@@ -125,5 +125,3 @@ class Collection<ObjectType = unknown> extends Map<string, ObjectType> {
 		return json
 	}
 }
-
-export default Collection

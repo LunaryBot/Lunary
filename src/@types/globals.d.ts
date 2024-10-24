@@ -1,17 +1,17 @@
-import type { } from 'eris'
-import type { FastifyReply } from 'fastify'
-import type { Logger } from 'winston'
+import type { LunaryBot as _LunaryBot } from '@/apps/lunary/structures/LunaryBot'
 
-import type { LunaryClient as _LunaryClient } from '@/structures/LunaryClient'
+import type { DatabaseClient } from '@/database/DatabaseClient'
 
 export {}
 
 declare global {
-    const logger: Logger
-
-    type LunaryClient = _LunaryClient
+    type LunaryBot = _LunaryBot
 
     type If<Value extends boolean, TrueResult, FalseResult = null> = Value extends true
         ? TrueResult
         : FalseResult
+
+    const _G: {
+    	DatabaseClient: DatabaseClient,
+    }
 }

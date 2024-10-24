@@ -1,11 +1,13 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 
-const BanSlashCommand = new SlashCommandBuilder()
+export const BanSlashCommandData = new SlashCommandBuilder()
 	.setName('ban')
-	.setDescription('〔🔨 • Moderation〕Bans a user from the server.')
+	.setDescription('🔨 • Moderation〕')
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('user')
+			.setDescription('〔🔨 • Moderation〕Bans a user from the server.')
+			.setDescriptionLocalization('pt-BR', '〔🔨 • Moderação〕Bane um usuário, mesmo que o usuário não estiver no servidor.')
 			.addUserOption(option =>
 				option
 					.setName('user')
@@ -52,9 +54,4 @@ const BanSlashCommand = new SlashCommandBuilder()
 						},
 					])
 			)
-	)
-	.addSubcommand(subcommand => 
-		subcommand
-			.setName('info')
-			.setDescription('')
 	)
