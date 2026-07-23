@@ -1,0 +1,17 @@
+{
+  "name": "@lunary/bot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "JVOPINHO",
+  "license": "AGPL-3.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --fix",
+    "dev": "tsx watch src/index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.1"
+  }
+}

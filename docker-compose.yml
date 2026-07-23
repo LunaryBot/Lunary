@@ -1,6 +1,6 @@
 services:
   db-pg:
-    image: postgres_cron:16
+    image: postgres:latest
     container_name: lunary-pg
     env_file:
       - .env

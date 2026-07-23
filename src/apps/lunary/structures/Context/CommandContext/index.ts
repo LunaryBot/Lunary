@@ -1,5 +1,0 @@
-export * from './BaseCommandContext'
-export * from './InteractionCommandContext'
-export * from './MessageCommandContext'
-export * from './SlashCommand'
-export * from './VanillaCommandContext'

@@ -1,9 +1,9 @@
-*.env
 *config.json
-.env
+.env*
+!.env.example
 !tsconfig.json
 
-build/
+**/dist/
 
 .dockerignore
 Dockerfile
@@ -16,3 +16,8 @@ yarn-error.log
 logs/
 
 prisma/migrations/
+
+old/
+
+prisma*
+packages/prisma
