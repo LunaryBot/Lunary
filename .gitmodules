@@ -1,0 +1,3 @@
+[submodule "packages/wasmoon/lua"]
+	path = packages/wasmoon/lua
+	url = https://github.com/lua/lua.git
