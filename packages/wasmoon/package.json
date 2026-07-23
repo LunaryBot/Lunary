@@ -1,0 +1,60 @@
+{
+    "name": "@lunarybot/wasmoon",
+    "version": "1.16.0",
+    "description": "A real lua VM with JS bindings made with webassembly",
+    "main": "./dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build:wasm:dev": "./build.sh dev",
+        "build:wasm": "./build.sh",
+        "start": "rolldown -w -c",
+        "test": "mocha --parallel --require ./test/boot.js test/*.test.js",
+        "luatests": "node --experimental-import-meta-resolve test/luatests.js",
+        "build": "rolldown -c && tsc -d --emitDeclarationOnly --rootDir src --declarationDir dist",
+        "clean": "rm -rf dist build",
+        "lint": "prettier --write . && eslint . --fix --cache",
+        "lint:nofix": "eslint ."
+    },
+    "files": [
+        "bin/*",
+        "dist/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ceifa/wasmoon.git"
+    },
+    "author": "ceifa",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ceifa/wasmoon/issues"
+    },
+    "homepage": "https://github.com/ceifa/wasmoon#readme",
+    "keywords": [
+        "lua",
+        "moon",
+        "wasm",
+        "webassembly"
+    ],
+    "devDependencies": {
+        "@eslint/js": "10.0.1",
+        "@types/node": "25.9.0",
+        "@typescript-eslint/parser": "8.59.4",
+        "chai": "6.2.2",
+        "chai-as-promised": "8.0.2",
+        "eslint": "10.4.0",
+        "eslint-config-prettier": "10.1.8",
+        "eslint-plugin-prettier": "5.5.5",
+        "eslint-plugin-simple-import-sort": "13.0.0",
+        "fengari": "0.1.5",
+        "mocha": "12.0.0-beta-2",
+        "prettier": "3.8.3",
+        "rolldown": "1.0.1",
+        "rollup-plugin-copy": "3.5.0",
+        "tslib": "2.8.1",
+        "typescript": "6.0.3",
+        "typescript-eslint": "8.59.4"
+    },
+    "dependencies": {
+        "@types/emscripten": "1.41.5"
+    }
+}
