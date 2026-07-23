@@ -1,5 +1,3 @@
-async function main() {
-  console.log('Hellow Lunary Bot! Welcome to back')
-}
+import { logger } from '@lunarybot/logger'
 
-main()
+logger.info('oi')
