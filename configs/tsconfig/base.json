@@ -9,7 +9,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
     "sourceMap": true,
     "types": ["node"]
   }

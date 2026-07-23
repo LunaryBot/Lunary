@@ -1,0 +1,15 @@
+{
+    "name": "@lunarybot/bitfields",
+    "version": "0.0.1",
+    "description": "Bitfield utilities for Lunary",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix"
+    },
+    "dependencies": {
+        "discord-api-types": "^0.38.50"
+    }
+}
