@@ -9,13 +9,15 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --fix",
-    "dev": "tsx watch src/index.ts"
+    "dev": "dotenv -e .env -- tsx watch src/index.ts"
   },
   "devDependencies": {
     "tsx": "^4.23.1"
   },
   "dependencies": {
+    "@lunarybot/bitfields": "*",
     "@lunarybot/logger": "*",
+    "discord-api-types": "^0.38.50",
     "dotenv-cli": "^11.0.0",
     "oceanic.js": "^1.14.0",
     "zod": "^4.4.3"

@@ -14,6 +14,7 @@
         "ModHelper.ts": "*ModHelper.ts",
         "docker-compose.yml": "*dockerfile"
     },
+    "editor.tabSize": 2,
     "autoBarrel.language.defaultLanguage": "TypeScript",
     "autoBarrel.files.disableRecursiveBarrelling": true,
     "autoBarrel.files.includeExtensionOnExport": ["ts"],
