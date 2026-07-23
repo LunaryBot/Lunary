@@ -4,7 +4,8 @@
         "logger": "mock",
         "repositories": "class",
         "builders": "class",
-        "observer": "review"
+        "observer": "review",
+        "wasmoon": "lua"
     },
     "workbench.colorCustomizations": {
         "minimap.background": "#00000000",

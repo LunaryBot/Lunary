@@ -17,6 +17,8 @@ export abstract class BaseCommandContext<isOnlyGuild extends boolean = any> exte
   constructor(lunary: LunaryBot, options: CommandContextOptions<isOnlyGuild>) {
     super(lunary, options)
 
+    this.command = options.command
+
     this.prefix = options.prefix
   }
 }

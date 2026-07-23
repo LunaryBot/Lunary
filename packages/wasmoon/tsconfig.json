@@ -1,9 +1,9 @@
 {
+    "extends": "../../configs/tsconfig/base.json",
     "compilerOptions": {
         "incremental": false,
         "inlineSources": false,
         "removeComments": false,
-        "sourceMap": false,
         "target": "ES2018",
         "skipLibCheck": true,
         "lib": [
